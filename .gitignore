@@ -1,0 +1,8 @@
+# OS / editor
+.DS_Store
+*.swp
+
+# skill-creator artefactos de evaluación (no distribuir)
+marcozen-workspace/
+**/skill-snapshot/
+**/iteration-*/

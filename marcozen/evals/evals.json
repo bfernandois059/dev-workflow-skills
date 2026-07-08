@@ -1,0 +1,23 @@
+{
+  "skill_name": "marcozen",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Este repo lo heredé de otro dev y está hecho un desorden: hay como 15 ramas, no sé cuáles se pueden borrar, y ni idea si está listo para producción. ¿Me puedes auditar el proyecto y decirme qué le falta?",
+      "expected_output": "Informe de auditoría MarcoZen completo: puntaje /100, tabla por las 8 categorías, riesgos P0/P1/P2, documentos existentes y faltantes, ramas a revisar, plan de poda y veredicto final. Solo lectura, sin modificar archivos. No expone secretos si los encuentra.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Quiero dejar este e-commerce listo para entregárselo a otro equipo y que puedan seguir sin preguntarme todo. Antes de integrar la pasarela de pago necesito saber en qué estado está la seguridad, la documentación y el deploy.",
+      "expected_output": "Auditoría MarcoZen con foco correcto en seguridad (secretos, .env versionado, .gitignore), documentación mínima faltante y deploy/runbook. Categorías SEO aplican por ser e-commerce público. Detecta secretos sin exponerlos (tipo + archivo). Veredicto y plan de poda orientado a la entrega.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Ya vi la auditoría MarcoZen que me hiciste. Aplícale la fase 1 de poda: ordena la documentación pero sin romper nada del código ni tocar precios o lógica.",
+      "expected_output": "Ejecuta Poda Fase 1 en rama dedicada: crea/actualiza README, AGENTS.md, .env.example (placeholders), docs de contexto/deploy/seguridad, CHANGELOG. No toca lógica de negocio, precios ni secretos reales. Entrega lista de archivos creados, actualizados, riesgos que quedan y próxima fase.",
+      "files": []
+    }
+  ]
+}
