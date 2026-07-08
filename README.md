@@ -41,7 +41,7 @@ Copia la carpeta `marcozen/` a tu directorio de skills:
 ```bash
 # a nivel usuario (disponible en todos tus proyectos)
 git clone https://github.com/bfernandois059/marcozen-skill
-cp -R marcozen-skill/marcozen ~/.claude/skills/marcozen
+cp -R marcozen-skill/skills/marcozen ~/.claude/skills/marcozen
 ```
 
 Luego invócala con `/marcozen` o con frases como *"audita este repo"* / *"¿está listo para
@@ -50,9 +50,9 @@ producción?"*.
 ### Otros agentes (Codex, Antigravity, etc.)
 
 El formato Agent Skills es markdown portable. Si tu agente no auto-carga skills, apúntalo al
-archivo [`marcozen/SKILL.md`](marcozen/SKILL.md) como instrucciones de método, o usa el
-**prompt maestro reutilizable** incluido en
-[`marcozen/references/audit-prompt.md`](marcozen/references/audit-prompt.md).
+archivo [`skills/marcozen/SKILL.md`](skills/marcozen/SKILL.md) como instrucciones de método, o
+usa el **prompt maestro reutilizable** incluido en
+[`skills/marcozen/references/audit-prompt.md`](skills/marcozen/references/audit-prompt.md).
 
 ## Uso
 
@@ -67,7 +67,7 @@ archivo [`marcozen/SKILL.md`](marcozen/SKILL.md) como instrucciones de método, 
 ## Estructura
 
 ```
-marcozen/
+skills/marcozen/
 ├── SKILL.md                              # metodología, modos, cadencia, scoring, formatos de salida
 ├── references/
 │   ├── audit-prompt.md                   # guía operativa + prompt maestro reutilizable
