@@ -161,16 +161,62 @@ Usa esta estructura (distinta de la auditoría rápida). Guarda también el info
 
 ---
 
-## Modo de operación: dos fases separadas
+## Modo de operación: pasos separados
 
-MarcoZen tiene **dos fases distintas**. No las mezcles.
+MarcoZen tiene **tres pasos**. No los mezcles ni te saltes uno para llegar antes al siguiente.
 
+0. **Triage rápido (solo lectura).** Vistazo barato que decide dónde vale la pena
+   profundizar. No es la auditoría — la enfoca.
 1. **Auditoría (solo lectura).** Diagnóstico. **No modificas nada.** Entregas el informe.
 2. **Poda Fase 1 (cambios seguros).** Solo si el usuario lo pide explícitamente después
    de ver la auditoría. Ordena documentación sin tocar lógica de negocio.
 
-Por defecto, cuando disparen la skill, **empieza por la auditoría**. No pases a podar sin
-que el usuario lo apruebe con la auditoría a la vista.
+Por defecto, cuando disparen la skill, **empieza por el triage y sigue con la auditoría**.
+No pases a podar sin que el usuario lo apruebe con la auditoría a la vista — el triage no es
+un atajo para saltarte ese paso, es solo el filtro de cuánto detalle recibe cada categoría.
+
+---
+
+## FASE 0 — Triage rápido
+
+Antes de invertir el detalle completo de la Fase 1 en las ocho categorías por igual, corre
+un vistazo barato para decidir dónde realmente hace falta profundizar. El objetivo es dar el
+mismo veredicto experto con menos esfuerzo desperdiciado en lo que ya está bien — no
+complejizar el proceso con un paso extra por regla.
+
+Comandos mínimos (todos de solo lectura, adapta el gestor de paquetes al del repo):
+
+```bash
+git branch -a | wc -l                                        # ramas vivas
+git branch --merged main 2>/dev/null | wc -l                  # candidatas a cerrar
+git ls-files | grep -E '(^|/)\.env($|\.)' | grep -v example   # .env versionado
+test -f public/sitemap.xml && echo "sitemap ok" || echo "sitemap falta"
+test -f public/robots.txt && echo "robots ok" || echo "robots falta"
+npm audit --omit=dev 2>/dev/null | tail -5                    # resumen de vulnerabilidades
+test -f README.md && test -f AGENTS.md && echo "docs-core ok" || echo "docs-core falta"
+```
+
+Salida — semáforo por categoría, sin desarrollar hallazgos todavía:
+
+```markdown
+## Triage rápido — [Proyecto]
+
+| Categoría | Semáforo | Nota de una línea |
+|---|---|---|
+| Git y ramas | 🟢/🟡/🔴 | ... |
+| Documentación | 🟢/🟡/🔴 | ... |
+| Seguridad | 🟢/🟡/🔴 | ... |
+| SEO/GEO/AEO | 🟢/🟡/🔴 | ... |
+| Dependencias | 🟢/🟡/🔴 | ... |
+
+Foco recomendado para la auditoría: [categorías 🔴/🟡]
+```
+
+Regla de uso: las categorías 🔴/🟡 reciben el detalle completo de la Fase 1 tal como está
+descrito abajo. Las 🟢 se confirman con una línea en el informe final — ya se sabe que están
+bien, no hace falta repetir el análisis completo para justificarlo. Si el triage no puede
+correr un chequeo (herramienta ausente, proyecto sin ese gestor de paquetes), márcalo `⚪
+sin dato` y trátalo como 🟡 por defecto — nunca asumas verde sin evidencia.
 
 ---
 

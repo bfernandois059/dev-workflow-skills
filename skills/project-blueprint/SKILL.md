@@ -37,6 +37,14 @@ Si existe repositorio, inspecciona primero estructura, manifiestos, dependencias
 
 Busca material de negocio o marca disponible: brief, Brand Master, documentación funcional, diseños, contratos, PDFs, hojas de cálculo o repositorios anteriores. Nunca reemplaces la validación del usuario con inferencias silenciosas.
 
+#### Modo Retrofit — proyecto existente que partió mal
+
+Si el proyecto ya existe y no tiene un blueprint previo (o lo tiene incompleto/inconsistente con lo que hay construido), esta skill es la que lo ordena. No te detengas en el diagnóstico: tu trabajo es entregar el criterio experto que falta, no describir el desorden y esperar instrucciones.
+
+- **Un informe de auditoría (MarcoZen u otro) es evidencia técnica de entrada, nunca el resultado de esta skill.** Una auditoría dice qué tan sano está el código; blueprint dice qué se construye, para quién y con qué arquitectura debería sostenerse. Si encuentras una auditoría, léela, extrae sus hallazgos como insumo, y sigue igual con las Fases 1 a 6 — no te quedes ahí.
+- Actúa como el experto que el usuario no tiene: cuando el repositorio ya tomó decisiones (framework, base de datos, auth, estructura), evalúalas con la misma matriz de Fase 3 y di explícitamente si están bien, si deberían cambiar, o si conviene mantenerlas por costo de migración — no solo documentes lo que hay.
+- El objetivo final es el mismo blueprint completo (Fases 1-6), pero además necesitas capturar la brecha entre lo que existe y lo que debería existir: en Fase 2, marca cada área relevante como `Actual` (lo que hay hoy) y `Objetivo` (lo recomendado), y en Fase 4 usa `docs/migration-plan.md` como el entregable central que ordena cómo cerrar esa brecha — no un documento opcional más.
+
 ### Fase 1 — Descubrimiento guiado
 
 Usa `references/discovery-questionnaire.md`.
@@ -80,6 +88,8 @@ Asigna nivel de complejidad:
 Explica qué evidencia sustenta la clasificación.
 
 Este nivel determina cuánta profundidad reciben las Fases 3 y 4. No apliques a un proyecto `L0`/`L1` el mismo detalle de evaluación y documentación que a uno `L3`/`L4`.
+
+En **Modo Retrofit**, marca cada área que ya tiene una decisión tomada en el código como `Actual` junto a su nivel, y añade el nivel `Objetivo` si tu recomendación difiere de lo existente. Si coinciden, dilo explícitamente — no hace falta duplicar la sección.
 
 ### Fase 3 — Matriz de decisiones
 
@@ -150,7 +160,7 @@ Después crea solo los documentos aplicables de esta lista. El nivel de compleji
 - `docs/api-contracts.md` para APIs o integraciones.
 - `docs/pdf-specification.md` para PDFs formales.
 - `docs/analytics-measurement-plan.md` para productos con conversión o KPIs.
-- `docs/migration-plan.md` para proyectos existentes.
+- `docs/migration-plan.md` para proyectos existentes. **En Modo Retrofit este documento no es opcional**: es el entregable central que ordena, con prioridad y dependencias, cómo pasar de lo `Actual` a lo `Objetivo` definido en Fase 2 — la pieza que le faltó a la última vez que se corrió esta skill sobre un proyecto ya construido. Cada paso del plan debe quedar en un tamaño ejecutable por `engineering-workflow` (una branch, un propósito).
 - `docs/compliance-and-privacy.md` para datos personales, pagos, salud, educación u otros contextos sensibles.
 - `docs/runbook.md` para aplicaciones operativas.
 
