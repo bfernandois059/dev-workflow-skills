@@ -79,9 +79,13 @@ Asigna nivel de complejidad:
 
 Explica qué evidencia sustenta la clasificación.
 
+Este nivel determina cuánta profundidad reciben las Fases 3 y 4. No apliques a un proyecto `L0`/`L1` el mismo detalle de evaluación y documentación que a uno `L3`/`L4`.
+
 ### Fase 3 — Matriz de decisiones
 
 Usa `references/architecture-decision-matrix.md`.
+
+En `L0`/`L1`, resuelve en una línea cada área que evidentemente no aplica (ej. autenticación, colas, búsqueda, microservicios en una landing estática) con su justificación de descarte, sin desarrollar alternativas ni comparaciones extensas. Reserva el análisis completo de "al menos" abajo para las áreas que sí están en juego y para proyectos `L2`+.
 
 Evalúa, al menos:
 
@@ -117,7 +121,11 @@ Evalúa, al menos:
 
 Genera primero `docs/00-project-blueprint.md` usando `assets/templates/00-project-blueprint.template.md`.
 
-Después crea solo los documentos aplicables de esta lista:
+Después crea solo los documentos aplicables de esta lista. El nivel de complejidad de Fase 2 determina la **extensión** de cada uno, no si existe:
+
+- `L0`/`L1`: cada documento del núcleo puede ser breve (media página, un par de secciones). Donde un tema no aplique (datos, seguridad avanzada, ADR sin decisión real que registrar), dilo en una línea dentro del documento en vez de desarrollarlo igual que para un sistema complejo.
+- `L2`: profundidad intermedia, desarrollando las secciones que sí tienen decisiones detrás.
+- `L3`/`L4`: desarrollo completo de cada documento, como describe el detalle de abajo.
 
 #### Núcleo obligatorio
 
