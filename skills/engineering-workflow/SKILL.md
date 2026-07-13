@@ -65,9 +65,26 @@ Resume:
 
 No implementes una solicitud ambigua si puede alterar datos, permisos, arquitectura o comportamiento de negocio. En cambios pequeños y reversibles, registra el supuesto y continúa.
 
+Asigna el nivel de riesgo desde este momento usando `references/change-risk-matrix.md` (`LOW` / `MEDIUM` / `HIGH` / `CRITICAL`). No esperes a Fase 3 para clasificarlo: este nivel determina cuánto esfuerzo real reciben las Fases 4 a 9. Un cambio `LOW` (texto, copy, estilos acotados, corrección localizada sin datos) usa la **ruta rápida** descrita abajo; el resto de este documento describe la profundidad completa para `MEDIUM`/`HIGH`/`CRITICAL`, no un piso mínimo para todo.
+
+#### Ruta rápida (riesgo LOW)
+
+Si el cambio es LOW según la matriz, comprime el flujo:
+
+1. Branch con nombre claro (Fase 2, sin ceremonia adicional).
+2. Edita el archivo.
+3. Corre solo lint/typecheck si tocan ese archivo, y una prueba focalizada si existe una relevante. No corras la batería completa de integración, E2E, seguridad, accesibilidad o rendimiento — no aplican a un cambio de copy o estilo.
+4. Actualiza `CHANGELOG.md` solo si el cambio es visible para usuarios finales; si no, omítelo.
+5. Revisa el diff (`git diff`) antes de PR — este paso no se salta nunca, es barato y evita alcance accidental.
+6. PR corta: qué cambió y por qué, sin secciones vacías de riesgos/rollback que no aplican.
+
+No repitas para un cambio LOW el mismo nivel de prueba y documentación que usarías para una migración o un cambio de permisos. Si tienes dudas sobre si algo es realmente LOW, sube un nivel — pero no apliques HIGH por defecto "para estar seguro".
+
 ### Fase 1 — Inspección del repositorio
 
-Ejecuta o verifica, según disponibilidad:
+En riesgo `LOW`, basta con el bloque de comandos Git y leer el archivo que vas a tocar. Omite el resto de esta fase.
+
+Para `MEDIUM`/`HIGH`/`CRITICAL`, ejecuta o verifica, según disponibilidad:
 
 ```bash
 git status --short --branch
@@ -143,14 +160,13 @@ Antes de editar, define un plan breve con:
 - documentación que probablemente cambiará;
 - estrategia de rollback si hay datos, migraciones o infraestructura.
 
-Usa `references/change-risk-matrix.md` para asignar riesgo:
+Confirma o ajusta el riesgo asignado en Fase 0 usando `references/change-risk-matrix.md`. Si sigue siendo `LOW`, usa la ruta rápida de Fase 0 y omite el resto de esta fase.
 
-- `LOW`
-- `MEDIUM`
-- `HIGH`
-- `CRITICAL`
+A mayor riesgo, mayor profundidad de pruebas, revisión y documentación — la profundidad no es fija, escala con el nivel.
 
-A mayor riesgo, mayor profundidad de pruebas, revisión y documentación.
+#### Tareas grandes con dominios independientes
+
+Si el cambio es grande pero se descompone en subtareas independientes (p. ej. un módulo de administrador con pantallas, permisos y reportes separados), no lo proceses como un solo bloque secuencial. Divide el plan por dominio y evalúa delegar subtareas auto-contenidas a subagentes en paralelo (Agent tool), especialmente cuando no comparten estado ni archivos. Esto reduce tiempo total sin reducir rigor: cada subagente sigue aplicando el nivel de riesgo que le corresponde a su parte, no el nivel más alto del conjunto.
 
 ### Fase 4 — Implementación controlada
 
@@ -206,7 +222,13 @@ Si se modifican roles o acceso:
 
 Detecta los comandos reales en `package.json`, Makefile, scripts o CI. No inventes comandos que el repositorio no posee.
 
-Ejecuta los aplicables:
+La lista siguiente es el techo para `HIGH`/`CRITICAL`, no el piso para todo cambio. Ejecuta solo lo que el nivel de riesgo (Fase 3) y el área tocada justifiquen:
+
+- `LOW`: formato/lint/typecheck si tocan el archivo, y una prueba focalizada si existe. Nada más.
+- `MEDIUM`: agrega tests unitarios relevantes y build.
+- `HIGH`/`CRITICAL`: agrega integración, E2E de flujos críticos, migraciones, seguridad, accesibilidad y rendimiento — los que aplican al área afectada, no todos por defecto.
+
+Catálogo completo de posibles validaciones (usar según lo anterior):
 
 - formato;
 - lint;
@@ -231,7 +253,7 @@ Usa `scripts/pre_pr_check.py` como verificador documental complementario. No ree
 
 ### Fase 6 — Impacto documental
 
-Usa `references/documentation-impact-matrix.md`.
+Usa `references/documentation-impact-matrix.md`, filtrada por el riesgo de Fase 3: en `LOW`, por defecto solo `CHANGELOG.md` si el cambio es visible para usuarios, y ni eso si es puramente interno. La lista de documentos frecuentes de abajo aplica a `MEDIUM`/`HIGH`/`CRITICAL` según el dominio tocado, no a cada tarea.
 
 La documentación se actualiza antes del merge, dentro de la misma branch y Pull Request.
 
