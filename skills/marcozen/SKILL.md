@@ -1,25 +1,17 @@
 ---
 name: marcozen
 description: >-
-  MarcoZen de Proyectos — sistema de auditoría, poda y gobernanza para repositorios
-  web, e-commerce y apps. Úsala SIEMPRE que el usuario quiera auditar/revisar/ordenar
-  un repo, entender un proyecto heredado, dejarlo "listo para otro dev o para un agente
-  IA (Codex)", o antes de un hito crítico: entregar el repo a otra persona, integrar
-  pagos/emails/CRM/logística, salir a producción, o correr una auditoría de SEO,
-  seguridad o performance. Dispara con frases como "audita este repo", "ordena el
-  proyecto", "revisa las ramas y la documentación", "¿está listo para producción?",
-  "esto está hecho un desorden", "poda el repositorio", "¿qué le falta a este proyecto?",
-  "dame un puntaje de salud del repo", "prepara el repo para entregarlo", o cuando pasen
-  una URL/ruta de repositorio pidiendo revisión general de estructura, ramas, seguridad
-  o mantenibilidad. También cuando haya muchas ramas sueltas, documentos duplicados o
-  dudas de dónde está cada cosa. Sirve además como **auditoría pre-producción** (¿listo
-  para publicar?), **auditoría SEO/GEO/AEO** (indexación, metadata, schema, llms.txt,
-  preparación para buscadores e IA), **auditoría de seguridad** (secretos, headers,
-  formularios, webhooks, pagos, dependencias) y **mantenimiento periódico** (ramas, PRs,
-  npm audit/outdated, build, lint). Dispara también con "¿está listo para producción?",
-  "revisa el SEO antes de publicar", "prepáralo para Google/IA", "auditoría de seguridad",
-  "revisa dependencias", "mantenimiento del repo", "checklist pre-lanzamiento", "llms.txt",
-  "schema/metadata", "npm audit".
+  MarcoZen de Proyectos audita, poda y gobierna repositorios web, e-commerce y apps.
+  Úsala SIEMPRE que el usuario quiera auditar, revisar u ordenar un repo; entender un
+  proyecto heredado; prepararlo para otro desarrollador o agente IA; evaluar ramas,
+  documentación, estructura, seguridad o mantenibilidad; o verificar si está listo para
+  producción. Úsala también antes de entregar el repo o integrar pagos, emails, CRM,
+  logística o autenticación. Incluye auditoría rápida con puntaje, pre-producción,
+  SEO/GEO/AEO, seguridad, performance, dependencias y mantenimiento periódico. Dispara
+  con frases como "audita este repo", "ordena el proyecto", "poda el repositorio",
+  "¿qué le falta?", "puntaje de salud", "revisa SEO/schema/llms.txt", "auditoría de
+  seguridad", "npm audit/outdated", "mantenimiento del repo" o al recibir una URL/ruta
+  de repositorio con una solicitud general de revisión.
 ---
 
 # MarcoZen de Proyectos
@@ -425,6 +417,12 @@ Al terminar la poda, entrega: **(1)** archivos creados, **(2)** archivos actuali
 **(3)** riesgos que quedan, **(4)** próxima fase recomendada.
 
 El prompt reutilizable completo de esta fase está en **`references/pruning-phase1.md`**.
+
+---
+
+## Control de versión de la skill
+
+Lee `VERSION` para identificar la versión instalada. Si el usuario pide confirmar que es la última, o si vas a modificar esta skill, lee `references/versioning-policy.md` y ejecuta `python3 scripts/check_version.py --check-remote` antes de editar. Si no hay red o el origen no es verificable, informa que la versión remota quedó sin confirmar; no presentes la copia local como última versión.
 
 ---
 

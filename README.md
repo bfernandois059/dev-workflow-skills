@@ -43,6 +43,7 @@ para agentes. No construye: prepara.
 - Salida principal: **Blueprint de Proyecto** + documentos iniciales.
 - Separa `Confirmado` / `Recomendado` / `Supuesto` / `Pendiente de validar`.
 - Cada tecnología recomendada explica por qué se elige y qué alternativa se descartó.
+- Mantiene versión SemVer propia en `skills/project-blueprint/VERSION`.
 
 ### [engineering-workflow](skills/engineering-workflow/SKILL.md) — durante el desarrollo
 
@@ -58,13 +59,6 @@ cuando faltan definiciones necesarias de arquitectura, alcance o datos.
 - Prepara la integración, pero el merge/squash merge requiere autorización explícita.
 - Mantiene versión SemVer propia en `skills/engineering-workflow/VERSION`.
 
-Consultar la versión instalada y compararla con el repositorio canónico:
-
-```bash
-python3 skills/engineering-workflow/scripts/check_version.py
-python3 skills/engineering-workflow/scripts/check_version.py --check-remote
-```
-
 ### [marcozen](skills/marcozen/SKILL.md) — auditoría y gobernanza
 
 Sistema de auditoría, poda y gobernanza para repositorios web, e-commerce y apps.
@@ -79,6 +73,25 @@ Cinco modos sobre la misma metodología:
 > Concepto central: un proyecto sano no es el que tiene más ramas, más documentos o más
 > features. Es el que **otro profesional puede tomar sin preguntar diez veces dónde está
 > cada cosa**.
+
+- Mantiene versión SemVer propia en `skills/marcozen/VERSION`.
+
+## Versionado
+
+Cada skill tiene una versión SemVer y un tag independiente:
+
+| Skill | Archivo | Tag |
+|---|---|---|
+| `project-blueprint` | `skills/project-blueprint/VERSION` | `project-blueprint-vX.Y.Z` |
+| `engineering-workflow` | `skills/engineering-workflow/VERSION` | `engineering-workflow-vX.Y.Z` |
+| `marcozen` | `skills/marcozen/VERSION` | `marcozen-vX.Y.Z` |
+
+Consultar una versión instalada y compararla con el repositorio canónico:
+
+```bash
+python3 skills/<nombre>/scripts/check_version.py
+python3 skills/<nombre>/scripts/check_version.py --check-remote
+```
 
 ## Instalación
 
@@ -143,9 +156,10 @@ un **prompt maestro reutilizable** en
 skills/
 ├── project-blueprint/
 │   ├── SKILL.md                          # método de descubrimiento, clasificación y blueprint
+│   ├── VERSION                           # versión SemVer de la skill
 │   ├── references/                       # cuestionario de descubrimiento, matriz de decisión
 │   ├── assets/templates/                 # plantilla del blueprint
-│   └── scripts/init_blueprint.py
+│   └── scripts/                          # inicialización y comprobación de versión
 ├── engineering-workflow/
 │   ├── SKILL.md                          # branch → implementación → validación → PR → merge
 │   ├── VERSION                           # versión SemVer de la skill
@@ -154,7 +168,9 @@ skills/
 │   └── scripts/                          # pre-PR y comprobación de versión
 └── marcozen/
     ├── SKILL.md                          # metodología, modos, cadencia, scoring, formatos de salida
+    ├── VERSION                           # versión SemVer de la skill
     ├── references/                       # auditoría, poda, plantillas, SEO/GEO/AEO, seguridad
+    ├── scripts/                          # comprobación de versión
     └── evals/evals.json
 ```
 
