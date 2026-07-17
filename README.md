@@ -47,13 +47,23 @@ para agentes. No construye: prepara.
 ### [engineering-workflow](skills/engineering-workflow/SKILL.md) — durante el desarrollo
 
 Ejecuta cada tarea de desarrollo de forma controlada y trazable. Requiere que el proyecto
-tenga un blueprint suficiente; si falta, detiene la implementación y pide completar
-`project-blueprint`.
+tenga decisiones suficientes para el cambio; solo exige completar `project-blueprint`
+cuando faltan definiciones necesarias de arquitectura, alcance o datos.
 
+- Usa una política híbrida: obligatoria para implementación, PR/merge y cambios sensibles;
+  opcional para documentación, copy y ajustes triviales; innecesaria para consultas o lectura.
 - Nunca trabaja directamente sobre `main`; una branch, un propósito.
 - Código y documentación viajan en la misma Pull Request.
 - Valida con los comandos reales (lint, typecheck, tests, build) antes de declarar terminado.
 - Prepara la integración, pero el merge/squash merge requiere autorización explícita.
+- Mantiene versión SemVer propia en `skills/engineering-workflow/VERSION`.
+
+Consultar la versión instalada y compararla con el repositorio canónico:
+
+```bash
+python3 skills/engineering-workflow/scripts/check_version.py
+python3 skills/engineering-workflow/scripts/check_version.py --check-remote
+```
 
 ### [marcozen](skills/marcozen/SKILL.md) — auditoría y gobernanza
 
@@ -138,9 +148,10 @@ skills/
 │   └── scripts/init_blueprint.py
 ├── engineering-workflow/
 │   ├── SKILL.md                          # branch → implementación → validación → PR → merge
+│   ├── VERSION                           # versión SemVer de la skill
 │   ├── references/                       # política de branches, riesgo, docs, definition of done
 │   ├── assets/templates/                 # plantillas de PR y changelog
-│   └── scripts/pre_pr_check.py
+│   └── scripts/                          # pre-PR y comprobación de versión
 └── marcozen/
     ├── SKILL.md                          # metodología, modos, cadencia, scoring, formatos de salida
     ├── references/                       # auditoría, poda, plantillas, SEO/GEO/AEO, seguridad
