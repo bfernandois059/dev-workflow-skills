@@ -4,6 +4,8 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+## engineering-workflow-v1.0.0 - 2026-07-17
+
 ### Added
 
 - `engineering-workflow`: control de versión SemVer por skill, política de publicación y comprobación opcional contra el repositorio canónico.
