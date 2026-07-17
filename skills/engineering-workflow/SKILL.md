@@ -1,6 +1,6 @@
 ---
 name: engineering-workflow
-description: Ejecuta cambios de desarrollo de forma controlada y trazable en repositorios GitHub. Úsala al implementar features, fixes, refactors, migraciones o cambios documentales. Debe inspeccionar Git, trabajar en una branch específica, limitar el alcance, validar código, seguridad y datos, actualizar la documentación afectada, preparar Pull Request y controlar el squash merge. No debe trabajar directamente sobre main, descartar cambios ajenos ni integrar sin autorización.
+description: Ejecuta cambios de desarrollo de forma controlada y trazable en repositorios Git. Úsala obligatoriamente cuando el usuario la nombre, el repositorio la exija o la tarea implemente comportamiento, requiera Pull Request o merge, afecte varios archivos, datos, permisos, autenticación, pagos, documentos formales, dependencias, infraestructura o flujos operacionales. Permite una ruta rápida para cambios LOW. Déjala a criterio de la IA para documentación, copy o ajustes locales triviales y reversibles. No la uses por defecto para consultas conceptuales, explicaciones, comandos aislados ni investigación o diagnóstico sin modificaciones.
 ---
 
 # Engineering Workflow
@@ -9,7 +9,20 @@ description: Ejecuta cambios de desarrollo de forma controlada y trazable en rep
 
 Convertir cada tarea de desarrollo en un cambio pequeño, revisable, probado, documentado y seguro, evitando que el repositorio se desordene o pierda trazabilidad a medida que trabajan agentes de IA.
 
-Esta skill se usa después de que el proyecto tiene un Blueprint suficiente. Si faltan arquitectura, alcance, criterios de aceptación o reglas de datos, detén la implementación y solicita completar o actualizar `project-blueprint`.
+Usa el Blueprint existente cuando esté disponible. No bloquees un cambio localizado solo porque el repositorio no tenga Blueprint. Detén la implementación y solicita completar o actualizar `project-blueprint` únicamente cuando falten decisiones necesarias de arquitectura, alcance, criterios de aceptación o reglas de datos que no puedan resolverse con patrones existentes y supuestos reversibles.
+
+## Política de activación híbrida
+
+Decide primero **si corresponde activar la skill** y después **qué profundidad aplicar**. No confundas activación obligatoria con flujo pesado: una tarea obligatoria puede ser `LOW` y usar la ruta rápida.
+
+Aplica este orden:
+
+1. **Obligatoria por autoridad:** el usuario nombra `engineering-workflow`, `AGENTS.md` u otra regla del repositorio la exige, o se solicita preparar/ejecutar un merge.
+2. **Obligatoria por alcance o riesgo:** se implementan features, fixes de comportamiento, refactors, migraciones, cambios de seguridad o hotfixes; se requiere branch/commit/push/PR; se afectan varios archivos, contratos públicos, transiciones operacionales, datos o integraciones; o intervienen permisos, autenticación, RLS, pagos, archivos privados, emails, PDFs u otros documentos formales/regulados, dependencias, infraestructura o despliegue.
+3. **A criterio de la IA:** documentación pequeña, correcciones de copy, estilos acotados y cambios locales de un archivo, triviales, reversibles y sin impacto en contratos, datos, seguridad u operación. Respeta siempre las reglas Git del repositorio; si exigen branch o PR, vuelve al punto 1.
+4. **No activar por defecto:** preguntas conceptuales, comparativas, explicaciones de código, comandos aislados, lectura y reporte, diagnóstico sin modificaciones o revisión de estado. Si la investigación deriva en una solicitud de implementación, reclasifica antes de editar.
+
+Ante duda razonable entre dos categorías, escala una categoría. Una mención explícita o una regla del repositorio siempre prevalece sobre las heurísticas de ahorro.
 
 ## Principios obligatorios
 
@@ -408,6 +421,10 @@ Estados permitidos:
 - `MERGED`
 - `BLOCKED`
 - `PARTIALLY VALIDATED`
+
+## Control de versión de la skill
+
+Lee `VERSION` para identificar la versión instalada. Si el usuario pide confirmar que es la última, o si vas a modificar esta skill, lee `references/versioning-policy.md` y ejecuta `python3 scripts/check_version.py --check-remote` antes de editar. Si no hay red o el origen no es verificable, informa que la versión remota quedó sin confirmar; no presentes la copia local como última versión.
 
 ## Formato de respuesta recomendado
 
