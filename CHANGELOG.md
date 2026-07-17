@@ -4,9 +4,16 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+## project-blueprint-v1.0.0 - 2026-07-17
+
 ### Added
 
 - `project-blueprint`: control de versión SemVer, política de publicación y comprobación opcional contra el repositorio canónico.
+
+## marcozen-v1.0.0 - 2026-07-17
+
+### Added
+
 - `marcozen`: control de versión SemVer, política de publicación y comprobación opcional contra el repositorio canónico.
 
 ### Changed
