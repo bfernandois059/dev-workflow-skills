@@ -219,6 +219,10 @@ Asigna resultado:
 
 No comiences implementación sustantiva sin mostrar este resultado.
 
+## Control de versión de la skill
+
+Lee `VERSION` para identificar la versión instalada. Si el usuario pide confirmar que es la última, o si vas a modificar esta skill, lee `references/versioning-policy.md` y ejecuta `python3 scripts/check_version.py --check-remote` antes de editar. Si no hay red o el origen no es verificable, informa que la versión remota quedó sin confirmar; no presentes la copia local como última versión.
+
 ## Formato de respuesta al usuario
 
 Presenta:
