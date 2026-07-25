@@ -1,6 +1,6 @@
 # dev-workflow-skills
 
-**Tres Agent Skills que cubren el ciclo completo de un proyecto digital: planificar, construir y gobernar.**
+**Cuatro Agent Skills que cubren el ciclo completo de un proyecto digital: planificar, construir, gobernar y podar.**
 
 Skills reutilizables para Claude Code, Codex y otros agentes compatibles con el estándar
 [Agent Skills](https://code.claude.com/docs/en/skills). Juntas forman un flujo de trabajo
@@ -28,6 +28,13 @@ Proyecto avanzado o pre-publicación
 ┌─────────────────────┐
 │      marcozen       │  Auditoría, poda y gobernanza: orden del repo, seguridad,
 │                     │  SEO/GEO/AEO, mantenimiento periódico, puntaje de salud.
+└─────────────────────┘
+        ↓
+Sitio en producción (o a punto de estarlo)
+        ↓
+┌─────────────────────┐
+│    tech-cleanup     │  Código, archivos, dependencias y assets sin uso: detección
+│                     │  con evidencia y eliminación segura por etapas.
 └─────────────────────┘
 ```
 
@@ -76,6 +83,24 @@ Cinco modos sobre la misma metodología:
 
 - Mantiene versión SemVer propia en `skills/marcozen/VERSION`.
 
+### [tech-cleanup](skills/tech-cleanup/SKILL.md) — código y archivos sin uso
+
+Detecta código muerto, componentes sin uso, rutas obsoletas, imágenes/assets duplicados,
+dependencias innecesarias, scripts sin uso y documentación desactualizada, y produce un plan
+de eliminación segura clasificado por riesgo. Framework-agnostic: adapta los comandos al
+stack real del proyecto en vez de asumir uno.
+
+- Cada hallazgo requiere evidencia (imports, referencias dinámicas, convenciones del
+  framework, metadata, build) antes de clasificarse — nunca "sin import = sin uso".
+- Clasificación A–E (seguro de borrar → archivar) y dificultad Baja/Media/Alta.
+- Modo multiagente opcional para repos grandes: varios agentes especializados en paralelo
+  (rutas, componentes, assets, dependencias, tests/docs) más un revisor crítico final que
+  cuestiona los hallazgos antes de confirmarlos. Consume más tokens — solo para cuando el
+  triage inicial lo justifique.
+- Fase 1 (auditoría) es siempre de solo lectura; la limpieza real es una Fase 2 aparte, por
+  etapas y con aprobación explícita del usuario.
+- Mantiene versión SemVer propia en `skills/tech-cleanup/VERSION`.
+
 ## Versionado
 
 Cada skill tiene una versión SemVer y un tag independiente:
@@ -85,6 +110,7 @@ Cada skill tiene una versión SemVer y un tag independiente:
 | `project-blueprint` | `skills/project-blueprint/VERSION` | `project-blueprint-vX.Y.Z` |
 | `engineering-workflow` | `skills/engineering-workflow/VERSION` | `engineering-workflow-vX.Y.Z` |
 | `marcozen` | `skills/marcozen/VERSION` | `marcozen-vX.Y.Z` |
+| `tech-cleanup` | `skills/tech-cleanup/VERSION` | `tech-cleanup-vX.Y.Z` |
 
 Consultar una versión instalada y compararla con el repositorio canónico:
 
@@ -97,7 +123,7 @@ python3 skills/<nombre>/scripts/check_version.py --check-remote
 
 ### Con el CLI de skills (recomendado)
 
-Las tres:
+Las cuatro:
 
 ```bash
 npx skills add https://github.com/bfernandois059/dev-workflow-skills
@@ -117,6 +143,7 @@ mkdir -p ~/.claude/skills
 cp -R dev-workflow-skills/skills/project-blueprint ~/.claude/skills/
 cp -R dev-workflow-skills/skills/engineering-workflow ~/.claude/skills/
 cp -R dev-workflow-skills/skills/marcozen ~/.claude/skills/
+cp -R dev-workflow-skills/skills/tech-cleanup ~/.claude/skills/
 ```
 
 Para instalarlas solo en un proyecto, usa `.claude/skills/` dentro del repo en vez de
@@ -129,6 +156,7 @@ mkdir -p ~/.agents/skills
 cp -R dev-workflow-skills/skills/project-blueprint ~/.agents/skills/
 cp -R dev-workflow-skills/skills/engineering-workflow ~/.agents/skills/
 cp -R dev-workflow-skills/skills/marcozen ~/.agents/skills/
+cp -R dev-workflow-skills/skills/tech-cleanup ~/.agents/skills/
 ```
 
 ### Otros agentes
@@ -149,6 +177,7 @@ un **prompt maestro reutilizable** en
 | Pre-lanzamiento | SEO/GEO/AEO | `/marcozen revisa SEO, schema y llms.txt` |
 | Siempre | Seguridad | `/marcozen auditoría de seguridad` |
 | Periódico | Mantenimiento | `/marcozen mantenimiento mensual` |
+| En producción | Código/archivos sin uso | `/tech-cleanup` o *"hay código muerto, límpialo"* |
 
 ## Estructura
 
@@ -166,12 +195,17 @@ skills/
 │   ├── references/                       # política de branches, riesgo, docs, definition of done
 │   ├── assets/templates/                 # plantillas de PR y changelog
 │   └── scripts/                          # pre-PR y comprobación de versión
-└── marcozen/
-    ├── SKILL.md                          # metodología, modos, cadencia, scoring, formatos de salida
+├── marcozen/
+│   ├── SKILL.md                          # metodología, modos, cadencia, scoring, formatos de salida
+│   ├── VERSION                           # versión SemVer de la skill
+│   ├── references/                       # auditoría, poda, plantillas, SEO/GEO/AEO, seguridad
+│   ├── scripts/                          # comprobación de versión
+│   └── evals/evals.json
+└── tech-cleanup/
+    ├── SKILL.md                          # triage, auditoría A–E, modo multiagente, limpieza por etapas
     ├── VERSION                           # versión SemVer de la skill
-    ├── references/                       # auditoría, poda, plantillas, SEO/GEO/AEO, seguridad
-    ├── scripts/                          # comprobación de versión
-    └── evals/evals.json
+    ├── references/                       # evidencia, modo multiagente, ejecución de limpieza
+    └── scripts/                          # comprobación de versión
 ```
 
 ## Principios compartidos
