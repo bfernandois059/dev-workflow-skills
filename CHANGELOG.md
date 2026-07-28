@@ -4,6 +4,17 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+### Added
+
+- `engineering-workflow`: `references/engine-routing.md`, política única de selección de motor por perfiles (ALTO/MEDIO/BAJO), con ejes de decisión, regla de los dos intentos y tabla fechada de modelos vigentes.
+- `engineering-workflow`: bloque "Selección de motor" en la Fase 0, emitido junto al nivel de riesgo y sin bloquear el trabajo.
+- `marcozen`: selección de motor en el triage de la Fase 0 y línea `Motor sugerido` en su salida.
+- `tech-cleanup`: selección de motor en el triage de la Fase 0 y asignación de modelo por rol en el modo multiagente (roles 1–5 en MEDIO, revisor crítico en ALTO).
+
+### Changed
+
+- `engineering-workflow`: la delegación a subagentes de la Fase 3 ahora asigna modelo por subtarea en vez de correr todo en el perfil más alto del conjunto.
+
 ## tech-cleanup-v1.0.0 - 2026-07-25
 
 ### Added

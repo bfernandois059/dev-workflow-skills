@@ -96,3 +96,8 @@ demás.
 Cada agente recibe: la ruta del repo/proyecto, el stack detectado en el triage, las reglas
 de solo lectura y no exponer secretos, y el recordatorio explícito de que debe adjuntar
 evidencia (comando o referencia concreta) a cada hallazgo, no solo una afirmación.
+
+Asigna el modelo por rol al lanzarlos, no uno solo para todos: los agentes 1–5 corren en
+perfil MEDIO (clasifican con criterios explícitos y verificables) y el agente 6 en perfil
+ALTO (su trabajo es sospechar de conclusiones que se ven bien fundamentadas). Perfiles y
+nombres de modelo vigentes en `engineering-workflow/references/engine-routing.md`.
