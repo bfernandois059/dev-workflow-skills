@@ -112,7 +112,29 @@ Stack detectado: [framework, gestor de paquetes, tipo de sitio]
 | Tests y documentación | 🟢/🟡/🔴 | ... |
 
 Modo recomendado: [rápido de un agente / profundo multiagente] — motivo en una línea.
+Motor sugerido: [ALTO/MEDIO] — motivo en media línea.
 ```
+
+### Selección de motor
+
+El triage decide profundidad y también **con qué modelo conviene seguir**. El criterio no es
+el costo por token sino el costo por tarea resuelta: en esta skill el error caro no es
+tardar, es marcar Categoría A algo que sí se usaba.
+
+- **Perfil ALTO (razonamiento profundo).** El juicio de categoría A–E, la detección de
+  referencias indirectas (imports dinámicos, convenciones del framework, metadata, emails,
+  JSON-LD) y el revisor crítico final. Un modelo menor aquí no tarda más: confirma falsos
+  positivos con confianza y eso termina en un borrado que no se debía hacer.
+- **Perfil MEDIO (ejecución guiada).** Redacción del informe con los hallazgos ya
+  clasificados, y la ejecución de Categoría A/B en Fase 2 — el plan ya está cerrado y el
+  build, los tests y el diff son el oráculo.
+- **Perfil BAJO (mecánico).** Recolección de evidencia bruta: grep de referencias,
+  inventarios de archivos, listados de dependencias, conteos, peso de assets.
+
+Regla de escalamiento: si el perfil menor no cerró la tarea en dos intentos, sube de perfil
+y reinicia con contexto limpio. Declara el perfil en una línea, sigue con el modelo actual y
+no bloquees esperando respuesta. Definición completa de los perfiles y nombres de modelo
+vigentes en `engineering-workflow/references/engine-routing.md`.
 
 ---
 
@@ -212,6 +234,18 @@ Roles y disciplina de evidencia detallados en
 
 Si el proyecto es chico o el triage salió mayormente 🟢, un solo agente cubriendo las cinco
 áreas en secuencia (con el mismo rigor de evidencia) es suficiente y más barato.
+
+### Motor por rol
+
+Aquí el enrutamiento sí se aplica solo: el `Agent` tool acepta `model`, así que no corras
+los seis roles en el perfil más alto. Los roles 1 a 5 recolectan y clasifican con criterios
+explícitos y verificables — **perfil MEDIO** es suficiente, y la parte puramente
+recolectora (grep, inventarios, conteos) puede ir en **BAJO**. El rol 6, el revisor crítico
+final, va siempre en **perfil ALTO**: su trabajo es exactamente lo que un modelo menor hace
+peor, sospechar de una conclusión que se ve bien fundamentada.
+
+Esto es lo que hace viable el modo multiagente en repos grandes: el costo se concentra
+donde el error es caro, no repartido parejo entre seis agentes.
 
 ---
 

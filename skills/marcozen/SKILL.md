@@ -202,6 +202,7 @@ Salida — semáforo por categoría, sin desarrollar hallazgos todavía:
 | Dependencias | 🟢/🟡/🔴 | ... |
 
 Foco recomendado para la auditoría: [categorías 🔴/🟡]
+Motor sugerido: [ALTO/MEDIO] — [motivo en media línea]
 ```
 
 Regla de uso: las categorías 🔴/🟡 reciben el detalle completo de la Fase 1 tal como está
@@ -209,6 +210,28 @@ descrito abajo. Las 🟢 se confirman con una línea en el informe final — ya 
 bien, no hace falta repetir el análisis completo para justificarlo. Si el triage no puede
 correr un chequeo (herramienta ausente, proyecto sin ese gestor de paquetes), márcalo `⚪
 sin dato` y trátalo como 🟡 por defecto — nunca asumas verde sin evidencia.
+
+### Selección de motor
+
+El triage también decide **con qué modelo conviene seguir**. El criterio no es el costo por
+token sino el costo por tarea resuelta: un modelo menor que necesita varios intentos para
+llegar al mismo veredicto sale más caro que uno mayor que cierra al primero.
+
+- **Perfil ALTO (razonamiento profundo).** Triage con 🔴, repos grandes o heredados,
+  proyectos que van a producción, y siempre el juicio final del informe: qué es P0, qué
+  falta que nadie pidió, y el veredicto. Aquí es donde un modelo menor pierde hallazgos en
+  vez de solo tardar más.
+- **Perfil MEDIO (ejecución guiada).** Triage mayormente 🟢/🟡, redacción del informe con
+  los hallazgos ya establecidos, y la Poda Fase 2 completa — son cambios documentales
+  acotados con un plan cerrado.
+- **Perfil BAJO (mecánico).** Recolección de evidencia: listar ramas, inventariar archivos,
+  correr los comandos del triage, contar y extraer.
+
+Regla de escalamiento: si el perfil menor no cerró la tarea en dos intentos, sube de perfil
+y reinicia con contexto limpio en vez de insistir. Declara el perfil en una línea junto al
+foco recomendado, sigue trabajando con el modelo actual y no bloquees esperando respuesta.
+Definición completa de los perfiles y los nombres de modelo vigentes en
+`engineering-workflow/references/engine-routing.md`.
 
 ---
 

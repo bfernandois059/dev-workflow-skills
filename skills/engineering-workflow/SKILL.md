@@ -80,6 +80,21 @@ No implementes una solicitud ambigua si puede alterar datos, permisos, arquitect
 
 Asigna el nivel de riesgo desde este momento usando `references/change-risk-matrix.md` (`LOW` / `MEDIUM` / `HIGH` / `CRITICAL`). No esperes a Fase 3 para clasificarlo: este nivel determina cuánto esfuerzo real reciben las Fases 4 a 9. Un cambio `LOW` (texto, copy, estilos acotados, corrección localizada sin datos) usa la **ruta rápida** descrita abajo; el resto de este documento describe la profundidad completa para `MEDIUM`/`HIGH`/`CRITICAL`, no un piso mínimo para todo.
 
+#### Selección de motor
+
+Con el riesgo ya asignado, decide también **con qué modelo conviene resolverla** usando `references/engine-routing.md`, y decláralo en una línea:
+
+```markdown
+Motor sugerido: ALTO — causa raíz desconocida + toca RLS (riesgo HIGH)
+Delegable a MEDIO: tests, CHANGELOG y redacción de PR una vez cerrado el plan
+```
+
+El criterio no es el costo por token sino el costo por tarea resuelta: un modelo menor que necesita cuatro intentos sale más caro que uno mayor que cierra al primero. Al revés también — no uses el perfil más capaz para renombres o cambios de copy con verificación automática.
+
+Es una sugerencia, no un bloqueo: emítela y sigue trabajando con el modelo actual. Solo detente a preguntar, y una sola vez, si el cambio es `HIGH`/`CRITICAL` y el modelo actual está claramente por debajo del perfil.
+
+En riesgo `LOW` omite el bloque, salvo que convenga señalar que la tarea puede bajar de perfil. Si un intento falla dos veces seguidas, no hagas un tercero con el mismo modelo: sube de perfil y reinicia con contexto limpio.
+
 #### Ruta rápida (riesgo LOW)
 
 Si el cambio es LOW según la matriz, comprime el flujo:
@@ -180,6 +195,8 @@ A mayor riesgo, mayor profundidad de pruebas, revisión y documentación — la 
 #### Tareas grandes con dominios independientes
 
 Si el cambio es grande pero se descompone en subtareas independientes (p. ej. un módulo de administrador con pantallas, permisos y reportes separados), no lo proceses como un solo bloque secuencial. Divide el plan por dominio y evalúa delegar subtareas auto-contenidas a subagentes en paralelo (Agent tool), especialmente cuando no comparten estado ni archivos. Esto reduce tiempo total sin reducir rigor: cada subagente sigue aplicando el nivel de riesgo que le corresponde a su parte, no el nivel más alto del conjunto.
+
+Aquí el motor sí se enruta solo: el `Agent` tool acepta `model`, así que asigna a cada subagente el perfil que le corresponde según `references/engine-routing.md` en vez de correr todo en el perfil más alto del conjunto. El patrón habitual es decidir en ALTO y ejecutar en MEDIO — plan, causa raíz y decisiones de diseño arriba; tests, documentación y redacción abajo, ya con el plan cerrado.
 
 ### Fase 4 — Implementación controlada
 

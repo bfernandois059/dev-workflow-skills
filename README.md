@@ -192,7 +192,7 @@ skills/
 ├── engineering-workflow/
 │   ├── SKILL.md                          # branch → implementación → validación → PR → merge
 │   ├── VERSION                           # versión SemVer de la skill
-│   ├── references/                       # política de branches, riesgo, docs, definition of done
+│   ├── references/                       # política de branches, riesgo, motor, docs, definition of done
 │   ├── assets/templates/                 # plantillas de PR y changelog
 │   └── scripts/                          # pre-PR y comprobación de versión
 ├── marcozen/
