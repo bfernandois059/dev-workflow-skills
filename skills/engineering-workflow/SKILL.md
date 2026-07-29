@@ -36,6 +36,7 @@ Ante duda razonable entre dos categorías, escala una categoría. Una mención e
 8. **Validar antes de declarar terminado.** Ejecutar los comandos reales de lint, typecheck, tests y build que correspondan.
 9. **Cambios sensibles requieren mayor rigor.** Datos, permisos, autenticación, pagos, archivos, emails, PDFs, migraciones e infraestructura exigen revisión específica.
 10. **No integrar automáticamente.** Preparar la integración, pero realizar merge o squash merge solo con autorización explícita.
+11. **No trabajar bajo el perfil de motor requerido.** Si la tarea exige un perfil de razonamiento mayor que el del modelo actual y el riesgo es `MEDIUM` o superior, detenerse y obtener autorización explícita antes de avanzar. Ver `references/engine-routing.md`.
 
 ## Orden de autoridad
 
@@ -82,18 +83,19 @@ Asigna el nivel de riesgo desde este momento usando `references/change-risk-matr
 
 #### Selección de motor
 
-Con el riesgo ya asignado, decide también **con qué modelo conviene resolverla** usando `references/engine-routing.md`, y decláralo en una línea:
+Con el riesgo ya asignado, decide también **con qué modelo conviene resolverla** usando `references/engine-routing.md`. El criterio no es el costo por token sino el costo por tarea resuelta: un modelo menor que necesita cuatro intentos sale más caro que uno mayor que cierra al primero. Al revés también — no uses el perfil más capaz para renombres o cambios de copy con verificación automática.
+
+**Si el perfil requerido es mayor que el del modelo actual y el riesgo es `MEDIUM` o superior, es un punto de control bloqueante: pide autorización explícita y no avances a la Fase 1 sin respuesta.** Rige la misma regla que para merge o migraciones de producción — no basta con avisar y seguir. Formato de la pregunta y opciones en `references/engine-routing.md`.
+
+Cuando no hay desajuste no hay punto de control: una línea junto al riesgo y sigues.
 
 ```markdown
-Motor sugerido: ALTO — causa raíz desconocida + toca RLS (riesgo HIGH)
-Delegable a MEDIO: tests, CHANGELOG y redacción de PR una vez cerrado el plan
+Motor: ALTO (coincide con el modelo actual) — delegable a MEDIO: tests, CHANGELOG y PR
 ```
 
-El criterio no es el costo por token sino el costo por tarea resuelta: un modelo menor que necesita cuatro intentos sale más caro que uno mayor que cierra al primero. Al revés también — no uses el perfil más capaz para renombres o cambios de copy con verificación automática.
+Poder bajar de perfil nunca bloquea: dilo en una línea y continúa. En riesgo `LOW` omite el bloque completo. Pregunta **una vez por tarea**, no una vez por fase.
 
-Es una sugerencia, no un bloqueo: emítela y sigue trabajando con el modelo actual. Solo detente a preguntar, y una sola vez, si el cambio es `HIGH`/`CRITICAL` y el modelo actual está claramente por debajo del perfil.
-
-En riesgo `LOW` omite el bloque, salvo que convenga señalar que la tarea puede bajar de perfil. Si un intento falla dos veces seguidas, no hagas un tercero con el mismo modelo: sube de perfil y reinicia con contexto limpio.
+Segundo gatillo, en cualquier fase: si la misma subtarea falla dos veces con el modelo actual, no hagas un tercer intento — detente y aplica el mismo punto de control.
 
 #### Ruta rápida (riesgo LOW)
 
