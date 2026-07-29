@@ -4,6 +4,17 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+### Changed
+
+- `engineering-workflow`, `marcozen`, `tech-cleanup`: la selección de motor deja de ser una sugerencia y pasa a ser un **punto de control bloqueante**. Si el perfil requerido es mayor que el del modelo actual, hay que pedir autorización explícita antes de avanzar, con la misma regla que ya rige para merge, migraciones de producción y el paso de auditoría a poda.
+- `engineering-workflow`: nuevo principio obligatorio 11 — no trabajar bajo el perfil de motor requerido.
+- `marcozen`, `tech-cleanup`: el punto de control se suma a las reglas inviolables de la fase de auditoría.
+
+### Added
+
+- `engineering-workflow`: `references/engine-routing.md` define el formato del punto de control, sus tres salidas (cambiar de modelo, seguir con desvío registrado, delegar el razonamiento a un subagente) y las condiciones en que **no** debe dispararse, para que no se vuelva ruido.
+- `engineering-workflow`, `marcozen`, `tech-cleanup`: segundo gatillo del punto de control — dos intentos fallidos de la misma subtarea con el modelo actual detienen el avance en vez de motivar un tercer intento.
+
 ## tech-cleanup-v1.1.0 - 2026-07-28
 
 ### Added

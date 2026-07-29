@@ -227,10 +227,18 @@ llegar al mismo veredicto sale más caro que uno mayor que cierra al primero.
 - **Perfil BAJO (mecánico).** Recolección de evidencia: listar ramas, inventariar archivos,
   correr los comandos del triage, contar y extraer.
 
-Regla de escalamiento: si el perfil menor no cerró la tarea en dos intentos, sube de perfil
-y reinicia con contexto limpio en vez de insistir. Declara el perfil en una línea junto al
-foco recomendado, sigue trabajando con el modelo actual y no bloquees esperando respuesta.
-Definición completa de los perfiles y los nombres de modelo vigentes en
+**Si el perfil requerido es mayor que el del modelo actual, es un punto de control
+bloqueante: pide autorización explícita y no arranques la Fase 1 sin respuesta.** Es la
+misma regla que ya usas para pasar de la auditoría a la poda — no basta con avisar y
+seguir. Una auditoría hecha bajo el perfil requerido no falla ruidosamente: entrega un
+informe que se ve bien y omite hallazgos, que es peor que no haberla corrido.
+
+Cuando no hay desajuste no hay punto de control: declara el perfil en una línea junto al
+foco recomendado y sigue. Poder bajar de perfil nunca bloquea. Pregunta una vez por
+auditoría, no una vez por categoría. Segundo gatillo: si una misma revisión falla dos veces
+con el modelo actual, detente y aplica el mismo punto de control en vez de insistir.
+
+Formato de la pregunta, opciones y nombres de modelo vigentes en
 `engineering-workflow/references/engine-routing.md`.
 
 ---
@@ -245,6 +253,9 @@ cambiar el paciente.
 - **No modificar archivos.** Ni un README, ni un `.gitignore`.
 - **No borrar ni renombrar ramas.**
 - **No cambiar código** ni configuración.
+- **No auditar bajo el perfil de motor requerido.** Si el triage indica un perfil mayor que
+  el del modelo actual, detente y obtén autorización explícita antes de arrancar esta fase.
+  Ver el punto de control en la Fase 0.
 - **No exponer secretos.** Si encuentras credenciales (claves API, tokens, contraseñas,
   connection strings, `.env` versionado), **no las muestres**. Indica solo **el tipo de
   secreto y en qué archivo/línea aparece**. Trátalo como riesgo P0.

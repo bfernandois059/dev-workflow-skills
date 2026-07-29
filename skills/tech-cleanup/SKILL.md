@@ -131,10 +131,19 @@ tardar, es marcar Categoría A algo que sí se usaba.
 - **Perfil BAJO (mecánico).** Recolección de evidencia bruta: grep de referencias,
   inventarios de archivos, listados de dependencias, conteos, peso de assets.
 
-Regla de escalamiento: si el perfil menor no cerró la tarea en dos intentos, sube de perfil
-y reinicia con contexto limpio. Declara el perfil en una línea, sigue con el modelo actual y
-no bloquees esperando respuesta. Definición completa de los perfiles y nombres de modelo
-vigentes en `engineering-workflow/references/engine-routing.md`.
+**Si el perfil requerido es mayor que el del modelo actual, es un punto de control
+bloqueante: pide autorización explícita y no arranques la auditoría sin respuesta.** Es la
+misma regla que ya usas para pasar de la auditoría a la limpieza — no basta con avisar y
+seguir. Aquí el error no es ruidoso: un falso positivo de Categoría A se ve idéntico a un
+hallazgo correcto hasta que el borrado llega a producción.
+
+Cuando no hay desajuste no hay punto de control: declara el perfil en una línea y sigue.
+Poder bajar de perfil nunca bloquea. Pregunta una vez por auditoría, no una vez por
+categoría. Segundo gatillo: si una misma verificación falla dos veces con el modelo actual,
+detente y aplica el mismo punto de control en vez de insistir.
+
+Formato de la pregunta, opciones y nombres de modelo vigentes en
+`engineering-workflow/references/engine-routing.md`.
 
 ---
 
@@ -142,6 +151,9 @@ vigentes en `engineering-workflow/references/engine-routing.md`.
 
 - **Fase 1 es de solo lectura.** No borrar, mover, renombrar, modificar ni refactorizar
   archivos. No abrir un PR de implementación en esta fase.
+- **No auditar bajo el perfil de motor requerido.** Si el triage indica un perfil mayor que
+  el del modelo actual, detente y obtén autorización explícita antes de arrancar la
+  auditoría. Ver el punto de control en la Fase 0.
 - **"Sin import directo" no significa "sin uso".** Nunca marques algo como seguro de borrar
   solo porque una búsqueda simple no lo encontró. Revisa también: imports dinámicos, rutas
   por convención del framework (carpetas con significado especial, archivos que el router

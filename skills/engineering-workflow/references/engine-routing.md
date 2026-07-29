@@ -53,7 +53,8 @@ tres días, sube de perfil aunque la tarea parezca simple.
 - **Regla de los dos intentos.** Si el perfil menor no cerró la tarea en dos intentos, no
   hay un tercero: sube de perfil y **reinicia con contexto limpio**, no encima del contexto
   contaminado por los intentos fallidos. Dos iteraciones fallidas ya costaron más que haber
-  empezado arriba.
+  empezado arriba. Esto dispara el punto de control de abajo — no sigas intentando por tu
+  cuenta.
 - **Riesgo manda sobre ahorro.** `HIGH` y `CRITICAL` van en perfil ALTO, aunque el cambio
   se vea pequeño. Un cambio de una línea en permisos sigue siendo un cambio de permisos.
 - **No subas por importancia percibida.** Una tarea puede ser urgente y visible y aun así
@@ -69,36 +70,91 @@ documentación, el `CHANGELOG` y la PR en el perfil medio, ya con el plan cerrad
 
 Divide por fase antes de asumir que toda la tarea necesita el perfil más caro.
 
-## Cómo se aplica realmente
+## Punto de control de motor — bloqueante
 
-Tres mecanismos, con alcances distintos. Sé honesto sobre cuál corresponde:
+Cuando el perfil requerido es **mayor** que el del modelo que está corriendo, **detente y
+pide autorización explícita antes de avanzar**, igual que para un merge o una migración de
+producción. No es una sugerencia al pasar: es un punto de control. Un aviso que se emite y
+se ignora en la misma respuesta no cambia nada — por eso esto bloquea.
 
-1. **Sesión principal — solo sugerencia.** Una skill no puede cambiar el modelo en el que
-   corre. Emite la recomendación en una línea y **sigue trabajando**; el usuario cambia de
-   modelo si quiere. Nunca bloquees esperando respuesta.
-   - Excepción: si el cambio es `HIGH`/`CRITICAL` y el modelo actual está claramente por
-     debajo del perfil, dilo explícitamente **una vez** antes de editar, y continúa solo si
-     el usuario lo confirma o insiste.
-2. **Subagentes — enrutamiento real.** El `Agent` tool acepta `model`, y las definiciones
-   en `.claude/agents/*.md` fijan modelo y esfuerzo. Aquí sí se aplica sin intervención:
-   delega las subtareas de perfil MEDIO/BAJO y quédate con las de perfil ALTO.
-3. **Otras herramientas (Codex, Antigravity, etc.) — solo mención.** Puedes recomendar
-   mover la tarea a otra herramienta cuando encaja mejor, pero no la invoques desde la
-   skill: mete autenticación, costo y salidas no verificables dentro de un flujo que se
-   supone trazable.
+Una skill no puede cambiar el modelo en el que corre; lo único que puede hacer es **no
+seguir** hasta que el usuario decida. Eso es exactamente lo que hace falta.
 
-## Formato de salida
+### Cuándo dispara
 
-Un bloque corto, después de asignar el riesgo. Sin párrafos.
+Dos gatillos, cualquiera de los dos basta:
+
+1. **Desajuste inicial.** El perfil requerido por la tarea es mayor que el del modelo
+   actual, y el riesgo es `MEDIUM` o superior (o la auditoría es profunda). Dispara antes
+   de editar o de lanzar la auditoría, no después.
+2. **Dos intentos fallidos.** La misma subtarea falló dos veces con el modelo actual. No
+   hagas un tercer intento: detente y pregunta. Este gatillo es el que más ahorra, porque
+   corrige una estimación inicial equivocada antes de que se convierta en cinco iteraciones.
+
+Si no puedes determinar con certeza en qué modelo estás corriendo, trata la incertidumbre
+como desajuste cuando el riesgo sea `HIGH`/`CRITICAL`, y pregunta igual.
+
+### Cuándo NO dispara
+
+Que sea bloqueante no significa que sea frecuente. Un punto de control que aparece siempre
+se vuelve ruido y se empieza a responder sin leer — ahí muere la utilidad. **No preguntes**
+cuando:
+
+- el perfil requerido es igual o menor que el actual;
+- el riesgo es `LOW`;
+- ya preguntaste por esta tarea (es **una vez por tarea**, no una por fase);
+- la tarea es un ahorro posible, no un riesgo: si podrías bajar de perfil, dilo en una línea
+  y sigue — bajar de perfil nunca bloquea.
+
+### Cómo se pregunta
+
+Con `AskUserQuestion` si está disponible; si no, en texto plano, y **detén el turno ahí**.
+Sin párrafos previos, sin empezar a trabajar "mientras tanto".
 
 ```markdown
-Motor sugerido: ALTO — causa raíz desconocida + toca RLS (riesgo HIGH)
-Delegable a MEDIO: tests, CHANGELOG y redacción de PR una vez cerrado el plan
+Punto de control — motor
+Tarea: [una línea]  ·  Riesgo: [NIVEL]  ·  Perfil requerido: [ALTO/MEDIO]
+Modelo actual: [nombre] (perfil [ALTO/MEDIO/BAJO])
+Motivo del desajuste: [media línea: ambigüedad / amplitud / costo del error / sin oráculo]
+
+A) Cambias de modelo y retomo — me detengo hasta que confirmes.
+B) Sigo con el modelo actual — registro el desvío y continúo.
+C) Delego solo las partes de razonamiento a un subagente de perfil ALTO y ejecuto el resto aquí.
 ```
 
-Si el perfil sugerido coincide con lo que ya está corriendo, una línea basta o se omite.
-No conviertas esto en una sección con justificación larga: el valor está en la decisión,
-no en el informe sobre la decisión.
+Reglas de la espera:
+
+- **No asumas B por silencio.** Sin respuesta no hay avance.
+- Si eligen **B**, deja el desvío por escrito en el plan y en la PR: *"Ejecutado en perfil
+  MEDIO con riesgo HIGH por decisión explícita del usuario."* La decisión es del usuario;
+  esconderla no.
+- Si eligen **C**, es la salida que no requiere que el usuario cambie nada: tú enrutas los
+  subagentes y sigues.
+
+## Los otros dos mecanismos
+
+Además del punto de control, hay dos formas de aplicar el perfil. Sé honesto sobre cuál
+corresponde:
+
+- **Subagentes — enrutamiento real, sin preguntar.** El `Agent` tool acepta `model`, y las
+  definiciones en `.claude/agents/*.md` fijan modelo y esfuerzo. Aquí se aplica solo:
+  delega las subtareas de perfil MEDIO/BAJO y quédate con las de perfil ALTO. Esto no
+  necesita autorización porque no cambia nada del entorno del usuario.
+- **Otras herramientas (Codex, Antigravity, etc.) — solo mención.** Puedes recomendar mover
+  la tarea a otra herramienta cuando encaja mejor, pero no la invoques desde la skill: mete
+  autenticación, costo y salidas no verificables dentro de un flujo que se supone trazable.
+
+## Formato cuando no hay desajuste
+
+Cuando el perfil coincide o podrías bajar, no hay punto de control: una línea junto al
+riesgo y sigues.
+
+```markdown
+Motor: ALTO (coincide con el modelo actual) — delegable a MEDIO: tests, CHANGELOG y PR
+```
+
+No conviertas esto en una sección con justificación larga: el valor está en la decisión, no
+en el informe sobre la decisión.
 
 ## Modelos vigentes
 
