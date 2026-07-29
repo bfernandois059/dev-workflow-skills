@@ -4,16 +4,39 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+## tech-cleanup-v1.2.0 - 2026-07-29
+
 ### Changed
 
-- `engineering-workflow`, `marcozen`, `tech-cleanup`: la selección de motor deja de ser una sugerencia y pasa a ser un **punto de control bloqueante**. Si el perfil requerido es mayor que el del modelo actual, hay que pedir autorización explícita antes de avanzar, con la misma regla que ya rige para merge, migraciones de producción y el paso de auditoría a poda.
-- `engineering-workflow`: nuevo principio obligatorio 11 — no trabajar bajo el perfil de motor requerido.
-- `marcozen`, `tech-cleanup`: el punto de control se suma a las reglas inviolables de la fase de auditoría.
+- `tech-cleanup`: la selección de motor del triage pasa a ser un **punto de control bloqueante** — si el perfil requerido es mayor que el del modelo actual, la auditoría no arranca sin autorización explícita.
+- `tech-cleanup`: el punto de control se suma a las reglas inviolables de la fase de auditoría.
 
 ### Added
 
-- `engineering-workflow`: `references/engine-routing.md` define el formato del punto de control, sus tres salidas (cambiar de modelo, seguir con desvío registrado, delegar el razonamiento a un subagente) y las condiciones en que **no** debe dispararse, para que no se vuelva ruido.
-- `engineering-workflow`, `marcozen`, `tech-cleanup`: segundo gatillo del punto de control — dos intentos fallidos de la misma subtarea con el modelo actual detienen el avance en vez de motivar un tercer intento.
+- `tech-cleanup`: segundo gatillo del punto de control — dos verificaciones fallidas con el modelo actual detienen el avance en vez de motivar un tercer intento.
+
+## marcozen-v1.2.0 - 2026-07-29
+
+### Changed
+
+- `marcozen`: la selección de motor del triage pasa a ser un **punto de control bloqueante** — si el perfil requerido es mayor que el del modelo actual, la Fase 1 no arranca sin autorización explícita.
+- `marcozen`: el punto de control se suma a las reglas inviolables de la primera pasada.
+
+### Added
+
+- `marcozen`: segundo gatillo del punto de control — dos revisiones fallidas con el modelo actual detienen el avance en vez de motivar un tercer intento.
+
+## engineering-workflow-v1.2.0 - 2026-07-29
+
+### Changed
+
+- `engineering-workflow`: la selección de motor deja de ser una sugerencia y pasa a ser un **punto de control bloqueante**. Si el perfil requerido es mayor que el del modelo actual y el riesgo es `MEDIUM` o superior, hay que pedir autorización explícita antes de avanzar, con la misma regla que ya rige para merge y migraciones de producción.
+- `engineering-workflow`: nuevo principio obligatorio 11 — no trabajar bajo el perfil de motor requerido.
+
+### Added
+
+- `engineering-workflow`: `references/engine-routing.md` define el formato del punto de control, sus tres salidas (cambiar de modelo, seguir con el desvío registrado, delegar el razonamiento a un subagente) y las condiciones en que **no** debe dispararse, para que no se vuelva ruido.
+- `engineering-workflow`: segundo gatillo del punto de control — dos intentos fallidos de la misma subtarea detienen el avance en vez de motivar un tercer intento.
 
 ## tech-cleanup-v1.1.0 - 2026-07-28
 
