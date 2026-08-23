@@ -92,8 +92,16 @@ sobre lo ya construido.
 - **Inventario objetivo** ejecutable sobre la página viva (`scripts/ui_inventory.js`):
   escala tipográfica en uso, paleta real, espaciados, contrastes medidos, tamaños de toque,
   esquema de encabezados y ritmo vertical. Convierte "siento que no hay jerarquía" en datos.
+- **Catálogo prescriptivo de estructura**: cajas dentro de cajas, títulos que repiten el
+  título del contenedor, el mismo estado dicho cuatro veces, mensajes e inputs metidos en
+  tarjetas, botones todos del mismo peso, campos que parecen deshabilitados, bloques vacíos
+  que solo se explican. Cada anti-patrón con su corrección y el **árbol antes/después** — no
+  "simplificar la jerarquía", sino la estructura exacta que debe quedar.
 - **Pasada de refutación obligatoria**: antes de entregar, el crítico intenta destruir su
   propio informe. "No encontré nada" no es `OK`, es `Sin verificar`.
+- **Plan de corrección reutilizable**: el informe termina en tareas autocontenidas, agrupadas
+  en olas (estructura → jerarquía y acciones → contenido y estados → detalle), con criterio de
+  aceptación verificable. Se toman sueltas y se pasan a `engineering-workflow`.
 - Nada de números de impacto inventados. Fase de auditoría en solo lectura; corregir es una
   fase aparte que pasa por `engineering-workflow`.
 - Mantiene versión SemVer propia en `skills/ux-critic/VERSION`.
@@ -235,7 +243,8 @@ skills/
 ├── ux-critic/
 │   ├── SKILL.md                          # principios, niveles de exigencia, 7 capas de juicio, refutación
 │   ├── VERSION                           # versión SemVer de la skill
-│   ├── references/                       # contexto, captura, capas de juicio, refutación, formato de informe
+│   ├── references/                       # contexto, captura, capas, anti-patrones de estructura, refutación, informe
+│   ├── assets/templates/                 # plantilla del plan de corrección
 │   ├── scripts/                          # inventario objetivo del DOM y comprobación de versión
 │   └── evals/evals.json
 ├── marcozen/

@@ -57,6 +57,9 @@ Alcance real: <qué se auditó y qué quedó fuera>
 
 ## Refutación
 <Qué se degradó de OK a hallazgo, qué hallazgo se retiró y por qué.>
+
+## Plan de corrección
+<Tareas autocontenidas, agrupadas en olas. Ver plantilla.>
 ```
 
 ---
@@ -75,6 +78,20 @@ Alcance real: <qué se auditó y qué quedó fuera>
 
 La línea de encabezado lleva siempre los cuatro campos en ese orden:
 `severidad · capa · nivel de intervención · esfuerzo`.
+
+**En hallazgos de estructura y superficie** —los del catálogo
+[`container-antipatterns.md`](container-antipatterns.md)— la corrección **debe incluir el
+árbol antes/después**. Sin el árbol, "simplificar la jerarquía de contenedores" vuelve a ser
+una recomendación tibia; el árbol es la instrucción:
+
+```
+❌ Antes                                  ✅ Después
+Panel "Documentos técnicos"               "Obligatorios" (título de sección, sin caja)
+  Tarjeta "Documentos … obligatorios"       Kick Off y OT antes de finalizar.
+    Tabla                                   ── una superficie, dos filas ──
+      Fila con fondo propio ×2
+  Pie "Documentación lista para finalizar"  (estado, una sola vez, junto a Finalizar)
+```
 
 ### Ejemplo correcto
 
@@ -137,6 +154,37 @@ una medición que no existe.
   los hechos no se discuten, se corrigen.
 - **El veredicto va primero.** Nadie debería tener que leer treinta hallazgos para saber si
   la pantalla está bien o mal.
+
+---
+
+## Plan de corrección
+
+Última sección del informe y **entregable en sí mismo**: la lista de tareas con la que se
+arregla lo encontrado, sin tener que releer el informe. Plantilla completa en
+[`../assets/templates/fix-plan.template.md`](../assets/templates/fix-plan.template.md).
+
+Reglas:
+
+1. **Una tarea es autocontenida.** Se puede tomar suelta, pasar a `engineering-workflow` o
+   entregar a otro agente sin el resto del informe. Lleva problema, dónde, qué cambia,
+   estructura objetivo, criterio de aceptación y fuera de alcance.
+2. **Criterio de aceptación verificable.** "Ninguna superficie anidada a más de dos niveles en
+   la pestaña" sí; "mejorar la jerarquía" no. Debe poder marcarse hecho o no hecho mirando la
+   pantalla.
+3. **Agrupadas en olas, no en una lista plana**: estructura → jerarquía y acciones →
+   contenido y estados → detalle. No se empieza una ola sin cerrar la anterior, porque pulir
+   antes de reestructurar es trabajo que se tira.
+4. **Un anti-patrón repetido es una sola tarea de sistema**, con la lista de pantallas donde
+   se verifica. Seis tareas de pantalla para el mismo problema es la forma de garantizar que
+   quede a medias.
+5. **Riesgo declarado.** Marca qué tareas son solo presentación y cuáles tocan comportamiento
+   o datos: define si pueden ir por la ruta rápida de `engineering-workflow` o exigen el flujo
+   completo.
+6. **Lo que no es tarea, es decisión.** Lo que requiere una definición de producto o negocio
+   va en una tabla aparte de decisiones pendientes, indicando qué tarea bloquea. No se
+   disfraza de tarea.
+7. **Verificación final incluida**: repetir el inventario objetivo y el recorrido limpio sobre
+   la interfaz corregida, y comparar capturas antes/después.
 
 ---
 

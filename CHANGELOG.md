@@ -12,6 +12,10 @@ Los cambios relevantes de las skills se registran en este archivo.
 - `ux-critic`: `scripts/ui_inventory.js`, inventario objetivo ejecutable sobre la página viva (escala tipográfica en uso, paleta real, espaciados, contrastes medidos, tamaños de toque, esquema de encabezados, ancho de línea y ritmo vertical).
 - `ux-critic`: pasada de refutación obligatoria antes de entregar el informe, con la distinción explícita entre `OK` verificado y `Sin verificar`.
 - `ux-critic`: referencias de contexto, protocolo de captura, capas de juicio, refutación, formato de informe y política de versionado; `evals/evals.json` con tres casos.
+- `ux-critic` 1.1.0: `references/container-antipatterns.md`, catálogo prescriptivo de anti-patrones de estructura y superficie —cajas anidadas sin función, títulos en eco, estado repetido, todo-es-una-tarjeta, acciones sin jerarquía, inputs que parecen deshabilitados y bloques vacíos que solo se explican— con siete reglas y el árbol de contenedores antes/después de cada corrección.
+- `ux-critic` 1.1.0: nuevas pruebas en las capas 2, 4, 5 y 6 para detectar esos anti-patrones (profundidad de superficies, títulos en eco, estado repetido, peso de acciones por frecuencia × deseabilidad, superficies con función, affordance de campos, vacío que ofrece).
+- `ux-critic` 1.1.0: el informe termina en un **plan de corrección** reutilizable como tareas, agrupado en olas y con criterio de aceptación verificable, con plantilla en `assets/templates/fix-plan.template.md`.
+- `ux-critic` 1.1.0: los hallazgos de estructura exigen el árbol antes/después; entregar el informe sin plan de corrección pasa a ser anti-patrón declarado de la skill.
 - `README.md`: `ux-critic` incorporada al flujo, a la tabla de versionado, a la instalación, a la tabla de uso y a la estructura del repositorio.
 
 ## tech-cleanup-v1.2.0 - 2026-07-29

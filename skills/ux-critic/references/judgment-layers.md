@@ -11,6 +11,11 @@ Reglas transversales:
   página.
 - **Regla de corte**: si una capa falla estructuralmente, las siguientes se reportan como
   `condicionadas`.
+- Los anti-patrones de **estructura y superficie** —cajas anidadas, títulos en eco, estado
+  repetido, todo-es-una-tarjeta, acciones sin jerarquía, inputs que parecen deshabilitados,
+  bloques vacíos que solo se explican— tienen catálogo propio con la corrección prescrita en
+  [`container-antipatterns.md`](container-antipatterns.md). Se detectan en las capas 2, 4, 5
+  y 6, y se reportan **con el árbol de estructura antes/después**.
 
 ---
 
@@ -52,7 +57,10 @@ jerarquía es perceptual: existe si el ojo la ve.
 2. **Conteo de dominantes.** En un pantallazo debería haber **un** elemento claramente
    dominante. Dos empatados es ambigüedad; tres o más es ruido.
 3. **Competencia de acciones.** Cuenta los controles con tratamiento de acción primaria
-   visibles a la vez. Más de uno obliga al usuario a decidir antes de entender.
+   visibles a la vez. Más de uno obliga al usuario a decidir antes de entender. Después
+   ordena las acciones por frecuencia esperada y por deseabilidad, y compara ese orden con el
+   de peso visual: cuando la acción más pesada es la más rara o la más destructiva, la
+   interfaz empuja al error (anti-patrón A5).
 4. **Elemento borrado.** Tapa el elemento más grande. ¿La pantalla sigue siendo comprensible?
    Si sí, ese elemento es decoración con tamaño de protagonista.
 5. **Escala real vs. semántica.** Cruza `headings.outline` con `typography.sizes` del
@@ -60,6 +68,13 @@ jerarquía es perceptual: existe si el ojo la ve.
    peso visual que un párrafo, o `div` con aspecto de título.
 6. **Contraste de importancia.** Lo importante gana por tamaño, peso, color, espacio o
    posición — idealmente por dos de esos, no por los cinco a la vez.
+7. **Profundidad de superficies.** Cuenta los niveles de caja anidada (panel → tarjeta →
+   tabla → fila con fondo propio). Por cada uno pregunta: *¿qué separa esta caja que el
+   espacio en blanco no podría separar?* Sin respuesta en una frase, sobra. Más de dos
+   niveles es hallazgo (anti-patrón A1, regla R1).
+8. **Títulos en eco.** Lee en voz alta los títulos anidados en secuencia, incluyendo el
+   nombre de la pestaña. Si suenan a la misma frase con un adjetivo agregado —"Documentos" →
+   "Documentos técnicos" → "Documentos técnicos obligatorios"— sobra uno (anti-patrón A2).
 
 **Señales de falla**: todo el mismo peso; badges y etiquetas más llamativos que el título;
 tarjetas idénticas para cosas de importancia distinta; el precio, el dato o el CTA que la
@@ -119,6 +134,10 @@ de 14 campos en el primer paso.
    deberían ser tabla, tabla que debería ser lista.
 7. **Ancho de línea.** `lineLength` del inventario: por encima de ~85 caracteres cuesta
    volver al inicio de la línea; por debajo de ~40 se fragmenta la lectura.
+8. **Estado repetido.** Lista todos los lugares donde se comunica el mismo hecho (etiqueta de
+   encabezado, estado por fila, pie de sección, resumen en otra vista). Más de dos —el
+   detalle por ítem y el resumen en el punto de decisión— es redundancia: no tranquiliza,
+   genera duda sobre cuál indicador manda (anti-patrón A3, regla R3).
 
 **Señales de falla**: tres adjetivos donde va un dato; texto de plantilla nunca reemplazado;
 promesas sin prueba; el mismo mensaje repetido en tres bloques con distintas palabras.
@@ -147,7 +166,11 @@ promesas sin prueba; el mismo mensaje repetido en tres bloques con distintas pal
 6. **Teclado.** `Tab` desde el inicio: orden lógico, foco visible, nada inalcanzable, `Esc`
    cierra los diálogos.
 7. **Navegación.** ¿Se sabe dónde se está? ¿Se puede volver? ¿El botón atrás del navegador
-   hace lo esperado?
+   hace lo esperado? La navegación no es una acción del flujo: no debe competir en peso con
+   las acciones de la tarea.
+8. **El vacío ofrece.** Por cada bloque en estado vacío: *¿entrega la acción que lo llena, o
+   solo explica por qué está vacío?* Un bloque que solo explica —y cuya acción vive en otro
+   bloque— es un callejón sin salida y sobra (anti-patrón A7, regla R7).
 
 **Señales de falla**: el flujo funciona solo en el camino feliz; errores que aparecen recién
 al enviar y borran el formulario; modales sin salida; "guardado" que no confirma nada.
@@ -181,6 +204,14 @@ Casi todo aquí se decide con el inventario objetivo: son hechos medidos.
    siguiente? Es el error de agrupación más frecuente y el más invisible.
 8. **Radios, bordes y sombras.** Deben ser pocos y consistentes. Tres radios distintos en la
    misma tarjeta es descuido; una sombra por componente es acumulación.
+9. **Superficies con función.** Cuenta las superficies apiladas en una pantalla. Más de
+   cuatro con el mismo peso visual es hallazgo: cuando todo pesa igual, la pantalla es una
+   lista de cajas equivalentes y hay que leerlas todas. Un mensaje que solo informa va como
+   texto, no como banner; un input suelto no necesita tarjeta propia (anti-patrón A4, regla
+   R6).
+10. **Affordance de los campos.** Compara un campo activo con uno deshabilitado del mismo
+    formulario. Si se parecen, el sistema gastó su única señal de "no se puede tocar" en
+    campos que sí se pueden. Mide el contraste del placeholder y del borde (anti-patrón A6).
 
 **Señales de falla**: dos grises casi iguales; el mismo componente con dos alturas; bordes en
 unos elementos y sombras en sus equivalentes; el sistema declarado en el design system y otro

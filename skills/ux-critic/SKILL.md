@@ -201,6 +201,15 @@ de cada prueba está en [`references/judgment-layers.md`](references/judgment-la
 Transversales a todas: **accesibilidad medida** (no supuesta) y **comportamiento
 responsive real** (no "es responsive porque usa Tailwind").
 
+**Catálogo prescriptivo de estructura.** Los defectos que ninguna heurística clásica nombra
+—cajas dentro de cajas dentro de cajas, títulos que repiten el título del contenedor, el
+mismo estado dicho cuatro veces, mensajes e inputs metidos en tarjetas, botones todos del
+mismo peso, campos que parecen deshabilitados, bloques vacíos que solo se explican— están en
+[`references/container-antipatterns.md`](references/container-antipatterns.md), cada uno con
+**la corrección prescrita y el árbol antes/después**. Son de los hallazgos más frecuentes y
+los que más rápido cambian la percepción de una pantalla: revísalos siempre, no solo cuando
+algo "se ve raro".
+
 **Regla de corte.** Si una capa falla de forma estructural, las capas siguientes se reportan
 como **condicionadas**: se anotan los hallazgos evidentes, pero se dice explícitamente que
 pierden sentido hasta resolver la capa superior. No pulas el borde de una tarjeta que va a
@@ -259,6 +268,11 @@ Estructura fija, plantillas y reglas de redacción en
 7. **Orden de ataque** — la secuencia en que conviene corregir, porque arreglar el detalle
    antes que la estructura es trabajo que se tira.
 8. **Lo que no pude verificar** — explícito y sin vergüenza.
+9. **Plan de corrección** — la lista de tareas con la que se arregla lo encontrado, agrupada
+   en olas (estructura → jerarquía y acciones → contenido y estados → detalle). Cada tarea es
+   autocontenida y se puede tomar suelta o pasar a `engineering-workflow` sin releer el
+   informe. Plantilla en
+   [`assets/templates/fix-plan.template.md`](assets/templates/fix-plan.template.md).
 
 **Ficha obligatoria de cada hallazgo:**
 
@@ -271,9 +285,15 @@ Corrección     → concreta y con valores. No "mejorar la jerarquía".
 Certeza        → Hecho observado | Juicio del crítico | Supuesto por confirmar
 ```
 
+En hallazgos de **estructura y superficie**, la corrección incluye obligatoriamente el árbol
+de contenedores antes/después. El árbol es la instrucción; la frase sola vuelve a ser una
+recomendación tibia.
+
 ### Fase 6 — Corrección (opcional, autorización explícita)
 
-La auditoría no corrige. Cuando el usuario decide avanzar:
+La auditoría no corrige, pero deja el plan listo para que corregir no requiera volver a
+pensar. Cuando el usuario decide avanzar, se ejecutan las tareas del plan en el orden de sus
+olas:
 
 - Cambios visuales acotados y reversibles (valores, espaciados, copy, colores en un bloque):
   pueden ir por la ruta rápida de `engineering-workflow`.
@@ -344,6 +364,9 @@ Si te descubres haciendo cualquiera de estos, vuelve atrás:
 - Suavizar por respeto al trabajo previo, a la documentación o a lo que ya fue aprobado.
 - Auditar la pantalla en desktop y declarar el móvil por deducción.
 - Proponer una solución que solo desplaza el problema a otro bloque.
+- Escribir "simplificar la jerarquía de contenedores" sin el árbol antes/después.
+- Entregar el informe sin plan de corrección: dejar el trabajo de convertir hallazgos en
+  tareas al que menos contexto tiene.
 - Dar por buena la interfaz porque no encontraste nada: revisa el método, no la interfaz.
 
 ---
