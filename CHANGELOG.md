@@ -6,6 +6,7 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ### Added
 
+- `ux-critic` 1.7.0: la evidencia del modo sitio **va a disco a medida que avanza** —un JSON de inventario por ruta y viewport, capturas con nombre citable y notas por pantalla— en un directorio de trabajo propio. Una corrida larga puede sufrir compactación de contexto, y lo que solo vivía en memoria se pierde.
 - `ux-critic` 1.6.0: **mapa de patrones obligatorio** en la salida del modo sitio — anti-patrón → componente que lo genera → rutas afectadas → corrección única. Se separa del mapa de calor del barrido, que son hechos medidos y no hallazgos.
 - `ux-critic` 1.6.0: el bloque de verificación del modo sitio suma filas propias — rutas medidas, plantillas dinámicas y estados, autenticación, herramienta de inventario, **críticas profundas emitidas N de N arquetipos** y anti-patrones evaluados.
 - `ux-critic` 1.6.0: nueva señal de auditoría que mintió — cero `P0` y cero `P1` en un producto maduro, o hallazgos que son exactamente los que el comparador entrega solo, sin ningún anti-patrón `A1`–`A8`.
@@ -13,6 +14,11 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ### Changed
 
+- `ux-critic` 1.7.0: `scripts/ui_inventory.js` pasa a `Number.parseFloat`/`Number.parseInt` y a `Map` en vez de `WeakMap`. En contextos de evaluación aislados los globales no siempre están expuestos, y la adaptación improvisada degradaba los tamaños CSS a valores inválidos: un fallo silencioso que contamina escala tipográfica, jerarquía y contraste a la vez.
+- `ux-critic` 1.7.0: el principio de solo lectura se precisa — **no se modifica el producto auditado**, pero escribir capturas, JSON del inventario y el propio informe en un directorio de trabajo es correcto y, en modo sitio, necesario. La redacción anterior ("no se modifican archivos") dejaba al crítico sin cuaderno.
+- `ux-critic` 1.7.0: **el nivel de exigencia no se infiere en silencio**. Es el input que más cambia el resultado: o se pregunta, o se declara `Supuesto por confirmar` diciendo qué cambiaría con el nivel de arriba. Y una vez declarado, se aplica: reportar semántica de encabezados o microcopy bajo un nivel 1 declarado es incoherencia.
+- `ux-critic` 1.7.0: si hubo que adaptar el inventario para que corriera, se descartan las métricas que la adaptación pudo alterar y se declara la adaptación.
+- `ux-critic` 1.7.0: se aclara la fila `Datos citados que NO salen de la captura` del bloque de verificación — es para datos de otra fuente (código, base de datos, conversación previa), no para lo que midió el inventario sobre la página viva.
 - `ux-critic` 1.6.0: **regla de cierre del modo sitio** — sin crítica profunda emitida (tabla de capas y fichas de hallazgo) de al menos un representante por arquetipo, y sin mapa de patrones, lo entregado es un barrido y se rotula así desde el título. El barrido medido es la mitad barata, no el resultado.
 - `ux-critic` 1.6.0: las rutas dinámicas se cubren pidiendo al usuario **un id real por estado relevante**, con la lista concreta; muestrear el primer enlace visible de un listado deja las plantillas de detalle cubiertas por una sola pantalla. Sin los ids, el barrido se declara parcial y se listan los estados sin cubrir.
 - `ux-critic` 1.6.0: autenticación del barrido — `storageState` exige un login humano, así que el agente lo **pide** en vez de intentar entrar por su cuenta: nada de crear usuarios, adivinar credenciales ni usar datos de prueba del repositorio. Se documenta el fallback legítimo —recorrer las rutas en un navegador ya autenticado ejecutando `ui_inventory.js`— declarándolo en la verificación y forzando a `No verificado` lo que el sustituto no mida.

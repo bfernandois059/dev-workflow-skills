@@ -56,7 +56,7 @@
     if (!str) return null;
     const m = str.match(/rgba?\(([^)]+)\)/);
     if (!m) return null;
-    const p = m[1].split(',').map((v) => parseFloat(v.trim()));
+    const p = m[1].split(',').map((v) => Number.parseFloat(v.trim()));
     if (p.length < 3 || p.some(Number.isNaN)) return null;
     return { r: p[0], g: p[1], b: p[2], a: p.length > 3 ? p[3] : 1 };
   };
@@ -103,7 +103,7 @@
 
   const isVisible = (el, cs, rect) =>
     rect.width > 0 && rect.height > 0 &&
-    cs.display !== 'none' && cs.visibility !== 'hidden' && parseFloat(cs.opacity || '1') > 0.05;
+    cs.display !== 'none' && cs.visibility !== 'hidden' && Number.parseFloat(cs.opacity || '1') > 0.05;
 
   const hasOwnText = (el) => {
     for (const n of el.childNodes) {
@@ -147,7 +147,9 @@
   const shadows = new Map();
   const zIndexes = new Map();
 
-  const surfaceDepth = new WeakMap();
+  // Map y no WeakMap: el script es efímero y algunos contextos de evaluación aislados
+  // (sandboxes de automatización) no exponen WeakMap. Number.parse* por el mismo motivo.
+  const surfaceDepth = new Map();
   const surfaceChains = [];
   let surfaceCount = 0;
 
@@ -173,7 +175,7 @@
     // profundidad de superficies: cajas visualmente distintas anidadas (anti-patrón A1)
     if (rect.width >= SURFACE_MIN_W && rect.height >= SURFACE_MIN_H) {
       const hasBorder =
-        parseFloat(cs.borderTopWidth) > 0 && cs.borderTopStyle !== 'none';
+        Number.parseFloat(cs.borderTopWidth) > 0 && cs.borderTopStyle !== 'none';
       const hasShadow = cs.boxShadow && cs.boxShadow !== 'none';
       const parentBg = el.parentElement
         ? effectiveBg(el.parentElement)
@@ -199,7 +201,7 @@
     // caja: espaciados, radios, sombras, z-index
     for (const prop of ['paddingTop', 'paddingBottom', 'paddingLeft', 'paddingRight',
                         'marginTop', 'marginBottom', 'rowGap', 'columnGap']) {
-      const v = parseFloat(cs[prop]);
+      const v = Number.parseFloat(cs[prop]);
       if (v > 0) bump(spacing, `${Math.round(v)}px`);
     }
     if (cs.borderRadius && cs.borderRadius !== '0px') bump(radii, cs.borderRadius);
@@ -208,14 +210,14 @@
 
     const bg = parseColor(cs.backgroundColor);
     if (bg && bg.a > 0.05) bump(bgColors, hex(bg));
-    if (parseFloat(cs.borderTopWidth) > 0) {
+    if (Number.parseFloat(cs.borderTopWidth) > 0) {
       const bc = parseColor(cs.borderTopColor);
       if (bc && bc.a > 0.05) bump(borderColors, hex(bc));
     }
 
     // tipografía y contraste: solo elementos con texto propio
     if (hasOwnText(el)) {
-      const size = Math.round(parseFloat(cs.fontSize));
+      const size = Math.round(Number.parseFloat(cs.fontSize));
       const weight = cs.fontWeight;
       const family = (cs.fontFamily || '').split(',')[0].replace(/["']/g, '').trim();
       bump(sizes, `${size}px`);
@@ -229,7 +231,7 @@
         const fg = fg0.a < 1 ? over(fg0, bgEff) : fg0;
         bump(textColors, hex(fg));
         const ratio = contrast(fg, bgEff);
-        const bold = parseInt(weight, 10) >= 700;
+        const bold = Number.parseInt(weight, 10) >= 700;
         const isLarge = size >= 24 || (bold && size >= 18.66);
         const min = isLarge ? CONTRAST_LARGE : CONTRAST_TEXT;
         if (ratio < min) {
@@ -295,11 +297,11 @@
     const cs = getComputedStyle(h);
     const rect = h.getBoundingClientRect();
     if (!isVisible(h, cs, rect)) continue;
-    const level = parseInt(h.tagName[1], 10);
+    const level = Number.parseInt(h.tagName[1], 10);
     const entry = {
       level,
       text: textOf(h, 60),
-      fontSize: `${Math.round(parseFloat(cs.fontSize))}px`,
+      fontSize: `${Math.round(Number.parseFloat(cs.fontSize))}px`,
       weight: cs.fontWeight,
     };
     headings.push(entry);
@@ -321,7 +323,7 @@
       path: path(el),
       height: Math.round(rect.height),
       screens: Math.round((rect.height / vh) * 100) / 100,
-      paddingY: `${Math.round(parseFloat(cs.paddingTop))}/${Math.round(parseFloat(cs.paddingBottom))}`,
+      paddingY: `${Math.round(Number.parseFloat(cs.paddingTop))}/${Math.round(Number.parseFloat(cs.paddingBottom))}`,
       textChars: chars,
       density: Math.round((chars / area) * 10000) / 100, // caracteres por 100×100 px
       children: el.children.length,
@@ -338,7 +340,7 @@
   const sizeList = byCountDesc(sizes);
   const spacingList = byCountDesc(spacing);
   const offGrid = spacingList.filter(({ value }) => {
-    const n = parseFloat(value);
+    const n = Number.parseFloat(value);
     return n % 4 !== 0;
   });
 

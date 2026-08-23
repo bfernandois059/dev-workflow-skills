@@ -73,11 +73,28 @@ desbloquea todo el barrido.
 
 **Fallback declarado.** Si no hay `storageState` pero sí un navegador ya autenticado que puedes
 manejar, es una salida válida: recorres las rutas ahí y ejecutas
-[`../scripts/ui_inventory.js`](../scripts/ui_inventory.js) en cada una, guardando el JSON con
-la misma forma que produce `sweep.mjs` para poder pasárselo al comparador. Lo que **no** es
-válido es improvisar un inventario propio en silencio: si mediste con otra cosa, se dice en el
-bloque de verificación, y las métricas que ese sustituto no produce —contraste, profundidad de
-anidamiento— van a `No verificado`.
+[`../scripts/ui_inventory.js`](../scripts/ui_inventory.js) en cada una, **guardando el JSON en
+disco** con la misma forma que produce `sweep.mjs` para poder pasárselo al comparador. Lo que
+**no** es válido es improvisar un inventario propio en silencio: si mediste con otra cosa, se
+dice en el bloque de verificación, y las métricas que ese sustituto no produce van a
+`No verificado`.
+
+Si tuviste que adaptar el script para que corriera en tu entorno, **descarta las métricas que
+la adaptación haya podido alterar** antes de usarlas, y declara la adaptación. Un inventario
+que falla ruidosamente se arregla; uno que devuelve números degradados sin avisar contamina la
+escala tipográfica, la jerarquía y el contraste a la vez.
+
+## La evidencia va a disco, siempre
+
+Una corrida de modo sitio es larga: veinte rutas, dos viewports, ocho críticas profundas. En
+sesiones largas el contexto se compacta, y lo que solo vivía en memoria se pierde a mitad de
+camino.
+
+Escribe a medida que avanzas, en un directorio de trabajo propio —nunca dentro del producto
+auditado—: un JSON de inventario por ruta y viewport, las capturas con su nombre citable, y
+las notas por pantalla de la Fase D. **Solo lectura se refiere al producto auditado, no a tus
+propias notas.** Un informe que no se guardó en ninguna parte es un informe que hay que volver
+a producir entero si algo se corta.
 
 Corre el barrido **dos veces**, en `1280x800` y en `375x812` (`--viewport`), a dos
 directorios distintos. Casi todos los problemas de objetivos táctiles y ancho de línea solo
