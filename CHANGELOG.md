@@ -4,6 +4,14 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+### Added
+
+- `ux-critic` 1.5.0: **ficha obligatoria de cada tarea** del plan de corrección, emitida desde el `SKILL.md` y no solo descrita en una referencia — `dónde · qué cambia · criterio de aceptación · fuera de alcance · riesgo`, agrupada en olas. Una tarea sin `Dónde` y sin criterio verificable se queda como hallazgo: no se disfraza de plan. Sin acceso al repositorio, `Dónde` se completa con el bloque de interfaz identificado sin ambigüedad y marcado como pendiente de localizar.
+
+### Changed
+
+- `ux-critic` 1.5.0: el forzado a `No verificado` pasa a ser **quirúrgico**. Una captura estática permite juzgar composición, jerarquía, copy, datos duplicados, el estado por defecto de un colapsable, el estado vacío renderizado, el peso de las acciones y el orden de los bloques; solo queda fuera lo que exige interacción o medición. Barrer capas enteras a `No verificado` es el error inverso a aprobar sin medir. Contraste y tamaños táctiles admiten estimación declarada como aproximada, que sirve para abrir un hallazgo pero no para aprobar una capa.
+
 ## ux-critic-v1.4.0 - 2026-08-23
 
 Primera publicación de `ux-critic`, crítica de UX/UI sobre la interfaz **renderizada**. Reúne

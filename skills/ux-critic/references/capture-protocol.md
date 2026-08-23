@@ -131,6 +131,12 @@ Método completo —inventario de rutas, muestreo por arquetipo, rastreo a compo
 
 ## Medición manual cuando no hay navegador
 
+Una captura estática limita, no ciega. Antes de marcar algo `No verificado`, comprueba que de
+verdad exigía interacción o medición: la composición, la jerarquía, el copy, los datos
+duplicados, el estado por defecto de un colapsable, el estado vacío renderizado, el peso
+relativo de las acciones y el orden de los bloques **se ven**. Solo lo que exige abrir, pulsar,
+enfocar, cambiar de viewport o medir queda fuera.
+
 Si solo tienes capturas, puedes seguir midiendo lo suficiente para no inventar:
 
 - Contraste: extrae los colores de la captura y calcula la relación; repórtalo como

@@ -157,6 +157,12 @@ una sensación con formato de informe.
 | **Referencia** | Se puede mostrar como ejemplo. Cada decisión tiene intención |
 | **No verificado** | No se pudo observar o medir. **No es aprobación**: es una casilla vacía |
 
+`No verificado` se aplica a lo que de verdad exigió interacción o medición. Lo que una captura
+estática sí muestra —composición, jerarquía, copy, datos duplicados, el estado por defecto de
+un colapsable, el peso de las acciones— se juzga normalmente. Barrer capas enteras a
+`No verificado` porque la fuente fue estática es el error inverso a aprobar sin medir: deja
+hallazgos reales sin reportar. Ver la tabla de la Fase 1 en `SKILL.md`.
+
 Sin puntajes numéricos. Un "72/100" en una crítica de interfaz es precisión falsa: sugiere
 una medición que no existe.
 
@@ -223,12 +229,27 @@ arregla lo encontrado, sin tener que releer el informe. Plantilla completa en
 
 Reglas:
 
-1. **Una tarea es autocontenida.** Se puede tomar suelta, pasar a `engineering-workflow` o
-   entregar a otro agente sin el resto del informe. Lleva problema, dónde, qué cambia,
-   estructura objetivo, criterio de aceptación y fuera de alcance.
-2. **Criterio de aceptación verificable.** "Ninguna superficie anidada a más de dos niveles en
-   la pestaña" sí; "mejorar la jerarquía" no. Debe poder marcarse hecho o no hecho mirando la
-   pantalla.
+1. **Una tarea es autocontenida y se emite con ficha.** Se puede tomar suelta, pasar a
+   `engineering-workflow` o entregar a otro agente sin el resto del informe.
+
+   ```
+   ### UX-01 · <título imperativo, una línea>
+   Capa · Severidad · Intervención · Esfuerzo · Riesgo · Depende de
+
+   Dónde        → componente o archivo. Sin acceso al repositorio: el bloque de la interfaz
+                   identificado sin ambigüedad (título visible + posición) y marcado como
+                   "falta localizar el componente".
+   Qué cambia   → los cambios concretos, uno por línea.
+   Criterio     → casillas verificables mirando la pantalla. Una por resultado.
+   Fuera de     → lo que esta tarea NO toca, para que no crezca.
+   ```
+
+   En hallazgos de estructura, la ficha incluye además el árbol antes/después.
+
+2. **Sin `Dónde` y sin criterio verificable no es una tarea, es un deseo.** "Ninguna superficie
+   anidada a más de dos niveles en la pestaña" se puede marcar hecho o no hecho mirando la
+   pantalla; "mejorar la jerarquía" no. Una tarea que no llegue a esa forma se queda como
+   hallazgo, no se disfraza de plan.
 3. **Agrupadas en olas, no en una lista plana**: estructura → jerarquía y acciones →
    contenido y estados → detalle. No se empieza una ola sin cerrar la anterior, porque pulir
    antes de reestructurar es trabajo que se tira.

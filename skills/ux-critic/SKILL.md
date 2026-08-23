@@ -234,12 +234,27 @@ estado en pantalla no es ese, estás auditando una pantalla imaginaria.
 **Cuando hay control de navegador, el inventario objetivo es obligatorio.** Si no se corrió,
 las capas y transversales que dependen de medición van forzadas a `No verificado`.
 
-**El forzado lo decide la fuente, no la herramienta disponible.** Con una captura estática
-—un PNG, un PDF, lo que el usuario pegó— no se puede medir contraste, ni objetivos táctiles,
-ni comportamiento responsive, ni estados, ni foco, ni feedback. Todo eso va a `No verificado`
-automáticamente, aunque la captura sea excelente. No pueden declararse `Sólido` ni
-`Referencia` sin un número o una observación directa detrás; "contraste adecuado" a ojo sobre
-una imagen es una suposición con formato de aprobación.
+**El forzado lo decide la fuente, no la herramienta disponible.** No pueden declararse
+`Sólido` ni `Referencia` sin un número o una observación directa detrás; "contraste adecuado"
+a ojo sobre una imagen es una suposición con formato de aprobación.
+
+Pero el forzado es **quirúrgico, no un barrido**. Una captura estática muestra mucho, y mandar
+al saco de `No verificado` lo que sí se ve es el error inverso: deja hallazgos reales sin
+reportar.
+
+| Con una captura estática **sí** se juzga | **No** se juzga sin interacción o medición |
+|---|---|
+| Composición, jerarquía visual, orden de lectura, ritmo de bloques | Estados que exigen una acción: error, carga, éxito, hover |
+| Contenido, copy y datos duplicados | Foco de teclado, orden de tabulación, reversibilidad |
+| **Estado por defecto** de un colapsable: si viene cerrado, se ve | Contenido **dentro** de un colapsable cerrado |
+| Estado vacío, si está renderizado | Feedback tras una acción |
+| Peso relativo de las acciones y cuál es la única ofrecida | Comportamiento responsive, salvo que haya capturas de otros viewports |
+| Estado del registro (badge, etiqueta) | Contraste y tamaños táctiles **medidos** |
+| Orden de los bloques y qué aparece antes de la tarea | La medida en píxeles del primer pantallazo, si la captura es de página completa |
+
+Contraste y tamaños táctiles admiten una tercera vía: **estimarlos desde la imagen y
+declararlos como aproximados**. Aproximado sirve para abrir un hallazgo; no sirve para
+aprobar una capa.
 
 Qué capturar como mínimo, viewports, estados obligatorios (vacío, carga, error, éxito,
 contenido largo, contenido mínimo, foco de teclado) y cómo correr el inventario objetivo:
@@ -356,6 +371,35 @@ Estructura fija, plantillas y reglas de redacción en
    informe. Plantilla en
    [`assets/templates/fix-plan.template.md`](assets/templates/fix-plan.template.md).
 10. **Bloque de verificación** — obligatorio, al final. Ver abajo.
+
+#### Ficha obligatoria de cada tarea
+
+El plan no es una lista de intenciones. Cada tarea se emite con esta forma, porque es lo que
+permite tomarla suelta y ejecutarla sin releer el informe:
+
+```
+### UX-01 · <título imperativo, una línea>
+Capa · Severidad · Intervención · Esfuerzo · Riesgo · Depende de
+
+Dónde        → componente o archivo. Sin acceso al repositorio: el bloque de la interfaz
+                identificado sin ambigüedad (título visible + posición) y marcado como
+                "falta localizar el componente".
+Qué cambia   → los cambios concretos, uno por línea.
+Criterio     → casillas verificables mirando la pantalla. Una por resultado.
+Fuera de     → lo que esta tarea NO toca, para que no crezca.
+```
+
+**Una tarea sin `Dónde` y sin criterio de aceptación verificable no es una tarea: es un
+deseo.** "Mejorar la jerarquía" no se puede marcar como hecho; "ninguna superficie anidada a
+más de dos niveles en la pestaña" sí.
+
+Las tareas van **agrupadas en olas** —estructura → jerarquía y acciones → contenido y estados
+→ detalle—, nunca en una lista plana: el orden es parte de la instrucción, porque pulir antes
+de reestructurar es trabajo que se tira.
+
+Cuando el mismo anti-patrón aparece en varias pantallas es **una** tarea de sistema con su
+lista de rutas de verificación, no una tarea por pantalla. Plantilla completa en
+[`assets/templates/fix-plan.template.md`](assets/templates/fix-plan.template.md).
 
 #### Bloque de verificación (obligatorio)
 
