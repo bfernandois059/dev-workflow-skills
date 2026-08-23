@@ -82,6 +82,11 @@ El alcance cambia el método, no el criterio. Se declara en la Fase 0.
 informes con los mismos ocho hallazgos, porque los anti-patrones no viven en las páginas: viven
 en un puñado de componentes compartidos. El modo sitio existe para eso.
 
+**Regla de cierre del modo sitio**: el barrido medido es la mitad barata, no el resultado. Sin
+crítica profunda **emitida** —tabla de capas y fichas de hallazgo— de al menos un representante
+por arquetipo, y sin mapa de patrones que ligue cada anti-patrón a su componente, lo entregado
+es un barrido y **se rotula así desde el título**. Es una entrega útil; no es una auditoría.
+
 ---
 
 ## Principios inviolables

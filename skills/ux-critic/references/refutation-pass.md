@@ -109,6 +109,13 @@ Si reconoces alguna de estas en tu informe, no lo entregues todavía:
 - La sección "lo que funciona" es más larga que la de hallazgos.
 - No hay ningún estado (vacío, error, carga) mencionado.
 - No hay ninguna medición: ni un contraste, ni un tamaño, ni un conteo.
+- **Cero `P0` y cero `P1` en un producto maduro.** Es posible, pero es raro, y es exactamente
+  la forma que tiene una auditoría que no miró. Antes de firmarlo, revisa el método: ¿abriste
+  los estados?, ¿recorriste la tarea?, ¿evaluaste los ocho anti-patrones de estructura?
+- **En modo sitio**: los hallazgos son exactamente los que el comparador entrega solo —scroll
+  horizontal, objetivos táctiles, contraste, saltos de encabezado— y no aparece ningún
+  anti-patrón `A1`–`A8`. El barrido no ve estructura, jerarquía, ritmo ni copy: si el informe
+  tampoco los ve, no hubo crítica, hubo script.
 - Algún campo "Qué se ve" describe algo que salió del código y no de la pantalla.
 - El informe razona sobre un estado del registro distinto al que muestra la captura.
 - El informe podría copiarse a otro sitio distinto cambiando dos nombres.

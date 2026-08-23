@@ -262,8 +262,12 @@ Reglas:
 6. **Lo que no es tarea, es decisión.** Lo que requiere una definición de producto o negocio
    va en una tabla aparte de decisiones pendientes, indicando qué tarea bloquea. No se
    disfraza de tarea.
-7. **Verificación final incluida**: repetir el inventario objetivo y el recorrido limpio sobre
-   la interfaz corregida, y comparar capturas antes/después.
+7. **El criterio de aceptación vive en su tarea, nunca agrupado al final.** Una lista global de
+   "cómo validar" al cierre del plan no sirve: quien tome `UX-03` suelta no puede saber cuál de
+   esas casillas le toca. Cada tarea lleva las suyas.
+8. **Verificación final incluida**: repetir el inventario objetivo y el recorrido limpio sobre
+   la interfaz corregida, y comparar capturas antes/después. Eso es *además* de los criterios
+   por tarea, no en su lugar.
 
 ---
 

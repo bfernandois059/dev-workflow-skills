@@ -29,8 +29,22 @@ Sacar la lista real de rutas del proyecto, no de la memoria de nadie:
 
 **Rutas dinámicas**: cada plantilla (`/servicios/[id]`) entra con **un id real por estado
 relevante**. La misma plantilla en tres estados es, para efectos de crítica, tres pantallas
-distintas: no es lo mismo un registro planificado, uno en ejecución y uno cerrado. Elige los
-ids con el usuario y anótalos.
+distintas: no es lo mismo un registro planificado, uno en ejecución y uno cerrado.
+
+**Pídeselos al usuario explícitamente.** No basta con muestrear el primer enlace visible en un
+listado: eso entrega el estado que la lista ordenó primero, casi nunca el interesante, y deja
+las plantillas de detalle —donde vive el daño estructural— cubiertas por una sola pantalla.
+Pregunta por id por estado, con una lista concreta:
+
+```
+Para las plantillas de detalle necesito un id real por estado. ¿Me das uno de cada?
+  /servicios/[id]  → planificado · en ejecución · entregado · cerrado
+  /terreno/[id]    → …
+```
+
+Si el usuario no puede darlos todos, **el barrido se declara parcial** y se listan las
+plantillas y estados que quedaron sin cubrir, en el alcance y en el bloque de verificación.
+Un detalle sin sus estados no está auditado: está visitado.
 
 Deja el resultado en un archivo de rutas, una por línea, para poder repetir el barrido
 después de corregir.
@@ -43,11 +57,27 @@ node <skill>/scripts/sweep.mjs --base http://localhost:3000 --routes rutas.txt -
 python3 <skill>/scripts/compare_inventories.py .ux-sweep
 ```
 
-Rutas autenticadas: crea el estado de sesión una vez y pásalo con `--storage`.
+**Rutas autenticadas.** Playwright arranca un navegador limpio: sin sesión, todas las rutas
+privadas devuelven el login y el barrido mide dieciséis veces la misma pantalla. El estado de
+sesión se crea así:
 
 ```bash
 npx playwright open --save-storage=.ux-sweep/state.json http://localhost:3000
 ```
+
+**Ese comando exige que una persona inicie sesión a mano.** Un agente no puede generarlo solo
+y **no debe intentar entrar por su cuenta**: nada de crear usuarios, adivinar credenciales ni
+usar datos de prueba encontrados en el repositorio. Si las rutas están detrás de auth, pide al
+usuario que corra ese comando y te pase la ruta del archivo. Es un paso de treinta segundos que
+desbloquea todo el barrido.
+
+**Fallback declarado.** Si no hay `storageState` pero sí un navegador ya autenticado que puedes
+manejar, es una salida válida: recorres las rutas ahí y ejecutas
+[`../scripts/ui_inventory.js`](../scripts/ui_inventory.js) en cada una, guardando el JSON con
+la misma forma que produce `sweep.mjs` para poder pasárselo al comparador. Lo que **no** es
+válido es improvisar un inventario propio en silencio: si mediste con otra cosa, se dice en el
+bloque de verificación, y las métricas que ese sustituto no produce —contraste, profundidad de
+anidamiento— van a `No verificado`.
 
 Corre el barrido **dos veces**, en `1280x800` y en `375x812` (`--viewport`), a dos
 directorios distintos. Casi todos los problemas de objetivos táctiles y ancho de línea solo
@@ -85,8 +115,22 @@ acumularon. Declara en el informe **qué arquetipos quedaron sin cubrir**.
 ### D · Crítica profunda de la muestra
 
 Sobre esas 5–8 pantallas, el flujo normal completo: Fase 0 (contexto, una vez para todo el
-sitio), Fase 1 (captura y estados), Fase 2 (siete capas), Fase 3, Fase 4 y ficha por
-hallazgo. Sin atajos: es aquí donde se gana la auditoría.
+sitio), Fase 1 (captura y estados), Fase 2 (siete capas), Fase 3, Fase 4 y ficha por hallazgo.
+Sin atajos: es aquí donde se gana la auditoría.
+
+**Y se emite.** Cada pantalla de la muestra entrega su tabla de niveles por capa y sus fichas
+de hallazgo completas. Colapsar el resultado en una tabla resumen de prioridades no es
+resumir: es borrar la auditoría y dejar el barrido.
+
+> **Regla de cierre del modo sitio.** Sin crítica profunda emitida de al menos un
+> representante por arquetipo, el resultado **no es una auditoría de sitio: es un barrido**, y
+> se rotula así desde el título del informe. Es una entrega legítima y útil —el mapa de calor
+> vale por sí solo— pero no se presenta como lo que no es.
+
+**Señal de que la Fase D no ocurrió**: los hallazgos del informe son exactamente los que el
+comparador ya entrega solo —scroll horizontal, objetivos táctiles, contraste, saltos de
+encabezado— y no aparece ningún anti-patrón `A1`–`A8`. El barrido no ve estructura, jerarquía,
+ritmo ni copy. Si el informe tampoco los ve, no hubo ojo: hubo script.
 
 ### E · Del hallazgo al componente
 
@@ -120,18 +164,27 @@ velocidad del equipo.
 
 ## Alcance del barrido
 Rutas medidas: N · Viewports: … · Arquetipos cubiertos: … · Arquetipos sin cubrir: …
+Plantillas dinámicas y estados cubiertos: … · Estados sin cubrir: …
 
-## Mapa de patrones
-<salida de compare_inventories.py, editada a lo relevante>
+## Mapa de calor del barrido
+<salida de compare_inventories.py, editada a lo relevante — métricas por ruta y señales
+medidas. Son hechos, no hallazgos.>
 
 ## Sistema visual real
 <qué existe de verdad vs. qué declara el design system, si lo hay>
 
 ## Críticas profundas
-<una por pantalla de la muestra, formato normal, resumidas a sus hallazgos>
+<una por pantalla de la muestra, con su tabla de niveles por capa y sus fichas de hallazgo
+completas. No se colapsan en una tabla de prioridades: eso borra la auditoría.>
 
-## Patrones transversales
-<cada anti-patrón: componente que lo genera, rutas afectadas, corrección única>
+## Mapa de patrones
+<obligatorio. Por cada anti-patrón encontrado: componente que lo genera, rutas donde aparece,
+corrección única. Es el entregable central del modo sitio — si esta sección está vacía, o no
+hubo crítica profunda, o el sitio es excepcional y hay que poder explicar por qué.>
+
+| Anti-patrón | Componente que lo genera | Rutas afectadas | Corrección |
+|---|---|---|---|
+| A1 · cajas anidadas | `<componente>` | `/a`, `/b`, `/c` | … |
 
 ## Plan de corrección por componente
 <olas, tareas de sistema, criterio de aceptación, rutas de verificación>
@@ -140,7 +193,16 @@ Rutas medidas: N · Viewports: … · Arquetipos cubiertos: … · Arquetipos si
 <R1–R8 como reglas del proyecto, con las excepciones nombradas que apliquen>
 
 ## Verificación
-<bloque de verificación obligatorio: qué se midió, qué no, qué quedó en No verificado>
+<bloque de verificación obligatorio, más las filas propias del modo sitio:>
+
+| Qué | Estado |
+|---|---|
+| Rutas medidas | N de M del inventario |
+| Plantillas dinámicas | N plantillas · estados cubiertos / sin cubrir |
+| Autenticación del barrido | storageState / navegador autenticado / sin acceso |
+| Herramienta de inventario | `sweep.mjs` / sustituto declarado — cuál y qué métricas no produce |
+| **Críticas profundas emitidas** | **N de N arquetipos** |
+| Anti-patrones evaluados | A1–A8 · cuáles se buscaron y cuáles no aplican |
 ```
 
 ## Costo y cadencia
