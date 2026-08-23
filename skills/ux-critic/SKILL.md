@@ -388,12 +388,16 @@ Estructura fija, plantillas y reglas de redacción en
 8. **Lo que no pude verificar** — explícito y sin vergüenza. **No se omite y no puede ir
    vacía** cuando la fuente fue una captura estática: como mínimo entran ahí los estados que
    no se abrieron y todo lo que exige medición.
-9. **Plan de corrección** — la lista de tareas con la que se arregla lo encontrado, agrupada
+9. **Decisiones que necesitas tomar** — obligatoria si alguna tarea depende de una definición
+   de producto o de negocio. Va **antes** del plan porque lo bloquea: preguntas redactadas como
+   preguntas, con opciones concretas y con la tarea que cada una desbloquea. Una decisión
+   enterrada en el campo `Depende de` de una ficha no la ve nadie.
+10. **Plan de corrección** — la lista de tareas con la que se arregla lo encontrado, agrupada
    en olas (estructura → jerarquía y acciones → contenido y estados → detalle). Cada tarea es
    autocontenida y se puede tomar suelta o pasar a `engineering-workflow` sin releer el
    informe. Plantilla en
    [`assets/templates/fix-plan.template.md`](assets/templates/fix-plan.template.md).
-10. **Bloque de verificación** — obligatorio, al final. Ver abajo.
+11. **Bloque de verificación** — obligatorio, al final. Ver abajo.
 
 #### Ficha obligatoria de cada tarea
 
@@ -415,6 +419,11 @@ Fuera de     → lo que esta tarea NO toca, para que no crezca.
 **Una tarea sin `Dónde` y sin criterio de aceptación verificable no es una tarea: es un
 deseo.** "Mejorar la jerarquía" no se puede marcar como hecho; "ninguna superficie anidada a
 más de dos niveles en la pestaña" sí.
+
+**Y una tarea cuyo `Depende de` sea una decisión de producto no arranca.** La decisión sube a
+la sección *Decisiones que necesitas tomar*, redactada como pregunta con opciones, y la tarea
+queda marcada `Bloqueada por D<n>`. Dejarla enterrada entre `Riesgo` y `Problema` es
+disfrazar de tarea lo que en realidad es una pregunta al usuario — y ahí no la ve.
 
 Las tareas van **agrupadas en olas** —estructura → jerarquía y acciones → contenido y estados
 → detalle—, nunca en una lista plana: el orden es parte de la instrucción, porque pulir antes

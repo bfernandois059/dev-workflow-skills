@@ -203,6 +203,9 @@ hubo crítica profunda, o el sitio es excepcional y hay que poder explicar por q
 |---|---|---|---|
 | A1 · cajas anidadas | `<componente>` | `/a`, `/b`, `/c` | … |
 
+## Decisiones que necesitas tomar
+<obligatoria si alguna tarea depende de una definición de producto. Antes del plan.>
+
 ## Plan de corrección por componente
 <olas, tareas de sistema, criterio de aceptación, rutas de verificación>
 

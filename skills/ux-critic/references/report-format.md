@@ -61,6 +61,10 @@ Alcance real: <qué se auditó y qué quedó fuera>
 ## Refutación
 <Qué se degradó de OK a hallazgo, qué hallazgo se retiró y por qué.>
 
+## Decisiones que necesitas tomar
+<Obligatoria si el plan tiene alguna. Preguntas redactadas como preguntas, con opciones y con
+la tarea que cada una desbloquea. Va ANTES del plan porque lo bloquea.>
+
 ## Plan de corrección
 <Tareas autocontenidas, agrupadas en olas. Ver plantilla.>
 
@@ -190,6 +194,36 @@ evidencia de comportamiento. La Fase 4 recorre estas casillas una por una.
   los hechos no se discuten, se corrigen.
 - **El veredicto va primero.** Nadie debería tener que leer treinta hallazgos para saber si
   la pantalla está bien o mal.
+
+---
+
+## Decisiones que necesitas tomar
+
+Sección obligatoria cuando alguna tarea depende de una definición de producto o de negocio.
+Va **antes** del plan, porque lo bloquea.
+
+```markdown
+## Decisiones que necesitas tomar
+
+| # | Pregunta | Bloquea | Opciones |
+|---|---|---|---|
+| D1 | ¿Cuál es la acción primaria de un ticket `Planificado` para Jefatura? | UX-03 | A: hay una acción vigente — ¿cuál? · B: Jefatura no actúa aquí y la pantalla debe decirlo |
+| D2 | Una visita de varios días, ¿se agrupa por fecha de inicio o por rango? | UX-02 | A: por inicio · B: por rango con barra de duración |
+```
+
+Reglas:
+
+1. **Redactadas como preguntas.** Un diagnóstico en tercera persona —"nadie definió qué cuatro
+   datos importan en móvil"— se lee y se sigue de largo. Una pregunta directa se contesta.
+2. **Con opciones concretas.** El usuario tiene que poder responder con una letra, no redactar
+   una especificación.
+3. **Con la tarea que desbloquean**, para que se vea el costo de no decidir.
+4. **Una tarea cuyo `Depende de` sea una decisión de producto no arranca.** La decisión sube a
+   esta tabla y la tarea se marca `Bloqueada por D<n>`. Dejar la decisión enterrada en una fila
+   de metadatos de la ficha es disfrazarla de tarea, y el usuario nunca la ve.
+5. **No se confunde con las preguntas incómodas.** Aquellas cuestionan una decisión ya tomada
+   —"¿por qué está así?"— y son parte del diagnóstico. Estas piden una decisión que todavía no
+   existe y sin la cual nadie puede ejecutar.
 
 ---
 
