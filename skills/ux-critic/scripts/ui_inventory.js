@@ -23,6 +23,8 @@
   const LINE_MIN = 40;
   const CONTRAST_TEXT = 4.5;
   const CONTRAST_LARGE = 3.0;
+  const SURFACE_MIN_W = 160;     // ancho mínimo para contar como superficie contenedora
+  const SURFACE_MIN_H = 48;
 
   const vw = window.innerWidth;
   const vh = window.innerHeight;
@@ -145,6 +147,10 @@
   const shadows = new Map();
   const zIndexes = new Map();
 
+  const surfaceDepth = new WeakMap();
+  const surfaceChains = [];
+  let surfaceCount = 0;
+
   const contrastFailures = [];
   const smallTaps = [];
   const unnamed = [];
@@ -160,7 +166,35 @@
   for (const el of all) {
     const cs = getComputedStyle(el);
     const rect = el.getBoundingClientRect();
+    const parentDepth = el.parentElement ? surfaceDepth.get(el.parentElement) || 0 : 0;
+    surfaceDepth.set(el, parentDepth);
     if (!isVisible(el, cs, rect)) continue;
+
+    // profundidad de superficies: cajas visualmente distintas anidadas (anti-patrón A1)
+    if (rect.width >= SURFACE_MIN_W && rect.height >= SURFACE_MIN_H) {
+      const hasBorder =
+        parseFloat(cs.borderTopWidth) > 0 && cs.borderTopStyle !== 'none';
+      const hasShadow = cs.boxShadow && cs.boxShadow !== 'none';
+      const parentBg = el.parentElement
+        ? effectiveBg(el.parentElement)
+        : { r: 255, g: 255, b: 255, a: 1 };
+      const ownRaw = parseColor(cs.backgroundColor);
+      const ownOnParent = ownRaw && ownRaw.a > 0 ? over(ownRaw, parentBg) : parentBg;
+      const distinctBg = hex(ownOnParent) !== hex(parentBg);
+      if (hasBorder || hasShadow || distinctBg) {
+        const depth = parentDepth + 1;
+        surfaceDepth.set(el, depth);
+        surfaceCount += 1;
+        if (depth >= 3) {
+          surfaceChains.push({
+            depth,
+            path: path(el),
+            text: textOf(el, 45),
+            size: `${Math.round(rect.width)}×${Math.round(rect.height)}`,
+          });
+        }
+      }
+    }
 
     // caja: espaciados, radios, sombras, z-index
     for (const prop of ['paddingTop', 'paddingBottom', 'paddingLeft', 'paddingRight',
@@ -340,6 +374,9 @@
       offFourGrid: clip(offGrid, 15),
     },
     surfaces: {
+      total: surfaceCount,
+      maxDepth: surfaceChains.reduce((m, c) => Math.max(m, c.depth), surfaceCount ? 1 : 0),
+      overNested: clip(surfaceChains.sort((a, b) => b.depth - a.depth), 15),
       radii: clip(byCountDesc(radii), 12),
       shadows: clip(byCountDesc(shadows), 10),
       zIndexes: clip(byCountDesc(zIndexes), 12),

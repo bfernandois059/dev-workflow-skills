@@ -62,6 +62,9 @@ Alcance real: <qué se auditó y qué quedó fuera>
 
 ## Plan de corrección
 <Tareas autocontenidas, agrupadas en olas. Ver plantilla.>
+
+## Verificación
+<Bloque obligatorio. Tabla completa más abajo en este documento.>
 ```
 
 ---
@@ -87,6 +90,17 @@ certeza es `Sin verificar en pantalla`, y el hallazgo **no puede ser `P0` ni enc
 de corrección** hasta confirmarse renderizado. Un componente puede existir en el árbol y no
 renderizarse, renderizarse distinto, o no aplicar al estado del registro que el usuario tiene
 delante.
+
+**La certeza se declara por la fuente de ese dato concreto, no por la fuente dominante del
+informe.** Un hallazgo puede verse en la captura y citar además un valor que salió de la base
+de datos, del código o de una conversación previa: eso no es `Hecho observado en captura`. Si
+un acordeón está cerrado en la imagen, su contenido no se vio; se sabe por otra vía y hay que
+decirlo. Mezclar fuentes sin declararlo es lo que convierte un informe correcto en uno que no
+se puede auditar.
+
+**Toda cifra declara su origen**: del inventario objetivo, de una captura (indicando su alto
+total), o de un conteo. Un porcentaje de viewport sobre una captura de página completa no
+tiene origen posible — ahí no hay viewport que medir.
 
 **En hallazgos de estructura y superficie** —los del catálogo
 [`container-antipatterns.md`](container-antipatterns.md)— la corrección **debe incluir el
@@ -169,6 +183,35 @@ evidencia de comportamiento. La Fase 4 recorre estas casillas una por una.
   los hechos no se discuten, se corrigen.
 - **El veredicto va primero.** Nadie debería tener que leer treinta hallazgos para saber si
   la pantalla está bien o mal.
+
+---
+
+## Bloque de verificación
+
+Cierra todo informe. Es el mecanismo que impide aprobar lo que no se miró: una regla que pide
+"haz una pasada" se omite, una tabla que hay que rellenar no.
+
+```markdown
+## Verificación
+
+| Qué | Estado |
+|---|---|
+| Fuente de evidencia | captura propia / captura del usuario / ambas |
+| Viewports observados | 1280×800, 375×812 … |
+| Estados abiertos | vacío, error, carga, éxito … (y cuáles no) |
+| Inventario objetivo | corrido / no corrido — por qué |
+| Cifras del informe | N cifras, todas con origen declarado |
+| Capas forzadas a `No verificado` | … |
+| Datos citados que NO salen de la captura | … (código, base de datos, conversación previa) |
+```
+
+Reglas:
+
+- Si una fila no se puede completar con honestidad, el informe **no está listo**.
+- La fila de capas forzadas debe coincidir con la tabla de niveles. Si la tabla dice
+  `Responsive: Sólido` y aquí dice que solo hubo una captura desktop, hay una contradicción
+  que el lector va a encontrar.
+- En modo sitio, se añaden dos filas: rutas medidas y arquetipos sin cubrir.
 
 ---
 

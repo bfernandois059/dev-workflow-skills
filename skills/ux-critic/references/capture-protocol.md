@@ -117,6 +117,18 @@ accesibilidad y responsive— va forzado a `No verificado` en la tabla de nivele
 declara `Sólido` ni `Referencia` sin un número detrás; "contraste correcto" sin ratio medido
 es una suposición con formato de aprobación.
 
+## Varias rutas a la vez
+
+Cuando el alcance es un sitio y no una pantalla, el inventario se corre en lote:
+
+```bash
+node <skill>/scripts/sweep.mjs --base http://localhost:3000 --routes rutas.txt --out .ux-sweep
+python3 <skill>/scripts/compare_inventories.py .ux-sweep
+```
+
+Método completo —inventario de rutas, muestreo por arquetipo, rastreo a componentes— en
+[`site-mode.md`](site-mode.md).
+
 ## Medición manual cuando no hay navegador
 
 Si solo tienes capturas, puedes seguir midiendo lo suficiente para no inventar:
