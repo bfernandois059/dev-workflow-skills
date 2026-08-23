@@ -56,6 +56,10 @@ Selecciona solo preguntas que puedan alterar alcance, arquitectura, seguridad, o
 - ¿Hay condiciones de terreno, mala conexión, uso móvil, impresión o accesibilidad?
 - ¿Se necesita modo oscuro, idiomas, offline o PWA?
 - ¿Qué nivel de animación aporta valor real?
+- **Cuando alguien llega a una URL que ya no existe, ¿a dónde conviene llevarlo?** Dos o tres
+  destinos concretos, elegidos por negocio: no "volver al inicio". Es tráfico que ya llegó.
+- ¿Quién escribe el texto de las páginas de sistema —404, error, vacío, sin permiso—? Si nadie
+  lo asume, saldrá el mensaje por defecto del framework.
 
 ## 9. SEO, adquisición y medición
 - ¿El producto debe captar tráfico orgánico o leads?
@@ -63,6 +67,11 @@ Selecciona solo preguntas que puedan alterar alcance, arquitectura, seguridad, o
 - ¿Qué páginas requieren indexación y cuáles deben ser privadas?
 - ¿Se necesitan sitemap, datos estructurados, GEO/AEO, campañas o atribución?
 - ¿Cuál es la métrica de negocio, no solo la métrica de tráfico?
+- **¿Quién entrega favicon, ícono de aplicación e imagen para compartir, en qué formato y para
+  cuándo?** Son piezas de marca, no de desarrollo: si no tienen dueño y fecha, se publican con
+  el ícono por defecto y esa versión queda en caché.
+- ¿Los enlaces del sitio se van a compartir por WhatsApp, LinkedIn o redes? Eso decide si la
+  imagen social es requisito o es opcional.
 
 ## 10. Seguridad y operación
 - ¿Qué impacto tendría una filtración, pérdida de datos o caída?

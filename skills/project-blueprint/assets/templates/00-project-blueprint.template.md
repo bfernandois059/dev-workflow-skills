@@ -66,6 +66,8 @@ flowchart LR
 - Accesibilidad:
 - Estrategia de componentes:
 - Motion:
+- Páginas de sistema (404, error, vacío, sin permiso): quién escribe el copy y qué destinos ofrece cada una
+- Identidad visible (favicon, ícono de aplicación, íconos del manifest, imagen para compartir): quién las entrega, en qué formato y con qué nombre de archivo
 
 ## 12. Seguridad y operación
 - Amenazas principales:

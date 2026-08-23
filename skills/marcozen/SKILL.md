@@ -88,8 +88,10 @@ Cuándo revisar qué. Los modos anteriores se aplican en estos momentos.
 ### Antes de producción
 documentación · seguridad · variables de entorno · `.env.example` · secretos expuestos ·
 build · lint · typecheck · sitemap · robots · canonical · metadata · Open Graph · schema ·
-`llms.txt` · analytics · eventos de conversión · formularios · captcha/rate limit ·
-performance · accesibilidad · páginas legales · deploy runbook · rollback.
+`llms.txt` · **página 404 propia y 404 real (no 200 blando)** · **favicon, apple-touch-icon e
+imagen OG con URL absoluta** · analytics · eventos de conversión · formularios ·
+captcha/rate limit · performance · accesibilidad · páginas legales · deploy runbook ·
+rollback.
 
 ### Mensual
 ramas abiertas · PRs antiguos · `npm audit` / `pnpm audit` · `npm outdated` / `pnpm outdated` ·
@@ -113,6 +115,8 @@ Modo 2. Responde una sola pregunta: **¿está listo para publicarse?** Ejecuta, 
 lectura, los checklists de:
 
 - **SEO/GEO/AEO** → [`references/preprod-seo-geo-aeo.md`](references/preprod-seo-geo-aeo.md)
+- **Identidad visible y páginas de error** →
+  [`references/preprod-identity-and-errors.md`](references/preprod-identity-and-errors.md)
 - **Seguridad** → [`references/preprod-security.md`](references/preprod-security.md)
 - **Analytics/conversión, deploy y dependencias** → categorías de este `SKILL.md` +
   `references/maintenance-and-branches.md`.
