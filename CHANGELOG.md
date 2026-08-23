@@ -4,6 +4,12 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+### Added
+
+- `ux-critic` 1.9.0: sección obligatoria **Decisiones que necesitas tomar**, emitida **antes** del plan porque lo bloquea. Preguntas redactadas como preguntas, con opciones que se responden con una letra y con la tarea que cada una desbloquea. Una tarea cuyo `Depende de` sea una decisión de producto no arranca: la decisión sube a esa tabla y la tarea se marca `Bloqueada por D<n>`.
+
+  La regla "lo que no es tarea, es decisión" ya existía, pero vivía solo dentro de la plantilla del plan; en la práctica las decisiones terminaban enterradas en una fila de metadatos de la ficha —entre `Riesgo` y `Problema`— y el usuario nunca las veía. Es el quinto caso del mismo patrón: la regla estaba escrita, el artefacto no estaba exigido.
+
 ## ux-critic-v1.8.0 - 2026-08-23
 
 Endurecimiento de `ux-critic` a partir de tres corridas contra un proyecto real: una crítica

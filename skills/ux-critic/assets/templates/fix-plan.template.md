@@ -82,14 +82,19 @@ compartido y se lista dónde se verifica.
 
 ---
 
-## Decisiones que necesita el usuario
+## Decisiones que necesitas tomar
 
 Lo que no se puede corregir sin una definición de producto o de negocio. No son tareas: son
-preguntas que bloquean tareas.
+preguntas que bloquean tareas. **Van redactadas como preguntas**, no como diagnóstico en
+tercera persona, y con opciones que se puedan responder con una letra.
 
-| # | Decisión pendiente | Qué tarea bloquea | Opciones |
+| # | Pregunta | Bloquea | Opciones |
 |---|---|---|---|
-| D1 | … | UX-0X | A: … · B: … |
+| D1 | ¿…? | UX-0X | A: … · B: … |
+
+Una tarea bloqueada por una decisión se marca `Bloqueada por D<n>` en su ficha y **no arranca**
+hasta que la decisión exista. Dejar la pregunta enterrada en el campo `Depende de` es
+disfrazarla de tarea: ahí no la ve nadie.
 
 ## Verificación final
 
