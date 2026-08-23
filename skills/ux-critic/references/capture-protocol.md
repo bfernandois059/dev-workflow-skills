@@ -11,9 +11,38 @@ captura o sin medición es una opinión con formato de hallazgo.
 2. **Capturas entregadas por el usuario.** Permiten juzgar composición, jerarquía, ritmo y
    copy. **No** permiten medir contraste, tamaños reales ni estados. Pide las que falten en
    vez de suponer.
-3. **Solo código.** Último recurso. La auditoría se declara **parcial** en el encabezado del
-   informe y se enumeran las capas que no pudiste juzgar. Nunca afirmes jerarquía, ritmo ni
-   contraste desde el código.
+3. **Solo código.** **No habilita una crítica de interfaz.** Leer el componente sirve para
+   localizar dónde se corrige y para proponer el cambio; no sirve para afirmar qué se ve. Un
+   componente puede existir en el árbol y no renderizarse, renderizarse distinto, o no
+   aplicar al estado del registro que el usuario tiene delante.
+
+## El gate de la Fase 1
+
+Sin evidencia renderizada no se emiten niveles por capa, ni severidades, ni veredicto. Dos
+salidas legítimas:
+
+| Salida | Cuándo | Qué se entrega |
+|---|---|---|
+| **Pedir captura o acceso** | Por defecto | La lista concreta de lo que necesitas: URL, estado del registro, viewports, estados a forzar |
+| **Revisión de código de interfaz** | El usuario insiste sin poder dar acceso | Documento rotulado como revisión de código desde el título, **sin** tabla de niveles ni severidades, con la lista de lo que habría que mirar en pantalla para convertirlo en crítica |
+
+Lo que **no** es una salida legítima: escribir el informe completo con capas y severidades a
+partir del código y anotar "parcial" en alguna parte. Eso produce exactamente el informe que
+se ve bien y miente, que es peor que no haber auditado.
+
+## Verificar el estado del registro
+
+Antes de razonar sobre el flujo, lee y cita **el estado que muestra la pantalla**: el badge,
+la etiqueta, el dato. Después comprueba que el flujo que vas a criticar corresponda a ese
+estado.
+
+Es el error más caro y el más fácil de cometer cuando se llega desde el código: el
+componente contempla cinco estados, tú razonas sobre el que te pareció más interesante, y la
+pantalla que el usuario tiene delante está en otro. Todo el informe queda sobre una pantalla
+imaginaria — bien escrita, pero imaginaria.
+
+Si necesitas auditar un estado distinto al de la captura, pídelo: un registro en ese estado,
+o la captura correspondiente.
 
 ## Antes de capturar
 
@@ -81,6 +110,12 @@ Qué devuelve y para qué sirve cada bloque:
 El inventario **no juzga**: entrega los hechos con los que se juzga. "Hay 14 tamaños de
 fuente" es el dato; "no hay jerarquía tipográfica y tres elementos compiten por ser el
 título" es el hallazgo.
+
+**Cuando hay control de navegador, correrlo es obligatorio.** Si no se corrió, todo lo que
+depende de medición —contraste, tamaños de toque, escala tipográfica, espaciado,
+accesibilidad y responsive— va forzado a `No verificado` en la tabla de niveles. No se
+declara `Sólido` ni `Referencia` sin un número detrás; "contraste correcto" sin ratio medido
+es una suposición con formato de aprobación.
 
 ## Medición manual cuando no hay navegador
 

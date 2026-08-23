@@ -61,7 +61,31 @@ Por cada hallazgo:
 Menos hallazgos verdaderos valen más que treinta defendibles en abstracto. Borrar hallazgos
 en esta pasada es señal de que la fase funcionó.
 
-## Pasada 4 — Coherencia
+## Pasada 4 — Cifras y aprobaciones
+
+Dos barridos mecánicos que atrapan los dos fraudes más frecuentes de un informe de UX.
+
+**Barrido de cifras.** Recorre el informe buscando **todo número**: porcentajes, píxeles,
+segundos, proporciones — "el 98 % de los casos", "entre 120 y 180 px". Por cada uno:
+
+- ¿Salió de una medición real —del inventario objetivo, de una captura, de un conteo—?
+- Si no, **se borra**. No se suaviza con "aproximadamente" ni con "cerca de": una cifra
+  inventada con hedge sigue siendo inventada, y una sola derrumba la credibilidad de todas
+  las que sí eran verdaderas.
+
+**Barrido de aprobaciones.** Recorre cada capa marcada `Sólido` o `Referencia`, y cada
+transversal (accesibilidad, responsive). Por cada una:
+
+- ¿Hay una medición o una observación concreta detrás, o es una impresión?
+- "Contraste correcto" sin un ratio medido no es una aprobación: es una suposición con
+  formato de aprobación. Baja a `No verificado`.
+- "Responsive sólido" sin haber renderizado a 375 px, lo mismo. Que el código use una
+  utilidad de scroll o un framework responsive no es evidencia de comportamiento.
+
+Si el informe completo no contiene **ninguna** medición, no está listo para entregarse: la
+Fase 1 quedó a medias.
+
+## Pasada 5 — Coherencia
 
 - ¿Hay hallazgos que se contradicen entre sí? (pedir más densidad en un bloque y más aire en
   su equivalente).
@@ -85,6 +109,8 @@ Si reconoces alguna de estas en tu informe, no lo entregues todavía:
 - La sección "lo que funciona" es más larga que la de hallazgos.
 - No hay ningún estado (vacío, error, carga) mencionado.
 - No hay ninguna medición: ni un contraste, ni un tamaño, ni un conteo.
+- Algún campo "Qué se ve" describe algo que salió del código y no de la pantalla.
+- El informe razona sobre un estado del registro distinto al que muestra la captura.
 - El informe podría copiarse a otro sitio distinto cambiando dos nombres.
 - No hay ni una pregunta incómoda: siempre hay al menos una decisión que no se explica sola.
 - Todo el informe está en condicional.

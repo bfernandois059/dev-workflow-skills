@@ -11,11 +11,12 @@ Reglas transversales:
   página.
 - **Regla de corte**: si una capa falla estructuralmente, las siguientes se reportan como
   `condicionadas`.
-- Los anti-patrones de **estructura y superficie** —cajas anidadas, títulos en eco, estado
-  repetido, todo-es-una-tarjeta, acciones sin jerarquía, inputs que parecen deshabilitados,
-  bloques vacíos que solo se explican— tienen catálogo propio con la corrección prescrita en
-  [`container-antipatterns.md`](container-antipatterns.md). Se detectan en las capas 2, 4, 5
-  y 6, y se reportan **con el árbol de estructura antes/después**.
+- Los anti-patrones de **estructura y superficie** —cajas anidadas, títulos en eco, contenido
+  duplicado, todo-es-una-tarjeta, acciones sin jerarquía, inputs que parecen deshabilitados,
+  bloques vacíos que solo se explican, primer pantallazo secuestrado— tienen catálogo propio
+  con la corrección prescrita en
+  [`container-antipatterns.md`](container-antipatterns.md). Se detectan en las capas 1, 2, 4,
+  5 y 6, y se reportan **con el árbol de estructura antes/después**.
 
 ---
 
@@ -33,7 +34,15 @@ Reglas transversales:
 3. **El extraño.** Alguien que llegó desde un anuncio, sin contexto: ¿sabe qué pasa si hace
    clic en la acción principal? ¿Sabe cuánto cuesta, cuánto tarda, qué recibe?
 4. **Acción única.** ¿Cuál es LA acción de esta pantalla? Si hay tres candidatas al mismo
-   nivel visual, no hay ninguna.
+   nivel visual, no hay ninguna. Y si la única acción ofrecida es destructiva o terminal
+   —archivar, eliminar, cancelar—, la pantalla está proponiendo lo contrario de lo que el
+   estado del registro pide.
+5. **El primer pantallazo.** Mide cuántos píxeles hay entre el borde superior y el primer
+   elemento de la tarea principal, y compáralo con la altura del viewport. Si la tarea empieza
+   fuera del primer pantallazo por culpa de un aviso, un descargo o un bloque administrativo,
+   es hallazgo. Pregunta por cada bloque de arriba: *¿aplica a todos los registros o solo a
+   algunos?* Lo que aplica a algunos no se cobra en el espacio de todos (anti-patrón A8,
+   regla R8).
 
 **Señales de falla**: titular que describe una categoría en vez de una promesa; la propuesta
 de valor escondida bajo el pliegue; jerga interna en la primera línea; la acción principal
@@ -134,10 +143,12 @@ de 14 campos en el primer paso.
    deberían ser tabla, tabla que debería ser lista.
 7. **Ancho de línea.** `lineLength` del inventario: por encima de ~85 caracteres cuesta
    volver al inicio de la línea; por debajo de ~40 se fragmenta la lectura.
-8. **Estado repetido.** Lista todos los lugares donde se comunica el mismo hecho (etiqueta de
-   encabezado, estado por fila, pie de sección, resumen en otra vista). Más de dos —el
-   detalle por ítem y el resumen en el punto de decisión— es redundancia: no tranquiliza,
-   genera duda sobre cuál indicador manda (anti-patrón A3, regla R3).
+8. **Contenido duplicado.** Dos barridos sobre la captura completa: primero los lugares donde
+   se comunica el mismo **estado** (etiqueta de encabezado, estado por fila, pie de sección,
+   resumen en otra vista); después los **datos** que aparecen dos veces —mismas etiquetas,
+   mismos valores, misma fecha, mismo nombre de archivo—. Un bloque entero renderizado dos
+   veces en la misma pantalla es el caso más caro y el más difícil de ver auditando por
+   partes, porque cada mitad está bien resuelta por separado (anti-patrón A3, regla R3).
 
 **Señales de falla**: tres adjetivos donde va un dato; texto de plantilla nunca reemplazado;
 promesas sin prueba; el mismo mensaje repetido en tres bloques con distintas palabras.

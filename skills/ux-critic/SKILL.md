@@ -74,24 +74,29 @@ Esta skill existe para hacer lo contrario en los tres puntos.
    [`references/context-intake.md`](references/context-intake.md).
 2. **Ver antes de opinar.** Todo hallazgo cita evidencia observada: captura, elemento, valor
    medido. Lo que no se vio renderizado no se afirma — se marca `No verificado`.
-3. **Nada se aprueba por defecto.** Un "esto está bien" exige la misma evidencia que un
+   **La evidencia de código no es evidencia visual**: que un componente exista en el árbol no
+   prueba que se renderice, ni con qué aspecto, ni en este estado del registro.
+3. **Se audita el registro que está en pantalla.** Antes de razonar sobre el flujo, verifica y
+   cita el estado real de lo que se está viendo (badge, etiqueta, dato). Un informe que razona
+   sobre un estado distinto al de la pantalla es ficción, por bien escrito que esté.
+4. **Nada se aprueba por defecto.** Un "esto está bien" exige la misma evidencia que un
    hallazgo. Si no puedes explicar por qué funciona **para este usuario en esta tarea**, no
    es `OK`: es `Sin verificar`.
-4. **Lo documentado no prueba que esté bien.** Un componente existente, un design system, un
+5. **Lo documentado no prueba que esté bien.** Un componente existente, un design system, un
    Figma aprobado o una decisión previa no protegen nada. Se audita el resultado.
-5. **Macro antes que micro.** No reportes un `padding` si la jerarquía de la pantalla está
+6. **Macro antes que micro.** No reportes un `padding` si la jerarquía de la pantalla está
    rota. El orden de juicio de la Fase 2 es fijo y las capas profundas se condicionan cuando
    una capa superior falla.
-6. **Se recorre la tarea, no la pantalla.** La auditoría se hace completando el trabajo del
+7. **Se recorre la tarea, no la pantalla.** La auditoría se hace completando el trabajo del
    usuario, en orden y en sus condiciones (dispositivo, prisa, primera vez), no inventariando
    componentes.
-7. **La severidad la fija el costo para el usuario**, no el gusto del crítico. Cada hallazgo
+8. **La severidad la fija el costo para el usuario**, no el gusto del crítico. Cada hallazgo
    nombra el costo concreto: confusión, abandono, error, paso extra, desconfianza.
-8. **El crítico se refuta a sí mismo antes de entregar.** La Fase 4 es obligatoria: es el QA
+9. **El crítico se refuta a sí mismo antes de entregar.** La Fase 4 es obligatoria: es el QA
    manual que las auditorías genéricas se saltan.
-9. **Prohibido inventar números.** Nada de "+20% de conversión" ni "reduce 3 s la tarea".
+10. **Prohibido inventar números.** Nada de "+20% de conversión" ni "reduce 3 s la tarea".
    Estimaciones de impacto sin medición son ruido que destruye la credibilidad del resto.
-10. **Fase de auditoría = solo lectura.** No se modifican archivos. Corregir es una fase
+11. **Fase de auditoría = solo lectura.** No se modifican archivos. Corregir es una fase
     aparte, con autorización explícita.
 
 ---
@@ -157,7 +162,7 @@ capturas) es perfil **BAJO**; la redacción del informe con hallazgos ya estable
 pide autorización explícita y no arranques la Fase 2 sin respuesta.** Pregunta una vez por
 auditoría, no una vez por capa. Bajar de perfil nunca bloquea.
 
-### Fase 1 — Captura
+### Fase 1 — Captura (punto de control bloqueante)
 
 Ver la interfaz de verdad, en sus estados reales. Sin captura no hay auditoría, hay lectura
 de código.
@@ -168,8 +173,29 @@ Prioridad de fuentes:
    accesibilidad + estilos computados + ejecución del inventario. Es la fuente completa.
 2. **Capturas que entrega el usuario**: sirven para composición, jerarquía, ritmo y copy; no
    permiten medir. Pide las que falten en vez de suponer.
-3. **Solo código**: último recurso. Declara la auditoría como **parcial** y di explícitamente
-   qué capas no pudiste juzgar.
+3. **Solo código**: **no habilita una crítica de interfaz.**
+
+**Es bloqueante, igual que la Fase 0.** Sin evidencia renderizada —captura propia o del
+usuario— no se emiten niveles por capa, ni severidades, ni veredicto. Solo hay dos salidas
+legítimas:
+
+- **Pedir la captura o el acceso** a la URL, y esperar. Es la salida correcta por defecto.
+- **Entregar una revisión de código de interfaz**, rotulada así desde el título, sin tabla de
+  niveles ni severidades, listando qué habría que mirar en pantalla para convertirla en
+  crítica. No se disfraza de auditoría de UX.
+
+Leer el código es **complemento** —sirve para localizar el componente y proponer la
+corrección—, nunca sustituto. Un informe que describe en "Qué se ve" algo que solo estaba en
+el código es un informe falso, aunque el componente exista de verdad.
+
+**Verifica el estado del registro que estás viendo** (badge, etiqueta, dato en pantalla) y
+cítalo en el contexto del informe. Si el flujo que vas a criticar depende del estado, y el
+estado en pantalla no es ese, estás auditando una pantalla imaginaria.
+
+**Cuando hay control de navegador, el inventario objetivo es obligatorio.** Si no se corrió,
+las capas y transversales que dependen de medición —contraste, tamaños de toque, escala
+tipográfica, espaciado, accesibilidad y responsive— van forzadas a `No verificado`. No pueden
+declararse `Sólido` ni `Referencia` sin un número detrás.
 
 Qué capturar como mínimo, viewports, estados obligatorios (vacío, carga, error, éxito,
 contenido largo, contenido mínimo, foco de teclado) y cómo correr el inventario objetivo:
@@ -232,7 +258,7 @@ se retira; si no, sube de severidad.
 
 ### Fase 4 — Refutación (obligatoria, antes de escribir el informe)
 
-Es el QA manual que desmiente a las auditorías complacientes. Cuatro pasadas, en orden:
+Es el QA manual que desmiente a las auditorías complacientes. Cinco pasadas, en orden:
 
 1. **Recorrido limpio.** Completa la tarea principal de punta a punta **sin mirar los
    hallazgos**, en las condiciones del usuario real. Anota cada punto donde dudaste, releíste
@@ -243,7 +269,12 @@ Es el QA manual que desmiente a las auditorías complacientes. Cuatro pasadas, e
 3. **Ataque a cada hallazgo.** ¿Es un costo real para **este** usuario o una regla que
    recitaste? Si es solo una regla, bájalo a `criterio` o elimínalo. Un informe con menos
    hallazgos verdaderos vale más que uno con treinta defendibles en abstracto.
-4. **Coherencia.** ¿Hay hallazgos que se contradicen entre sí o contra el contexto de la
+4. **Cifras y aprobaciones.** Recorre el informe buscando **todo número** —porcentajes,
+   píxeles, segundos, proporciones— y verifica que cada uno salga de una medición real. El que
+   no la tenga se borra; no se suaviza con "aproximadamente". Después recorre cada capa
+   marcada `Sólido` o `Referencia` y comprueba que tenga una medición o una observación
+   concreta detrás. Sin eso, baja a `No verificado`.
+5. **Coherencia.** ¿Hay hallazgos que se contradicen entre sí o contra el contexto de la
    Fase 0? Resuélvelos antes de entregar; no dejes que el lector descubra la contradicción.
 
 Procedimiento detallado y errores típicos de esta fase:
@@ -278,12 +309,17 @@ Estructura fija, plantillas y reglas de redacción en
 
 ```
 [P1 · Jerarquía · Rediseño de bloque · Esfuerzo medio]
-Qué se ve      → evidencia observada, con valores medidos o captura.
+Qué se ve      → SOLO evidencia visual: captura, elemento en pantalla, valor medido.
 Por qué falla  → para ESTE usuario, en ESTA tarea.
 Qué cuesta     → confusión / paso extra / error / abandono / desconfianza.
 Corrección     → concreta y con valores. No "mejorar la jerarquía".
 Certeza        → Hecho observado | Juicio del crítico | Supuesto por confirmar
 ```
+
+El campo **"Qué se ve" no admite evidencia de código**. Si el hallazgo salió de leer el
+componente y no de mirar la pantalla, el campo se llama **"Qué encontré en el código"** y la
+certeza es `Sin verificar en pantalla` — nunca `Hecho observado`. Un hallazgo así no puede ser
+`P0` ni encabezar el plan de corrección hasta confirmarse renderizado.
 
 En hallazgos de **estructura y superficie**, la corrección incluye obligatoriamente el árbol
 de contenedores antes/después. El árbol es la instrucción; la frase sola vuelve a ser una
@@ -346,7 +382,8 @@ Acompaña cada intervención con esfuerzo `Bajo` / `Medio` / `Alto`.
   limpios.
 - **Sin jerga vacía.** *Sinergia visual*, *storytelling de marca*, *experiencia inmersiva* no
   son hallazgos.
-- **Sin números inventados.** Ver principio 9.
+- **Sin números inventados.** Ver principio 10. Todo número del informe debe salir de una
+  medición; la Fase 4 los recorre uno por uno.
 - **Separa hechos de juicios** con el marcado de certeza: `Hecho observado` /
   `Juicio del crítico` / `Supuesto por confirmar`. El usuario tiene derecho a saber cuál es
   cuál y a discutir solo los juicios.
@@ -363,6 +400,8 @@ Si te descubres haciendo cualquiera de estos, vuelve atrás:
 - Entregar 30 hallazgos de detalle y ninguno estructural.
 - Suavizar por respeto al trabajo previo, a la documentación o a lo que ya fue aprobado.
 - Auditar la pantalla en desktop y declarar el móvil por deducción.
+- Leer el componente, no abrir la pantalla, y escribir el informe igual.
+- Razonar sobre un estado del registro distinto al que muestra la pantalla.
 - Proponer una solución que solo desplaza el problema a otro bloque.
 - Escribir "simplificar la jerarquía de contenedores" sin el árbol antes/después.
 - Entregar el informe sin plan de corrección: dejar el trabajo de convertir hallazgos en
