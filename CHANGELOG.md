@@ -4,6 +4,14 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+## ux-critic-v1.8.0 - 2026-08-23
+
+Endurecimiento de `ux-critic` a partir de tres corridas contra un proyecto real: una crítica
+de pantalla con un modelo de perfil alto y dos auditorías completas en modo sitio. Cada regla
+de esta versión responde a un fallo observado, y el patrón se repitió en los cuatro casos —
+**lo que se especifica como regla se omite; lo que se exige como artefacto de salida se
+cumple**.
+
 ### Added
 
 - `ux-critic` 1.7.0: la evidencia del modo sitio **va a disco a medida que avanza** —un JSON de inventario por ruta y viewport, capturas con nombre citable y notas por pantalla— en un directorio de trabajo propio. Una corrida larga puede sufrir compactación de contexto, y lo que solo vivía en memoria se pierde.
