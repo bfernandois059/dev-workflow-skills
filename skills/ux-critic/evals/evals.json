@@ -1,0 +1,23 @@
+{
+  "skill_name": "ux-critic",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Tengo el sitio corriendo en http://localhost:3000. Míralo y dime qué está mal, pero de verdad, no me digas que está todo bien.",
+      "expected_output": "Antes de criticar pide el contexto mínimo en un solo bloque (producto, usuario real, tarea, etapa, exigencia, restricciones), infiriendo lo que puede de la página y el repo. Luego captura en varios viewports y estados, corre el inventario objetivo y entrega el informe: veredicto en una frase, nivel por capa, hallazgos con evidencia medida, preguntas incómodas y orden de ataque. No modifica archivos. No inventa métricas de impacto.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Le hice una auditoría de usabilidad hace poco y me dijo que estaba todo correcto, pero cuando hice QA manual encontré que no había jerarquía en ninguna parte. Revísalo tú.",
+      "expected_output": "Reconoce el modo de fallo (aprobar por ausencia de error obvio) y prioriza las capas 1 a 3 —propósito, jerarquía, ritmo— sobre el detalle. Mide en vez de suponer: escala tipográfica en uso, elementos dominantes, contraste, ritmo de secciones. Ejecuta la pasada de refutación y declara qué degradó de OK a hallazgo. Ningún hallazgo sin evidencia observada.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "El bloque de precios de la landing no me convence pero no sé qué es. Todavía no salimos a producción.",
+      "expected_output": "Alcance = bloque, pero lo juzga dentro de la página que lo contiene. Al ser pre-producción incluye la sección \"Lo que replantearía de cero\" con alternativas estructurales reales, no parches tímidos. Cada hallazgo trae nivel de intervención (ajuste / rediseño de bloque / replanteo de flujo / eliminar) y corrección con valores concretos. No implementa los cambios: deriva a engineering-workflow si el usuario los autoriza.",
+      "files": []
+    }
+  ]
+}

@@ -4,6 +4,16 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+### Added
+
+- Nueva skill `ux-critic` (1.0.0): crítica de UX/UI sobre la interfaz **renderizada** —sitio en local, URL, flujo, pantalla o bloque—, no sobre el código ni la documentación.
+- `ux-critic`: contexto bloqueante en Fase 0 (producto, usuario real, tarea, criterio de éxito, etapa, restricciones, alcance) y tres niveles de exigencia que cambian qué cuenta como hallazgo.
+- `ux-critic`: juicio en siete capas con orden fijo y regla de corte —propósito, jerarquía, ritmo, copy, interacción y estados, sistema visual, oficio— más accesibilidad y responsive como transversales.
+- `ux-critic`: `scripts/ui_inventory.js`, inventario objetivo ejecutable sobre la página viva (escala tipográfica en uso, paleta real, espaciados, contrastes medidos, tamaños de toque, esquema de encabezados, ancho de línea y ritmo vertical).
+- `ux-critic`: pasada de refutación obligatoria antes de entregar el informe, con la distinción explícita entre `OK` verificado y `Sin verificar`.
+- `ux-critic`: referencias de contexto, protocolo de captura, capas de juicio, refutación, formato de informe y política de versionado; `evals/evals.json` con tres casos.
+- `README.md`: `ux-critic` incorporada al flujo, a la tabla de versionado, a la instalación, a la tabla de uso y a la estructura del repositorio.
+
 ## tech-cleanup-v1.2.0 - 2026-07-29
 
 ### Changed
