@@ -19,9 +19,14 @@ P0–P3 (ver `SKILL.md`). Solo lectura: no modifiques archivos en la fase de aud
 - **Metadata por página**: no todas heredando el mismo title/description.
 - **Titles y descriptions** únicos, descriptivos, con longitud razonable.
 - **Open Graph** (`og:title`, `og:description`, `og:image`, `og:url`, `og:type`).
+  Tamaños, rutas, URL absoluta y regla de caché en
+  [`preprod-identity-and-errors.md`](preprod-identity-and-errors.md).
 - **Twitter/X cards** si aplica (`twitter:card`, etc.).
 - **Redirects** correctos (301 para permanentes; sin cadenas largas).
 - **Status codes** correctos (200 en páginas vivas, 404 real en inexistentes, sin 200 "blandos").
+  La **página 404** en sí —que exista, que conserve la marca y que ofrezca destinos útiles en
+  vez de un error genérico— se audita en
+  [`preprod-identity-and-errors.md`](preprod-identity-and-errors.md).
 - **Páginas huérfanas**: que toda página importante tenga enlaces entrantes.
 - **URLs limpias**: legibles, sin parámetros innecesarios, coherentes.
 - **Imágenes con `alt`** descriptivo.

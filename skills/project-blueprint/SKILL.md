@@ -147,6 +147,35 @@ Evalúa, al menos:
 - **Microservicios** quedan descartados por defecto salvo evidencia de equipos, escalado, dominios o despliegues independientes.
 - **IA generativa** no se incluye salvo caso de uso, datos, evaluación, costos, privacidad y fallback definidos.
 
+#### Páginas de sistema e identidad visible
+
+Dos entregables que casi ningún proyecto planifica y que después nadie asume. Ambos se
+definen aquí, con dueño y fecha, o salen por defecto.
+
+**Páginas de sistema.** El 404, el error del servidor, el estado vacío y el "sin permiso" son
+pantallas del producto, no accidentes del framework. Define para cada una **quién escribe el
+copy** y **a qué dos o tres destinos lleva**, elegidos por negocio. Un 404 genérico pierde
+tráfico que ya llegó, y el error por defecto del framework puede filtrar rutas y versiones del
+servidor. La verificación previa a producción es de `marcozen`; la decisión de qué dice y a
+dónde lleva es de aquí.
+
+**Identidad visible.** Favicon, ícono de aplicación e imagen para compartir son piezas de
+marca con dueño y plazo, no una tarea de desarrollo al final. Define quién las entrega y fija
+**los nombres de archivo desde ahora**, porque estos archivos quedan en caché por ruta fija y
+corregirlos después tarda días:
+
+```
+/favicon.ico             32×32 (o multi 16/32/48)
+/icon.svg                vectorial
+/icon-192.png            192×192      /icon-512.png  512×512
+/apple-touch-icon.png    180×180, PNG opaco, sin esquinas redondeadas
+/og.png                  1200×630, referenciada con URL absoluta y HTTPS
+```
+
+Regla que conviene dejar escrita en el blueprint: **cuando uno de estos archivos cambie, se
+publica con nombre nuevo versionado** (`og-v2.png`), no se sobrescribe. Cambiar el nombre
+invalida todas las cachés; editar el archivo no invalida ninguna.
+
 ### Fase 4 — Blueprint y artefactos
 
 Genera primero `docs/00-project-blueprint.md` usando `assets/templates/00-project-blueprint.template.md`.
