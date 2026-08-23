@@ -1,6 +1,6 @@
 # dev-workflow-skills
 
-**Cuatro Agent Skills que cubren el ciclo completo de un proyecto digital: planificar, construir, gobernar y podar.**
+**Cinco Agent Skills que cubren el ciclo completo de un proyecto digital: planificar, construir, criticar, gobernar y podar.**
 
 Skills reutilizables para Claude Code, Codex y otros agentes compatibles con el estándar
 [Agent Skills](https://code.claude.com/docs/en/skills). Juntas forman un flujo de trabajo
@@ -22,6 +22,13 @@ Proyecto documentado y arquitectura aprobada
 │  engineering-workflow │  Cada tarea: branch → implementación → validaciones →
 │                       │  documentación → changelog → PR → squash merge → limpieza.
 └───────────────────────┘
+        ↓
+Hay algo que mirar en pantalla
+        ↓
+┌─────────────────────┐
+│      ux-critic      │  Crítica de la interfaz real: propósito, jerarquía, ritmo,
+│                     │  copy, estados, sistema visual y oficio. Solo lectura.
+└─────────────────────┘
         ↓
 Proyecto avanzado o pre-publicación
         ↓
@@ -66,6 +73,39 @@ cuando faltan definiciones necesarias de arquitectura, alcance o datos.
 - Prepara la integración, pero el merge/squash merge requiere autorización explícita.
 - Mantiene versión SemVer propia en `skills/engineering-workflow/VERSION`.
 
+### [ux-critic](skills/ux-critic/SKILL.md) — crítica de interfaz
+
+Crítico de UX/UI que audita la interfaz **renderizada** —un sitio en local, una URL, un
+flujo, una pantalla o un bloque— en vez de deducirla del código o de la documentación.
+Existe porque las auditorías de usabilidad genéricas fallan siempre igual: aprueban por
+ausencia de error obvio, juzgan el DOM en lugar de la pantalla y proponen parches tímidos
+sobre lo ya construido.
+
+- **Sin contexto no hay veredicto**: producto, usuario real, tarea y criterio de éxito son
+  entrada obligatoria y bloqueante. La misma pantalla puede estar bien para un operador
+  diario y ser inservible para alguien que llega desde un anuncio.
+- **Tres niveles de exigencia** (que funcione / profesional / referencia) que cambian qué
+  cuenta como hallazgo, para que no reporte lo mismo en un panel interno y en una landing.
+- **Juicio en siete capas en orden fijo** —propósito, jerarquía, ritmo, copy, interacción y
+  estados, sistema visual, oficio— con regla de corte: no se pule un `padding` si la
+  jerarquía está rota.
+- **Inventario objetivo** ejecutable sobre la página viva (`scripts/ui_inventory.js`):
+  escala tipográfica en uso, paleta real, espaciados, contrastes medidos, tamaños de toque,
+  esquema de encabezados y ritmo vertical. Convierte "siento que no hay jerarquía" en datos.
+- **Catálogo prescriptivo de estructura**: cajas dentro de cajas, títulos que repiten el
+  título del contenedor, el mismo estado dicho cuatro veces, mensajes e inputs metidos en
+  tarjetas, botones todos del mismo peso, campos que parecen deshabilitados, bloques vacíos
+  que solo se explican. Cada anti-patrón con su corrección y el **árbol antes/después** — no
+  "simplificar la jerarquía", sino la estructura exacta que debe quedar.
+- **Pasada de refutación obligatoria**: antes de entregar, el crítico intenta destruir su
+  propio informe. "No encontré nada" no es `OK`, es `Sin verificar`.
+- **Plan de corrección reutilizable**: el informe termina en tareas autocontenidas, agrupadas
+  en olas (estructura → jerarquía y acciones → contenido y estados → detalle), con criterio de
+  aceptación verificable. Se toman sueltas y se pasan a `engineering-workflow`.
+- Nada de números de impacto inventados. Fase de auditoría en solo lectura; corregir es una
+  fase aparte que pasa por `engineering-workflow`.
+- Mantiene versión SemVer propia en `skills/ux-critic/VERSION`.
+
 ### [marcozen](skills/marcozen/SKILL.md) — auditoría y gobernanza
 
 Sistema de auditoría, poda y gobernanza para repositorios web, e-commerce y apps.
@@ -109,6 +149,7 @@ Cada skill tiene una versión SemVer y un tag independiente:
 |---|---|---|
 | `project-blueprint` | `skills/project-blueprint/VERSION` | `project-blueprint-vX.Y.Z` |
 | `engineering-workflow` | `skills/engineering-workflow/VERSION` | `engineering-workflow-vX.Y.Z` |
+| `ux-critic` | `skills/ux-critic/VERSION` | `ux-critic-vX.Y.Z` |
 | `marcozen` | `skills/marcozen/VERSION` | `marcozen-vX.Y.Z` |
 | `tech-cleanup` | `skills/tech-cleanup/VERSION` | `tech-cleanup-vX.Y.Z` |
 
@@ -123,7 +164,7 @@ python3 skills/<nombre>/scripts/check_version.py --check-remote
 
 ### Con el CLI de skills (recomendado)
 
-Las cuatro:
+Las cinco:
 
 ```bash
 npx skills add https://github.com/bfernandois059/dev-workflow-skills
@@ -142,6 +183,7 @@ git clone https://github.com/bfernandois059/dev-workflow-skills
 mkdir -p ~/.claude/skills
 cp -R dev-workflow-skills/skills/project-blueprint ~/.claude/skills/
 cp -R dev-workflow-skills/skills/engineering-workflow ~/.claude/skills/
+cp -R dev-workflow-skills/skills/ux-critic ~/.claude/skills/
 cp -R dev-workflow-skills/skills/marcozen ~/.claude/skills/
 cp -R dev-workflow-skills/skills/tech-cleanup ~/.claude/skills/
 ```
@@ -155,6 +197,7 @@ Para instalarlas solo en un proyecto, usa `.claude/skills/` dentro del repo en v
 mkdir -p ~/.agents/skills
 cp -R dev-workflow-skills/skills/project-blueprint ~/.agents/skills/
 cp -R dev-workflow-skills/skills/engineering-workflow ~/.agents/skills/
+cp -R dev-workflow-skills/skills/ux-critic ~/.agents/skills/
 cp -R dev-workflow-skills/skills/marcozen ~/.agents/skills/
 cp -R dev-workflow-skills/skills/tech-cleanup ~/.agents/skills/
 ```
@@ -172,6 +215,8 @@ un **prompt maestro reutilizable** en
 |---------|---------|----------------|
 | Inicio | Planificar un proyecto nuevo | `/project-blueprint` o *"tengo una idea para un sitio…"* |
 | Desarrollo | Implementar una tarea | `/engineering-workflow` o *"implementa este fix"* |
+| Desarrollo | Criticar lo que se ve en pantalla | `/ux-critic` o *"tengo esto en localhost, dime qué está mal"* |
+| Pre-entrega | ¿La interfaz aguanta que la vea el cliente? | `/ux-critic` sobre el flujo principal |
 | Avanzado | Orden general del repo | `/marcozen auditoría rápida` |
 | Pre-lanzamiento | ¿Listo para publicar? | `/marcozen auditoría pre-producción` |
 | Pre-lanzamiento | SEO/GEO/AEO | `/marcozen revisa SEO, schema y llms.txt` |
@@ -195,6 +240,13 @@ skills/
 │   ├── references/                       # política de branches, riesgo, motor, docs, definition of done
 │   ├── assets/templates/                 # plantillas de PR y changelog
 │   └── scripts/                          # pre-PR y comprobación de versión
+├── ux-critic/
+│   ├── SKILL.md                          # principios, niveles de exigencia, 7 capas de juicio, refutación
+│   ├── VERSION                           # versión SemVer de la skill
+│   ├── references/                       # contexto, captura, capas, anti-patrones de estructura, refutación, informe
+│   ├── assets/templates/                 # plantilla del plan de corrección
+│   ├── scripts/                          # inventario objetivo del DOM y comprobación de versión
+│   └── evals/evals.json
 ├── marcozen/
 │   ├── SKILL.md                          # metodología, modos, cadencia, scoring, formatos de salida
 │   ├── VERSION                           # versión SemVer de la skill
@@ -212,6 +264,7 @@ skills/
 
 - **Entender antes de actuar**: no elegir stack sin clasificar el proyecto; no modificar sin inspeccionar; no podar sin auditar.
 - **No inventar**: hechos, decisiones y supuestos siempre separados y marcados.
+- **Lo documentado no prueba que esté bien**: se audita el resultado, no la intención.
 - **Código y documentación viajan juntos**, en la misma PR.
 - **Nunca exponer secretos**: se reporta tipo + archivo, nunca el valor.
 - **Cambios sensibles exigen mayor rigor** y autorización explícita para integrar.
