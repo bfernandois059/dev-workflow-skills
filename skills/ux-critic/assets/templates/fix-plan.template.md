@@ -15,8 +15,9 @@
 | 3 · Contenido y estados | UX-05 | Copy y estados sobre la estructura ya definida |
 | 4 · Detalle | UX-06 | Último: pulir lo que ya no se va a mover |
 
-**Regla**: no empezar una ola sin cerrar la anterior. Pulir antes de reestructurar es trabajo
-que se tira.
+**Reglas**: no empezar una ola sin cerrar la anterior — pulir antes de reestructurar es
+trabajo que se tira. Y una tarea sin `Dónde` y sin criterio de aceptación verificable no entra
+al plan: se queda como hallazgo hasta que alguien pueda localizarla.
 
 ---
 
