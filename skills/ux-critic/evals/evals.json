@@ -30,6 +30,12 @@
       "prompt": "Acá está la captura de pantalla completa. Dime qué está mal.",
       "expected_output": "Cita el estado real del registro que muestra la pantalla y verifica que el flujo criticado corresponda a ese estado. Busca contenido duplicado —el mismo bloque de datos renderizado dos veces en la misma vista— y mide dónde empieza la tarea principal respecto del primer pantallazo. Al no tener navegador, declara `No verificado` en contraste, tamaños de toque y responsive en vez de aprobarlos. Ningún número del informe carece de medición.",
       "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "El proyecto ya está maduro y tiene como 40 pantallas, todas con problemas parecidos. Si las audito una por una no termino nunca. ¿Cómo lo hacemos?",
+      "expected_output": "Activa el modo sitio: inventario de rutas desde el código (no de memoria), barrido medido con sweep.mjs + compare_inventories.py en desktop y móvil, muestreo de 5–8 pantallas por arquetipo (diferencia, no importancia), crítica profunda solo de la muestra, rastreo de cada hallazgo al componente compartido que lo genera, y plan de corrección ordenado por componente con guardarraíles R1–R8. Declara explícitamente qué arquetipos quedaron sin cubrir y que el barrido no juzga propósito, jerarquía, ritmo ni copy.",
+      "files": []
     }
   ]
 }

@@ -106,6 +106,13 @@ sobre lo ya construido.
 - **Plan de corrección reutilizable**: el informe termina en tareas autocontenidas, agrupadas
   en olas (estructura → jerarquía y acciones → contenido y estados → detalle), con criterio de
   aceptación verificable. Se toman sueltas y se pasan a `engineering-workflow`.
+- **Modo sitio para proyectos maduros**: no se auditan 40 pantallas una por una. Barrido medido
+  de todas las rutas (`sweep.mjs` + `compare_inventories.py`) → muestreo de 5–8 pantallas por
+  arquetipo → crítica profunda solo de la muestra → rastreo de cada hallazgo al componente
+  compartido → plan por componente y guardarraíles. Los anti-patrones no viven en las páginas,
+  viven en unos pocos componentes.
+- **Bloque de verificación obligatorio**: todo informe cierra declarando qué fuente usó, qué
+  viewports y estados abrió, si corrió el inventario y qué quedó forzado a `No verificado`.
 - Nada de números de impacto inventados. Fase de auditoría en solo lectura; corregir es una
   fase aparte que pasa por `engineering-workflow`.
 - Mantiene versión SemVer propia en `skills/ux-critic/VERSION`.
@@ -220,6 +227,7 @@ un **prompt maestro reutilizable** en
 | Inicio | Planificar un proyecto nuevo | `/project-blueprint` o *"tengo una idea para un sitio…"* |
 | Desarrollo | Implementar una tarea | `/engineering-workflow` o *"implementa este fix"* |
 | Desarrollo | Criticar lo que se ve en pantalla | `/ux-critic` o *"tengo esto en localhost, dime qué está mal"* |
+| Proyecto maduro | Auditar todas las pantallas sin morir | `/ux-critic modo sitio` |
 | Pre-entrega | ¿La interfaz aguanta que la vea el cliente? | `/ux-critic` sobre el flujo principal |
 | Avanzado | Orden general del repo | `/marcozen auditoría rápida` |
 | Pre-lanzamiento | ¿Listo para publicar? | `/marcozen auditoría pre-producción` |
@@ -247,9 +255,9 @@ skills/
 ├── ux-critic/
 │   ├── SKILL.md                          # principios, niveles de exigencia, 7 capas de juicio, refutación
 │   ├── VERSION                           # versión SemVer de la skill
-│   ├── references/                       # contexto, captura, capas, anti-patrones de estructura, refutación, informe
+│   ├── references/                       # contexto, captura, capas, anti-patrones, refutación, informe, modo sitio
 │   ├── assets/templates/                 # plantilla del plan de corrección
-│   ├── scripts/                          # inventario objetivo del DOM y comprobación de versión
+│   ├── scripts/                          # inventario del DOM, barrido de rutas, comparador y versión
 │   └── evals/evals.json
 ├── marcozen/
 │   ├── SKILL.md                          # metodología, modos, cadencia, scoring, formatos de salida
