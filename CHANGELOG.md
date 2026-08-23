@@ -4,14 +4,29 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+## marcozen-v1.4.0 - 2026-08-23
+
+Dos requisitos que casi ningún proyecto tiene y que se notan el primer día en producción: la
+página 404 y los íconos e imagen social. El problema de los segundos no es ponerlos, es
+ponerlos una vez y bien — se cachean por ruta fija y corregirlos después tarda días.
+
 ### Added
 
 - `marcozen` 1.4.0: `references/preprod-identity-and-errors.md`, checklist bloqueante de **páginas de error** e **identidad visible** para el modo pre-producción. Cubre el 404 real frente al 200 blando, la página 404 propia que conserva marca y ofrece destinos útiles en vez de un error genérico, la prohibición de mostrar stack traces, y la convención completa de favicon, `apple-touch-icon`, íconos del manifest e imagen Open Graph: rutas, tamaños, formatos y severidades P0–P3.
 - `marcozen` 1.4.0: **regla de caché** para los archivos de identidad — nunca se sobrescriben en su sitio; al cambiar se publican con nombre versionado, porque cambiar el nombre invalida CDN, rastreadores y navegadores a la vez, y editar el archivo no invalida ninguno. Se documentan las dos rutas que no se pueden versionar (`/favicon.ico` y `/apple-touch-icon.png`) y qué hacer con ellas.
 - `marcozen` 1.4.0: la cadencia "antes de producción" y el modo pre-producción incorporan la página 404 y los íconos e imagen social; el checklist SEO enlaza al nuevo archivo desde `Open Graph` y desde `Status codes`.
+
+## project-blueprint-v1.2.0 - 2026-08-23
+
+### Added
+
 - `project-blueprint` 1.2.0: las **páginas de sistema** (404, error, vacío, sin permiso) y la **identidad visible** (favicon, ícono de aplicación, imagen para compartir) pasan a ser entregables con dueño y plazo en la Fase 3, con los nombres de archivo fijados desde el blueprint y la regla de versionado escrita. Un 404 genérico pierde tráfico que ya llegó; el error por defecto del framework puede filtrar rutas y versiones del servidor.
 - `project-blueprint` 1.2.0: nuevas preguntas en el cuestionario de descubrimiento — a qué destinos llevar a quien cae en una URL inexistente, quién escribe el copy de las páginas de sistema, y quién entrega los íconos y la imagen social con qué formato y para cuándo.
 - `project-blueprint` 1.2.0: la plantilla del blueprint suma ambos campos en la sección de UX y sistema de diseño.
+
+## ux-critic-v1.9.0 - 2026-08-23
+
+### Added
 
 - `ux-critic` 1.9.0: sección obligatoria **Decisiones que necesitas tomar**, emitida **antes** del plan porque lo bloquea. Preguntas redactadas como preguntas, con opciones que se responden con una letra y con la tarea que cada una desbloquea. Una tarea cuyo `Depende de` sea una decisión de producto no arranca: la decisión sube a esa tabla y la tarea se marca `Bloqueada por D<n>`.
 
