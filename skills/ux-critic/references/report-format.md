@@ -15,7 +15,9 @@ sitio completo.
 
 **Contexto usado**
 Producto: … · Usuario: … · Tarea: … · Etapa: … · Exigencia: nivel N
+Registro auditado: <id> · Estado en pantalla: <badge o etiqueta literal>
 Capturas: <viewports y estados revisados>
+Inventario objetivo: <corrido / no corrido y por qué>
 Alcance real: <qué se auditó y qué quedó fuera>
 
 ## Veredicto
@@ -69,15 +71,22 @@ Alcance real: <qué se auditó y qué quedó fuera>
 ```
 ### [P1 · Jerarquía · Rediseño de bloque · Esfuerzo medio] Título del hallazgo en una línea
 
-**Qué se ve** — evidencia observada, con valores medidos o referencia a la captura.
+**Qué se ve** — SOLO evidencia visual: captura, elemento en pantalla, valor medido.
 **Por qué falla** — para este usuario, en esta tarea. No en abstracto.
 **Qué cuesta** — confusión / paso extra / error / abandono / desconfianza.
 **Corrección** — concreta, con valores o texto propuesto.
-**Certeza** — Hecho observado | Juicio del crítico | Supuesto por confirmar
+**Certeza** — Hecho observado | Juicio del crítico | Supuesto por confirmar | Sin verificar en pantalla
 ```
 
 La línea de encabezado lleva siempre los cuatro campos en ese orden:
 `severidad · capa · nivel de intervención · esfuerzo`.
+
+**El campo "Qué se ve" no admite evidencia de código.** Si el hallazgo salió de leer el
+componente y no de mirar la pantalla, el campo se llama **"Qué encontré en el código"**, la
+certeza es `Sin verificar en pantalla`, y el hallazgo **no puede ser `P0` ni encabezar el plan
+de corrección** hasta confirmarse renderizado. Un componente puede existir en el árbol y no
+renderizarse, renderizarse distinto, o no aplicar al estado del registro que el usuario tiene
+delante.
 
 **En hallazgos de estructura y superficie** —los del catálogo
 [`container-antipatterns.md`](container-antipatterns.md)— la corrección **debe incluir el
@@ -132,9 +141,15 @@ una sensación con formato de informe.
 | **Funciona pero mediocre** | Cumple, se nota que nadie decidió. Se sostiene por inercia |
 | **Sólido** | Decidido, consistente, sin fricciones relevantes. No sorprende |
 | **Referencia** | Se puede mostrar como ejemplo. Cada decisión tiene intención |
+| **No verificado** | No se pudo observar o medir. **No es aprobación**: es una casilla vacía |
 
 Sin puntajes numéricos. Un "72/100" en una crítica de interfaz es precisión falsa: sugiere
 una medición que no existe.
+
+Una capa o transversal solo puede declararse `Sólido` o `Referencia` si hay una medición o una
+observación concreta detrás. "Contraste correcto" sin ratio medido, o "responsive sólido" sin
+haber renderizado a 375 px, van a `No verificado` — que un framework sea responsive no es
+evidencia de comportamiento. La Fase 4 recorre estas casillas una por una.
 
 ---
 

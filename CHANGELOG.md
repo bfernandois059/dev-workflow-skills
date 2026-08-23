@@ -17,6 +17,11 @@ Los cambios relevantes de las skills se registran en este archivo.
 - `ux-critic` 1.1.0: el informe termina en un **plan de corrección** reutilizable como tareas, agrupado en olas y con criterio de aceptación verificable, con plantilla en `assets/templates/fix-plan.template.md`.
 - `ux-critic` 1.1.0: los hallazgos de estructura exigen el árbol antes/después; entregar el informe sin plan de corrección pasa a ser anti-patrón declarado de la skill.
 - `README.md`: `ux-critic` incorporada al flujo, a la tabla de versionado, a la instalación, a la tabla de uso y a la estructura del repositorio.
+- `ux-critic` 1.2.0: la **Fase 1 (captura) pasa a ser punto de control bloqueante**. Sin evidencia renderizada no se emiten niveles por capa, severidades ni veredicto; las únicas salidas son pedir la captura o entregar una revisión de código rotulada como tal. Leer el código es complemento, nunca sustituto.
+- `ux-critic` 1.2.0: el campo `Qué se ve` de la ficha **no admite evidencia de código** — pasa a llamarse `Qué encontré en el código` con certeza `Sin verificar en pantalla`, y un hallazgo así no puede ser `P0` ni encabezar el plan de corrección.
+- `ux-critic` 1.2.0: nuevo principio 3 — se audita el registro que está en pantalla; hay que verificar y citar su estado real antes de razonar sobre el flujo.
+- `ux-critic` 1.2.0: quinta pasada de refutación —cifras y aprobaciones—; todo número se verifica contra una medición y toda capa `Sólido`/`Referencia` contra un dato, o baja a `No verificado`. El inventario objetivo pasa a ser obligatorio cuando hay control de navegador.
+- `ux-critic` 1.2.0: anti-patrón A3 ampliado de "estado repetido" a **contenido duplicado** (el mismo bloque de datos renderizado dos veces en la misma vista) y nuevo A8 — el primer pantallazo secuestrado por un aviso o un bloque administrativo en vez de la tarea. Nueva regla R8.
 
 ## tech-cleanup-v1.2.0 - 2026-07-29
 

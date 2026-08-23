@@ -1,7 +1,7 @@
 # Container Antipatterns
 
-Catálogo de anti-patrones de **estructura y superficie**: cajas, títulos, mensajes y
-acciones. Es la parte prescriptiva de `ux-critic` — cada entrada dice **qué no va, por qué, y
+Catálogo de anti-patrones de **estructura y superficie**: cajas, títulos, mensajes, datos
+duplicados y acciones. Es la parte prescriptiva de `ux-critic` — cada entrada dice **qué no va, por qué, y
 cómo debe hacerse**, con la estructura antes/después.
 
 Se aplica en la Capa 2 (jerarquía) y la Capa 6 (sistema visual) del juicio. Son los hallazgos
@@ -13,17 +13,18 @@ cuando el contexto de la Fase 0 lo justifica y **se dice explícitamente por qu�
 
 ---
 
-## Las siete reglas
+## Las ocho reglas
 
 | # | Regla | En una línea |
 |---|---|---|
 | R1 | **Dos superficies como máximo** | Una tarjeta dentro de un panel. Un tercer nivel resta jerarquía en vez de darla |
 | R2 | **Un título por superficie** | Ninguna caja contiene otra caja cuyo título sea variación del suyo |
-| R3 | **El estado se dice una vez** | Y se dice donde el usuario decide, no en tres lugares |
+| R3 | **Cada dato se muestra una vez** | El mismo estado —o el mismo bloque de datos— no se repite en la misma vista |
 | R4 | **Una acción primaria por zona visible** | El resto son secundarias o terciarias |
 | R5 | **El peso lo fija frecuencia × deseabilidad** | No la novedad de la acción ni lo orgulloso que esté el equipo de ella |
 | R6 | **El espacio agrupa antes que el borde** | Se recurre al borde solo cuando el espacio ya no alcanza |
 | R7 | **El vacío ofrece, no se explica** | Un estado vacío entrega la acción que lo llena; no justifica su vacío |
+| R8 | **El primer pantallazo es de la tarea** | No de una advertencia, un aviso legal o un bloque administrativo |
 
 ---
 
@@ -83,18 +84,35 @@ X. La pestaña ya lo dijo.
 
 ---
 
-## A3 · Estado repetido
+## A3 · Contenido duplicado
 
-**Qué se ve.** El mismo hecho comunicado tres o cuatro veces: una etiqueta "Documentación
-completa" en el encabezado, un "Cargado" por fila, un pie que dice "Documentación técnica
-lista para finalizar" y, en otra pantalla, "Documentos técnicos completos".
+**Qué se ve.** Dos formas del mismo problema:
+
+- **Estado repetido**: el mismo hecho comunicado tres o cuatro veces — una etiqueta
+  "Documentación completa" en el encabezado, un "Cargado" por fila, un pie que dice
+  "Documentación técnica lista para finalizar" y, en otra vista, "Documentos técnicos
+  completos".
+- **Bloque duplicado**: el mismo conjunto de datos renderizado **dos veces en la misma
+  pantalla**, con distinta presentación. Un aviso superior con cinco tarjetas —Nota de Venta,
+  Orden de Compra, Kick Off, Costeo, Centro de Costo, cada una con su estado— y, 800 px más
+  abajo, una tabla "Antecedentes administrativos" con **las mismas cinco filas y los mismos
+  estados**. También cuenta la fecha del encabezado repetida literal dentro de una tarjeta de
+  estado.
+
+El bloque duplicado es el más difícil de ver auditando por partes, porque cada mitad está
+bien resuelta por separado. Solo aparece mirando la pantalla completa de una vez.
 
 **Por qué falla.** La repetición no tranquiliza: genera duda. Si el sistema necesita decirlo
 cuatro veces, el usuario asume que hay una diferencia entre las cuatro. Y cuando algo falle,
 el usuario no sabrá cuál de los cuatro indicadores es el que manda.
 
-**Prueba.** Lista todos los lugares donde aparece el mismo estado. Más de dos —el detalle por
-ítem y el resumen en el punto de decisión— es redundancia.
+**Prueba.** Dos barridos sobre la captura completa:
+
+1. Lista todos los lugares donde aparece el mismo **estado**. Más de dos —el detalle por ítem
+   y el resumen en el punto de decisión— es redundancia.
+2. Lista los **datos** que aparecen dos veces: mismas etiquetas, mismos valores, misma fecha,
+   mismo nombre de archivo. Si una cadena de texto se repite más de dos veces en una pantalla,
+   hay duplicación estructural detrás.
 
 **Cómo debe hacerse.** El estado por ítem se queda donde está el ítem. El estado agregado se
 dice **una vez**, pegado a la acción que ese estado habilita o bloquea (R3).
@@ -107,6 +125,14 @@ dice **una vez**, pegado a la acción que ese estado habilita o bloquea (R3).
 
 ✅ por fila:   "Cargado" ×2
    junto al botón Finalizar: "Documentación completa" (o el botón deshabilitado con la razón)
+```
+
+```
+❌ Aviso superior: 5 tarjetas de antecedentes con su estado
+   Tabla inferior: las mismas 5 filas con el mismo estado
+
+✅ Una sola tabla de antecedentes, en su lugar del flujo.
+   El aviso superior conserva el mensaje y enlaza a ella: "3 antecedentes no verificables →"
 ```
 
 ---
@@ -219,6 +245,39 @@ texto, no con una caja propia.
    Aún no registras equipos en terreno. El registro de mantención se habilita al agregar
    el primero.
    [+ Agregar equipo en terreno]
+```
+
+---
+
+## A8 · El primer pantallazo no es de la tarea
+
+**Qué se ve.** Antes de llegar a lo que el usuario vino a hacer hay un aviso de sistema, un
+descargo legal, un bloque administrativo o una asignación que casi nunca cambia. El contenido
+de trabajo —las pestañas, el formulario, la lista— empieza pasados 700 u 800 px.
+
+**Por qué falla.** El primer pantallazo es el único espacio garantizado de la pantalla: es lo
+que todo usuario ve, siempre. Gastarlo en una excepción que aplica a algunos registros, o en
+un dato que se consulta una vez al mes, obliga a hacer scroll en cada visita para llegar a lo
+de siempre.
+
+**Prueba.** Mide cuántos píxeles hay entre el borde superior y el primer elemento de la tarea
+principal. Compáralo con la altura del viewport. Si la tarea empieza fuera del primer
+pantallazo, es hallazgo. Y pregunta por cada bloque de arriba: *¿aplica a todos los registros
+o solo a algunos?* Lo que aplica a algunos no se cobra en el espacio de todos.
+
+**Cómo debe hacerse.** El aviso excepcional se comprime a una línea con enlace al detalle, o
+se coloca junto a lo que condiciona. Los metadatos que casi nunca cambian —equipo asignado,
+responsable— van al encabezado como metadato, no como tarjeta propia (R8).
+
+```
+❌ Header
+   [caja 300px] Aviso: ticket histórico, requisitos no verificables + 5 tarjetas
+   [caja 110px] Equipo técnico terreno + botón Editar
+   Tabs ← la tarea empieza aquí, a ~800px
+
+✅ Header (código · estado · cliente · fechas · equipo: Vicente Espinoza +1)
+   ⚠ Ticket histórico: 4 antecedentes no verificables. Ver detalle →   ← una línea
+   Tabs ← la tarea empieza en el primer pantallazo
 ```
 
 ---

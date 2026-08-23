@@ -97,8 +97,12 @@ sobre lo ya construido.
   tarjetas, botones todos del mismo peso, campos que parecen deshabilitados, bloques vacíos
   que solo se explican. Cada anti-patrón con su corrección y el **árbol antes/después** — no
   "simplificar la jerarquía", sino la estructura exacta que debe quedar.
+- **Captura bloqueante**: sin evidencia renderizada no hay niveles por capa ni severidades.
+  Leer el código sirve para localizar dónde se corrige, nunca para afirmar qué se ve — y el
+  campo "Qué se ve" no admite evidencia de código.
 - **Pasada de refutación obligatoria**: antes de entregar, el crítico intenta destruir su
-  propio informe. "No encontré nada" no es `OK`, es `Sin verificar`.
+  propio informe. "No encontré nada" no es `OK`, es `Sin verificar`; todo número se verifica
+  contra una medición y toda capa aprobada, contra un dato.
 - **Plan de corrección reutilizable**: el informe termina en tareas autocontenidas, agrupadas
   en olas (estructura → jerarquía y acciones → contenido y estados → detalle), con criterio de
   aceptación verificable. Se toman sueltas y se pasan a `engineering-workflow`.

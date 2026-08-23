@@ -18,6 +18,18 @@
       "prompt": "El bloque de precios de la landing no me convence pero no sé qué es. Todavía no salimos a producción.",
       "expected_output": "Alcance = bloque, pero lo juzga dentro de la página que lo contiene. Al ser pre-producción incluye la sección \"Lo que replantearía de cero\" con alternativas estructurales reales, no parches tímidos. Cada hallazgo trae nivel de intervención (ajuste / rediseño de bloque / replanteo de flujo / eliminar) y corrección con valores concretos. No implementa los cambios: deriva a engineering-workflow si el usuario los autoriza.",
       "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Audítame la pantalla /servicios/[id] de esta app. El repo lo tienes acá, revisa los componentes.",
+      "expected_output": "No entrega una crítica de interfaz a partir del código. La Fase 1 es bloqueante: pide la captura o el acceso a la URL indicando exactamente qué necesita (estado del registro, viewports, estados a forzar). Si el usuario insiste sin poder dar acceso, entrega una revisión de código de interfaz rotulada como tal desde el título, sin tabla de niveles ni severidades. Ningún campo \"Qué se ve\" describe algo que solo estaba en el código.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Acá está la captura de pantalla completa. Dime qué está mal.",
+      "expected_output": "Cita el estado real del registro que muestra la pantalla y verifica que el flujo criticado corresponda a ese estado. Busca contenido duplicado —el mismo bloque de datos renderizado dos veces en la misma vista— y mide dónde empieza la tarea principal respecto del primer pantallazo. Al no tener navegador, declara `No verificado` en contraste, tamaños de toque y responsive en vez de aprobarlos. Ningún número del informe carece de medición.",
+      "files": []
     }
   ]
 }
