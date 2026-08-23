@@ -209,6 +209,11 @@ Cierra todo informe. Es el mecanismo que impide aprobar lo que no se miró: una 
 | Cifras del informe | N cifras, todas con origen declarado |
 | Capas forzadas a `No verificado` | … |
 | Datos citados que NO salen de la captura | … (código, base de datos, conversación previa) |
+
+La última fila es para datos traídos de **otra fuente**: el código, la base de datos, una
+conversación anterior, la documentación del proyecto. Lo que salió del inventario ejecutado
+sobre la página viva —contraste, dimensiones, conteos— **sí es evidencia de la interfaz**: va
+en `Inventario objetivo`, no ahí.
 ```
 
 Reglas:

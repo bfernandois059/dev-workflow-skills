@@ -118,8 +118,11 @@ es un barrido y **se rotula así desde el título**. Es una entrega útil; no es
    manual que las auditorías genéricas se saltan.
 10. **Prohibido inventar números.** Nada de "+20% de conversión" ni "reduce 3 s la tarea".
    Estimaciones de impacto sin medición son ruido que destruye la credibilidad del resto.
-11. **Fase de auditoría = solo lectura.** No se modifican archivos. Corregir es una fase
-    aparte, con autorización explícita.
+11. **Fase de auditoría = solo lectura del producto auditado.** No se modifica su código, sus
+    datos ni su configuración; no se envían formularios ni se pulsan acciones con efectos.
+    Corregir es una fase aparte, con autorización explícita. **Esto no te deja sin cuaderno**:
+    escribir capturas, JSON del inventario y el propio informe en un directorio de trabajo es
+    correcto y, en modo sitio, necesario.
 
 ---
 
@@ -159,6 +162,15 @@ Se declara en la Fase 0 y cambia qué cuenta como hallazgo. Sin esto la skill qu
 Por defecto: **nivel 2**. Sube a **3** si el proyecto es pre-producción y el usuario pide
 "perfección", "que se vea de primer nivel" o nombra una referencia concreta a la altura de
 la cual quiere estar.
+
+**El nivel no se infiere en silencio.** Es el input que más cambia el resultado: decide qué
+cuenta como hallazgo y, por lo tanto, cuánto encuentra la auditoría. O se pregunta, o se
+declara `Supuesto por confirmar` diciendo **qué cambiaría con el nivel de arriba** — por
+ejemplo: "asumo nivel 1 por ser herramienta interna; en nivel 3 las capas de ritmo, sistema
+visual y oficio se desglosarían en hallazgos en vez de quedar en un nivel agregado".
+
+Y una vez declarado, **se aplica**. Reportar semántica de encabezados o microcopy bajo un
+nivel 1 declarado es incoherencia: o el nivel estaba mal elegido, o el hallazgo sobra.
 
 ---
 
