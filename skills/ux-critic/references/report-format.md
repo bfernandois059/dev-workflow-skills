@@ -14,7 +14,8 @@ sitio completo.
 # Crítica de interfaz — <alcance>
 
 **Contexto usado**
-Producto: … · Usuario: … · Tarea: … · Etapa: … · Exigencia: nivel N
+Producto: … · Usuario: … · Tarea: … · Etapa: …
+Exigencia: nivel N — <confirmado por el usuario | supuesto: con nivel N+1 cambiaría …>
 Registro auditado: <id> · Estado en pantalla: <badge o etiqueta literal>
 Capturas: <viewports y estados revisados>
 Inventario objetivo: <corrido / no corrido y por qué>

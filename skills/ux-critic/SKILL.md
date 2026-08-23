@@ -163,11 +163,17 @@ Por defecto: **nivel 2**. Sube a **3** si el proyecto es pre-producción y el us
 "perfección", "que se vea de primer nivel" o nombra una referencia concreta a la altura de
 la cual quiere estar.
 
-**El nivel no se infiere en silencio.** Es el input que más cambia el resultado: decide qué
-cuenta como hallazgo y, por lo tanto, cuánto encuentra la auditoría. O se pregunta, o se
-declara `Supuesto por confirmar` diciendo **qué cambiaría con el nivel de arriba** — por
-ejemplo: "asumo nivel 1 por ser herramienta interna; en nivel 3 las capas de ritmo, sistema
-visual y oficio se desglosarían en hallazgos en vez de quedar en un nivel agregado".
+**El nivel no se infiere en silencio, y se emite.** Es el input que más cambia el resultado:
+decide qué cuenta como hallazgo y, por lo tanto, cuánto encuentra la auditoría. La cabecera
+del informe lleva el nivel **con su procedencia**, no solo el número:
+
+```
+Exigencia: nivel 1 — supuesto: por ser herramienta interna. Con nivel 3, las capas de ritmo,
+sistema visual y oficio se desglosarían en hallazgos en vez de quedar en un nivel agregado.
+```
+
+Escrito así, el usuario ve el costo de la elección al principio y puede corregirla, en vez de
+descubrir al final que la auditoría se calibró sola.
 
 Y una vez declarado, **se aplica**. Reportar semántica de encabezados o microcopy bajo un
 nivel 1 declarado es incoherencia: o el nivel estaba mal elegido, o el hallazgo sobra.

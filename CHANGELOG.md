@@ -14,6 +14,8 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ### Changed
 
+- `ux-critic` 1.8.0: `scripts/ui_inventory.js` termina como **expresión**, sin `;` final. Era la última normalización que un evaluador de página obligaba a hacer a mano; ahora se pega tal cual en cualquier adaptador de automatización o consola embebida.
+- `ux-critic` 1.8.0: el nivel de exigencia pasa a ser **campo emitido en la cabecera del informe**, con su procedencia — confirmado por el usuario, o supuesto declarando qué cambiaría con el nivel de arriba. Como regla se seguía omitiendo; como campo del encabezado, se ve al principio y se puede corregir.
 - `ux-critic` 1.7.0: `scripts/ui_inventory.js` pasa a `Number.parseFloat`/`Number.parseInt` y a `Map` en vez de `WeakMap`. En contextos de evaluación aislados los globales no siempre están expuestos, y la adaptación improvisada degradaba los tamaños CSS a valores inválidos: un fallo silencioso que contamina escala tipográfica, jerarquía y contraste a la vez.
 - `ux-critic` 1.7.0: el principio de solo lectura se precisa — **no se modifica el producto auditado**, pero escribir capturas, JSON del inventario y el propio informe en un directorio de trabajo es correcto y, en modo sitio, necesario. La redacción anterior ("no se modifican archivos") dejaba al crítico sin cuaderno.
 - `ux-critic` 1.7.0: **el nivel de exigencia no se infiere en silencio**. Es el input que más cambia el resultado: o se pregunta, o se declara `Supuesto por confirmar` diciendo qué cambiaría con el nivel de arriba. Y una vez declarado, se aplica: reportar semántica de encabezados o microcopy bajo un nivel 1 declarado es incoherencia.

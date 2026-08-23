@@ -15,6 +15,10 @@
  *   - Playwright/Puppeteer: page.evaluate(fs.readFileSync('ui_inventory.js', 'utf8'))
  *
  * Solo lectura: no modifica el DOM ni dispara eventos.
+ *
+ * El archivo termina como EXPRESIÓN, sin `;` final, a propósito: muchos evaluadores de
+ * página (adaptadores de automatización, consolas embebidas) aceptan una expresión y no una
+ * sentencia. Así se pega tal cual sin tener que normalizarlo.
  */
 (() => {
   const LIMIT = 25;              // tope de ítems por lista, para que el reporte sea legible
@@ -413,4 +417,4 @@
       oversized: clip(oversizedImages, 15),
     },
   };
-})();
+})()
