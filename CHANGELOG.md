@@ -6,10 +6,17 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ### Added
 
+- `ux-critic` 1.6.0: **mapa de patrones obligatorio** en la salida del modo sitio — anti-patrón → componente que lo genera → rutas afectadas → corrección única. Se separa del mapa de calor del barrido, que son hechos medidos y no hallazgos.
+- `ux-critic` 1.6.0: el bloque de verificación del modo sitio suma filas propias — rutas medidas, plantillas dinámicas y estados, autenticación, herramienta de inventario, **críticas profundas emitidas N de N arquetipos** y anti-patrones evaluados.
+- `ux-critic` 1.6.0: nueva señal de auditoría que mintió — cero `P0` y cero `P1` en un producto maduro, o hallazgos que son exactamente los que el comparador entrega solo, sin ningún anti-patrón `A1`–`A8`.
 - `ux-critic` 1.5.0: **ficha obligatoria de cada tarea** del plan de corrección, emitida desde el `SKILL.md` y no solo descrita en una referencia — `dónde · qué cambia · criterio de aceptación · fuera de alcance · riesgo`, agrupada en olas. Una tarea sin `Dónde` y sin criterio verificable se queda como hallazgo: no se disfraza de plan. Sin acceso al repositorio, `Dónde` se completa con el bloque de interfaz identificado sin ambigüedad y marcado como pendiente de localizar.
 
 ### Changed
 
+- `ux-critic` 1.6.0: **regla de cierre del modo sitio** — sin crítica profunda emitida (tabla de capas y fichas de hallazgo) de al menos un representante por arquetipo, y sin mapa de patrones, lo entregado es un barrido y se rotula así desde el título. El barrido medido es la mitad barata, no el resultado.
+- `ux-critic` 1.6.0: las rutas dinámicas se cubren pidiendo al usuario **un id real por estado relevante**, con la lista concreta; muestrear el primer enlace visible de un listado deja las plantillas de detalle cubiertas por una sola pantalla. Sin los ids, el barrido se declara parcial y se listan los estados sin cubrir.
+- `ux-critic` 1.6.0: autenticación del barrido — `storageState` exige un login humano, así que el agente lo **pide** en vez de intentar entrar por su cuenta: nada de crear usuarios, adivinar credenciales ni usar datos de prueba del repositorio. Se documenta el fallback legítimo —recorrer las rutas en un navegador ya autenticado ejecutando `ui_inventory.js`— declarándolo en la verificación y forzando a `No verificado` lo que el sustituto no mida.
+- `ux-critic` 1.6.0: el criterio de aceptación vive en su tarea y nunca agrupado al final del plan; quien toma una tarea suelta no puede saber cuál de una lista global le toca.
 - `ux-critic` 1.5.0: el forzado a `No verificado` pasa a ser **quirúrgico**. Una captura estática permite juzgar composición, jerarquía, copy, datos duplicados, el estado por defecto de un colapsable, el estado vacío renderizado, el peso de las acciones y el orden de los bloques; solo queda fuera lo que exige interacción o medición. Barrer capas enteras a `No verificado` es el error inverso a aprobar sin medir. Contraste y tamaños táctiles admiten estimación declarada como aproximada, que sirve para abrir un hallazgo pero no para aprobar una capa.
 
 ## ux-critic-v1.4.0 - 2026-08-23
