@@ -52,7 +52,12 @@ al plan: se queda como hallazgo hasta que alguien pueda localizarla.
 - [ ] <verificable: "un solo título en la pestaña, sin repetir el nombre de la pestaña">
 - [ ] Sin regresión: <lo que debe seguir funcionando igual>
 
-**Fuera de alcance** — <lo que esta tarea NO toca, para que no crezca>
+**Fuera de alcance** — <lo que esta tarea NO toca, para que no crezca. Cuando haya riesgo de
+arrastre, **nombra los bloques vecinos** que quedan intactos: "no toca Siguiente paso ni Equipo
+técnico">
+
+**Decisiones que toca** — <entradas del registro que esta tarea modifica, si las hay. Se
+confirma con el usuario antes de implementar>
 
 ---
 

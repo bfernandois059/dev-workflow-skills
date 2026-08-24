@@ -87,7 +87,10 @@ la tarea que cada una desbloquea. Va ANTES del plan porque lo bloquea.>
 ```
 
 La línea de encabezado lleva siempre los cuatro campos en ese orden:
-`severidad · capa · nivel de intervención · esfuerzo`.
+`severidad · capa · nivel de intervención · esfuerzo`. Los niveles de intervención son
+`Ajuste` · `Rediseño de bloque` · `Replanteo de flujo` · `Eliminar` · `Pieza nueva de sistema`;
+el último va siempre acompañado de una entrada en *Decisiones que necesitas tomar*, porque
+agregar vocabulario al sistema se propaga.
 
 **El campo "Qué se ve" no admite evidencia de código.** Si el hallazgo salió de leer el
 componente y no de mirar la pantalla, el campo se llama **"Qué encontré en el código"**, la
@@ -199,8 +202,12 @@ evidencia de comportamiento. La Fase 4 recorre estas casillas una por una.
 
 ## Decisiones que necesitas tomar
 
-Sección obligatoria cuando alguna tarea depende de una definición de producto o de negocio.
-Va **antes** del plan, porque lo bloquea.
+Sección obligatoria en tres casos, todos bloqueantes del plan y por eso **antes** de él:
+
+1. Una tarea depende de una **definición de producto o de negocio**.
+2. Se propone **reabrir una decisión cerrada** del registro — con el motivo por el que el
+   contexto cambió, no una impresión comparativa.
+3. Se propone una **pieza nueva de sistema** — con dónde más aplicaría, porque se propaga.
 
 ```markdown
 ## Decisiones que necesitas tomar
@@ -244,6 +251,7 @@ Cierra todo informe. Es el mecanismo que impide aprobar lo que no se miró: una 
 | Cifras del informe | N cifras, todas con origen declarado |
 | Capas forzadas a `No verificado` | … |
 | Datos citados que NO salen de la captura | … (código, base de datos, conversación previa) |
+| Registro de decisiones | leído / no existe · decisiones cerradas tocadas · reaperturas propuestas · piezas nuevas propuestas |
 
 La última fila es para datos traídos de **otra fuente**: el código, la base de datos, una
 conversación anterior, la documentación del proyecto. Lo que salió del inventario ejecutado

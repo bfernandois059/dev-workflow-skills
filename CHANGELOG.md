@@ -4,6 +4,19 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+### Added
+
+- `ux-critic` 1.10.0: **registro de decisiones de interfaz** (`references/decision-ledger.md` y plantilla `assets/templates/ux-decisions.template.md`). Vive en el repositorio del proyecto y se referencia desde `AGENTS.md`, para que lo herede cualquier agente y no solo el que corra la skill. Se lee en la Fase 0, se contrasta en la Fase 2, se declara en la Fase 5 y se escribe en la Fase 6.
+- `ux-critic` 1.10.0: el registro guarda **convenciones, no respuestas** — vocabulario compartido que se hereda, no cómo se resolvió una pantalla concreta. Con regla de tamaño: si una entrada solo aplica en un lugar y nada la va a heredar, es un detalle de implementación y no entra.
+- `ux-critic` 1.10.0: **dos operaciones sobre el registro**. *Reabrir* es caro y exige un motivo real —requisito nuevo, evidencia medida, un caso que no encaja y se repite—; la deriva de estándar no cuenta. *Extender* es barato y se fomenta: si el caso no encaja en el vocabulario, se propone una pieza nueva en vez de reabrir. Un registro con una sola operación paraliza; con dos, genera.
+- `ux-critic` 1.10.0: quinto nivel de intervención **`Pieza nueva de sistema`**, para cuando la corrección correcta es agregar vocabulario en vez de forzar una pieza que no calza o romper el lenguaje de la pantalla. Va siempre a *Decisiones que necesitas tomar*: el crítico propone vocabulario, no se lo autoconcede.
+- `ux-critic` 1.10.0: sección **Cómo no aplicar este catálogo** en los anti-patrones de estructura — el contenedor a medias, el aire que se conserva al quitar el borde, el fondo propio que sigue siendo superficie, la coherencia del sistema como límite de la corrección, y la deriva de estándar que no es hallazgo.
+
+### Changed
+
+- `ux-critic` 1.10.0: un hallazgo que contradice una decisión cerrada **deja de ser un hallazgo** y pasa a propuesta de cambio de decisión, con el motivo por el que el contexto cambió. Decide el usuario.
+- `ux-critic` 1.10.0: reglas de alcance de la corrección — no se toca lo ya corregido y aceptado en una ola anterior; una tarea que toca una decisión cerrada avisa antes de implementar nombrando la entrada; el campo `Fuera de alcance` de la ficha nombra explícitamente los bloques vecinos cuando hay riesgo de arrastre.
+
 ## marcozen-v1.4.0 - 2026-08-23
 
 Dos requisitos que casi ningún proyecto tiene y que se notan el primer día en producción: la

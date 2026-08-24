@@ -282,6 +282,45 @@ responsable— van al encabezado como metadato, no como tarjeta propia (R8).
 
 ---
 
+## Cómo no aplicar este catálogo
+
+Los errores que produce seguir estas reglas al pie. Todos observados en correcciones reales.
+
+### El contenedor a medias
+
+Aplanar tiene **tres estados válidos**: superficie completa (borde, radio, padding), texto
+plano con su espacio, o un separador limpio. **El estado intermedio no existe.** Un borde
+parcial sin respiración —`border-y` con el padding horizontal colapsado— no se lee como plano:
+se lee como roto. Es un contenedor sin terminar, no un bloque simplificado.
+
+### Si quitas el borde, el aire se conserva
+
+El padding que daba el contenedor tiene que seguir existiendo como espacio. **Quitar borde y
+padding a la vez** es exactamente lo que produce el bloque incompleto. Aplanar es cambiar cómo
+se delimita el bloque, no dejarlo sin delimitar ni respirar.
+
+### Un fondo propio sigue siendo una superficie
+
+Un bloque con relleno —un aviso de color, una alerta, un banner— es una superficie aunque no
+tenga borde. No se puede aplanar a medias: o se le quita también el fondo y queda texto con su
+icono, o conserva su padding. Un fill sin padding es el peor de los dos mundos.
+
+### La coherencia limita la corrección
+
+Si el resto de la pantalla usa un patrón de tarjeta consistente, dos bloques con otro
+tratamiento no son más planos: son inconsistentes. **La regla local nunca gana sobre el
+lenguaje de la pantalla.** Cuando aplicar el catálogo exigiría romper el sistema, lo correcto
+no es romperlo: es **proponer la pieza que falta** (`Pieza nueva de sistema`, ver
+[`decision-ledger.md`](decision-ledger.md)).
+
+### La deriva de estándar no es un hallazgo
+
+Que el resto de la pantalla haya mejorado **no convierte en defecto** un bloque que ya se
+decidió y se aceptó. El estándar se movió; el bloque no. Reabrir una decisión cerrada exige un
+motivo real, no una impresión comparativa — ver [`decision-ledger.md`](decision-ledger.md).
+
+---
+
 ## Cómo reportarlos
 
 Estos hallazgos van en la ficha estándar (`report-format.md`) y **exigen el árbol de
