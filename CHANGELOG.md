@@ -4,6 +4,12 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+## ux-critic-v1.10.0 - 2026-08-24
+
+Una corrección aplanó dos bloques ya reparados y aceptados, dejándolos como contenedores sin
+terminar. La causa de fondo no era el `padding`: la crítica tenía memoria de los problemas y
+ninguna de las resoluciones, así que cada pasada re-litigaba lo que la anterior había resuelto.
+
 ### Added
 
 - `ux-critic` 1.10.0: **registro de decisiones de interfaz** (`references/decision-ledger.md` y plantilla `assets/templates/ux-decisions.template.md`). Vive en el repositorio del proyecto y se referencia desde `AGENTS.md`, para que lo herede cualquier agente y no solo el que corra la skill. Se lee en la Fase 0, se contrasta en la Fase 2, se declara en la Fase 5 y se escribe en la Fase 6.
