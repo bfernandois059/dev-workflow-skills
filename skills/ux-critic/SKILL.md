@@ -202,6 +202,12 @@ Lo mínimo que debe quedar escrito antes de mirar nada con ojo crítico:
 Cuestionario, orden de preguntas y qué hacer cuando el usuario no sabe responder:
 [`references/context-intake.md`](references/context-intake.md).
 
+**Lee el registro de decisiones del proyecto** —`docs/ux-decisions.md` o equivalente— antes de
+juzgar nada. Una decisión cerrada es contexto, no está en discusión: sin esto, cada auditoría
+re-litiga lo que la anterior resolvió, y en dirección contraria. Si el proyecto no tiene
+registro, dilo y ofrece crearlo con las decisiones que salgan de esta auditoría. Ver
+[`references/decision-ledger.md`](references/decision-ledger.md).
+
 **Es bloqueante.** Si falta el usuario real, la tarea o el criterio de éxito, no arranques
 la Fase 1. Una crítica sin contexto produce exactamente el informe genérico que esta skill
 existe para evitar. Lo único que se permite sin contexto son observaciones objetivas y
@@ -330,6 +336,13 @@ desaparecer en el replanteo del bloque.
 de las capas 1–3, no terminaste la auditoría: te escondiste en lo fácil. Vuelve a las capas
 altas.
 
+**Regla de contraste con lo ya decidido.** Antes de escribir un hallazgo, crúzalo con el
+registro de decisiones. Si lo contradice, **no es un hallazgo**: es una **propuesta de cambio
+de decisión**, va en su propia sección y tiene que decir qué cambió en el contexto para
+justificar reabrirla. Que el resto de la pantalla haya mejorado no es un motivo — el estándar
+se movió, el bloque no. Y si el caso simplemente no encaja en el vocabulario existente, la
+salida no es reabrir sino **extender**: proponer la pieza que falta.
+
 ### Fase 3 — Preguntas incómodas
 
 Sección obligatoria del informe. Elige entre 3 y 5 decisiones que no se explican solas y
@@ -389,7 +402,8 @@ Estructura fija, plantillas y reglas de redacción en
    vacía** cuando la fuente fue una captura estática: como mínimo entran ahí los estados que
    no se abrieron y todo lo que exige medición.
 9. **Decisiones que necesitas tomar** — obligatoria si alguna tarea depende de una definición
-   de producto o de negocio. Va **antes** del plan porque lo bloquea: preguntas redactadas como
+   de producto o de negocio, si se propone reabrir una decisión cerrada, o si se propone una
+   pieza nueva de sistema. Va **antes** del plan porque lo bloquea: preguntas redactadas como
    preguntas, con opciones concretas y con la tarea que cada una desbloquea. Una decisión
    enterrada en el campo `Depende de` de una ficha no la ve nadie.
 10. **Plan de corrección** — la lista de tareas con la que se arregla lo encontrado, agrupada
@@ -496,6 +510,18 @@ olas:
 Nunca mezcles la corrección con la auditoría en la misma respuesta sin permiso: el usuario
 tiene que poder discutir el diagnóstico antes de que le cambien los archivos.
 
+**Alcance de la corrección:**
+
+- **No se toca lo ya corregido y aceptado en una ola anterior.** Si al implementar aparece la
+  tentación de ajustar un bloque vecino que ya está cerrado, no es parte de la tarea: es una
+  tarea nueva y se declara. Deshacer trabajo aceptado obliga al usuario a revisar lo que ya
+  daba por cerrado, y es peor que el defecto que se quería arreglar.
+- **Una tarea que toca una decisión cerrada avisa antes de implementar**, nombrando la entrada:
+  *"esta tarea modifica `UXD-01`, que está cerrada — ¿confirmas?"*. El usuario no debería
+  descubrirlo leyendo el diff.
+- **Una corrección aceptada se anota** en el registro de decisiones, en el nivel del componente
+  y no de la pantalla. Lo que no se anota se vuelve a discutir.
+
 ---
 
 ## Severidad y nivel de intervención
@@ -521,6 +547,11 @@ exigir replantear un flujo completo.
   producto.
 - **Eliminar** — el elemento no debería existir. Es una recomendación válida y frecuentemente
   la correcta.
+- **Pieza nueva de sistema** — el caso no encaja en el vocabulario existente y la corrección
+  correcta es **agregar** una pieza al sistema, no forzar una que no calza ni romper el
+  lenguaje de la pantalla. Se propaga, así que es un compromiso de producto: va a la sección
+  *Decisiones que necesitas tomar*, nombrando dónde más aplicaría. El crítico propone
+  vocabulario nuevo; no se lo autoconcede.
 
 Acompaña cada intervención con esfuerzo `Bajo` / `Medio` / `Alto`.
 
