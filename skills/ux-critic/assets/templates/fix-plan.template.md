@@ -36,6 +36,9 @@ al plan: se queda como hallazgo hasta que alguien pueda localizarla.
 
 **Dónde** — `<componente / archivo / ruta>`
 
+**Dónde más aparece** — <las otras vistas donde vive este mismo elemento. Obligatorio: si son
+más de una, esta tarea es de sistema y su criterio de aceptación cubre todas>
+
 **Qué cambia**
 - <cambio concreto 1>
 - <cambio concreto 2>

@@ -202,10 +202,12 @@ Lo mínimo que debe quedar escrito antes de mirar nada con ojo crítico:
 Cuestionario, orden de preguntas y qué hacer cuando el usuario no sabe responder:
 [`references/context-intake.md`](references/context-intake.md).
 
-**Lee el registro de decisiones del proyecto** —`docs/ux-decisions.md` o equivalente— antes de
-juzgar nada. Una decisión cerrada es contexto, no está en discusión: sin esto, cada auditoría
-re-litiga lo que la anterior resolvió, y en dirección contraria. Si el proyecto no tiene
-registro, dilo y ofrece crearlo con las decisiones que salgan de esta auditoría. Ver
+**Lee el registro de soluciones validadas** —`docs/ux-decisions.md` o equivalente— antes de
+juzgar nada. Es la memoria del crítico sobre lo que ya propuso, se aceptó y funcionó. **No
+congela nada**: el listón solo sube, y lo que estaba `Sólido` puede llegar a `Referencia`. Lo
+que evita es re-inventar una solución distinta para lo que la pasada anterior ya resolvió bien.
+Si el proyecto no tiene registro, dilo y ofrece crearlo — nace vacío, no se siembra desde el
+`PRD` ni desde la documentación funcional. Ver
 [`references/decision-ledger.md`](references/decision-ledger.md).
 
 **Es bloqueante.** Si falta el usuario real, la tarea o el criterio de éxito, no arranques
@@ -336,12 +338,17 @@ desaparecer en el replanteo del bloque.
 de las capas 1–3, no terminaste la auditoría: te escondiste en lo fácil. Vuelve a las capas
 altas.
 
-**Regla de contraste con lo ya decidido.** Antes de escribir un hallazgo, crúzalo con el
-registro de decisiones. Si lo contradice, **no es un hallazgo**: es una **propuesta de cambio
-de decisión**, va en su propia sección y tiene que decir qué cambió en el contexto para
-justificar reabrirla. Que el resto de la pantalla haya mejorado no es un motivo — el estándar
-se movió, el bloque no. Y si el caso simplemente no encaja en el vocabulario existente, la
-salida no es reabrir sino **extender**: proponer la pieza que falta.
+**Regla de contraste con lo ya resuelto.** Antes de escribir un hallazgo, crúzalo con el
+registro de soluciones validadas y decide de qué movimiento se trata:
+
+- **Subir el nivel** —lo que está `Sólido` puede llegar a `Referencia`— es un hallazgo válido y
+  bienvenido. El registro no es un techo.
+- **Cambiar de lado** —sustituir una solución que funciona por otra equivalente— **no es un
+  hallazgo**. Es churn: deshace trabajo aceptado y deja el sistema donde estaba. Se descarta en
+  la refutación y se anota que se descartó. Que el resto de la pantalla haya mejorado no es
+  motivo: el estándar se movió, el bloque no.
+- Si el caso **no encaja** en el vocabulario existente, la salida no es cambiar una entrada:
+  es **extender**, proponiendo la pieza que falta como `Pieza nueva de sistema`.
 
 ### Fase 3 — Preguntas incómodas
 
@@ -402,8 +409,8 @@ Estructura fija, plantillas y reglas de redacción en
    vacía** cuando la fuente fue una captura estática: como mínimo entran ahí los estados que
    no se abrieron y todo lo que exige medición.
 9. **Decisiones que necesitas tomar** — obligatoria si alguna tarea depende de una definición
-   de producto o de negocio, si se propone reabrir una decisión cerrada, o si se propone una
-   pieza nueva de sistema. Va **antes** del plan porque lo bloquea: preguntas redactadas como
+   de producto o de negocio, si se propone un cambio lateral sobre una solución ya validada, o
+   si se propone una pieza nueva de sistema. Va **antes** del plan porque lo bloquea: preguntas redactadas como
    preguntas, con opciones concretas y con la tarea que cada una desbloquea. Una decisión
    enterrada en el campo `Depende de` de una ficha no la ve nadie.
 10. **Plan de corrección** — la lista de tareas con la que se arregla lo encontrado, agrupada
@@ -425,6 +432,7 @@ Capa · Severidad · Intervención · Esfuerzo · Riesgo · Depende de
 Dónde        → componente o archivo. Sin acceso al repositorio: el bloque de la interfaz
                 identificado sin ambigüedad (título visible + posición) y marcado como
                 "falta localizar el componente".
+Dónde más    → las otras vistas donde vive este mismo elemento. Obligatorio.
 Qué cambia   → los cambios concretos, uno por línea.
 Criterio     → casillas verificables mirando la pantalla. Una por resultado.
 Fuera de     → lo que esta tarea NO toca, para que no crezca.
@@ -433,6 +441,13 @@ Fuera de     → lo que esta tarea NO toca, para que no crezca.
 **Una tarea sin `Dónde` y sin criterio de aceptación verificable no es una tarea: es un
 deseo.** "Mejorar la jerarquía" no se puede marcar como hecho; "ninguna superficie anidada a
 más de dos niveles en la pestaña" sí.
+
+**Un arreglo que no se propaga deja el sistema peor que antes.** Antes de escribir la tarea,
+busca dónde más aparece ese elemento. Si aparece en más de un lugar, la corrección **no es de
+pantalla: es de sistema** — la tarea nombra todas las apariciones y su criterio de aceptación
+cubre cada una. Vale en todos los modos, no solo en modo sitio: auditar una pantalla no
+autoriza a dejar el mismo componente distinto en las otras cinco donde vive. Esa incoherencia
+la termina encontrando una persona a mano.
 
 **Y una tarea cuyo `Depende de` sea una decisión de producto no arranca.** La decisión sube a
 la sección *Decisiones que necesitas tomar*, redactada como pregunta con opciones, y la tarea
@@ -516,11 +531,12 @@ tiene que poder discutir el diagnóstico antes de que le cambien los archivos.
   tentación de ajustar un bloque vecino que ya está cerrado, no es parte de la tarea: es una
   tarea nueva y se declara. Deshacer trabajo aceptado obliga al usuario a revisar lo que ya
   daba por cerrado, y es peor que el defecto que se quería arreglar.
-- **Una tarea que toca una decisión cerrada avisa antes de implementar**, nombrando la entrada:
+- **Una tarea que modifica una entrada del registro avisa antes de implementar**, nombrándola:
   *"esta tarea modifica `UXD-01`, que está cerrada — ¿confirmas?"*. El usuario no debería
   descubrirlo leyendo el diff.
-- **Una corrección aceptada se anota** en el registro de decisiones, en el nivel del componente
-  y no de la pantalla. Lo que no se anota se vuelve a discutir.
+- **Una corrección aceptada se anota** en el registro de soluciones validadas, al nivel del
+  elemento y no de la pantalla, con sus apariciones conocidas. Lo que no se anota se vuelve a
+  discutir en la próxima pasada, y probablemente en dirección contraria.
 
 ---
 
