@@ -4,6 +4,13 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+## ux-critic-v1.11.0 - 2026-08-24
+
+El registro de decisiones estaba formulado como reglamento del proyecto y al sembrarlo en un
+proyecto real terminó lleno de principios copiados del `PRD`: cuatro entradas bien escritas que
+no habrían impedido ninguno de los errores que motivaron su creación. Formulado así reproducía
+justamente lo que esta skill existe para evitar — algo que se define una vez y queda intocable.
+
 ### Changed
 
 - `ux-critic` 1.11.0: el registro se reencuadra como **memoria del crítico sobre sus soluciones ya validadas**, no como reglamento del proyecto. **No congela nada**: el listón solo sube, y lo que estaba `Sólido` puede llegar a `Referencia`. Nace vacío y no se siembra desde el `PRD` ni desde la documentación funcional — si una regla ya vive ahí, ahí se queda y aquí se referencia. Un registro que resume el PRD es un duplicado que va a divergir.
