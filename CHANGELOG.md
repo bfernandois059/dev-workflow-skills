@@ -4,6 +4,17 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+### Changed
+
+- `ux-critic` 1.11.0: el registro se reencuadra como **memoria del crítico sobre sus soluciones ya validadas**, no como reglamento del proyecto. **No congela nada**: el listón solo sube, y lo que estaba `Sólido` puede llegar a `Referencia`. Nace vacío y no se siembra desde el `PRD` ni desde la documentación funcional — si una regla ya vive ahí, ahí se queda y aquí se referencia. Un registro que resume el PRD es un duplicado que va a divergir.
+- `ux-critic` 1.11.0: la regla de "reabrir es caro" se reemplaza por la distinción que importa. **Subir el nivel siempre se puede** y es el trabajo del crítico. **Cambiar de lado** —sustituir una solución que funciona por otra equivalente— no es un hallazgo: es churn, se descarta en la refutación y se anota que se descartó. Que el resto de la pantalla haya mejorado no es motivo: el estándar se movió, el bloque no.
+- `ux-critic` 1.11.0: dos pruebas antes de anotar una entrada. *La inversa* — escribe lo contrario; si el contrario es absurdo, es un principio y no restringe nada. *Aplicabilidad* — si hace falta interpretarla al escribir el componente, no entra. Y se aclara que la regla de tamaño limita la cantidad, no la especificidad.
+
+### Added
+
+- `ux-critic` 1.11.0: **propagación obligatoria en todos los modos**, no solo en modo sitio. Antes de escribir una tarea hay que buscar dónde más aparece el elemento; si aparece en más de un lugar, la corrección es de sistema y su criterio de aceptación cubre todas las vistas. Auditar una pantalla no autoriza a dejar el mismo componente distinto en las otras cinco donde vive — esa incoherencia la termina encontrando una persona haciendo QA a mano.
+- `ux-critic` 1.11.0: la ficha de tarea suma el campo `Dónde más aparece`, y el bloque de verificación una fila de propagación. El registro anota el elemento con sus apariciones conocidas, para que la próxima búsqueda empiece hecha.
+
 ## ux-critic-v1.10.0 - 2026-08-24
 
 Una corrección aplanó dos bloques ya reparados y aceptados, dejándolos como contenedores sin

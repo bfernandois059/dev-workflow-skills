@@ -205,8 +205,9 @@ evidencia de comportamiento. La Fase 4 recorre estas casillas una por una.
 Sección obligatoria en tres casos, todos bloqueantes del plan y por eso **antes** de él:
 
 1. Una tarea depende de una **definición de producto o de negocio**.
-2. Se propone **reabrir una decisión cerrada** del registro — con el motivo por el que el
-   contexto cambió, no una impresión comparativa.
+2. Se propone un **cambio lateral** sobre una solución ya validada — con el motivo real, no
+   una impresión comparativa. Subir el nivel de una solución existente **no** necesita
+   decisión: es el trabajo normal del crítico.
 3. Se propone una **pieza nueva de sistema** — con dónde más aplicaría, porque se propaga.
 
 ```markdown
@@ -222,13 +223,13 @@ Reglas:
 
 1. **Redactadas como preguntas.** Un diagnóstico en tercera persona —"nadie definió qué cuatro
    datos importan en móvil"— se lee y se sigue de largo. Una pregunta directa se contesta.
-2. **Con opciones concretas.** El usuario tiene que poder responder con una letra, no redactar
+3. **Con opciones concretas.** El usuario tiene que poder responder con una letra, no redactar
    una especificación.
-3. **Con la tarea que desbloquean**, para que se vea el costo de no decidir.
-4. **Una tarea cuyo `Depende de` sea una decisión de producto no arranca.** La decisión sube a
+4. **Con la tarea que desbloquean**, para que se vea el costo de no decidir.
+5. **Una tarea cuyo `Depende de` sea una decisión de producto no arranca.** La decisión sube a
    esta tabla y la tarea se marca `Bloqueada por D<n>`. Dejar la decisión enterrada en una fila
    de metadatos de la ficha es disfrazarla de tarea, y el usuario nunca la ve.
-5. **No se confunde con las preguntas incómodas.** Aquellas cuestionan una decisión ya tomada
+6. **No se confunde con las preguntas incómodas.** Aquellas cuestionan una decisión ya tomada
    —"¿por qué está así?"— y son parte del diagnóstico. Estas piden una decisión que todavía no
    existe y sin la cual nadie puede ejecutar.
 
@@ -251,7 +252,8 @@ Cierra todo informe. Es el mecanismo que impide aprobar lo que no se miró: una 
 | Cifras del informe | N cifras, todas con origen declarado |
 | Capas forzadas a `No verificado` | … |
 | Datos citados que NO salen de la captura | … (código, base de datos, conversación previa) |
-| Registro de decisiones | leído / no existe · decisiones cerradas tocadas · reaperturas propuestas · piezas nuevas propuestas |
+| Registro de soluciones | leído / no existe · entradas tocadas · elevaciones propuestas · piezas nuevas propuestas |
+| Propagación | elementos corregidos que aparecen en más de una vista, y si la tarea las cubre todas |
 
 La última fila es para datos traídos de **otra fuente**: el código, la base de datos, una
 conversación anterior, la documentación del proyecto. Lo que salió del inventario ejecutado
@@ -277,7 +279,10 @@ arregla lo encontrado, sin tener que releer el informe. Plantilla completa en
 
 Reglas:
 
-1. **Una tarea es autocontenida y se emite con ficha.** Se puede tomar suelta, pasar a
+1. **Toda tarea declara dónde más aparece el elemento.** Si aparece en más de un lugar, es una
+   tarea de sistema: nombra todas las vistas y su criterio de aceptación las cubre. Un arreglo
+   que solo toca una pantalla y deja el resto viejo deja el sistema más incoherente que antes.
+2. **Una tarea es autocontenida y se emite con ficha.** Se puede tomar suelta, pasar a
    `engineering-workflow` o entregar a otro agente sin el resto del informe.
 
    ```
@@ -294,26 +299,26 @@ Reglas:
 
    En hallazgos de estructura, la ficha incluye además el árbol antes/después.
 
-2. **Sin `Dónde` y sin criterio verificable no es una tarea, es un deseo.** "Ninguna superficie
+3. **Sin `Dónde` y sin criterio verificable no es una tarea, es un deseo.** "Ninguna superficie
    anidada a más de dos niveles en la pestaña" se puede marcar hecho o no hecho mirando la
    pantalla; "mejorar la jerarquía" no. Una tarea que no llegue a esa forma se queda como
    hallazgo, no se disfraza de plan.
-3. **Agrupadas en olas, no en una lista plana**: estructura → jerarquía y acciones →
+4. **Agrupadas en olas, no en una lista plana**: estructura → jerarquía y acciones →
    contenido y estados → detalle. No se empieza una ola sin cerrar la anterior, porque pulir
    antes de reestructurar es trabajo que se tira.
-4. **Un anti-patrón repetido es una sola tarea de sistema**, con la lista de pantallas donde
+5. **Un anti-patrón repetido es una sola tarea de sistema**, con la lista de pantallas donde
    se verifica. Seis tareas de pantalla para el mismo problema es la forma de garantizar que
    quede a medias.
-5. **Riesgo declarado.** Marca qué tareas son solo presentación y cuáles tocan comportamiento
+6. **Riesgo declarado.** Marca qué tareas son solo presentación y cuáles tocan comportamiento
    o datos: define si pueden ir por la ruta rápida de `engineering-workflow` o exigen el flujo
    completo.
-6. **Lo que no es tarea, es decisión.** Lo que requiere una definición de producto o negocio
+7. **Lo que no es tarea, es decisión.** Lo que requiere una definición de producto o negocio
    va en una tabla aparte de decisiones pendientes, indicando qué tarea bloquea. No se
    disfraza de tarea.
-7. **El criterio de aceptación vive en su tarea, nunca agrupado al final.** Una lista global de
+8. **El criterio de aceptación vive en su tarea, nunca agrupado al final.** Una lista global de
    "cómo validar" al cierre del plan no sirve: quien tome `UX-03` suelta no puede saber cuál de
    esas casillas le toca. Cada tarea lleva las suyas.
-8. **Verificación final incluida**: repetir el inventario objetivo y el recorrido limpio sobre
+9. **Verificación final incluida**: repetir el inventario objetivo y el recorrido limpio sobre
    la interfaz corregida, y comparar capturas antes/después. Eso es *además* de los criterios
    por tarea, no en su lugar.
 

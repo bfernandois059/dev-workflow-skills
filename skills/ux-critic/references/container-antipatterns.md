@@ -316,8 +316,9 @@ no es romperlo: es **proponer la pieza que falta** (`Pieza nueva de sistema`, ve
 ### La deriva de estándar no es un hallazgo
 
 Que el resto de la pantalla haya mejorado **no convierte en defecto** un bloque que ya se
-decidió y se aceptó. El estándar se movió; el bloque no. Reabrir una decisión cerrada exige un
-motivo real, no una impresión comparativa — ver [`decision-ledger.md`](decision-ledger.md).
+decidió y se aceptó. El estándar se movió; el bloque no. **Subir el nivel de ese bloque siempre
+se puede**; sustituir su solución por otra equivalente exige un motivo real, no una impresión
+comparativa — ver [`decision-ledger.md`](decision-ledger.md).
 
 ---
 
