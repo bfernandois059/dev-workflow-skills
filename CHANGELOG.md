@@ -4,6 +4,75 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+## interface-craft-v0.1.0 - 2026-09-10
+
+Segunda skill de la familia visual definida en `docs/visual-skills-architecture.md`. Un agente
+frente a una interfaz falla de dos maneras, y casi nunca por falta de gusto: **converge** —ante
+cualquier problema, badge, título grande, párrafo, dos botones y tres tarjetas; ante cualquier
+panel, título, fila de KPI, gráfico y tabla— y se **acobarda**, interpretando alcance acotado
+como ambición visual mínima y cambio limpio como menos líneas. La primera fórmula no es
+consistencia, es ausencia de decisión; la segunda confunde dos dimensiones distintas.
+
+### Added
+
+- `interface-craft` 0.1.0: nueva skill instalable que **diseña, rediseña e implementa una
+  interfaz concreta** —pantalla, sección, bloque o flujo— dentro del alcance funcional pedido.
+  Sirve tanto para sitios comerciales y e-commerce como para dashboards, intranets, CRM, sistemas
+  internos, herramientas operacionales y paneles de administración.
+- `interface-craft` 0.1.0: **orden de decisión macro antes que micro** —propósito, acción
+  dominante, arquitectura visual, jerarquía, composición, densidad, tipografía, spacing, color,
+  estados, detalle—. No se empieza por el `padding` si tres bloques compiten por ser el
+  principal, no se añaden sombras para compensar una composición sin resolver, y no se anidan
+  containers para suplir una jerarquía débil.
+- `interface-craft` 0.1.0: **precedencia visual explícita** —alcance de la tarea, `ui-system.md`,
+  marca, referencia aprobada, patrón del producto, documentación funcional, implementación
+  actual— con `docs/ui-system.md` de uso obligatorio cuando existe, y sin bloquear una tarea
+  acotada que ya tiene una referencia suficiente.
+- `interface-craft` 0.1.0: **respetar el sistema no significa copiar lo que hay.** Una
+  inconsistencia histórica no adquiere autoridad solo por existir: ante `H1` de 36, 40, 42 y
+  44 px no se adopta el valor de la pantalla que tocó ni el más frecuente — se consulta la
+  referencia y, si no alcanza, se deriva a `visual-foundation` en vez de inventar un quinto
+  valor arbitrario.
+- `interface-craft` 0.1.0: **autoridad para replantear dentro del alcance** —composición,
+  jerarquía, orden de bloques, densidad, escalas, tratamiento visual y componentes locales— con
+  la frontera escrita de lo que no se toca: lógica de negocio, permisos, datos, contratos de API,
+  estados funcionales inexistentes y arquitectura del producto.
+- `interface-craft` 0.1.0: **uso proporcional de librerías.** La cantidad mínima de código no es
+  un objetivo de diseño. Gráficos con ejes y tooltips, tablas con sorting y paginación,
+  primitives accesibles y motion con gestos van con la herramienta que el proyecto ya usa —o con
+  una dependencia estándar si no existe—; y no se agrega una dependencia para una transición de
+  150 ms. Corte en las dos direcciones: no reimplementar a mano lo ya resuelto, no trasladar
+  complejidad con un paquete.
+- `interface-craft` 0.1.0: **validación visual antes de declarar completado.**
+  `build ✓ lint ✓ typecheck ✓` no es validación visual. Primero comparación renderizada contra la
+  referencia —jerarquía, composición, tipografía, spacing, color, densidad, marca y estados—,
+  después la validación técnica del proyecto. Si no hubo forma de ver la interfaz, se declara en
+  vez de afirmar paridad.
+- `interface-craft` 0.1.0: **densidad según el producto.** Una intranet no se diseña como una
+  landing. Una interfaz "limpia" no es una con mucho espacio vacío: cuando un panel operacional
+  se ve cargado, el orden es jerarquía → agrupación → disclosure → densidad, y eliminar
+  información es la última opción.
+- `interface-craft` 0.1.0: **derivación en vez de improvisación** cuando falta dirección visual y
+  hay varias soluciones materialmente distintas: se nombra la decisión que falta y se deriva a
+  `design-directions`, sin construir tres propuestas aquí ni abrir una entrevista.
+- `interface-craft` 0.1.0: `references/craft-criteria.md` con criterios por área —jerarquía,
+  composición, tipografía, spacing, densidad, color, imagen, acciones, formularios, dashboards y
+  visualización de datos, tablas, estados y motion—, con pruebas concretas y señales de falla.
+  Guía de consulta, no checklist: se abre solo la sección del problema actual.
+- `interface-craft` 0.1.0: evals iniciales (`evals/evals.json`) sobre la decisión que toma el
+  agente, no sobre el recitado del procedimiento — hero genérico, dashboard plano, gráfico con
+  librería existente, gráfico sin librería, transición simple, interacción compleja,
+  inconsistencia tipográfica histórica, pantalla de CRM cargada, componentización local frente a
+  transversal y ausencia total de dirección visual.
+
+### Changed
+
+- `README.md`: `interface-craft` pasa de futura a disponible en el flujo, las skills
+  documentadas, el versionado, la instalación y la tabla de uso. Las otras cinco skills visuales
+  siguen marcadas como no implementadas.
+- `docs/visual-skills-architecture.md`: actualizado el estado de `interface-craft`. Las otras
+  cinco skills visuales siguen sin implementar.
+
 ## visual-foundation-v0.1.0 - 2026-09-10
 
 Primera skill de la familia visual definida en `docs/visual-skills-architecture.md`. Un proyecto

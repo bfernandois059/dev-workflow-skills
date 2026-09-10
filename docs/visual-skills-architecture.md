@@ -8,9 +8,9 @@ Este documento es un contrato operativo, no un manifiesto de diseño. Se escribe
 agente —Claude Code, Codex u otro compatible— pueda decidir qué skill corresponde a una tarea
 sin adivinar, y para que la implementación posterior de cada pieza no invada a las demás.
 
-> **Estado:** `visual-foundation` ya está implementada e instalable
-> (`skills/visual-foundation/`). Las otras seis siguen sin existir: este documento define su
-> contrato y los siguientes PR implementarán cada pieza.
+> **Estado:** `visual-foundation` e `interface-craft` ya están implementadas e instalables
+> (`skills/visual-foundation/`, `skills/interface-craft/`). Las otras cinco siguen sin existir:
+> este documento define su contrato y los siguientes PR implementarán cada pieza.
 
 ## Titularidad
 
@@ -91,7 +91,6 @@ la **dirección de la dependencia**: `visual-foundation` no depende de las demá
 ### `visual-foundation` — implementada
 
 **Estado.** Disponible en [`skills/visual-foundation/`](../skills/visual-foundation/SKILL.md).
-Es la única de las siete que existe hoy.
 
 **Propósito.** Establecer y mantener el lenguaje visual del proyecto como reglas operativas, y
 ser dueña de `docs/ui-system.md`.
@@ -149,7 +148,9 @@ en producción son dos decisiones distintas y la segunda pasa por `interface-cra
 
 ---
 
-### `interface-craft`
+### `interface-craft` — implementada
+
+**Estado.** Disponible en [`skills/interface-craft/`](../skills/interface-craft/SKILL.md).
 
 **Propósito.** Diseñar o rediseñar una interfaz concreta con criterio visual, e implementarla
 cuando la tarea lo requiera.
@@ -506,13 +507,15 @@ la descripción del frontmatter: se lee siempre, aunque la skill no se use.
 Implementado:
 
 - `visual-foundation` — dueña de `docs/ui-system.md`, con su plantilla y sus evals.
+- `interface-craft` — diseño, rediseño e implementación de una interfaz concreta, con sus
+  criterios por área en `references/craft-criteria.md` y sus evals.
 
 Todavía no existe:
 
-- `design-directions`, `interface-craft`, `visual-consistency`, `adaptive-layout`,
-  `component-architecture` y `tailwind-hygiene`
+- `design-directions`, `visual-consistency`, `adaptive-layout`, `component-architecture` y
+  `tailwind-hygiene`
 - `ux-audit` ni ninguna separación de `ux-critic`
 - librerías, scripts o infraestructura compartida entre skills visuales
 
 Las cinco skills previas siguen sin modificarse: cada pieza visual se incorpora sin alterar el
-comportamiento de las existentes. La siguiente será `interface-craft`.
+comportamiento de las existentes. La siguiente será `visual-consistency`.

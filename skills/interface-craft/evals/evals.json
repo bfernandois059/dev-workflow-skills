@@ -1,0 +1,65 @@
+{
+  "skill_name": "interface-craft",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Este hero funciona pero se ve genérico, como cualquier plantilla. Mejóralo respetando la marca. Tenemos docs/ui-system.md y el manual de marca aprobado.",
+      "expected_output": "Abre ui-system.md y la marca antes de tocar nada, y decide contra esas referencias. Trata el problema como de composición y jerarquía, no como de detalle: está permitido replantear la estructura del hero, no solo subir padding, radius o font-weight. No resuelve por defecto con badge + título grande + párrafo + dos botones + tres tarjetas, ni añade gradientes, blobs o sombras decorativas para tapar una composición sin decidir. Mantiene intacto el alcance funcional: mismos enlaces, mismo destino, mismo contenido. Antes de declararlo terminado compara el render contra la marca y el sistema, y si no pudo ver la interfaz renderizada lo dice en vez de afirmar paridad visual.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Todos los KPI de este dashboard tienen el mismo peso y no sé dónde mirar.",
+      "expected_output": "Identifica que el problema es de jerarquía y composición, y lo resuelve en ese orden antes de tocar detalle. No lo reduce a cambiar colores, tamaños de fuente o el estilo de las tarjetas. Decide qué métrica es primaria —la que dispara acción— y cuáles son contexto, y puede reorganizar la composición para reflejarlo en vez de mantener la fila de KPI idénticos. Usa varias herramientas de jerarquía (posición, escala, espacio, agrupación, contraste, densidad), no solo font-size o font-weight. No elimina métricas para 'simplificar' ni convierte el panel en una landing aireada.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Agrega un gráfico de evolución mensual de ventas a este dashboard. El proyecto ya usa una librería de charts.",
+      "expected_output": "Reutiliza la librería de charts que el proyecto ya tiene. No dibuja el gráfico a mano en SVG para evitar la dependencia, y no introduce una segunda librería de gráficos habiendo una adecuada. Elige el tipo correcto para la pregunta (evolución en el tiempo → línea) e integra el gráfico al sistema visual del producto —colores, tipografía y grillas del sistema, no la paleta por defecto de la librería— y a la jerarquía de la pantalla, en vez de pegarlo como widget. Incluye unidades y una referencia de comparación cuando corresponda.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Necesito un gráfico interactivo con tooltip, leyenda y varias series. Revisé y el proyecto no tiene ninguna librería de gráficos.",
+      "expected_output": "Puede recomendar o agregar una dependencia estándar y mantenida: ejes, escalas, tooltips, leyendas y series múltiples son exactamente el caso donde una librería reduce complejidad real. No trata 'cero dependencias' ni 'menos líneas' como objetivo, y no construye a mano un gráfico complejo en SVG por austeridad. Justifica brevemente qué resuelve la dependencia y qué alternativa descartó, en vez de instalarla sin explicación. Sigue integrando el resultado al sistema visual del proyecto.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Quiero que este botón tenga una transición suave al hover.",
+      "expected_output": "Lo resuelve con CSS o con la convención de transiciones que el proyecto ya usa. No agrega una librería de motion para una transición simple: una dependencia debe reducir complejidad real, y aquí no hay complejidad que reducir. Trabajo proporcional: no convierte una mejora de detalle en un rediseño del sistema de interacción ni en una auditoría de motion. Respeta prefers-reduced-motion y mantiene una duración corta para una interacción frecuente.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Necesito un panel lateral animado, con gesto de arrastre para cerrarlo y estados de entrada y salida coordinados con el contenido. El proyecto ya usa una solución de motion.",
+      "expected_output": "Reutiliza la solución de motion que el proyecto ya tiene. No escribe cientos de líneas de CSS y JavaScript propio para evitarla, ni introduce una segunda librería de animación. Reconoce que gestos y secuencias coordinadas están por encima de lo que resuelven bien las transiciones CSS. Si el panel necesita comportamiento de diálogo —foco atrapado, cierre con teclado, portal— usa las primitives accesibles del proyecto en vez de reimplementarlas a mano.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Esta pantalla usa H1 de 44px pero el resto del sitio tiene tamaños distintos: hay pantallas con 36, con 40 y con 42. Hazla consistente.",
+      "expected_output": "Consulta docs/ui-system.md y las referencias aprobadas antes de elegir un valor. No adopta 44px solo porque es el valor de la pantalla que le tocó, ni elige por frecuencia bruta el tamaño más repetido: reconoce que 36/40/42/44 casi con seguridad son un rol con tres desviaciones, no cuatro niveles del sistema. Si el sistema resuelve la decisión, la aplica. Si no existe foundation suficiente, mantiene la tarea acotada, señala explícitamente que la escala tipográfica no está decidida y deriva esa decisión a visual-foundation, en vez de inventar un quinto valor arbitrario o recorrer todas las pantallas normalizando tamaños.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "Mejora esta pantalla del CRM, se ve muy cargada. Es la vista que usan los ejecutivos todo el día para revisar cuentas.",
+      "expected_output": "No interpreta 'mejorar' como eliminar información ni como convertir la pantalla en tarjetas grandes con mucho aire. Reconoce que es una herramienta de uso intensivo y conserva la densidad que la tarea necesita: quien la usa ocho horas necesita ver más, no menos. Interviene en el orden jerarquía → agrupación → disclosure → densidad, y solo consideraría quitar información con evidencia de que no se usa. Puede reorganizar composición y agrupar campos por sentido. No aplica el patrón de landing a un sistema operacional.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "Este bloque nuevo que agregaste tiene bastante JSX, quedó largo. Hazlo bien.",
+      "expected_output": "Decide por responsabilidad, no por número de líneas ni de archivos. Puede crear componentes locales cuando cada uno tiene una responsabilidad real y un contrato claro, y también puede dejar el bloque como está si partirlo solo produciría microcomponentes sin responsabilidad propia. No construye una página monolítica para no crear archivos, y no extrae todo por sistema. No inicia una componentización transversal del proyecto sin evidencia de repetición: si detecta que el patrón se repite en muchas pantallas, resuelve su alcance, señala el patrón y deriva la consolidación a component-architecture.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Diseña desde cero la portada del sitio. No tenemos referencia, ni marca definida, ni sabemos qué estilo queremos: algo moderno y limpio.",
+      "expected_output": "Primero comprueba si existe algo que sirva de referencia —ui-system.md, otra pantalla aprobada, un patrón compartido, marca con estructura definida, una captura o un mockup. Si no hay nada y las direcciones posibles son materialmente distintas, no improvisa una dirección definitiva ni la rellena con una UI genérica ('moderno y limpio' no es una dirección). Declara que la dirección visual no está resuelta, nombra en concreto qué decisión falta y deriva la exploración a design-directions. No construye tres propuestas dentro de esta skill ni abre una entrevista larga de descubrimiento.",
+      "files": []
+    }
+  ]
+}
