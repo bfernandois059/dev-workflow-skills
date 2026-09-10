@@ -4,6 +4,108 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+## adaptive-layout-v0.1.0 - 2026-09-10
+
+Cuarta skill de la familia visual definida en `docs/visual-skills-architecture.md`. Corrige el
+reflejo automático que produce casi todo el responsive generado por agentes: *desktop → hacer
+todo más angosto → apilar columnas → ocultar lo que molesta → llamarlo mobile*. Eso no es
+adaptación, es la misma pantalla con menos aire y menos capacidades. **Responsive no es reducir
+desktop**: lo primero en una pantalla pequeña puede no ser lo primero en una grande, y decidir
+esa prioridad es parte del trabajo.
+
+### Added
+
+- `adaptive-layout` 0.1.0: nueva skill instalable que **adapta una interfaz ya resuelta entre
+  mobile, tablet y desktop** conservando intención, prioridad y capacidades. Puede replantear
+  composición, orden, agrupación, densidad, navegación, disposición de acciones, comportamiento
+  de tablas, distribución de formularios, visualización de datos, crop y proporción de media,
+  disclosure, comportamiento sticky y layout de componentes; no toca intención de la pantalla,
+  capacidades funcionales, información necesaria, datos, reglas comerciales, permisos, acciones
+  disponibles ni contratos de API.
+- `adaptive-layout` 0.1.0: **frontera con `interface-craft` reducida a una prueba.** Si el
+  problema aparece porque cambió el espacio disponible, es de esta skill; si el mismo problema
+  existe en el viewport de origen —jerarquía rota, composición sin resolver, dirección visual
+  indecisa—, se deriva a `interface-craft` primero. Una jerarquía rota no se arregla desde un
+  breakpoint, y adaptar una pantalla mal resuelta produce dos pantallas mal resueltas.
+- `adaptive-layout` 0.1.0: **prioridad por viewport antes de reorganizar** —qué hay que ver
+  primero, qué hay que hacer primero, qué debe seguir siempre accesible, qué puede pasar a
+  segundo nivel, qué puede revelarse bajo demanda y qué necesita comparación simultánea—. Con
+  los dos errores simétricos escritos: preservar la simultaneidad cuando el espacio ya no la
+  permite, y añadir pasos cuando la tarea sí requiere comparar de un vistazo.
+- `adaptive-layout` 0.1.0: **preservar capacidad, no posición.** Ocultar visualmente no puede
+  significar eliminar una capacidad: `no cabe → display:none` no es responsive. Un filtro pasa a
+  un sheet, una acción secundaria a un menú, un detalle simultáneo a una navegación en dos
+  pasos, pero sigue siendo alcanzable. Si algo deja de estar permanentemente disponible hace
+  falta evidencia de que es prescindible en ese contexto. No cambia permisos ni reglas de
+  visibilidad funcional.
+- `adaptive-layout` 0.1.0: **estrategia de tablas según la tarea.** Una tabla no se convierte
+  automáticamente en cards: existen a menudo porque hay que comparar filas y columnas, y
+  convertir cada registro en tarjeta destruye esa capacidad. Tabla de decisión entre scroll
+  horizontal contenido, columnas prioritarias, columna clave fija, resumen→detalle y cards —esta
+  última legítima cuando la tarea es leer entidades de a una, nunca porque "mobile usa cards"—.
+  El scroll queda contenido en la tabla y no produce overflow horizontal de la página.
+- `adaptive-layout` 0.1.0: **breakpoints guiados por contenido.** La pregunta no es "¿es
+  tablet?" sino "¿en qué punto deja de funcionar esta composición?". Se reutilizan los del
+  proyecto y solo se crea uno nuevo ante una transición real que el sistema no pueda
+  representar. Varias media queries cercanas sosteniendo la misma estructura son parches
+  sucesivos y la señal de que hay que revisar la composición, no de que falte un breakpoint más.
+- `adaptive-layout` 0.1.0: **apilar no es una estrategia por sí misma.** Antes de pasar de tres
+  columnas a una se consideran prioridad, relación entre bloques, necesidad de comparación,
+  agrupación, disclosure, navegación contextual, scroll controlado, reordenamiento y cambio de
+  representación. Y los sistemas operacionales —CRM, intranet, administración— no se convierten
+  en landings espaciosas: la densidad simultánea baja por prioridad y disclosure, no por
+  eliminación indiscriminada.
+- `adaptive-layout` 0.1.0: **navegación, acciones y formularios con criterio propio.** La
+  estructura funcional de la navegación permanece y cambia solo el acceso —no se reducen diez
+  destinos a cuatro porque no caben—; la acción primaria sigue visible y una destructiva no gana
+  protagonismo por quedar sola en una fila; el responsive de un formulario no es
+  `grid-cols-2 → grid-cols-1` y conserva agrupaciones semánticas, campos, obligatoriedad,
+  validaciones y flujo.
+- `adaptive-layout` 0.1.0: **orden visual, de lectura y de teclado no se separan.** Reordenar con
+  `order` de CSS hasta que el foco salte en desacuerdo con lo que se ve es un defecto; duplicar
+  controles en una versión desktop y otra mobile produce focus duplicado, IDs repetidos y
+  estados divergentes. Se prefiere una estructura DOM cuya lectura tenga sentido en todos los
+  tamaños relevantes.
+- `adaptive-layout` 0.1.0: **la herramienta sigue al problema.** Primero CSS, Tailwind, grid,
+  flex, container queries y los primitives que el proyecto ya use; nada de JavaScript para lo
+  que CSS resuelve, ni hooks genéricos de `isMobile` para decisiones que el layout resuelve
+  declarativamente, ni render condicional por ancho cuando una sola estructura sirve.
+- `adaptive-layout` 0.1.0: **tablet no es residuo y el overflow no se esconde.** Validar
+  `desktop ✓ mobile ✓` deja el punto medio como accidente, justo donde los sidebars dejan de
+  caber y las toolbars empiezan a envolver. `overflow-x-hidden` sobre la página no es una
+  corrección: oculta el síntoma de un layout roto.
+- `adaptive-layout` 0.1.0: **validación visual en los viewports donde cambia la composición.**
+  `build ✓ lint ✓ typecheck ✓` no es validación responsive. Para "corrige mobile", el viewport
+  objetivo y el de origen para descartar regresión; para adaptación completa, desktop, un punto
+  intermedio relevante y mobile —sin matrices artificiales de veinte resoluciones— y con los
+  estados que ya existen, no solo con el ejemplo que cabe justo. Si no hay forma de renderizar,
+  se declara.
+- `adaptive-layout` 0.1.0: `references/adaptive-patterns.md` con patrones por área —navegación,
+  sidebars, headers, toolbars, acciones, grids, tablas, formularios, dashboards, gráficos,
+  master/detail, filtros, búsqueda, modales/drawers/sheets, imágenes y media, sticky y fixed,
+  empty/loading/error y contenido extremo—. Cada sección responde qué se rompe, qué debe
+  preservarse, qué estrategias existen y **cuándo una estrategia destruye la tarea**. Guía de
+  consulta, no catálogo de recetas obligatorias.
+- `adaptive-layout` 0.1.0: evals iniciales (`evals/evals.json`) sobre la decisión que toma el
+  agente y no sobre el recitado del método — desktop encogido, tabla de CRM, sidebar
+  operacional, formulario de dos columnas, dashboard apilado, acciones escondidas con
+  `display:none`, cinco breakpoints acumulados, hero de marketing, diseño base defectuoso que
+  deriva a `interface-craft`, validación sin render, transición intermedia de tablet y una tabla
+  donde cards **sí** corresponden.
+
+### Changed
+
+- `README.md`: `adaptive-layout` pasa de futura a disponible en el flujo, las skills
+  documentadas, el versionado, la instalación, la tabla de uso, la estructura del repositorio y
+  la sección de seguridad. Las otras tres skills visuales —`design-directions`,
+  `component-architecture` y `tailwind-hygiene`— siguen marcadas como no implementadas.
+- `docs/visual-skills-architecture.md`: actualizado el estado de `adaptive-layout`. Su línea
+  «qué puede modificar» pasa a precisar que la visibilidad se cambia mediante presentación
+  —disclosure, menú, sheet, vista secundaria— y no suprimiendo capacidades, y que los permisos y
+  las reglas de visibilidad funcional no son suyos; sin esa precisión, «visibilidad por
+  breakpoint» podía leerse como licencia para `display:none`. Las otras tres skills visuales
+  siguen sin implementar.
+
 ## visual-consistency-v0.1.0 - 2026-09-10
 
 Tercera skill de la familia visual definida en `docs/visual-skills-architecture.md`. Entre

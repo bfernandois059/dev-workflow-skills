@@ -1,0 +1,77 @@
+{
+  "skill_name": "adaptive-layout",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "La versión mobile funciona técnicamente, pero parece el desktop angosto: todo está simplemente apilado.",
+      "expected_output": "Identifica que apilar columnas no equivale a adaptar. Antes de reorganizar establece la prioridad de ese viewport —qué se ve primero, qué se hace primero, qué necesita comparación simultánea— y puede cambiar orden, agrupación, densidad y disclosure en consecuencia. Preserva las capacidades funcionales de la pantalla. No rediseña la identidad visual ni cambia la dirección del producto: adapta la decisión existente, no la sustituye.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Esta tabla funciona en desktop pero en teléfono no cabe. Hazla responsive.",
+      "expected_output": "No la convierte automáticamente en cards. Primero identifica la tarea: si el usuario compara filas y columnas o si inspecciona registros de a uno. Según eso elige scroll horizontal contenido, columnas prioritarias, columna clave fija o resumen→detalle, y justifica la elección por la tarea. Mantiene accesibles los datos necesarios y las acciones por registro en lugar de eliminarlos. El scroll queda contenido en la tabla y no produce overflow horizontal de la página.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "La app tiene sidebar de navegación y en mobile ocupa casi toda la pantalla.",
+      "expected_output": "Adapta el mecanismo de acceso —drawer, colapso, destinos primarios persistentes con el resto en menú— sin eliminar destinos ni reducir la cantidad porque no caben. La navegación sigue siendo alcanzable y la jerarquía entre primarios y secundarios se mantiene. Reutiliza los primitives o el patrón de overlay que el proyecto ya tenga. No inventa una arquitectura de información nueva.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Este formulario se rompe en tablet y mobile.",
+      "expected_output": "No se limita a cambiar grid-cols-2 por grid-cols-1: revisa orden lógico, agrupación, campos relacionados, longitud natural, ayudas, errores y acciones. Conserva las agrupaciones semánticas —los campos que pertenecen juntos se siguen leyendo juntos—. No altera campos, obligatoriedad, validaciones, reglas ni flujo. Verifica que el orden visual siga correspondiendo al orden de lectura y de teclado, en vez de reordenar con CSS order.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "En desktop tengo KPI, gráfico y tabla. En mobile queda una columna larguísima.",
+      "expected_output": "No trata el stack completo como solución suficiente. Prioriza: qué métrica responde la pregunta principal del panel y qué necesita verse simultáneamente. Adapta el gráfico según la pregunta que responde —proporción, posición de leyenda, densidad de marcas, scroll contenido— reutilizando la librería del proyecto, y la tabla según su tarea. Mantiene el resto del contenido accesible en lugar de eliminarlo.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Para que cupiera en mobile escondí tres botones secundarios con display:none.",
+      "expected_output": "Detecta que eso es pérdida funcional, no adaptación: ocultar visualmente no puede significar eliminar una capacidad. Distingue entre esconder por espacio y esconder por permisos o por regla del producto. Preserva las tres acciones mediante una presentación apropiada —menú de desbordamiento, sheet, acciones contextuales, vista de detalle— y verifica que la primaria siga visible. No cambia permisos ni reglas de visibilidad funcional.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Tengo media queries en 1180, 1120, 1070, 1030 y 980 porque el header se sigue rompiendo.",
+      "expected_output": "No agrega otro breakpoint. Reconoce que varios breakpoints cercanos sosteniendo la misma estructura son parches sucesivos y cuestiona la composición del header: qué contiene, qué es contexto y qué es acción, qué puede agruparse o pasar a un segundo nivel. Busca una transición estructural estable y reutiliza los breakpoints del sistema del proyecto cuando sirvan. La pregunta que se hace no es si es tablet, sino en qué punto deja de funcionar la composición.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "El hero aprobado funciona muy bien en desktop pero en mobile la imagen ocupa casi toda la pantalla y el CTA queda abajo.",
+      "expected_output": "Conserva la intención y la personalidad visual del hero aprobado. Puede cambiar crop, aspect ratio, punto focal, orden y escala para que el mensaje y el CTA queden en la primera pantalla. No interpreta mobile como permiso para eliminar la imagen ni para convertir el hero en un bloque genérico de título y botón. La referencia aprobada sigue mandando sobre la implementación.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "Quiero arreglar el responsive, pero esta misma pantalla ya se ve desordenada y sin jerarquía en desktop.",
+      "expected_output": "Detecta que el problema base no es responsive: la jerarquía rota existe también en el viewport de origen. Deriva primero a interface-craft y lo dice explícitamente, en vez de intentar arreglar la jerarquía de fondo mediante breakpoints. Puede nombrar qué se romperá además al reducir el espacio, pero no absorbe el rediseño ni entrega una adaptación sobre una base defectuosa.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Ya hice todos los cambios responsive. El build y typecheck pasan, pero no puedo abrir la app.",
+      "expected_output": "No declara validación visual. Dice explícitamente qué pudo verificar —los checks técnicos— y qué no: ningún viewport fue inspeccionado. Deja claro que build, lint y typecheck no sustituyen el render en una tarea responsive, y no afirma que mobile quedó correcto. Puede enumerar qué habría que revisar cuando exista forma de renderizar: overflow, prioridad, navegación, acciones, tablas y estados.",
+      "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "Desktop y mobile se ven bien, pero alrededor del tamaño tablet la toolbar se parte y las cards quedan demasiado estrechas.",
+      "expected_output": "Trata el punto intermedio como una transición real y no lo ignora porque los extremos funcionan. Adapta la composición en ese rango —separar la toolbar por naturaleza de sus controles, ajustar el número de columnas al ancho mínimo útil de la card— en lugar de añadir un breakpoint arbitrario para sostener la estructura actual. Verifica el resultado en el tamaño intermedio, no solo en desktop y mobile.",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "En desktop mostramos una tabla de propiedades. En mobile cada usuario normalmente abre una propiedad y lee sus datos; no compara filas.",
+      "expected_output": "Reconoce que aquí resumen→detalle o cards son apropiados, porque la tarea real es leer entidades individuales. No trata 'nunca cards' como prohibición: la regla es decidir según la tarea, y esta tarea la justifica. Conserva en el resumen los datos que permiten identificar y elegir la propiedad, y mantiene accesibles las acciones relevantes. No elimina datos que el usuario necesita al abrir el detalle.",
+      "files": []
+    }
+  ]
+}
