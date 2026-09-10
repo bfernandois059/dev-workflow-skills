@@ -8,10 +8,12 @@ Este documento es un contrato operativo, no un manifiesto de diseño. Se escribe
 agente —Claude Code, Codex u otro compatible— pueda decidir qué skill corresponde a una tarea
 sin adivinar, y para que la implementación posterior de cada pieza no invada a las demás.
 
-> **Estado:** `visual-foundation`, `interface-craft`, `visual-consistency` y `adaptive-layout`
-> ya están implementadas e instalables (`skills/visual-foundation/`, `skills/interface-craft/`,
-> `skills/visual-consistency/`, `skills/adaptive-layout/`). Las otras tres siguen sin existir:
-> este documento define su contrato y los siguientes PR implementarán cada pieza.
+> **Estado:** `visual-foundation`, `interface-craft`, `visual-consistency`, `adaptive-layout` y
+> `component-architecture` ya están implementadas e instalables (`skills/visual-foundation/`,
+> `skills/interface-craft/`, `skills/visual-consistency/`, `skills/adaptive-layout/`,
+> `skills/component-architecture/`). Las otras dos —`design-directions` y `tailwind-hygiene`—
+> siguen sin existir: este documento define su contrato y los siguientes PR implementarán cada
+> pieza.
 
 ## Titularidad
 
@@ -258,7 +260,9 @@ arregla desde el responsive.
 
 ---
 
-### `component-architecture`
+### `component-architecture` — implementada
+
+**Estado.** Disponible en [`skills/component-architecture/`](../skills/component-architecture/SKILL.md).
 
 **Propósito.** Identificar cuándo una decisión visual o funcional repetida debe convertirse en un
 componente o patrón compartido, y ejecutar esa consolidación.
@@ -267,22 +271,29 @@ componente o patrón compartido, y ejecutar esa consolidación.
 corregir algo obliga a tocar seis archivos; cuando una revisión detectó que el problema no está en
 las páginas sino en lo que comparten.
 
-**Cuándo no usarla.** Para diseñar el patrón por primera vez (`interface-craft`). Para eliminar
-componentes sin uso (`tech-cleanup`). Para consolidar cuando todavía no hay repetición real.
+**Cuándo no usarla.** Para diseñar el patrón por primera vez (`interface-craft`). Para decidir un
+comportamiento responsive que aún no está resuelto (`adaptive-layout`). Para eliminar componentes
+sin uso (`tech-cleanup`). Para consolidar cuando todavía no hay repetición real, o cuando la hay
+pero nadie decidió cuál de las versiones es la correcta.
 
 **Entrada principal.** El código de la interfaz y la evidencia de repetición.
 
 **Salida esperada.** Componentes o patrones compartidos creados o consolidados, con los puntos de
 uso migrados y el resultado visual preservado.
 
-**Qué puede modificar.** La estructura de componentes y sus consumidores dentro del alcance.
+**Qué puede modificar.** La estructura de componentes y sus consumidores dentro del alcance,
+incluidas las implementaciones duplicadas que la migración reemplace realmente. No modifica
+permisos, reglas comerciales, contratos de API ni estados funcionales para acomodar una
+abstracción.
 
 **Qué no debe absorber.** La decisión visual en sí. Consolida lo que ya se decidió; no aprovecha
 la consolidación para rediseñar.
 
-> **Regla dura.** No se componentiza por número de líneas. Un componente existe porque tiene una
-> responsabilidad real y un contrato claro, no porque un bloque se repita dos veces. Crear
-> microcomponentes sin responsabilidad propia empeora la mantenibilidad que se quería mejorar.
+> **Regla dura.** No se componentiza por número de líneas ni por número de apariciones. Un
+> componente existe porque tiene una responsabilidad real y un contrato claro, no porque un bloque
+> se repita dos veces. Crear microcomponentes sin responsabilidad propia empeora la
+> mantenibilidad que se quería mejorar, y una mega-API que acomode a todos los consumidores
+> también.
 
 ---
 
@@ -526,12 +537,15 @@ Implementado:
   con sus criterios por área en `references/visual-review-criteria.md` y sus evals.
 - `adaptive-layout` — adaptación de una interfaz resuelta entre mobile, tablet y desktop, con sus
   patrones por área en `references/adaptive-patterns.md` y sus evals.
+- `component-architecture` — consolidación de una decisión ya resuelta en una responsabilidad
+  compartida, con su criterio por tipo de patrón en `references/component-boundaries.md` y sus
+  evals.
 
 Todavía no existe:
 
-- `design-directions`, `component-architecture` y `tailwind-hygiene`
+- `design-directions` y `tailwind-hygiene`
 - `ux-audit` ni ninguna separación de `ux-critic`
 - librerías, scripts o infraestructura compartida entre skills visuales
 
 Las cinco skills previas siguen sin modificarse: cada pieza visual se incorpora sin alterar el
-comportamiento de las existentes. La siguiente será `component-architecture`.
+comportamiento de las existentes. La siguiente será `tailwind-hygiene`.

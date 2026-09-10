@@ -1,0 +1,77 @@
+{
+  "skill_name": "component-architecture",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "En tres pantallas del CRM tenemos prácticamente la misma tarjeta de cliente implementada por separado. Cuando cambiamos el estado visual tenemos que hacerlo tres veces.",
+      "expected_output": "Inspecciona las tres implementaciones antes de decidir. Confirma que comparten una responsabilidad real —presentar un cliente— y no solo estructura parecida, y separa las diferencias accidentales de las variantes legítimas. Reutiliza un componente adecuado si el proyecto ya lo tiene; si no, crea uno con un nombre que exprese la responsabilidad. Migra los consumidores del alcance comparando render y comportamiento antes y después. El resultado es que un cambio futuro del estado visual se hace en un solo lugar. No rediseña las tarjetas de paso.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Este bloque aparece dos veces. Extráelo a un componente para evitar duplicación.",
+      "expected_output": "No usa el número de apariciones como criterio automático. Determina si las dos apariciones comparten una responsabilidad real y se pregunta si deberían cambiar juntas cuando cambie esa decisión. Puede mantenerlo duplicado y explicar por qué abstraer no mejora la claridad, o componentizarlo si debe evolucionar como una misma decisión. En cualquier caso justifica por responsabilidad, no por conteo, y no inventa una regla numérica.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Este componente tiene más de 600 líneas. Divídelo en componentes más pequeños.",
+      "expected_output": "No divide por la cifra. Identifica responsabilidades reales dentro del archivo —comportamiento independiente, ciclo de estado propio, frontera conceptual clara— y extrae solo los límites coherentes, con su estado y su contrato completos. Puede dejar junta una sección grande si es cohesiva, y lo dice. No crea microcomponentes ni reparte JSX entre archivos para bajar el tamaño, y no deja la mitad del estado en el padre.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Esta pantalla tiene muchos componentes de 5–10 líneas que solo reenvían props y me cuesta seguir el flujo.",
+      "expected_output": "Detecta indirection sin responsabilidad: wrappers que reenvían las mismas props, nombres que describen posición en vez de concepto, archivos triviales que obligan a abrir varios para entender una pantalla. Puede reincorporar o consolidar esos wrappers. Conserva los componentes con contrato real —estado propio, semántica de dominio, accesibilidad, reutilización efectiva—, incluso si tienen un solo uso. No interpreta component architecture como crear más archivos, y tampoco convierte 'menos componentes' en el objetivo.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Esta nueva pantalla implementó su propio EmptyState pero ya tenemos uno usado en todo el producto.",
+      "expected_output": "Inspecciona el componente existente antes de proponer nada. Si representa la misma responsabilidad y soporta el caso, migra la pantalla al existente y elimina la copia local una vez comprobado que no tiene otros usos. No crea EmptyStateV2 ni una segunda abstracción para resolver una duplicación causada por no usar la primera. Si el caso realmente requiere una forma distinta, la modela como variante semántica del componente existente en lugar de un flag de página.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Nuestro `Card` ahora tiene `isDashboard`, `isCompact`, `isAdmin`, `showExtraBorder`, `hideFooter` y `smallOnMobile`.",
+      "expected_output": "Detecta que el componente está absorbiendo excepciones de consumidores que quizá no pertenecen juntos. Separa los estados binarios legítimos de los flags que nombran páginas o roles, y evalúa variantes semánticas —densidad, tono, tamaño—, composición con subcomponentes o responsabilidades separadas que compartan una capa inferior. No agrega otro boolean para resolver el próximo caso ni prohíbe los boolean props como categoría.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Tenemos cinco PageHeader distintos. Quiero uno solo, pero no existe `ui-system.md` y nadie sabe cuál de los cinco es el correcto.",
+      "expected_output": "Reconoce que la decisión visual no está resuelta y que consolidar no la resuelve. No escoge por mayoría, por antigüedad, por el que tiene más consumidores ni por el más nuevo, y no mezcla los cinco tratamientos dentro de una mega-API que los acomode a todos. Deriva a visual-foundation si falta la regla de sistema o a interface-craft si falta resolver el diseño concreto, y lo dice explícitamente. Puede dejar preparado el alcance de la consolidación posterior sin ejecutarla.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "Tenemos cinco PageHeader distintos y `docs/ui-system.md` define claramente el patrón aprobado.",
+      "expected_output": "Usa la foundation como decisión en lugar de promediar las implementaciones. Crea o reutiliza el patrón compartido correcto, migra los consumidores del alcance y elimina las desviaciones accidentales. Preserva las variantes que el sistema realmente define y no las borra por parecerse. Comprueba que los consumidores migrados no perdieron acciones ni estados, y compara el resultado visual contra la referencia, no solo contra la implementación anterior.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "Hay cuatro dialogs implementados a mano. El proyecto ya usa Radix para otros overlays.",
+      "expected_output": "Reutiliza el primitive que el proyecto ya tiene en vez de construir un dialog propio. Puede crear un wrapper compartido cuando existen decisiones de producto repetidas —tamaños, estructura de header y acciones, patrón de confirmación—, y ese wrapper delega en el primitive. No reimplementa focus trap, portal, navegación por teclado ni dismiss. El contenido y las acciones específicas siguen en los consumidores, y el wrapper no bloquea capacidades del primitive que algún caso necesita.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Estas dos tarjetas se ven iguales. Una permite editar si el usuario tiene permisos y la otra tiene reglas comerciales distintas. Hagamos una sola.",
+      "expected_output": "No deduce responsabilidad compartida únicamente por apariencia. Identifica qué presentación puede compartirse y qué lógica debe permanecer fuera: permisos y reglas comerciales no se mueven a un componente genérico, y el componente recibe resuelto lo que necesita —canEdit, status, actions— desde la capa propietaria. Si no hay una abstracción limpia, mantiene los componentes separados o comparte solo una capa inferior de presentación, y lo justifica. No modifica permisos, auth ni contratos de API por comodidad de componentización.",
+      "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "Tres versiones del mismo filtro usan exactamente el mismo diseño desktop, pero cada una resolvió mobile de manera distinta y no tenemos decidido cuál comportamiento es correcto.",
+      "expected_output": "No elige el comportamiento responsive por frecuencia ni por el que le parezca mejor. Reconoce que la consolidación depende de una decisión de adaptación que todavía no está tomada y deriva ese punto a adaptive-layout. No convierte las tres estrategias mobile en props arbitrarias del componente compartido. Puede consolidar lo que sí está decidido —el diseño desktop común— declarando que el comportamiento mobile queda pendiente, o esperar la decisión, pero no la inventa.",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "Ya consolidé cuatro cards en un componente común. Build y tests pasan, pero ahora algunas tienen menos padding y el título cambió de tamaño.",
+      "expected_output": "Considera que la consolidación no está terminada: build y tests no sustituyen la equivalencia visual, y una componentización que cambia spacing y tipografía sin decisión previa introdujo una regresión. Compara los consumidores contra la referencia aprobada o el sistema visual y contra su estado anterior, y corrige únicamente lo que la componentización rompió. No aprovecha para rediseñar las cards: si algún cambio visual es deseable pero no estaba decidido, lo señala y lo deriva a interface-craft.",
+      "files": []
+    }
+  ]
+}

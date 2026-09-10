@@ -4,6 +4,133 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+## component-architecture-v0.1.0 - 2026-09-10
+
+Quinta skill de la familia visual definida en `docs/visual-skills-architecture.md`. Responde una
+sola pregunta: *¿qué parte de esta interfaz tiene una responsabilidad suficientemente estable y
+compartida como para que deba existir una sola vez?* No existe para producir más componentes,
+sino para evitar los dos fallos opuestos: **la misma decisión copiada en muchas pantallas**, que
+derivan por separado y obligan a corregir en varios lugares, y **cada bloque pequeño convertido
+en componente**, que produce capas de props y archivos sin responsabilidad propia.
+
+### Added
+
+- `component-architecture` 0.1.0: nueva skill instalable que **consolida una decisión visual o
+  funcional ya resuelta en una responsabilidad compartida**. Puede detectar implementaciones
+  duplicadas o divergentes, crear componentes compartidos, consolidar componentes equivalentes,
+  definir variantes semánticas, reorganizar límites, migrar consumidores, eliminar duplicados
+  realmente reemplazados y simplificar fragmentación excesiva; no toca comportamiento, intención
+  visual aprobada, datos, lógica de negocio, permisos, contratos de API, estados funcionales ni
+  capacidades, salvo instrucción explícita.
+- `component-architecture` 0.1.0: **responsabilidad antes que repetición.** La repetición es
+  evidencia, no criterio suficiente, y no existe regla numérica —`2 apariciones → no,
+  3 → sí` no es un criterio—. Dos apariciones pueden justificar un componente si comparten una
+  responsabilidad importante y deben evolucionar juntas; diez pueden no justificarlo si solo
+  coinciden superficialmente. La pregunta decisiva queda escrita: **si esta decisión cambia
+  mañana, ¿deberían cambiar todas estas apariciones juntas?**
+- `component-architecture` 0.1.0: **el tamaño tampoco es criterio.** `500 líneas → dividir` no es
+  una razón: un bloque grande puede estar cohesionado y uno pequeño contener una responsabilidad
+  independiente. Se extrae por responsabilidad visual clara, comportamiento independiente, ciclo
+  de estado propio, patrón compartido o frontera conceptual — nunca para reducir líneas, bajar
+  complejidad aparente o repartir JSX entre archivos.
+- `component-architecture` 0.1.0: **detección del extremo opuesto.** Señales de
+  sobrecomponentización —wrappers que solo reenvían props, nombres que describen posición
+  (`TopLeftBox`), árboles donde entender una pantalla exige abrir muchos archivos triviales,
+  abstracciones creadas para ocultar tres líneas de JSX— con permiso explícito para
+  reincorporarlos cuando eso reduce indirection sin perder una frontera útil. «Menos
+  componentes» tampoco es el objetivo: se conserva todo componente con contrato real, aunque
+  tenga un solo uso.
+- `component-architecture` 0.1.0: **consolida decisiones resueltas, no las toma.** Cinco
+  `PageHeader` divergentes con `docs/ui-system.md` que define el patrón se consolidan; cinco sin
+  evidencia de cuál es el correcto **no se eligen por mayoría, por antigüedad ni por ser el más
+  nuevo**, ni se mezclan dentro de una mega-API. Se deriva a `visual-foundation` si falta la
+  regla de sistema y a `interface-craft` si falta resolver el diseño concreto. La consolidación
+  no convierte una inconsistencia en sistema solo porque sea frecuente.
+- `component-architecture` 0.1.0: **la implementación actual es evidencia, no arquitectura.** No
+  se asume que el patrón correcto sea el más antiguo, el más reutilizado, el que tiene más
+  consumidores, el que se llama `Shared` o el que vive en `/components`. Misma precedencia de
+  fuentes que el resto de la familia visual, con la misma consecuencia: una referencia aprobada
+  más reciente puede superseder `ui-system.md`, y esa discrepancia se declara y vuelve a
+  `visual-foundation`.
+- `component-architecture` 0.1.0: **reutilizar antes de crear.** Si el producto ya tiene
+  `EmptyState`, `PageHeader` o `DataTable` y una pantalla hizo su copia local, se migra al
+  existente en vez de crear `EmptyStateV2` — no se crea una segunda abstracción para resolver una
+  duplicación causada por no usar la primera—, salvo que el existente tenga otra
+  responsabilidad, su API no represente el caso o requiera flags incoherentes. Y cuando el
+  proyecto ya usa shadcn, Radix, Headless UI o una librería de tablas o formularios, la
+  consolidación es un **wrapper sobre ese primitive**: no se reimplementan focus trap, portal,
+  navegación por teclado, dismiss, sorting ni filtering.
+- `component-architecture` 0.1.0: **variantes semánticas contra flags de página.**
+  `density="compact"`, `tone="critical"` o `layout="summary"` describen formas legítimas del
+  componente; `isDashboard`, `isPropertyPage`, `isAdmin` o `showExtraBorder` suelen describir que
+  la abstracción está absorbiendo consumidores que no pertenecen juntos, sobre todo cuando
+  empiezan a combinarse. Los boolean props **no se prohíben**: siguen siendo correctos para
+  estados genuinamente binarios como `disabled`, `required`, `loading` y `selected`.
+- `component-architecture` 0.1.0: **ni mega-componente ni receta de composición.** Consolidar
+  tres componentes similares puede producir uno peor; cuando las diferencias afectan demasiadas
+  partes de la estructura se evalúan primitives compartidos, subcomponentes, composición,
+  slots/children, variantes específicas o mantener componentes separados sobre una capa común.
+  La composición con subcomponentes se ofrece como alternativa a veinte flags, explícitamente
+  **no como receta universal**. La meta no es tener un solo componente: es tener una sola
+  definición por decisión compartida.
+- `component-architecture` 0.1.0: **presentación, comportamiento o ambos.** Verse igual no prueba
+  que dos bloques deban compartir toda su lógica, y compartir lógica no obliga a la misma
+  presentación: se consolida únicamente la responsabilidad demostrada. Los permisos y las reglas
+  comerciales no se mudan a un componente genérico —lo recibe resuelto: `canEdit`, `status`,
+  `actions`— y no se modifican auth, contratos de API, consultas ni mutaciones por comodidad de
+  componentización. Ubicación local, compartida entre features o primitive global según la
+  arquitectura real del proyecto, sin crear una taxonomía de carpetas nueva.
+- `component-architecture` 0.1.0: **componentizar no es rediseñar.** Si la tarea es consolidar un
+  patrón aprobado, el resultado visual debe quedar equivalente salvo las desviaciones que la
+  fuente de verdad ya identifique como incorrectas; si cambian spacing, tipografía, color,
+  alineación, densidad, responsive o estados, la tarea no está terminada, y `build ✓ tests ✓` no
+  prueba equivalencia visual. Se preservan acciones, eventos, navegación, formularios, estados,
+  accesibilidad, interacción y permisos: una diferencia funcional real se convierte en variante
+  legítima o impide consolidar, pero no se borra durante la extracción. El comportamiento
+  responsive decidido por `adaptive-layout` se preserva, y si nunca se decidió se deriva en vez
+  de inventarlo.
+- `component-architecture` 0.1.0: **migración e incrementalidad.** Se migran los consumidores del
+  alcance acordado, se comprueban usos reales —imports indirectos, reexportaciones, referencias
+  dinámicas, rutas, tests— y se eliminan los duplicados realmente reemplazados con sus imports y
+  estilos muertos, sin dejar conviviendo `OldCard`, `NewCard` y `SharedCard`. Si el alcance es
+  `PageHeader`, no se sigue después con cards, modales, tablas, formularios y sidebar: se señalan
+  como siguientes candidatos. La eliminación general de código muerto no relacionado sigue siendo
+  de `tech-cleanup`.
+- `component-architecture` 0.1.0: `references/component-boundaries.md` con el criterio por tipo de
+  patrón —responsabilidad y cohesión, repetición o coincidencia, extracción, composición,
+  variantes, slots y children, controlled/uncontrolled, presentación y comportamiento, local
+  frente a feature y global, wrappers sobre primitives, tablas, formularios, dialogs y overlays,
+  sistemas operacionales, patrones de marketing, señales de mega-componente, señales de
+  microcomponentización, migración de consumidores y eliminación segura de duplicados—. Cada
+  sección responde qué evidencia justifica abstraer, qué debe compartir el componente, qué debe
+  permanecer en el consumidor y **qué señales indican que la abstracción empeoró el código**.
+  Guía de consulta, no doctrina general de React.
+- `component-architecture` 0.1.0: evals iniciales (`evals/evals.json`) sobre la decisión de
+  abstracción y no sobre el recitado de principios — tres cards equivalentes de CRM, un bloque
+  repetido dos veces, un archivo de 600 líneas, una pantalla llena de microcomponentes, un
+  `EmptyState` existente ignorado, un `Card` con seis booleanos, divergencia visual sin
+  foundation y con foundation, cuatro dialogs sobre un proyecto que ya usa Radix, dos tarjetas
+  iguales con lógica distinta, responsive divergente sin decidir y una consolidación que pasó
+  build y tests pero cambió padding y tipografía.
+
+### Changed
+
+- `README.md`: `component-architecture` pasa de futura a disponible en el flujo, las skills
+  documentadas, el versionado, la instalación, la tabla de uso, la estructura del repositorio y
+  la sección de seguridad; el total pasa de nueve a diez skills disponibles. Las dos skills
+  visuales restantes —`design-directions` y `tailwind-hygiene`— siguen marcadas como no
+  implementadas, y `ux-audit` sigue siendo trabajo futuro separado.
+- `docs/visual-skills-architecture.md`: actualizado el estado de `component-architecture`. Su
+  «cuándo no usarla» agrega la derivación a `adaptive-layout` cuando el comportamiento responsive
+  todavía no está decidido y el caso en que hay repetición pero nadie decidió cuál versión es la
+  correcta; su «qué puede modificar» precisa que incluye las implementaciones duplicadas que la
+  migración reemplace realmente y que no toca permisos, reglas comerciales, contratos de API ni
+  estados funcionales para acomodar una abstracción; y su regla dura agrega que tampoco se
+  componentiza por número de apariciones y que una mega-API que acomode a todos los consumidores
+  empeora la mantenibilidad igual que los microcomponentes. Sin esas precisiones, «la estructura
+  de componentes y sus consumidores» podía leerse como licencia para mover lógica de negocio a un
+  componente genérico. Las dos skills visuales restantes siguen sin implementar.
+
 ## adaptive-layout-v0.1.0 - 2026-09-10
 
 Cuarta skill de la familia visual definida en `docs/visual-skills-architecture.md`. Corrige el
