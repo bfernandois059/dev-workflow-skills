@@ -1,15 +1,16 @@
 # Arquitectura del sistema visual de skills
 
 Documento canónico de la familia de skills visuales de este repositorio. Define qué resuelve
-cada una, dónde termina su responsabilidad y qué reglas comparten, **antes** de que exista
-ninguna implementación.
+cada una, dónde termina su responsabilidad y qué reglas comparten. Se escribió antes de que
+existiera ninguna implementación y sigue siendo el contrato que cada pieza debe respetar.
 
 Este documento es un contrato operativo, no un manifiesto de diseño. Se escribe para que un
 agente —Claude Code, Codex u otro compatible— pueda decidir qué skill corresponde a una tarea
 sin adivinar, y para que la implementación posterior de cada pieza no invada a las demás.
 
-> **Estado:** ninguna de las siete skills visuales existe todavía. Este PR define el contrato;
-> los siguientes implementarán cada pieza. La primera será `visual-foundation`.
+> **Estado:** `visual-foundation` ya está implementada e instalable
+> (`skills/visual-foundation/`). Las otras seis siguen sin existir: este documento define su
+> contrato y los siguientes PR implementarán cada pieza.
 
 ## Titularidad
 
@@ -87,7 +88,10 @@ la **dirección de la dependencia**: `visual-foundation` no depende de las demá
 
 ## Las siete skills
 
-### `visual-foundation`
+### `visual-foundation` — implementada
+
+**Estado.** Disponible en [`skills/visual-foundation/`](../skills/visual-foundation/SKILL.md).
+Es la única de las siete que existe hoy.
 
 **Propósito.** Establecer y mantener el lenguaje visual del proyecto como reglas operativas, y
 ser dueña de `docs/ui-system.md`.
@@ -300,8 +304,8 @@ uso.
 `ui-system.md` es el contrato visual **operativo** que podrá existir dentro de cada proyecto que
 use estas skills. Vive en el repositorio del proyecto, no en este repositorio.
 
-Este PR lo define conceptualmente. No crea todavía la plantilla ni implementa
-`visual-foundation`, que será su dueña.
+Este documento lo define conceptualmente. Su dueña es `visual-foundation`, que mantiene la
+plantilla en `skills/visual-foundation/assets/templates/ui-system.template.md`.
 
 ### Qué podrá contener
 
@@ -497,18 +501,18 @@ la descripción del frontmatter: se lee siempre, aunque la skill no se use.
 
 ---
 
-## Qué queda fuera de este PR
+## Estado de implementación
 
-No se crea todavía:
+Implementado:
 
-- ninguna de las siete skills
+- `visual-foundation` — dueña de `docs/ui-system.md`, con su plantilla y sus evals.
+
+Todavía no existe:
+
+- `design-directions`, `interface-craft`, `visual-consistency`, `adaptive-layout`,
+  `component-architecture` y `tailwind-hygiene`
 - `ux-audit` ni ninguna separación de `ux-critic`
-- la plantilla completa de `ui-system.md`
-- librerías, scripts o infraestructura compartida
+- librerías, scripts o infraestructura compartida entre skills visuales
 
-No se modifica:
-
-- ninguna skill en `skills/**`
-- versiones, tags ni comandos de instalación
-
-**PR 2** implementará `visual-foundation`, primera dueña de `ui-system.md`, incluida su plantilla.
+Las cinco skills previas siguen sin modificarse: cada pieza visual se incorpora sin alterar el
+comportamiento de las existentes. La siguiente será `interface-craft`.

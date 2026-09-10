@@ -4,6 +4,46 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+## visual-foundation-v0.1.0 - 2026-09-10
+
+Primera skill de la familia visual definida en `docs/visual-skills-architecture.md`. Un proyecto
+no pierde coherencia visual por falta de talento, la pierde por no tener un lugar donde estén
+escritas las reglas: sin él, cada pantalla nueva vuelve a decidir desde cero el tamaño del
+título, el gap de la grilla y el radio de la tarjeta, y a los seis meses conviven cuatro escalas
+que nadie eligió.
+
+### Added
+
+- `visual-foundation` 0.1.0: nueva skill instalable, dueña de `docs/ui-system.md` — la fuente de
+  verdad visual operativa del proyecto. Crea el documento cuando no existe y **actualiza solo el
+  delta respaldado** cuando ya existe, conservando las decisiones todavía válidas. Una pantalla
+  nueva no redefine el sistema.
+- `visual-foundation` 0.1.0: **precedencia de fuentes explícita** —instrucciones del usuario,
+  referencias aprobadas, `ui-system.md` existente, documentación de producto, código e interfaz
+  renderizada— y **tres estados de evidencia** (`Confirmado` / `Derivado` / `Pendiente de
+  validar`). Una sección sin evidencia se borra en vez de rellenarse: un documento completado por
+  completitud enseña reglas que nadie aprobó.
+- `visual-foundation` 0.1.0: regla **frecuencia no es intención**, contra el modo de fallo de
+  inventar un design system desde código accidental. Un valor repetido se contrasta con función,
+  contexto, referencias aprobadas, consistencia perceptual y otros patrones antes de elevarse a
+  regla; ante evidencia insuficiente se marca pendiente. Títulos de 38, 40, 42 y 44 px no son
+  cuatro niveles del sistema.
+- `visual-foundation` 0.1.0: plantilla inicial de `ui-system.md`
+  (`assets/templates/ui-system.template.md`) con contexto y fuentes, dirección visual, tipografía
+  por roles, spacing semántico, layout, color por función, forma y profundidad, componentes,
+  motion, responsive, patrones aprobados y a evitar, y mapeo técnico. Ninguna sección obligatoria.
+- `visual-foundation` 0.1.0: evals iniciales (`evals/evals.json`) sobre decisiones, no sobre
+  recitado del procedimiento — marca aprobada contra implementación inconsistente, proyecto sin
+  marca, actualización por referencia nueva, petición de rediseño que corresponde a otra skill,
+  valores arbitrarios sin escala, y proyecto con librería visual ya instalada.
+
+### Changed
+
+- `README.md`: `visual-foundation` pasa de futura a disponible en el flujo, las skills
+  documentadas, el versionado, la instalación y la tabla de uso.
+- `docs/visual-skills-architecture.md`: actualizado el estado de `visual-foundation`. Las otras
+  seis skills visuales siguen sin implementar.
+
 ## ux-critic-v1.11.0 - 2026-08-24
 
 El registro de decisiones estaba formulado como reglamento del proyecto y al sembrarlo en un
