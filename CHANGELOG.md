@@ -24,10 +24,13 @@ consistencia, es ausencia de decisión; la segunda confunde dos dimensiones dist
   estados, detalle—. No se empieza por el `padding` si tres bloques compiten por ser el
   principal, no se añaden sombras para compensar una composición sin resolver, y no se anidan
   containers para suplir una jerarquía débil.
-- `interface-craft` 0.1.0: **precedencia visual explícita** —alcance de la tarea, `ui-system.md`,
-  marca, referencia aprobada, patrón del producto, documentación funcional, implementación
-  actual— con `docs/ui-system.md` de uso obligatorio cuando existe, y sin bloquear una tarea
-  acotada que ya tiene una referencia suficiente.
+- `interface-craft` 0.1.0: **precedencia visual explícita**, la misma que aplica
+  `visual-foundation` —instrucción de la tarea, referencia aprobada aplicable (Brand Master,
+  design system, mockup, captura), `docs/ui-system.md`, patrones aprobados del producto,
+  documentación funcional, implementación actual—. `ui-system.md` es de uso obligatorio cuando
+  existe, pero **una referencia específica más reciente puede superseder la foundation**: en ese
+  caso se aplica la referencia, se declara la discrepancia y se devuelve a `visual-foundation`
+  para sincronizar. No bloquea una tarea acotada que ya tiene una referencia suficiente.
 - `interface-craft` 0.1.0: **respetar el sistema no significa copiar lo que hay.** Una
   inconsistencia histórica no adquiere autoridad solo por existir: ante `H1` de 36, 40, 42 y
   44 px no se adopta el valor de la pantalla que tocó ni el más frecuente — se consulta la

@@ -42,8 +42,8 @@ cuál es la acción principal, qué es contexto, qué es metadata y qué puede e
 2. **El primer elemento.** Nombra el elemento que el ojo toca primero. ¿Coincide con lo más
    importante de la pantalla? Si el ojo va a un badge de color o a una ilustración decorativa, el
    peso está mal repartido.
-3. **Prueba de tres niveles.** Clasifica cada bloque en primario / secundario / terciario. Si más
-   del 60 % cae en primario, no hay jerarquía: hay una lista.
+3. **Prueba de tres niveles.** Clasifica cada bloque en primario / secundario / terciario. Si una
+   buena parte de los bloques compite como primario, no hay jerarquía: hay una lista.
 4. **Quitar el color.** En escala de grises, ¿sigue habiendo orden? Si la jerarquía desaparece,
    estaba sostenida solo por color.
 
@@ -101,8 +101,10 @@ cuerpo, apoyo, metadata— sobre una lista de píxeles.
    que dos son el mismo rol con distinto valor.
 2. **Distancia perceptual.** Dos niveles que se distinguen por 2 px no son dos niveles: quien mira
    no los diferencia, y quien implementa los confunde.
-3. **Ancho de línea.** Texto corrido cómodo entre ~45 y ~75 caracteres. Un párrafo a todo el ancho
-   de un contenedor grande no se lee, se recorre.
+3. **Ancho de línea.** El texto corrido se lee mejor en columnas estrechas —del orden de 45 a 75
+   caracteres como referencia orientativa, no como umbral de aprobación—. Lo que se juzga es si
+   el ojo encuentra el inicio de la línea siguiente: un párrafo a todo el ancho de un contenedor
+   grande no se lee, se recorre.
 
 **Se revisan en conjunto**, no aislados: `font-size`, `line-height`, `weight`, `tracking`, ancho
 de línea, contraste y la relación entre niveles. Subir el tamaño sin bajar el `line-height`
@@ -147,7 +149,8 @@ relación.
 2. **¿La tarea es leer o comparar?** Comparar exige ver varias cosas a la vez: el aire que ayuda a
    leer estorba para comparar.
 3. **Scroll por dato.** En una herramienta operacional, cuenta cuántos registros caben en un
-   viewport. Si caben tres, el diseño está cobrando en scroll lo que gana en aire.
+   viewport. Si caben muy pocos, el diseño está cobrando en scroll lo que gana en aire — y
+   cuántos son pocos depende de si la tarea es leer uno o comparar varios.
 
 **Señales de falla**: tarjetas grandes envolviendo una línea de información; en un panel de alta
 densidad, padding de landing; información eliminada "para simplificar" cuando el usuario la
@@ -169,8 +172,9 @@ convertir la paleta completa de marca en roles de UI produce interfaces que grit
 
 1. **¿Ya existe un rol equivalente?** No introduzcas un color nuevo por conveniencia local si el
    sistema ya tiene uno para esa función.
-2. **Grises casi idénticos.** Si dos tonos se diferencian en un 3 % y cumplen la misma función,
-   son uno mal copiado.
+2. **Grises casi idénticos.** Si dos tonos son prácticamente indistinguibles en pantalla y
+   cumplen el mismo rol, son un color mal copiado, no dos niveles del sistema. El criterio es
+   perceptual y funcional: ¿alguien nota la diferencia, y significa algo distinto?
 3. **Color como única señal.** Un estado señalado solo por color falla para daltonismo, en
    impresión y en pantallas malas. Acompáñalo de forma, texto, icono o posición.
 4. **Contraste medido**, no estimado, en texto y en controles.

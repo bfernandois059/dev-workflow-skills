@@ -95,13 +95,23 @@ nómbralo** en el informe. No lo absorbas.
 Inspecciona **solo lo necesario** para decidir. Cuando dos fuentes se contradicen, manda la de
 arriba:
 
-1. El **alcance y las instrucciones** de la tarea actual.
-2. **`docs/ui-system.md`** — si existe, se usa; no es opcional.
-3. **Brand Master** o sistema de marca.
-4. **Mockup, captura o referencia aprobada.**
-5. **Pantallas o patrones del mismo producto declarados como referencia.**
-6. **Documentación funcional** necesaria para entender la pantalla.
-7. **La implementación actual.**
+1. **Instrucción explícita de la tarea actual.**
+2. **Referencia visual explícitamente aprobada y aplicable a esta tarea** — Brand Master, design
+   system, mockup, captura.
+3. **`docs/ui-system.md`** — si existe, se usa; no es opcional.
+4. **Patrones aprobados del producto.**
+5. **Documentación funcional** necesaria para entender la pantalla.
+6. **La implementación actual.**
+
+Es la misma precedencia que aplica `visual-foundation`, y el orden entre 2 y 3 importa:
+
+> Una **referencia específica y aprobada más reciente puede superseder `ui-system.md`**. La
+> foundation puede quedar temporalmente desactualizada frente a un mockup recién aprobado, y en
+> ese caso manda el mockup.
+
+Cuando ocurra: aplica la referencia, **declara la discrepancia** en la entrega —qué dice el
+sistema, qué dice la referencia— y **devuélvela a `visual-foundation`** para sincronizar la
+foundation. Aplicarla en silencio deja `ui-system.md` mintiendo para la próxima tarea.
 
 > El código existente es **evidencia de cómo está construido el producto, no prueba de que esa
 > decisión visual sea correcta.**
@@ -125,7 +135,7 @@ Este es el criterio que separa continuidad de inercia:
 
 Si cuatro pantallas equivalentes usan `H1` de 36, 40, 42 y 44 px, **no elijas 44 porque es el
 valor de la pantalla que te tocó**. Tampoco el más frecuente: frecuencia no es intención. Consulta
-`ui-system.md` o la referencia aprobada.
+la referencia aprobada y `ui-system.md`, en ese orden.
 
 Si no hay decisión suficiente, mantén la tarea acotada y **marca el problema para
 `visual-foundation`** en vez de inventar un quinto valor arbitrario. Un valor nuevo elegido por

@@ -153,8 +153,12 @@ gusto.
   principal, y no se añaden sombras para compensar una composición sin resolver.
 - **Respetar el sistema no es copiar lo que hay.** Una inconsistencia histórica no adquiere
   autoridad solo por existir: ante `H1` de 36, 40, 42 y 44 px no se adopta el valor de la
-  pantalla que tocó ni el más frecuente — se consulta `ui-system.md` y, si no alcanza, se deriva
-  a `visual-foundation` en vez de inventar un quinto valor.
+  pantalla que tocó ni el más frecuente — se consulta la referencia aprobada y `ui-system.md` y,
+  si no alcanzan, se deriva a `visual-foundation` en vez de inventar un quinto valor.
+- **Misma precedencia de fuentes que `visual-foundation`**, con una consecuencia escrita: una
+  referencia aprobada más reciente **puede superseder `ui-system.md`** —la foundation puede
+  quedar atrás de un mockup recién aprobado—, y esa discrepancia se declara y vuelve a
+  `visual-foundation` para sincronizar, en vez de aplicarse en silencio.
 - **Densidad según el producto.** Una intranet no se diseña como una landing. Una interfaz
   "limpia" no es una con mucho espacio vacío: cuando un panel operacional se ve cargado, el orden
   es jerarquía → agrupación → disclosure → densidad, y eliminar información es la última opción.
