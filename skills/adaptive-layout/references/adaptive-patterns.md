@@ -159,8 +159,8 @@ alguien la convierte en cards y desaparece la comparación.
 
 - **Scroll contenido**: el contenedor de la tabla desplaza, no la página. Compruébalo con el
   viewport más estrecho y con el contenido más largo, no con el ejemplo que cabe.
-- **Columna clave fija**: fija la que identifica el registro; si al fijarla queda menos de la
-  mitad del ancho para el resto, la fijación estorba más de lo que ayuda.
+- **Columna clave fija**: fija la que identifica el registro; si la columna fija consume tanto
+  espacio que el resto pierde ancho útil para comparar, la fijación estorba más de lo que ayuda.
 - **Columnas prioritarias**: la selección se decide por la tarea —qué necesita el usuario para
   identificar la fila y decidir qué hacer con ella—, no por cuáles son más angostas.
 - **Resumen → detalle**: la fila resumida sigue mostrando lo que permite elegir cuál abrir.
@@ -311,8 +311,12 @@ conserve lo importante · reordenamiento de imagen y texto · texto superpuesto 
 adyacente cuando el contraste ya no aguanta · escala reducida conservando el gesto.
 
 **Cuándo destruye la tarea.** Reducir toda imagen grande a una miniatura decorativa, o conservar
-un hero enorme en mobile solo porque así funciona en desktop. En un hero, lo primero que debe
-verse es el mensaje y su acción; la imagen acompaña, y **eliminarla no es adaptarla**.
+un hero enorme en mobile solo porque así funciona en desktop.
+
+En un hero, **conserva la prioridad aprobada**. Si mensaje y acción son el objetivo dominante,
+deben seguir siendo alcanzables y visibles sin que la imagen los desplace; si la referencia hace
+de la imagen el elemento principal —editorial, inmobiliario, producto, lujo—, adapta crop y
+proporción sin quitarle ese rol. En ningún caso **eliminarla es adaptarla**.
 
 ---
 

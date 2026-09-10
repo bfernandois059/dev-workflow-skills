@@ -186,8 +186,9 @@ transición real que el sistema actual no pueda representar razonablemente.
 ```
 
 Cinco breakpoints cercanos sosteniendo la misma estructura no son responsive fino: son parches
-sucesivos. **Si hacen falta muchos para que algo no se rompa, el problema es la composición** —
-resuélvela y la mayoría desaparece.
+sucesivos. **Si hacen falta muchos breakpoints cercanos para sostener la misma estructura,
+trátalo como una señal de que la composición puede estar mal resuelta. Revísala antes de agregar
+otro breakpoint.** Cuando ese es el problema, resolverlo hace desaparecer la mayoría.
 
 ---
 
