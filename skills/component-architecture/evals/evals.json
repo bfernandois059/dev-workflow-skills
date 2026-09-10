@@ -28,7 +28,7 @@
     {
       "id": 5,
       "prompt": "Esta nueva pantalla implementó su propio EmptyState pero ya tenemos uno usado en todo el producto.",
-      "expected_output": "Inspecciona el componente existente antes de proponer nada. Si representa la misma responsabilidad y soporta el caso, migra la pantalla al existente y elimina la copia local una vez comprobado que no tiene otros usos. No crea EmptyStateV2 ni una segunda abstracción para resolver una duplicación causada por no usar la primera. Si el caso realmente requiere una forma distinta, la modela como variante semántica del componente existente en lugar de un flag de página.",
+      "expected_output": "Inspecciona el componente existente antes de proponer nada. Si representa la misma responsabilidad y soporta el caso, migra la pantalla al existente y elimina la copia local una vez comprobado que no tiene otros usos. No crea EmptyStateV2 ni una segunda abstracción para resolver una duplicación causada por no usar la primera. Si el caso necesita una forma distinta pero sigue representando la misma responsabilidad, puede modelarla como variante semántica en lugar de un flag de página. Si la responsabilidad cambió, no fuerza el componente existente ni crea una mega-API que acomode ambos casos: mantiene componentes separados o comparte solo la capa que realmente coincide, y lo justifica.",
       "files": []
     },
     {

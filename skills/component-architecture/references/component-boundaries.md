@@ -44,8 +44,9 @@ producto y responden a la misma pregunta —"así se presenta un cliente", "así
 página"—. La prueba práctica: si esa decisión cambia, todas deben cambiar juntas.
 
 **Qué debe compartir el componente.** Exactamente la decisión común: la estructura, el
-tratamiento y el contrato que define el concepto. Un componente cohesivo se puede describir en
-una frase sin conjunciones.
+tratamiento y el contrato que define el concepto. Un componente cohesivo suele poder describirse
+con una responsabilidad breve y reconocible; si la descripción empieza a acumular funciones no
+relacionadas, revisa el límite.
 
 **Qué debe permanecer en el consumidor.** El contenido, los datos, la conexión con el dominio y
 las diferencias que pertenecen a esa pantalla y no al concepto.
@@ -116,14 +117,16 @@ subcomponentes donde una prop bastaba.
 sistema**: densidad, tono, tamaño, énfasis, layout. El sistema visual o la referencia aprobada las
 nombra, o pueden nombrarse sin mencionar una página.
 
-**Qué debe compartir el componente.** El conjunto cerrado de variantes y su traducción a estilo.
-Una variante es un valor semántico —`tone="critical"`—, no una lista de utilidades.
+**Qué debe compartir el componente.** El vocabulario acotado y semántico de variantes y su
+traducción a estilo. Una variante es un valor con significado —`tone="critical"`—, no una lista
+de utilidades. El vocabulario puede crecer cuando el sistema realmente incorpora una forma nueva;
+lo que no puede es crecer una variante por pantalla.
 
 **Qué debe permanecer en el consumidor.** La elección de la variante, no su definición.
 
 **Señales de que empeoró.** La variante se llama como el consumidor (`variant="dashboard"`). Las
 combinaciones válidas ya no caben en la cabeza y algunas producen resultados absurdos. Se agrega
-una variante por cada pantalla nueva: eso ya no es un conjunto cerrado.
+una variante por cada pantalla nueva: eso ya no es un vocabulario, es una lista de excepciones.
 
 > Los boolean props siguen siendo correctos para estados genuinamente binarios: `disabled`,
 > `required`, `loading`, `selected`. El problema no es el tipo, es codificar excepciones
