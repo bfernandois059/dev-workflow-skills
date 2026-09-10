@@ -1,6 +1,6 @@
 # dev-workflow-skills
 
-**Cinco Agent Skills que cubren el ciclo completo de un proyecto digital: planificar, construir, criticar, gobernar y podar.**
+**Agent Skills que cubren el ciclo completo de un proyecto digital: planificar, construir, criticar, gobernar y podar.**
 
 Skills reutilizables para Claude Code, Codex y otros agentes compatibles con el estándar
 [Agent Skills](https://code.claude.com/docs/en/skills). Juntas forman un flujo de trabajo
@@ -11,6 +11,11 @@ salida, escritos a partir de trabajo real de agencia: proyectos heredados, repos
 entregas a clientes y sitios que salen a producción. Cada una impone la misma disciplina —
 **entender antes de actuar, separar hechos de supuestos y no declarar terminado lo que no se
 verificó**.
+
+Hoy hay **cinco skills disponibles**, documentadas más abajo. El repositorio está además
+preparando una familia de skills especializadas en interfaz —diseño, consistencia visual,
+responsive y arquitectura de componentes— que todavía **no está implementada**: por ahora existe
+solo su [arquitectura](docs/visual-skills-architecture.md).
 
 ## El flujo
 
@@ -51,7 +56,7 @@ Sitio en producción (o a punto de estarlo)
 └─────────────────────┘
 ```
 
-## Skills
+## Skills disponibles hoy
 
 ### [project-blueprint](skills/project-blueprint/SKILL.md) — antes de programar
 
@@ -158,6 +163,47 @@ stack real del proyecto en vez de asumir uno.
   etapas y con aprobación explícita del usuario.
 - Mantiene versión SemVer propia en `skills/tech-cleanup/VERSION`.
 
+## Arquitectura y evolución visual
+
+Las cinco skills de arriba cubren planificar, construir, criticar, gobernar y podar. Lo que
+todavía no cubren con criterio especializado es **la interfaz**: dirección visual, consistencia
+entre pantallas, responsive y arquitectura de componentes.
+
+Ese trabajo está definido —no implementado— en
+**[docs/visual-skills-architecture.md](docs/visual-skills-architecture.md)**, que fija qué
+resuelve cada futura skill visual, dónde termina su responsabilidad y qué reglas comparten:
+
+```
+Producto / arquitectura
+        ↓
+project-blueprint
+        ↓
+engineering-workflow
+        ↓
+┌──────────────────────────────┐
+│ Sistema visual especializado │
+│                              │
+│ foundation → directions      │
+│       ↓                      │
+│ interface craft              │
+│       ↓                      │
+│ adaptive layout              │
+│       ↓                      │
+│ visual consistency           │
+│       ↓                      │
+│ component architecture       │
+│       ↓                      │
+│ tailwind hygiene             │
+└──────────────────────────────┘
+
+Auditorías especializadas:
+ux-critic / marcozen / tech-cleanup
+```
+
+La familia se incorporará **progresivamente, una skill por vez**, con su propia versión SemVer y
+sin alterar el comportamiento de las cinco actuales. Mientras una skill no aparezca en
+[Skills disponibles hoy](#skills-disponibles-hoy), no existe y no se puede instalar.
+
 ## Versionado
 
 Cada skill tiene una versión SemVer y un tag independiente:
@@ -181,7 +227,7 @@ python3 skills/<nombre>/scripts/check_version.py --check-remote
 
 ### Con el CLI de skills (recomendado)
 
-Las cinco:
+Todas las del repositorio:
 
 ```bash
 npx skills add bfernandois059/dev-workflow-skills
@@ -251,6 +297,8 @@ un **prompt maestro reutilizable** en
 ## Estructura
 
 ```
+docs/
+└── visual-skills-architecture.md         # contrato de la futura familia de skills visuales
 skills/
 ├── project-blueprint/
 │   ├── SKILL.md                          # método de descubrimiento, clasificación y blueprint
