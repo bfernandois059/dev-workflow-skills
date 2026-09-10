@@ -8,10 +8,10 @@ Este documento es un contrato operativo, no un manifiesto de diseño. Se escribe
 agente —Claude Code, Codex u otro compatible— pueda decidir qué skill corresponde a una tarea
 sin adivinar, y para que la implementación posterior de cada pieza no invada a las demás.
 
-> **Estado:** `visual-foundation`, `interface-craft` y `visual-consistency` ya están
-> implementadas e instalables (`skills/visual-foundation/`, `skills/interface-craft/`,
-> `skills/visual-consistency/`). Las otras cuatro siguen sin existir: este documento define su
-> contrato y los siguientes PR implementarán cada pieza.
+> **Estado:** `visual-foundation`, `interface-craft`, `visual-consistency` y `adaptive-layout`
+> ya están implementadas e instalables (`skills/visual-foundation/`, `skills/interface-craft/`,
+> `skills/visual-consistency/`, `skills/adaptive-layout/`). Las otras tres siguen sin existir:
+> este documento define su contrato y los siguientes PR implementarán cada pieza.
 
 ## Titularidad
 
@@ -223,7 +223,9 @@ es que dos bloques compiten por el protagonismo.
 
 ---
 
-### `adaptive-layout`
+### `adaptive-layout` — implementada
+
+**Estado.** Disponible en [`skills/adaptive-layout/`](../skills/adaptive-layout/SKILL.md).
 
 **Propósito.** Adaptar una interfaz entre mobile, tablet y desktop conservando intención y
 prioridad.
@@ -243,6 +245,9 @@ declarada de la pantalla.
 contenido explícita por tamaño.
 
 **Qué puede modificar.** Layout, orden, densidad, visibilidad y comportamiento por breakpoint.
+La visibilidad se cambia mediante presentación —disclosure, menú, sheet, vista secundaria—, no
+suprimiendo capacidades: **ocultar visualmente no puede significar eliminar una función que el
+usuario necesita**. Los permisos y las reglas de visibilidad funcional no son suyos.
 
 **Qué no debe absorber.** El rediseño visual de fondo. Si la pantalla está mal en desktop, no se
 arregla desde el responsive.
@@ -519,12 +524,14 @@ Implementado:
   criterios por área en `references/craft-criteria.md` y sus evals.
 - `visual-consistency` — revisión visual cotidiana de solo lectura sobre la interfaz renderizada,
   con sus criterios por área en `references/visual-review-criteria.md` y sus evals.
+- `adaptive-layout` — adaptación de una interfaz resuelta entre mobile, tablet y desktop, con sus
+  patrones por área en `references/adaptive-patterns.md` y sus evals.
 
 Todavía no existe:
 
-- `design-directions`, `adaptive-layout`, `component-architecture` y `tailwind-hygiene`
+- `design-directions`, `component-architecture` y `tailwind-hygiene`
 - `ux-audit` ni ninguna separación de `ux-critic`
 - librerías, scripts o infraestructura compartida entre skills visuales
 
 Las cinco skills previas siguen sin modificarse: cada pieza visual se incorpora sin alterar el
-comportamiento de las existentes. La siguiente será `adaptive-layout`.
+comportamiento de las existentes. La siguiente será `component-architecture`.
