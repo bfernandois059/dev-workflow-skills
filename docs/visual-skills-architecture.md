@@ -8,9 +8,10 @@ Este documento es un contrato operativo, no un manifiesto de diseño. Se escribe
 agente —Claude Code, Codex u otro compatible— pueda decidir qué skill corresponde a una tarea
 sin adivinar, y para que la implementación posterior de cada pieza no invada a las demás.
 
-> **Estado:** `visual-foundation` e `interface-craft` ya están implementadas e instalables
-> (`skills/visual-foundation/`, `skills/interface-craft/`). Las otras cinco siguen sin existir:
-> este documento define su contrato y los siguientes PR implementarán cada pieza.
+> **Estado:** `visual-foundation`, `interface-craft` y `visual-consistency` ya están
+> implementadas e instalables (`skills/visual-foundation/`, `skills/interface-craft/`,
+> `skills/visual-consistency/`). Las otras cuatro siguen sin existir: este documento define su
+> contrato y los siguientes PR implementarán cada pieza.
 
 ## Titularidad
 
@@ -178,7 +179,9 @@ resolver detecta repetición estructural, lo señala y lo deriva a `component-ar
 
 ---
 
-### `visual-consistency`
+### `visual-consistency` — implementada
+
+**Estado.** Disponible en [`skills/visual-consistency/`](../skills/visual-consistency/SKILL.md).
 
 **Propósito.** Revisar una interfaz **renderizada** contra las referencias aprobadas y el sistema
 visual, y reportar lo que no corresponde.
@@ -197,17 +200,22 @@ referencias aprobadas.
 
 **Qué puede modificar.** Nada. Es de revisión.
 
-**Qué no debe absorber.** La profundidad de `ux-critic`. Prioriza en este orden:
+**Qué no debe absorber.** La profundidad de `ux-critic`. Revisa **macro antes que micro**:
 
-1. tamaños tipográficos
-2. gaps
-3. padding
-4. márgenes
-5. colores
-6. jerarquía
-7. composición
-8. consistencia entre pantallas
-9. patrones visuales arbitrarios
+1. jerarquía
+2. composición
+3. tipografía
+4. spacing
+5. alineación y layout
+6. color
+7. densidad
+8. forma y profundidad
+9. consistencia entre patrones
+10. detalle
+
+El orden no obliga a recorrer las diez capas en cada revisión: obliga a no reportar la última
+como si fuera la primera. Un `gap` de unos píxeles no encabeza el informe cuando el defecto real
+es que dos bloques compiten por el protagonismo.
 
 > **Regla dura.** Es una revisión cotidiana, rápida y repetible. Si empieza a evaluar propósito
 > de producto, adecuación al usuario o calidad del copy, dejó de ser `visual-consistency` y está
@@ -509,13 +517,14 @@ Implementado:
 - `visual-foundation` — dueña de `docs/ui-system.md`, con su plantilla y sus evals.
 - `interface-craft` — diseño, rediseño e implementación de una interfaz concreta, con sus
   criterios por área en `references/craft-criteria.md` y sus evals.
+- `visual-consistency` — revisión visual cotidiana de solo lectura sobre la interfaz renderizada,
+  con sus criterios por área en `references/visual-review-criteria.md` y sus evals.
 
 Todavía no existe:
 
-- `design-directions`, `visual-consistency`, `adaptive-layout`, `component-architecture` y
-  `tailwind-hygiene`
+- `design-directions`, `adaptive-layout`, `component-architecture` y `tailwind-hygiene`
 - `ux-audit` ni ninguna separación de `ux-critic`
 - librerías, scripts o infraestructura compartida entre skills visuales
 
 Las cinco skills previas siguen sin modificarse: cada pieza visual se incorpora sin alterar el
-comportamiento de las existentes. La siguiente será `visual-consistency`.
+comportamiento de las existentes. La siguiente será `adaptive-layout`.
