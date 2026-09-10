@@ -1,0 +1,41 @@
+{
+  "skill_name": "visual-foundation",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Tenemos el manual de marca aprobado por el cliente en docs/brand-master.pdf y los mockups firmados, pero el sitio se fue construyendo por partes y ya no se parece mucho. Déjame el sistema visual escrito para que dejemos de improvisar.",
+      "expected_output": "La marca y los mockups mandan sobre el código: cuando el implementado y la referencia se contradicen, la regla se escribe según la referencia y la diferencia se reporta como desviación, no se adopta el valor histórico como token. Crea docs/ui-system.md con las reglas respaldadas marcadas Confirmado y las inferidas Derivado. No convierte cada valor encontrado en el código en un nivel del sistema. Enumera las divergencias detectadas como siguiente acción para interface-craft o visual-consistency, sin corregir páginas en esta tarea.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "No tenemos manual de marca ni Figma ni nada, solo el código. ¿Puedes armar el sistema de diseño a partir de lo que hay?",
+      "expected_output": "Declara desde el principio que sin referencias aprobadas el resultado será mayoritariamente Derivado. No inventa identidad ni dirección visual: si nada la respalda, borra esa sección en vez de rellenarla con adjetivos genéricos. Deriva únicamente los patrones con evidencia consistente y contrasta frecuencia contra función y contexto antes de elevar un valor a regla. Donde conviven escalas incompatibles lo registra como Pendiente de validar con una pregunta respondible, en vez de elegir la más repetida.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Ya teníamos docs/ui-system.md desde hace meses. El cliente acaba de aprobar un rediseño de la tipografía en este mockup nuevo. Actualízalo.",
+      "expected_output": "Lee el documento existente y actualiza solo el delta respaldado por la referencia nueva; conserva con su texto y su estado las decisiones que siguen siendo válidas. No regenera el documento desde cero. Deja explícito qué regla cambió, qué decía antes, qué dice la referencia aprobada y por qué gana. Una referencia aprobada más reciente sí justifica cambiar una regla anterior, pero la contradicción queda escrita, no silenciada.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Rediseña el hero de la home, no me convence como se ve.",
+      "expected_output": "Reconoce que diseñar una pantalla concreta es responsabilidad de interface-craft y no absorbe la tarea. Puede señalar en una o dos líneas si falta foundation que haría falta para resolver bien ese hero, pero no convierte la petición en una auditoría larga del sistema visual ni empieza a escribir ui-system.md sin que se lo pidan.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Cada pantalla de esta app usa un tamaño de título distinto y los paddings son todos diferentes. Hay títulos de 38, 40, 42 y 44 px conviviendo. Pon orden.",
+      "expected_output": "Identifica que 38/40/42/44 no son cuatro niveles del sistema sino casi con seguridad un nivel y tres desviaciones, y no los registra como escala. Deriva una foundation proporcional a la evidencia disponible, marcando Pendiente de validar donde no hay base para elegir. Escribe el sistema en docs/ui-system.md; no recorre las pantallas corrigiendo tamaños ni paddings en esta tarea, y nombra explícitamente esa corrección como siguiente acción de otra skill.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "El proyecto usa una librería de componentes y de motion que vinieron con el template. Necesito el sistema visual documentado.",
+      "expected_output": "Documenta la herramienta existente cuando es relevante para las reglas —motion, componentes, tokens que la librería ya define— y la registra en el mapeo técnico. No recomienda reemplazarla ni reconstruir a mano lo que ya resuelve, ni introduce otra dependencia para lo mismo. Distingue qué reglas vienen impuestas por la librería y cuáles son decisiones propias del proyecto.",
+      "files": []
+    }
+  ]
+}
