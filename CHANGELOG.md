@@ -4,6 +4,83 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+## visual-consistency-v0.1.0 - 2026-09-10
+
+Tercera skill de la familia visual definida en `docs/visual-skills-architecture.md`. Entre
+construir una interfaz y auditarla en profundidad faltaba la revisión de todos los días: la que
+se corre después de implementar, antes de mostrarle algo a un cliente, o cuando alguien dice "se
+ve raro" y no sabe por qué. `ux-critic` resuelve esa pregunta con contexto obligatorio, siete
+capas, inventario medido y pasada de refutación —es cara y se usa en momentos concretos—. Esta
+skill responde una sola cosa, rápido y de solo lectura: **¿lo que está renderizado corresponde
+visualmente a lo que este producto decidió ser?**
+
+### Added
+
+- `visual-consistency` 0.1.0: nueva skill instalable de **revisión visual cotidiana y de solo
+  lectura** sobre la interfaz renderizada. Diagnostica, prioriza y entrega dirección de
+  corrección; no modifica archivos. La frontera queda escrita: `interface-craft` construye,
+  `visual-consistency` mira lo construido, `ux-critic` audita en profundidad UX, tarea, usuario,
+  flujo y propósito.
+- `visual-consistency` 0.1.0: **nada se afirma sin haber mirado.** No declara que algo "se ve",
+  "está alineado" o "es consistente" sin inspeccionar un render —navegador local, preview, URL o
+  captura—. Si solo hay código, lo declara como `Revisión visual no verificada` y se limita a
+  inconsistencias estructurales observables, sin presentar defectos perceptuales como hechos.
+  `lint ✓ typecheck ✓ build ✓` no cuenta como evidencia de consistencia visual.
+- `visual-consistency` 0.1.0: **mira primero, explica después.** No exige antes de revisar
+  formulario de contexto, definición de persona, objetivo comercial, inventario de componentes,
+  captura de todos los breakpoints ni pasada formal de refutación. Pide un dato solo cuando su
+  ausencia impide juzgar una decisión concreta.
+- `visual-consistency` 0.1.0: **orden de revisión macro antes que micro** —jerarquía,
+  composición, tipografía, spacing, alineación y layout, color, densidad, forma y profundidad,
+  consistencia entre patrones, detalle—. Un `gap` de unos píxeles no encabeza el informe cuando
+  el defecto real es que dos bloques compiten por el protagonismo.
+- `visual-consistency` 0.1.0: **priorizar en vez de inventariar.** Normalmente entre 3 y 7
+  hallazgos ordenados por cuánto mejora la percepción al corregirlos; si hay dos problemas
+  reales, se entregan dos y no se completa una cuota. Sin scores tipo `Jerarquía 7/10` salvo que
+  se pidan. El informe incluye siempre qué conviene mantener.
+- `visual-consistency` 0.1.0: **comparación entre pantallas por patrón equivalente**
+  —`PageHeader`, `Card`, `Panel`, `Table`, `EmptyState`, `FormSection`, `Modal`,
+  `PrimaryAction`, `KPI`— separando la variante justificada por función de la deriva accidental
+  y nombrando la pantalla que se salió del consenso. La consolidación transversal se deriva a
+  `component-architecture`.
+- `visual-consistency` 0.1.0: **misma precedencia de fuentes** que `visual-foundation` e
+  `interface-craft`, con una consecuencia propia de la revisión: si una referencia aprobada más
+  reciente contradice `docs/ui-system.md`, la implementación **no está incumpliendo** —la
+  foundation quedó atrás—. Se declara la discrepancia y se recomienda sincronizar con
+  `visual-foundation`, en vez de acusar a la pantalla de violar una regla obsoleta.
+- `visual-consistency` 0.1.0: **densidad según el tipo de producto.** Un CRM o un sistema
+  operacional no falla por contener mucha información: antes de recomendar eliminar algo se
+  revisa jerarquía → agrupación → disclosure → densidad. En un sitio comercial, la falla
+  simétrica —todo denso, plano y sin ritmo— sí es un defecto.
+- `visual-consistency` 0.1.0: **dirección de corrección sin implementar.** Cada hallazgo termina
+  en qué debería cambiar y por qué, con suficiente concreción para que el siguiente agente no
+  vuelva a diagnosticar. No se escribe el código de la solución, y cuando el problema es
+  estructural la dirección tampoco puede ser "subir `font-weight`" o "agregar `shadow`".
+- `visual-consistency` 0.1.0: `references/visual-review-criteria.md` con criterios por área
+  —jerarquía, composición, tipografía, spacing, layout y alineación, color, densidad,
+  superficies y profundidad, consistencia entre componentes, comparación con una referencia,
+  comparación entre pantallas y señales de diseño genérico—. Guía perceptual, no checklist: se
+  abre solo la sección del defecto observado, y los valores orientativos están declarados como
+  tales para que no se conviertan en umbrales de aprobación.
+- `visual-consistency` 0.1.0: evals iniciales (`evals/evals.json`) sobre la decisión que toma el
+  agente y no sobre el recitado del método — "algo se ve raro", comparación con mockup aprobado,
+  revisión sin render disponible, tres pantallas dispares, CRM cargado, hero genérico
+  técnicamente correcto, cinco vistas con `PageHeader` divergente, solicitud de auditoría
+  profunda de checkout, foundation desactualizada frente a un mockup nuevo y pantalla casi
+  correcta antes de mostrarla al cliente.
+
+### Changed
+
+- `README.md`: `visual-consistency` pasa de futura a disponible en el flujo, las skills
+  documentadas, el versionado, la instalación, la tabla de uso, la estructura del repositorio y
+  la sección de seguridad. Las otras cuatro skills visuales siguen marcadas como no
+  implementadas.
+- `docs/visual-skills-architecture.md`: actualizado el estado de `visual-consistency`. Su orden
+  de prioridad pasa de micro a macro —jerarquía y composición antes que tamaños tipográficos,
+  gaps y padding— para eliminar una contradicción con la regla dura de revisar macro antes que
+  micro; la lista anterior habría hecho que la skill reportara un `gap` como hallazgo principal
+  frente a una jerarquía rota. Las otras cuatro skills visuales siguen sin implementar.
+
 ## interface-craft-v0.1.0 - 2026-09-10
 
 Segunda skill de la familia visual definida en `docs/visual-skills-architecture.md`. Un agente

@@ -1,0 +1,65 @@
+{
+  "skill_name": "visual-consistency",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Tengo esto en localhost:3000. Algo se ve raro pero no sé qué.",
+      "expected_output": "Inspecciona el render antes de afirmar nada visual y empieza a revisar sin abrir un cuestionario bloqueante de producto, usuario o tarea. Devuelve hallazgos priorizados por mejora perceptual —normalmente entre 3 y 7 si hay tantos reales—, con el defecto macro antes que el micro: no encabeza el informe con un gap de unos píxeles si dos bloques compiten por el protagonismo. Incluye qué conviene mantener. No ejecuta la auditoría profunda de ux-critic ni evalúa propósito de negocio o copy.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Compara esta pantalla con el diseño aprobado.",
+      "expected_output": "La referencia aprobada manda sobre la implementación: el código no gana por existir. Compara en orden macro→micro y nombra discrepancias perceptuales concretas —proporción, énfasis, escala, spacing, color por rol— con su ubicación. Distingue lo implementado distinto de lo que la referencia no cubría. No declara cumplimiento apoyándose en build, lint o typecheck, y no propone reescribir el mockup para que coincida con lo construido.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Revisa visualmente este componente. No puedes levantar la app ni tengo captura.",
+      "expected_output": "Declara explícitamente que la revisión visual no está verificada porque solo pudo inspeccionar estructura y código. No inventa observaciones perceptuales ni afirma que algo 'se ve inconsistente'. Puede señalar riesgos estructurales observables en el código —dos componentes equivalentes con tokens distintos, un valor arbitrario donde el sistema tiene escala, un rol tipográfico que cambia entre archivos— presentados como riesgos a confirmar, no como defectos vistos.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Estas tres pantallas parecen hechas por personas distintas.",
+      "expected_output": "Compara patrones equivalentes entre las tres —encabezado, cards, acciones, metadata— en lugar de auditar cada pantalla por separado. Detecta escala tipográfica, gaps, paddings, márgenes, radius y colores divergentes, y agrupa por patrón en vez de listar cada valor. Identifica cuál pantalla se salió del consenso. No trata cada valor histórico como un nivel legítimo del sistema por el solo hecho de estar implementado.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Este CRM se siente cargado. ¿Qué está mal?",
+      "expected_output": "No recomienda eliminar información como primera medida. Revisa en orden jerarquía, agrupación, disclosure y densidad, y reconoce que un sistema operacional no falla por contener mucha información. No lo evalúa con criterios de landing ni propone convertirlo en tarjetas grandes 'para que respire'. Si la corrección real implica sacar contenido, lo nombra como decisión de producto, no como hallazgo visual.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "¿Qué opinas de este hero? Técnicamente funciona.",
+      "expected_output": "No lo aprueba por estar técnicamente correcto. Evalúa si la composición responde al contenido o es la fórmula por defecto —badge, título grande, párrafo, dos botones, tres tarjetas— y dice qué relación del contenido quedó sin expresar, en vez de limitarse a 'usa cards'. Conserva y nombra los recursos que sí responden a la marca. No propone originalidad gratuita ni rediseña ni escribe el código.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Revisa estas cinco vistas; los headers no me terminan de cuadrar.",
+      "expected_output": "Compara el patrón PageHeader en las cinco vistas y separa variante justificada por función de deriva accidental, nombrando cuál es la divergente en vez de declarar el patrón entero inconsistente. Entrega dirección de corrección concreta, no código, y no modifica archivos. Si la solución correcta es consolidar el patrón de forma transversal, lo deriva a component-architecture en lugar de ejecutarlo.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "Quiero saber si todo el flujo de checkout está bien para el usuario, desde producto hasta pago.",
+      "expected_output": "Reconoce que el objetivo excede la revisión visual cotidiana: propósito, tarea, usuario, estados y recorrido completo son auditoría profunda. Deriva a ux-critic explicando la diferencia en una o dos líneas. No intenta ejecutar una auditoría UX completa bajo visual-consistency ni la simula con un informe largo. Puede ofrecer, como alternativa acotada, revisar la consistencia visual de las pantallas del flujo.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "El mockup aprobado ayer usa otro tratamiento que docs/ui-system.md.",
+      "expected_output": "Aplica la precedencia correcta: la referencia aprobada más reciente puede superseder ui-system.md. No acusa a la implementación de incumplir una regla que quedó obsoleta. Declara la discrepancia con las dos versiones a la vista —qué dice el sistema, qué dice la referencia, cuál aplicó la implementación— y recomienda sincronizar la foundation con visual-foundation. No edita ui-system.md por su cuenta.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Revisa esto antes de mostrárselo al cliente.",
+      "expected_output": "Si solo hay dos desviaciones materiales, reporta dos: no completa una cuota de hallazgos ni infla el informe para demostrar exhaustividad. Incluye qué conviene mantener y declara contra qué referencia juzgó. No entrega scores numéricos por área salvo que se los pidan, y no convierte una revisión de pre-entrega en una auditoría completa.",
+      "files": []
+    }
+  ]
+}
