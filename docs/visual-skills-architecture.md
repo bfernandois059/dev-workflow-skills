@@ -8,12 +8,12 @@ Este documento es un contrato operativo, no un manifiesto de diseño. Se escribe
 agente —Claude Code, Codex u otro compatible— pueda decidir qué skill corresponde a una tarea
 sin adivinar, y para que la implementación posterior de cada pieza no invada a las demás.
 
-> **Estado:** `visual-foundation`, `interface-craft`, `visual-consistency`, `adaptive-layout` y
-> `component-architecture` ya están implementadas e instalables (`skills/visual-foundation/`,
-> `skills/interface-craft/`, `skills/visual-consistency/`, `skills/adaptive-layout/`,
-> `skills/component-architecture/`). Las otras dos —`design-directions` y `tailwind-hygiene`—
-> siguen sin existir: este documento define su contrato y los siguientes PR implementarán cada
-> pieza.
+> **Estado:** seis de las siete están implementadas e instalables: `visual-foundation`,
+> `interface-craft`, `visual-consistency`, `adaptive-layout`, `component-architecture` y
+> `tailwind-hygiene` (`skills/visual-foundation/`, `skills/interface-craft/`,
+> `skills/visual-consistency/`, `skills/adaptive-layout/`, `skills/component-architecture/`,
+> `skills/tailwind-hygiene/`). Solo `design-directions` sigue sin existir: este documento define
+> su contrato y el siguiente PR implementará esa pieza.
 
 ## Titularidad
 
@@ -297,7 +297,9 @@ la consolidación para rediseñar.
 
 ---
 
-### `tailwind-hygiene`
+### `tailwind-hygiene` — implementada
+
+**Estado.** Disponible en [`skills/tailwind-hygiene/`](../skills/tailwind-hygiene/SKILL.md).
 
 **Propósito.** Normalizar y limpiar el uso de Tailwind preservando exactamente el resultado
 visual.
@@ -307,20 +309,27 @@ clases es ilegible; cuando conviven utilidades contradictorias; cuando el `tailw
 uso real divergieron.
 
 **Cuándo no usarla.** Para cambiar cómo se ve algo. Para arreglar responsive roto
-(`adaptive-layout`). Para eliminar clases de componentes sin uso (`tech-cleanup`).
+(`adaptive-layout`). Para consolidar el mismo patrón repetido en varias pantallas
+(`component-architecture`). Para eliminar clases de componentes sin uso (`tech-cleanup`). Para
+migrar Tailwind de versión, convertir CSS a utilities o crear un sistema de tokens nuevo: son
+tareas distintas, no higiene.
 
-**Entrada principal.** El código con Tailwind y el `ui-system.md` o la configuración vigente.
+**Entrada principal.** El código con Tailwind, el `ui-system.md` o la configuración vigente, y la
+interfaz renderizada para comparar antes y después.
 
 **Salida esperada.** Clases normalizadas, con el antes/después visual verificado.
 
-**Qué puede modificar.** Clases de utilidad, `tailwind.config` y tokens, siempre que el resultado
-renderizado no cambie.
+**Qué puede modificar.** Clases de utilidad, `tailwind.config` o `@theme` y tokens, siempre que el
+resultado renderizado no cambie y el cambio exprese una decisión que **ya existe**. Crear un token
+nuevo porque un valor se repite no es suyo: eso es `visual-foundation`.
 
 **Qué no debe absorber.** El rediseño, la creación de componentes y la eliminación de código sin
 uso.
 
 > **Regla dura.** Si el resultado visual cambió, la tarea dejó de ser higiene. O se revierte, o se
-> reclasifica como `interface-craft` y se justifica el cambio.
+> reclasifica como `interface-craft` y se justifica el cambio. Y la equivalencia se demuestra
+> contra el theme real y el render, no contra una escala recordada: cercano no es equivalente, y
+> un valor arbitrario no es deuda por llevar corchetes.
 
 ---
 
@@ -540,12 +549,15 @@ Implementado:
 - `component-architecture` — consolidación de una decisión ya resuelta en una responsabilidad
   compartida, con su criterio por tipo de patrón en `references/component-boundaries.md` y sus
   evals.
+- `tailwind-hygiene` — normalización del uso de Tailwind con equivalencia demostrada, con su
+  criterio por tipo de clase y configuración en `references/tailwind-normalization.md` y sus
+  evals.
 
 Todavía no existe:
 
-- `design-directions` y `tailwind-hygiene`
+- `design-directions`
 - `ux-audit` ni ninguna separación de `ux-critic`
 - librerías, scripts o infraestructura compartida entre skills visuales
 
 Las cinco skills previas siguen sin modificarse: cada pieza visual se incorpora sin alterar el
-comportamiento de las existentes. La siguiente será `tailwind-hygiene`.
+comportamiento de las existentes. La siguiente será `design-directions`.

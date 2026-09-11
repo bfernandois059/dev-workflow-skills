@@ -4,6 +4,113 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+## tailwind-hygiene-v0.1.0 - 2026-09-10
+
+Sexta skill de la familia visual definida en `docs/visual-skills-architecture.md`, y la última
+antes de `design-directions`. Responde una sola pregunta: *¿cómo expresamos esta misma interfaz
+con Tailwind de forma más consistente, legible y alineada con el sistema existente, sin cambiar
+cómo se ve ni cómo funciona?* Resuelve la deriva de que una decisión termine escrita de tres
+maneras —`p-[24px]`, `p-6`, `px-[24px] py-[24px]`— o que se acumulen utilidades que se pisan entre
+sí —`rounded-md rounded-lg`, `hidden flex`—, y el fallo simétrico de tratar todo corchete como
+deuda.
+
+### Added
+
+- `tailwind-hygiene` 0.1.0: nueva skill instalable que **normaliza y limpia el uso de Tailwind
+  preservando exactamente el resultado visual y funcional**. Puede sustituir valores arbitrarios
+  por tokens equivalentes, eliminar utilidades demostrablemente redundantes o contradictorias,
+  reorganizar `className` con los helpers que el proyecto ya usa y sincronizar theme o
+  configuración con una decisión que ya existe. **Regla central: cambia cómo está expresada una
+  decisión, no la decisión.** Si después del cambio la interfaz se ve distinta, cambia su
+  responsive, altera un estado o modifica el comportamiento, dejó de ser higiene: se revierte o
+  se reclasifica.
+- `tailwind-hygiene` 0.1.0: **equivalencia exacta antes de reemplazar un arbitrary value.**
+  `mt-[24px] → mt-6` solo si el theme real del proyecto resuelve `6` exactamente a 24px, y las
+  escalas se inspeccionan en lugar de recordarse de memoria. Quedan escritas como inválidas
+  `px-[22px] → px-6`, `17px → text-lg` y `#1e1e1f → neutral-900`: **cercano no es equivalente**, y
+  no se redondean valores para que entren en la escala. Aplica a spacing, tipografía, color,
+  radius, dimensiones, sombras, opacidad, bordes, `z-index`, breakpoints y tokens propios.
+- `tailwind-hygiene` 0.1.0: **los arbitrary values no son un defecto.** `calc()`, variables CSS,
+  grid templates, geometría del layout, `env()` e integraciones con primitives son legítimos y no
+  se convierten a tokens para eliminar corchetes. La pregunta que decide: *¿este valor es
+  arbitrario porque el proyecto olvidó usar una decisión existente, o porque expresa una relación
+  específica que no pertenece a una escala?* Solo el primer caso es higiene clara.
+- `tailwind-hygiene` 0.1.0: **duplicados y contradicciones sin asumir que «la última clase
+  gana».** El resultado puede depender del CSS generado, la specificity, las variantes,
+  `!important`, estilos externos, `tailwind-merge`, composición en runtime o la versión y
+  configuración de Tailwind. Antes de eliminar una contradicción hay que determinar qué regla
+  produce el estilo observable, y se conserva **ese** resultado, no el que parezca más razonable.
+  Una utilidad aparentemente redundante puede ser un fallback o aplicar en un breakpoint, estado
+  o tema donde la otra no está activa.
+- `tailwind-hygiene` 0.1.0: **respeta el proyecto real sin asumir versión.** Se inspeccionan
+  versión instalada, `tailwind.config.*` o `@theme`, variables CSS, presets, plugins, utilities
+  propias, helpers (`cn`, `clsx`, `cva`, `tailwind-merge`) y el formatter u ordenador de clases ya
+  instalado. No se migra Tailwind de versión, no se mueve configuración de v3 a v4, no se
+  convierten CSS Modules ni CSS tradicional a utilities y no se crea un sistema de tokens nuevo.
+  Tampoco se intercambian helpers por preferencia, se agrega una dependencia para limpiar cuatro
+  clases ni se impone un orden de utilidades propio cuando el proyecto no tiene convención
+  automatizada.
+- `tailwind-hygiene` 0.1.0: **no crea tokens por repetición.** `gap-[18px]` en seis lugares no
+  autoriza a inventar `--spacing-18`: la repetición es evidencia de una decisión no formalizada,
+  pero formalizarla pertenece a `visual-foundation`. La skill puede `detectar → señalar →
+  derivar`, y solo sincroniza la implementación técnica cuando el valor o el rol **ya están
+  decididos**, la equivalencia es exacta y ningún consumidor cambia de resultado.
+- `tailwind-hygiene` 0.1.0: **estados, responsive y CSS variables preservados.** `hover:`,
+  `focus-visible:`, `disabled:`, `group-*`, `peer-*`, `data-*`, `aria-*`, `dark:` y las variantes
+  responsive no se colapsan porque simplifiquen el string, y una variante no se elimina por no
+  verse en una captura estática. `md:grid-cols-2 → lg:grid-cols-2` no es «más limpio»: cambia el
+  responsive, y eso es `adaptive-layout`. Una CSS variable no se sustituye por un color
+  hardcodeado aunque hoy coincidan —se perdería semántica, theming y comportamiento en runtime—,
+  aunque sí puede pasar a una utility semántica basada en esa misma variable.
+- `tailwind-hygiene` 0.1.0: **fronteras escritas con su derivación.** Un cambio visual deseable
+  sigue siendo un cambio visual y no se convierte en higiene porque mejore la interfaz:
+  `text-[15px] → text-base` cuando no son equivalentes va a `interface-craft`. El responsive roto
+  va a `adaptive-layout`; la consolidación de la misma `Card` copiada en cinco pantallas, a
+  `component-architecture`; la eliminación general de tokens, utilities o configuración sin uso,
+  a `tech-cleanup`. En este alcance solo se retira lo que quede directamente reemplazado por la
+  normalización y cuyo uso se haya verificado.
+- `tailwind-hygiene` 0.1.0: **validación visual obligatoria.** `build ✓ lint ✓ typecheck ✓` no es
+  equivalencia visual. Para un cambio puntual se inspecciona el consumidor antes y después y se
+  revisan los estados o breakpoints tocados; para varios, representantes suficientes del patrón y
+  no una matriz artificial de toda la aplicación. Sin forma de renderizar, solo transformaciones
+  demostrables técnicamente con alta confianza y se declara explícitamente que la equivalencia
+  visual no fue verificada. Si el render cambia: determinar si lo introdujo la limpieza,
+  revertir lo accidental y derivar lo deseable en vez de incorporarlo de paso.
+- `tailwind-hygiene` 0.1.0: `references/tailwind-normalization.md` con el criterio por tipo de
+  clase y configuración —arbitrary values, spacing, tipografía, color, radius y sombras,
+  duplicados y conflictos, variantes responsive y de estado, CSS variables, `cn`/`clsx`, `cva`,
+  `tailwind-merge`, clases condicionales, generación dinámica, `!important`, interop con CSS,
+  Tailwind v3, Tailwind v4 y `@theme`, utilities custom, plugins, dark mode, transiciones y
+  animación, y sincronización de theme y config—. Cada sección responde qué parece sucio, qué
+  puede normalizarse sin cambiar el render, **qué evidencia confirma la equivalencia**, qué debe
+  dejarse quieto y qué indicaría que la tarea pertenece a otra skill. Guía de consulta, no manual
+  general de Tailwind.
+- `tailwind-hygiene` 0.1.0: evals iniciales (`evals/evals.json`) sobre criterio de equivalencia y
+  no sobre el recitado de buenas prácticas — arbitrario exactamente equivalente, arbitrario casi
+  equivalente que no debe redondearse, `calc()` legítimo, `rounded-md rounded-lg` sin asumir
+  orden textual, responsive roto que se deriva, cambio visual disfrazado de limpieza, helper
+  existente reutilizado, helper inexistente que no se instala, CSS variable semántica que no se
+  hardcodea, valor repetido que no se convierte en token, duplicación de componente que se
+  deriva, y normalización sin render que no puede declararse visualmente validada.
+
+### Changed
+
+- `README.md`: `tailwind-hygiene` pasa de futura a disponible en el flujo, las skills
+  documentadas, el versionado, la instalación, la tabla de uso, la estructura del repositorio y
+  la sección de seguridad; el total pasa de diez a once skills disponibles. `design-directions`
+  queda como la única skill visual pendiente, y `ux-audit` sigue siendo trabajo futuro separado.
+- `docs/visual-skills-architecture.md`: actualizado el estado de `tailwind-hygiene`. Su «cuándo
+  no usarla» agrega la derivación a `component-architecture` y que migrar Tailwind de versión,
+  convertir CSS a utilities o crear un sistema de tokens nuevo son tareas distintas; su «entrada
+  principal» incorpora la interfaz renderizada, sin la cual no puede compararse antes y después;
+  su «qué puede modificar» precisa que el cambio de config o `@theme` debe expresar una decisión
+  que ya existe, y que crear un token porque un valor se repite es de `visual-foundation`; y su
+  regla dura agrega que la equivalencia se demuestra contra el theme real y el render —cercano no
+  es equivalente— y que un valor arbitrario no es deuda por llevar corchetes. Sin esas
+  precisiones, «clases de utilidad, `tailwind.config` y tokens» podía leerse como licencia para
+  redefinir la escala mientras el render se mantuviera «parecido». `design-directions` sigue sin
+  implementar.
+
 ## component-architecture-v0.1.0 - 2026-09-10
 
 Quinta skill de la familia visual definida en `docs/visual-skills-architecture.md`. Responde una
