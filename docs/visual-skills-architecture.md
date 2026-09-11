@@ -572,6 +572,6 @@ Todavía no existe:
   autorizado aquí (ver contradicción 1)
 - librerías, scripts o infraestructura compartida entre skills visuales
 
-Las cinco skills previas siguen sin modificarse: cada pieza visual se incorporó sin alterar el
+Las seis skills previas siguen sin modificarse: cada pieza visual se incorporó sin alterar el
 comportamiento de las existentes. El siguiente trabajo es el replanteamiento de `ux-critic` como
 `ux-audit`.

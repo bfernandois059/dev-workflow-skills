@@ -9,9 +9,12 @@ description: >-
   editorial, producto-first, guiada por evidencia, orientada a comparar o centrada en la tarea.
   Sirve para sitios comerciales, e-commerce, dashboards, CRM, intranets y sistemas operacionales.
   Dispara con "exploremos opciones", "dame direcciones para este hero", "no sabemos si debería
-  sentirse editorial o de producto", "muéstrame caminos distintos". No la uses cuando ya hay un
-  mockup o una referencia aprobada, cuando la tarea es implementar la dirección elegida, cuando
-  el problema es de detalle y no de dirección, ni para inventar una marca que no existe.
+  sentirse editorial o de producto", "muéstrame caminos distintos". Puede trabajar dentro de un
+  sistema visual o de referencias aprobadas mientras siga habiendo una decisión estructural
+  abierta. No la uses cuando ya existe un mockup o una referencia aprobada que fija
+  suficientemente la dirección de esa pantalla, cuando la tarea es implementar la dirección
+  elegida, cuando el problema es de detalle y no de dirección, ni para inventar una marca que no
+  existe.
 ---
 
 # Design Directions
