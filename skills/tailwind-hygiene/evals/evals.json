@@ -58,7 +58,7 @@
     {
       "id": 10,
       "prompt": "Encontré `gap-[18px]` en seis lugares. Agrégalo al theme como `gap-4.5` y migra todo.",
-      "expected_output": "No convierte la repetición en un token nuevo por su cuenta: formalizar un step de la escala es una decisión de sistema y pertenece a `visual-foundation` si no está tomada. No inventa nomenclatura ni semántica para el valor. Puede detectar y señalar la repetición como evidencia de una decisión no formalizada, y deja la normalización lista para cuando el token exista. Si el theme o `ui-system.md` ya definieran ese valor, sí podría sincronizar la implementación sin cambiar el render.",
+      "expected_output": "Antes de decidir nada inspecciona la versión de Tailwind y la configuración real, porque de eso depende si hace falta un token. Si el proyecto soporta utilities numéricas dinámicas y el valor real de `--spacing` hace que `gap-4.5` resuelva exactamente a 18px, puede normalizar `gap-[18px] → gap-4.5` como higiene: usar una utility que la versión y el theme ya soportan no es crear un token nuevo, y no toca `@theme` ni la configuración. Si esa utility no existe en la versión instalada o no resuelve exactamente al mismo valor, conserva `gap-[18px]` sin redondear, señala la repetición como evidencia de una decisión no formalizada y deriva esa formalización a `visual-foundation`, sin inventar nomenclatura ni semántica. En ninguno de los dos casos agrega una entrada de theme por su cuenta ni cambia `--spacing` para hacer entrar el valor.",
       "files": []
     },
     {

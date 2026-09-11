@@ -128,6 +128,16 @@ Encontrar `gap-[18px]` en seis lugares **no autoriza** a crear `--spacing-18` ni
 de theme. La repetición puede ser evidencia de una decisión no formalizada, pero **decidir que
 merece un token pertenece a `visual-foundation`**. Aquí se puede `detectar → señalar → derivar`.
 
+> **Usar una utility dinámica que la versión y el theme ya soportan no equivale a crear un token
+> nuevo. Primero comprueba si Tailwind ya puede expresar exactamente ese valor.**
+
+En Tailwind v4 buena parte de las familias numéricas —spacing, sizing y sus derivadas— se calculan
+desde `--spacing`, del estilo `calc(var(--spacing) * <número>)`. Una utility puede entonces ser
+válida y exactamente equivalente **sin que exista ningún token individual con ese nombre**: con
+`--spacing: 0.25rem`, `gap-4.5` resuelve a 18px y `gap-[18px] → gap-4.5` es higiene, no un token
+nuevo. Comprueba el valor real de `--spacing` y la versión antes de concluir que hace falta
+formalizar algo.
+
 Si `docs/ui-system.md` o el theme aprobado **ya define** ese valor o ese rol y Tailwind todavía no
 lo expone correctamente, puedes sincronizar la implementación técnica cuando la equivalencia sea
 exacta, no cambie consumidores y no invente una decisión visual nueva.

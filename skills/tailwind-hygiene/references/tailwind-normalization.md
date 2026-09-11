@@ -388,16 +388,31 @@ entrada cuyo consumo no hayas verificado.
 **Qué parece sucio.** `@theme` conviviendo con variables definidas en `:root`, utilities que
 parecen faltar y valores duplicados entre CSS y uso.
 
-**Qué puede normalizarse.** El arbitrario que coincide con una variable de theme ya declarada, y
-la expresión coherente de un rol que `@theme` ya define.
+**Dos familias distintas, y confundirlas lleva a formalizar de más:**
 
-**Qué evidencia confirma equivalencia.** Que la variable esté en `@theme` —y no solo en `:root`—
-cuando lo que quieres es que genere utility; y el valor resuelto tras todos los `@import`.
+| Familia | Cómo existe la utility |
+|---|---|
+| **Semántica, por namespace de theme** | Cada variable declarada en `@theme` bajo su namespace —`--color-*`, `--font-*`, `--radius-*`, `--shadow-*`, `--breakpoint-*`— genera su utility: `--color-surface-muted` habilita `bg-surface-muted`. Sin la variable, la utility no existe |
+| **Numérica dinámica, derivada de `--spacing`** | Las familias de spacing y sizing se calculan del estilo `calc(var(--spacing) * <número>)`. La utility **no necesita un token individual con ese nombre**: con `--spacing: 0.25rem`, `gap-4.5` resuelve a 18px |
+
+**Qué puede normalizarse.** El arbitrario que coincide con una variable de theme ya declarada; la
+expresión coherente de un rol que `@theme` ya define; y el arbitrario numérico que una utility
+dinámica ya expresa exactamente —`gap-[18px] → gap-4.5`— sin tocar el theme.
+
+**Qué evidencia confirma equivalencia.** Para la familia semántica, que la variable esté en
+`@theme` —y no solo en `:root`—, porque solo la primera genera utility. Para la numérica, el valor
+real de `--spacing` y la multiplicación completa, no el supuesto de que la escala sea la de
+fábrica: un proyecto puede redefinir `--spacing` y mover todas las utilities a la vez. En ambos
+casos, el valor resuelto tras todos los `@import`.
 
 **Qué dejar quieto.** La diferencia entre una variable de theme y una variable de aplicación: no
-todas las variables deben generar utilities, y moverlas cambia la superficie del sistema.
+todas las variables deben generar utilities, y moverlas cambia la superficie del sistema. Y el
+valor numérico que **no** cae exactamente en un múltiplo de `--spacing`: ahí la utility dinámica
+no existe y el arbitrario sigue siendo correcto.
 
-**Cuándo es de otra skill.** Decidir qué roles existen en `@theme`: `visual-foundation`.
+**Cuándo es de otra skill.** Decidir qué roles existen en `@theme` o cambiar `--spacing`:
+`visual-foundation`. Que una utility dinámica ya exprese el valor **no** es crear un token, así
+que no hay nada que derivar en ese caso.
 
 ---
 
