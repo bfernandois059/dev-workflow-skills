@@ -4,6 +4,129 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+## ux-audit-v0.1.0 - 2026-09-11
+
+**`ux-audit` reemplaza a `ux-critic`.** Conserva la profundidad útil para auditar experiencia y
+elimina la ceremonia, la rigidez y los solapamientos que hoy pertenecen a la familia visual
+especializada. La pregunta central pasa a ser una sola: *¿puede esta persona completar bien esta
+tarea, entender lo que ocurre y recuperarse de los problemas, sin fricción, incertidumbre ni
+errores evitables?* El total de skills disponibles no aumenta: sigue siendo doce.
+
+`ux-critic` existía antes de que existieran `visual-consistency`, `adaptive-layout` y
+`component-architecture`, y por eso auditaba también sistema visual, responsive y componentes
+compartidos. Con la familia visual completa, esa superficie dejó de ser profundidad y pasó a ser
+duplicación.
+
+### Added
+
+- `ux-audit` 0.1.0: nueva skill instalable, **auditoría profunda de experiencia y de solo
+  lectura**. El centro es el recorrido —`persona → objetivo → recorrido → decisiones → feedback →
+  resultado`—, no el inventario de pantalla. Audita pantalla, flujo, herramienta o producto
+  completo sin modos ceremoniales: el alcance cambia la profundidad, no el método.
+- `ux-audit` 0.1.0: **frontera dura con `visual-consistency`**, el cambio más importante respecto
+  de `ux-critic`. Spacing, radius, color fuera del sistema, escalas tipográficas, alineaciones,
+  sombras, deriva visual entre pantallas y fidelidad a `ui-system.md` **no son suyos** cuando no
+  cambian la capacidad de comprender o completar la tarea. Sí lo son cuando el problema visual
+  tiene costo UX: *dos acciones parecen igual de primarias* o *el botón destructivo no se
+  distingue de uno seguro* son hallazgos de usabilidad; *tres cards con gap distinto* y *38 px
+  donde `ui-system.md` dice 40* no lo son.
+- `ux-audit` 0.1.0: **contexto sin burocracia.** Desaparece el «sin Fase 0 completa no hay
+  auditoría». Se usa primero todo el contexto existente —solicitud, producto, blueprint,
+  documentación, la interfaz, el flujo, los datos visibles— y se pregunta solo lo que falte y
+  pueda cambiar el juicio: una pregunta corta, o una hipótesis explícita cuando el juicio sigue
+  siendo útil sin ella.
+- `ux-audit` 0.1.0: **evidencia en tres marcas** —`Verificado` / `Inferido` / `No verificado`—
+  sin convertir cada párrafo en una matriz. Cada hallazgo relevante deja claro qué ocurre, dónde
+  se observó, qué le cuesta a la persona y por qué importa. El código no es evidencia visual,
+  pero sí aporta contexto sobre estados, rutas, flujo, condiciones y componentes compartidos.
+- `ux-audit` 0.1.0: **sin render no se bloquea: se ejecuta una `UX risk review`** sobre flujo
+  aparente, labels, estructura del formulario, estados contemplados, mensajes y condiciones
+  visibles en el código, **rotulada explícitamente** como basada en implementación y sin
+  experiencia renderizada verificada. No se afirma qué domina, qué compite o qué ve el usuario
+  sin haberlo visto, y no se asigna severidad visual desde el código.
+- `ux-audit` 0.1.0: **severidad simple por costo sobre la tarea** —Alta / Media / Baja— y solo
+  cuando ayude a priorizar. **Sin scores 0–100, sin puntuar pantallas y sin health score**: un
+  número inventado da precisión falsa a un juicio cualitativo. Acabado visual sin costo UX no es
+  «Baja»: es `visual-consistency`. Se mantiene la prohibición de inventar métricas de impacto:
+  *«este paso agrega fricción antes de la acción principal»* sí, *«eliminarlo aumentará la
+  conversión 18%»* no.
+- `ux-audit` 0.1.0: **los flujos se auditan como tarea completa**, no como una serie de informes
+  por pantalla, siguiendo el recorrido real y buscando pasos sin valor, información pedida dos
+  veces, decisiones prematuras, contexto perdido, feedback tardío, errores irreversibles, falta
+  de confirmación, loops y dead ends. Sin exigir un mapa de esfuerzo formal.
+- `ux-audit` 0.1.0: **productos grandes por muestreo** —tareas → arquetipos → representantes →
+  recorridos—, sin cantidad fija de pantallas, sin scripts de barrido y sin inventario obligatorio.
+  Separa hallazgos sistémicos de locales, puede rastrear el patrón compartido cuando hay
+  evidencia y **declara cobertura**: qué se revisó y qué quedó fuera. Cobertura no es calidad.
+- `ux-audit` 0.1.0: **los sistemas operacionales no se juzgan como una landing.** En CRM,
+  intranets y herramientas de uso frecuente el costo relevante es el trabajo acumulado por
+  sesión. No se recomienda «más aire», «menos información» ni «una acción por pantalla» por
+  estética: antes de proponer eliminar información, el orden es jerarquía → agrupación →
+  disclosure → densidad.
+- `ux-audit` 0.1.0: **una aprobación previa no inmuniza el producto.** Un mockup aprobado o
+  `ui-system.md` son fuente de diseño, no prueba de buena UX — pero auditar el efecto sobre la
+  persona no autoriza a reabrir la marca ni a rediseñar por gusto.
+- `ux-audit` 0.1.0: **diagnostica y deriva, no implementa.** Corrección visual clara a
+  `interface-craft`; dirección abierta con varias soluciones estructurales legítimas a
+  `design-directions`; ruptura entre tamaños a `adaptive-layout` —sin auditar breakpoints por sí
+  mismos—; patrón compartido a `component-architecture` —sin convertirse en revisión de
+  arquitectura React—; cambios funcionales a `engineering-workflow`.
+- `ux-audit` 0.1.0: `references/audit-criteria.md` con el criterio por área —orientación y
+  propósito, navegación e IA, acciones y decisiones, feedback y system status, errores y
+  recuperación, confirmaciones, acciones destructivas, estados, formularios, contenido y copy,
+  confianza, eficiencia y usuarios frecuentes, CRM e intranets, dashboards, e-commerce, sitios
+  comerciales, móvil cuando afecta la tarea y accesibilidad observable—. Cada sección responde
+  qué observar, qué cuesta, qué evidencia lo confirma, **qué falsos positivos evitar** y qué
+  skill recibe la corrección.
+- `ux-audit` 0.1.0: `references/site-scale.md` con el criterio de escala —tareas antes que
+  pantallas, arquetipos, representantes, local vs. sistémico, rastreo al patrón compartido,
+  cobertura declarada y uso opcional de automatización—. Automatizar puede ayudar; automatizar
+  no define qué es una auditoría.
+- `ux-audit` 0.1.0: evals iniciales (`evals/evals.json`) sobre calidad de juicio y frontera entre
+  skills — CRM con contexto suficiente, problema puramente visual que se deriva, checkout
+  end-to-end, auditoría sin render, producto de 40 pantallas, formulario de 18 campos, diseño
+  aprobado en Figma, acción que desaparece en móvil, patrón repetido en tres módulos, replanteo
+  estructural en pre-producción, hallazgo visual con costo UX que **no** se deriva, y petición de
+  score numérico con tabla de 50 heurísticas.
+
+### Removed
+
+- `ux-critic` eliminada del repositorio. El historial de Git conserva su implementación completa
+  y las entradas anteriores de este changelog siguen describiendo sus versiones 1.4.0 a 1.11.0.
+  No se deja copia archivada, stub deprecado ni alias.
+- Ceremonia eliminada intencionalmente en el reemplazo: context intake obligatorio y bloqueante
+  con cuestionario completo · niveles de exigencia 1/2/3 · selección de motor ALTO/MEDIO/BAJO ·
+  fases rígidas 0–5 · pasada de refutación como fase independiente —se conserva su intención como
+  comprobación de evidencia antes de emitir un hallazgo— · `docs/ux-decisions.md` obligatorio y
+  su plantilla de decision ledger · informe extenso con capas obligatorias, preguntas incómodas,
+  bloque de verificación y plan de corrección en olas · inventario automático obligatorio para
+  poder auditar · catálogo prescriptivo de anti-patrones visuales como doctrina · auditoría
+  detallada de spacing, color y ritmo como responsabilidad central, que ahora es de
+  `visual-consistency`.
+- Scripts y plantillas no portados: `scripts/ui_inventory.js`, `scripts/sweep.mjs`,
+  `scripts/compare_inventories.py`, `assets/templates/fix-plan.template.md` y
+  `assets/templates/ux-decisions.template.md`. El método nuevo no depende de ellos: la medición
+  automatizada pasa a ser opcional y ninguna capacidad conservada la exige. `check_version.py` sí
+  se mantiene, siguiendo el patrón vigente del repositorio.
+
+### Changed
+
+- `README.md`: `ux-critic` sustituida por `ux-audit` en el flujo, las skills documentadas, el
+  versionado, la instalación, la tabla de uso, la estructura del repositorio y la sección de
+  seguridad. El total se mantiene en doce skills disponibles porque es un reemplazo, no una
+  incorporación, y la diferencia entre `visual-consistency`, `ux-audit` e `interface-craft` queda
+  explicada en la propia entrada de la skill.
+- `docs/visual-skills-architecture.md`: la contradicción 1 —`ux-critic` cubría sistema visual y
+  responsive— deja de administrarse documentalmente y pasa a estar resuelta en el origen: la
+  separación es ahora por **tipo de pregunta** y no por profundidad. La contradicción 3 se
+  reescribe sobre `ux-audit`. `ux-audit` figura como auditoría especializada **transversal**, no
+  como octava skill visual, y desaparece de pendientes. Las siete visuales siguen implementadas y
+  sin cambios de contrato.
+- Referencias operativas actualizadas de `ux-critic` a `ux-audit` en `visual-consistency`
+  (`SKILL.md` y sus evals), `visual-foundation`, `interface-craft`, `adaptive-layout`,
+  `component-architecture` y `tailwind-hygiene`. Son sustituciones de nombre y enlace: ninguna
+  de esas skills cambia su contrato ni su comportamiento.
+
 ## design-directions-v0.1.0 - 2026-09-10
 
 Séptima y última skill de la familia visual definida en `docs/visual-skills-architecture.md`: con

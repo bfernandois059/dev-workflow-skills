@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Tengo esto en localhost:3000. Algo se ve raro pero no sé qué.",
-      "expected_output": "Inspecciona el render antes de afirmar nada visual y empieza a revisar sin abrir un cuestionario bloqueante de producto, usuario o tarea. Devuelve hallazgos priorizados por mejora perceptual —normalmente entre 3 y 7 si hay tantos reales—, con el defecto macro antes que el micro: no encabeza el informe con un gap de unos píxeles si dos bloques compiten por el protagonismo. Incluye qué conviene mantener. No ejecuta la auditoría profunda de ux-critic ni evalúa propósito de negocio o copy.",
+      "expected_output": "Inspecciona el render antes de afirmar nada visual y empieza a revisar sin abrir un cuestionario bloqueante de producto, usuario o tarea. Devuelve hallazgos priorizados por mejora perceptual —normalmente entre 3 y 7 si hay tantos reales—, con el defecto macro antes que el micro: no encabeza el informe con un gap de unos píxeles si dos bloques compiten por el protagonismo. Incluye qué conviene mantener. No ejecuta la auditoría profunda de ux-audit ni evalúa propósito de negocio o copy.",
       "files": []
     },
     {
@@ -46,7 +46,7 @@
     {
       "id": 8,
       "prompt": "Quiero saber si todo el flujo de checkout está bien para el usuario, desde producto hasta pago.",
-      "expected_output": "Reconoce que el objetivo excede la revisión visual cotidiana: propósito, tarea, usuario, estados y recorrido completo son auditoría profunda. Deriva a ux-critic explicando la diferencia en una o dos líneas. No intenta ejecutar una auditoría UX completa bajo visual-consistency ni la simula con un informe largo. Puede ofrecer, como alternativa acotada, revisar la consistencia visual de las pantallas del flujo.",
+      "expected_output": "Reconoce que el objetivo excede la revisión visual cotidiana: propósito, tarea, usuario, estados y recorrido completo son auditoría profunda. Deriva a ux-audit explicando la diferencia en una o dos líneas. No intenta ejecutar una auditoría UX completa bajo visual-consistency ni la simula con un informe largo. Puede ofrecer, como alternativa acotada, revisar la consistencia visual de las pantallas del flujo.",
       "files": []
     },
     {

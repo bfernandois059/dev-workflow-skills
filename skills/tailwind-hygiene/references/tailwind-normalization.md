@@ -201,7 +201,7 @@ teclado, deshabilitado, y los estados `data`/`aria` que el componente realmente 
 variante que no se ve en una captura estática sigue existiendo.
 
 **Cuándo es de otra skill.** Si falta un estado —no hay foco visible, no hay estado
-deshabilitado—, eso es un defecto de interfaz: `interface-craft` o `ux-critic`.
+deshabilitado—, eso es un defecto de interfaz: `interface-craft` o `ux-audit`.
 
 ---
 
