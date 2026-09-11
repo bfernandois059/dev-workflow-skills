@@ -46,7 +46,7 @@ de este repositorio. Se cita, no se copia. Léelo cuando necesites resolver una 
 
 - Para **diseñar o rediseñar una pantalla** concreta. Eso es `interface-craft`.
 - Para **juzgar si lo construido cumple** el sistema. Eso es `visual-consistency`.
-- Para **auditar la interfaz renderizada** con contexto de producto y usuario. Eso es `ux-critic`.
+- Para **auditar la interfaz renderizada** con contexto de producto y usuario. Eso es `ux-audit`.
 - Para **inventar una marca desde cero**. Si no hay ninguna decisión visual aprobada, eso es una
   conversación de producto, no una skill: registra lo que falta como `Pendiente de validar`.
 - Para **corregir la implementación**. Ver [Límites de modificación](#límites-de-modificación).

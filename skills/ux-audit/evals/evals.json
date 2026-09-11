@@ -1,0 +1,77 @@
+{
+  "skill_name": "ux-audit",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Tengo abierto el CRM. Los agentes lo usan todo el día para revisar propiedades y hacer seguimiento. Audita esta pantalla de propiedades y dime dónde estamos haciendo perder tiempo.",
+      "expected_output": "Usa el contexto entregado —usuarios recurrentes, uso diario, tarea de revisión y seguimiento— sin abrir un cuestionario de producto ni exigir etapa, nivel de exigencia o registro previo. Audita eficiencia, densidad útil, jerarquía de acciones frecuentes, continuidad entre registros y contexto que se pierde al navegar. No recomienda «más aire», «menos información» ni «una acción por pantalla» por estética: antes de proponer eliminar información aplica jerarquía, agrupación y disclosure. Prioriza por costo acumulado por sesión y sostiene cada hallazgo con evidencia observada, marcando lo que no pudo verificar.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Estas cinco cards tienen radios, sombras y gaps ligeramente distintos. Haz una auditoría UX.",
+      "expected_output": "Reconoce que lo descrito es principalmente consistencia visual y que, sin un costo demostrable sobre la comprensión o la tarea, no es un hallazgo de usabilidad. Deriva a `visual-consistency` explicando la frontera en una línea. No fabrica problemas de usabilidad —carga cognitiva, confusión, falta de jerarquía— para justificar su propia intervención. Puede ofrecer auditar la tarea que esas cards sirven si el usuario lo quiere, y mantendría el hallazgo dentro de `ux-audit` solo si esas diferencias hicieran que elementos con función distinta parezcan equivalentes.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Audita este checkout completo. Funciona, pero los clientes se pierden entre envío, dirección y pago.",
+      "expected_output": "Audita la tarea de punta a punta y no entrega un informe por pantalla. Recorre entrada, orientación, secuencia de pasos, decisiones pedidas antes de tiempo, información solicitada dos veces, costos que aparecen tarde, feedback, validación, recuperación tras un pago fallido y qué ocurre después de pagar. Nombra dónde se pierde el contexto entre pasos. No inventa impacto de conversión, lift ni benchmarks: describe la fricción y su costo. No altera el flujo comercial real —medios de pago, políticas, pasos legales— para simplificar, y deriva la implementación a `interface-craft` o `engineering-workflow` según corresponda.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "No puedo levantar la app ahora, pero revisa el código de esta pantalla y dime si tiene problemas de UX.",
+      "expected_output": "No bloquea la tarea. Ejecuta una `UX risk review` sobre flujo aparente, labels, estructura del formulario, estados contemplados, mensajes, decisiones de navegación y condiciones visibles en el código, y la rotula explícitamente como basada en implementación, sin experiencia renderizada verificada. No afirma observaciones visuales que no vio —qué domina, qué compite, qué ve o no ve el usuario— ni asigna severidad visual desde el código. Distingue lo inferido de lo verificado y lista qué habría que comprobar en pantalla para convertirla en auditoría.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Esta intranet tiene más de 40 pantallas. Quiero una auditoría UX pero no tiene sentido revisar una por una.",
+      "expected_output": "Parte de las tareas principales, no del mapa de secciones. Identifica arquetipos que funcionan distinto —listado, detalle, formulario largo, flujo multipaso, tabla densa, estados de error— y elige representantes, sin imponer una cantidad fija de pantallas ni exigir scripts de barrido, capturas de toda ruta o inventarios automatizados. Audita recorridos completos en vez de producir 40 auditorías superficiales. Separa hallazgos sistémicos de locales, puede rastrear el patrón compartido cuando hay evidencia, y declara cobertura: qué tareas y arquetipos revisó y qué quedó fuera.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Revisa este formulario de postulación. Tiene 18 campos y cuando falla uno vuelve arriba sin explicar mucho.",
+      "expected_output": "Prioriza la pérdida de información y la dificultad de recuperación por encima del número de campos. Analiza qué datos se piden y por qué, agrupación, labels visibles, momento de la validación, ubicación y contenido del mensaje, persistencia de lo ingresado tras el error y prevención de pérdida al salir. No trata 18 campos como defecto automático: el hallazgo sería pedir datos que no se usan o pedirlos antes de tiempo. No cambia reglas de obligatoriedad ni reglas comerciales sin evidencia; si no se entiende por qué un dato es obligatorio, lo plantea como hallazgo UX o pregunta de producto. No lo convierte en una auditoría WCAG completa.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "El cliente aprobó el diseño en Figma, así que no deberíamos cuestionarlo. Solo confirma que la UX esté bien.",
+      "expected_output": "No trata la aprobación como prueba de buena UX ni confirma por defecto. Respeta la dirección visual aprobada y no la reabre por gusto, pero audita comprensión, recorrido y capacidad de completar la tarea, y puede concluir que la pantalla cumple la referencia y aun así tiene un problema de tarea. Formula los hallazgos por su efecto sobre la persona, no como disputa estética, y deriva la corrección sin implementarla. Si no hay hallazgos materiales, lo dice con evidencia en vez de aprobar por ausencia de error obvio.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "En desktop editar un registro funciona bien. En móvil la acción Editar desaparece dentro de dos menús y nadie la encuentra.",
+      "expected_output": "Registra un problema UX real: en el dispositivo donde ocurre la tarea, la acción principal deja de ser alcanzable, y el costo es que la tarea no se completa o se vuelve mucho más cara. Lo mantiene dentro de `ux-audit` porque cambia la capacidad de completar, no porque cambie la composición. Deriva la resolución responsive a `adaptive-layout` y no rediseña breakpoints, ni audita el resto del comportamiento entre tamaños por su cuenta. Señala que ocultar visualmente no debería significar perder la capacidad.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "En clientes, propiedades y cotizaciones pasa lo mismo: para volver al listado pierdo filtros y posición.",
+      "expected_output": "Reconoce un problema repetido y lo clasifica como sistémico en vez de emitir tres hallazgos por pantalla. Explica el costo en trabajo acumulado: reconstruir el contexto en cada vuelta, sobre una acción que se repite muchas veces por sesión. Cuando hay evidencia, puede rastrearlo a la navegación, al layout o al componente de listado compartido, y lo marca como inferido si no pudo confirmarlo. No ejecuta el refactor: deriva la consolidación a `component-architecture` y la persistencia de estado a `engineering-workflow`.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Todavía no está publicado. Si la estructura de este flujo está mal, prefiero cambiarla ahora y no hacer parches.",
+      "expected_output": "Puede recomendar un replanteo estructural cuando el problema UX lo justifica, en vez de limitarse a microajustes por prudencia. Sostiene la recomendación en el costo observado sobre la tarea, no en preferencia. Si existen varias soluciones estructurales legítimas y la dirección está abierta, deriva a `design-directions`; si la corrección es clara, a `interface-craft`. No implementa el cambio dentro de la auditoría ni entrega tres propuestas visuales por hallazgo.",
+      "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "Tenemos dos botones visualmente iguales: \"Guardar borrador\" y \"Eliminar definitivamente\". ¿Eso es solo consistencia visual?",
+      "expected_output": "Reconoce que aquí el problema visual tiene costo UX claro y lo mantiene dentro de `ux-audit`: dos acciones con consecuencias opuestas —una reversible y una destructiva e irreversible— con el mismo tratamiento inducen un error grave y caro. Lo explica como prevención de error y jerarquía de acciones, no como falta de estilo, y le asigna severidad alta por pérdida de datos no recuperable. No lo deriva a `visual-consistency` por tratarse de un atributo visual. Puede recomendar distinguir el tratamiento, separar las acciones, confirmar nombrando el objeto o permitir deshacer, y deriva la ejecución.",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "Dame un score de UX de 0 a 100, una tabla de 50 heurísticas y todos los problemas que puedas encontrar.",
+      "expected_output": "No inventa un score numérico ni puntúa pantallas: explica brevemente que un número absoluto daría precisión falsa a un juicio cualitativo y que no está respaldado por medición. No entrega una matriz de 50 heurísticas ni confunde exhaustividad con calidad. Prioriza los hallazgos materiales según la tarea, el usuario y la evidencia disponible, entrega una auditoría accionable y acotada con su orden de corrección, y declara qué no verificó. Puede ofrecer severidad Alta/Media/Baja como priorización, que no es lo mismo que un puntaje.",
+      "files": []
+    }
+  ]
+}

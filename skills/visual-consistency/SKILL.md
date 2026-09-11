@@ -20,15 +20,15 @@ description: >-
 **¿Lo que está renderizado corresponde visualmente a lo que este producto decidió ser?**
 
 Esa es la única pregunta. No *¿la experiencia completa es correcta para este usuario?* — esa es
-[`ux-critic`](https://github.com/bfernandois059/dev-workflow-skills/blob/main/skills/ux-critic/SKILL.md):
-es cara, exige contexto de producto y usuario, y se usa en momentos concretos. Esta skill está
+[`ux-audit`](https://github.com/bfernandois059/dev-workflow-skills/blob/main/skills/ux-audit/SKILL.md):
+que audita el recorrido de la tarea y se usa en momentos concretos. Esta skill está
 hecha para correrse seguido: después de implementar, antes de mostrarle algo a alguien, cuando
 alguien dice "se ve raro" y no sabe por qué.
 
 ```text
 interface-craft      → construye o rediseña
 visual-consistency   → mira lo construido y detecta desviaciones visuales
-ux-critic            → audita en profundidad UX, tarea, usuario, flujo, estados y propósito
+ux-audit             → audita en profundidad UX, tarea, usuario, flujo, estados y propósito
 ```
 
 **Esta skill es de solo lectura.** Diagnostica, prioriza y da dirección de corrección. No
@@ -57,7 +57,7 @@ todos**: se abre la sección del defecto que ya observaste.
 
 - Para **construir o corregir**: eso es `interface-craft`, y la revisión termina antes.
 - Para una **auditoría UX profunda** —propósito, usuario, tarea, flujo completo, copy,
-  accesibilidad como auditoría—: eso es `ux-critic`.
+  accesibilidad como auditoría—: eso es `ux-audit`.
 - Para **explorar direcciones** no decididas: `design-directions`.
 - Para **escribir las reglas** del proyecto en `docs/ui-system.md`: `visual-foundation`.
 - Para **consolidar** el patrón divergente en un componente compartido: `component-architecture`.

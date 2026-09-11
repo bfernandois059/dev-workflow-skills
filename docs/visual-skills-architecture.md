@@ -79,7 +79,7 @@ engineering-workflow       controla rama, validaciones, PR e integración
 └──────────────────────────────────────────────────────────────┘
 
 Auditorías especializadas (transversales, fuera de la cadena):
-ux-critic · marcozen · tech-cleanup
+ux-audit · marcozen · tech-cleanup
 ```
 
 El orden es la secuencia típica, no una obligación. Una tarea puede entrar directamente por
@@ -169,7 +169,7 @@ cuando la tarea lo requiera.
 **Cuándo usarla.** Para construir una pantalla, sección o flujo nuevo; para rehacer uno que no
 funciona visualmente; cuando hay una referencia aprobada que traducir a interfaz real.
 
-**Cuándo no usarla.** Para revisar sin construir (`visual-consistency` o `ux-critic`). Para
+**Cuándo no usarla.** Para revisar sin construir (`visual-consistency` o `ux-audit`). Para
 explorar direcciones aún no decididas (`design-directions`). Para normalizar clases sin cambiar
 el resultado (`tailwind-hygiene`).
 
@@ -199,9 +199,9 @@ visual, y reportar lo que no corresponde.
 **Cuándo usarla.** Después de implementar; antes de mostrar algo a un cliente; cuando "se ve raro"
 y no está claro dónde; para comparar pantallas entre sí y detectar deriva.
 
-**Cuándo no usarla.** Como auditoría UX completa —eso es `ux-critic`, que evalúa propósito,
-tarea, copy y estados con contexto obligatorio. Para corregir: reporta, no implementa. Para
-juzgar sin haber renderizado nada.
+**Cuándo no usarla.** Como auditoría UX completa —eso es `ux-audit`, que evalúa si la persona
+puede entender, decidir y completar su tarea. Para corregir: reporta, no implementa. Para juzgar
+sin haber renderizado nada.
 
 **Entrada principal.** La interfaz renderizada (local, URL o captura), más `ui-system.md` y las
 referencias aprobadas.
@@ -210,7 +210,7 @@ referencias aprobadas.
 
 **Qué puede modificar.** Nada. Es de revisión.
 
-**Qué no debe absorber.** La profundidad de `ux-critic`. Revisa **macro antes que micro**:
+**Qué no debe absorber.** La profundidad de `ux-audit`. Revisa **macro antes que micro**:
 
 1. jerarquía
 2. composición
@@ -229,7 +229,7 @@ es que dos bloques compiten por el protagonismo.
 
 > **Regla dura.** Es una revisión cotidiana, rápida y repetible. Si empieza a evaluar propósito
 > de producto, adecuación al usuario o calidad del copy, dejó de ser `visual-consistency` y está
-> duplicando `ux-critic` peor de lo que `ux-critic` ya lo hace.
+> duplicando `ux-audit` peor de lo que `ux-audit` ya lo hace.
 
 ---
 
@@ -448,7 +448,7 @@ Las cinco skills existentes siguen funcionando sin cambios. Estas fronteras se r
 |---|---|---|
 | `project-blueprint` | Producto y arquitectura general | Define qué se construye y con qué stack. La familia visual no define arquitectura de información ni documentos de producto. |
 | `engineering-workflow` | Rama, validaciones, PR, integración | Controla **cómo** se integra cualquier cambio, incluidos los visuales. Ninguna skill visual gestiona ramas, PR ni merge. |
-| `ux-critic` | Auditoría UX profunda de interfaz renderizada | Sin cambios por ahora. Ver contradicción 1. |
+| `ux-audit` | Auditoría de experiencia sobre la tarea real | Juzga si la persona puede entender, decidir y completar; la revisión visual cotidiana es de `visual-consistency`. Ver contradicción 1. |
 | `marcozen` | Auditoría y gobernanza del repositorio | Orden general, seguridad, SEO, mantenimiento. No juzga calidad visual de una pantalla. |
 | `tech-cleanup` | Eliminación segura de código y assets sin uso | Borra lo que no se usa. `tailwind-hygiene` normaliza lo que sí se usa; `component-architecture` consolida lo repetido. Tres operaciones distintas. |
 
@@ -456,23 +456,20 @@ Las cinco skills existentes siguen funcionando sin cambios. Estas fronteras se r
 
 Las siguientes son solapamientos **reales** encontrados en las skills actuales, no hipotéticos.
 
-**1. `ux-critic` ya cubre sistema visual y responsive.**
-Su Capa 6 (`skills/ux-critic/SKILL.md`, Capa 6) evalúa color, tipografía y espaciado; su Transversal B
-(`skills/ux-critic/references/judgment-layers.md`, Transversal B) evalúa responsive real. Eso solapa con `visual-consistency`
-y con `adaptive-layout`.
+**1. `ux-critic` cubría sistema visual y responsive. Resuelto: fue reemplazada por `ux-audit`.**
+La versión anterior evaluaba color, tipografía y espaciado en una capa propia y responsive en una
+transversal, lo que solapaba con `visual-consistency` y con `adaptive-layout`.
 
-*Resolución documental:* se separan por **profundidad y costo**, no por tema.
+*Resolución:* el solapamiento ya no se administra documentalmente — se eliminó en el origen. La
+separación quedó por **tipo de pregunta**, no por profundidad:
 
-- `ux-critic` es una auditoría profunda con contexto de producto y usuario obligatorio y
-  bloqueante, siete capas en orden fijo, inventario medido sobre la página viva, pasada de
-  refutación y niveles de exigencia. Es cara y se usa en momentos concretos.
-- `visual-consistency` es una revisión cotidiana contra referencias y `ui-system.md`. No exige
-  contexto de producto, no evalúa propósito ni copy, y está pensada para correrse seguido.
-- `adaptive-layout` **implementa** la adaptación; `ux-critic` solo la juzga y no toca código.
-
-`ux-critic` no se renombra, no se recorta y no se modifica en este PR. Más adelante se evaluará
-separar su auditoría UX profunda de la revisión visual cotidiana; esa evaluación es un PR propio y
-no está autorizada aquí.
+- `ux-audit` pregunta si la persona puede entender, decidir y completar su tarea. Un problema
+  visual le pertenece **solo cuando tiene costo UX demostrable** —dos acciones que parecen igual
+  de primarias, un destructivo indistinguible de uno seguro—.
+- `visual-consistency` es la revisión cotidiana contra referencias y `ui-system.md`: spacing,
+  radius, color, escalas y deriva entre pantallas, sin costo UX de por medio.
+- `adaptive-layout` **implementa** la adaptación; `ux-audit` solo registra el hallazgo cuando la
+  tarea deja de poder completarse en ese tamaño, y deriva.
 
 **2. `docs/04-ux-content-and-design-system.md` ya existe como documento de producto.**
 Lo define `project-blueprint` (`skills/project-blueprint/SKILL.md`) como "arquitectura de información, flujos,
@@ -489,13 +486,13 @@ contenido y componentes" y lo lista `engineering-workflow` en su matriz de impac
 El primero responde *qué pantallas y qué contenido existen*. El segundo, *con qué reglas visuales
 se construyen*. Si un proyecto solo tiene uno de los dos, no se fuerza el otro.
 
-**3. `ux-critic` ya rastrea hallazgos al componente compartido.**
-Su modo sitio y su plantilla de plan de corrección (`skills/ux-critic/assets/templates/fix-plan.template.md`)
-trabajan con alcance "Componente compartido". Eso roza `component-architecture`.
+**3. La auditoría UX rastrea hallazgos al componente compartido.**
+Al auditar un producto grande, `ux-audit` separa lo sistémico de lo local y puede llegar del
+hallazgo al patrón que lo produce. Eso roza `component-architecture`.
 
-*Resolución documental:* `ux-critic` **identifica** que el problema vive en un componente
-compartido y lo entrega como tarea. `component-architecture` **decide y ejecuta** la
-consolidación estructural. Diagnóstico y cirugía, no la misma skill.
+*Resolución documental:* `ux-audit` **identifica** que el problema vive en un patrón compartido y
+declara su alcance. `component-architecture` **decide y ejecuta** la consolidación estructural.
+Diagnóstico y cirugía, no la misma skill.
 
 **4. `project-blueprint` ya pregunta por marca y referencias.**
 Su cuestionario de descubrimiento (`skills/project-blueprint/references/discovery-questionnaire.md`) pregunta si existe
@@ -566,12 +563,13 @@ Implementado:
 
 Con `design-directions` la familia visual queda completa.
 
+`ux-audit` reemplazó a `ux-critic` como auditoría de experiencia. **No es una octava skill
+visual**: sigue siendo una auditoría especializada transversal, fuera de la cadena visual.
+
 Todavía no existe:
 
-- `ux-audit` ni ninguna separación de `ux-critic` — sigue siendo un PR propio, pendiente y no
-  autorizado aquí (ver contradicción 1)
 - librerías, scripts o infraestructura compartida entre skills visuales
 
-Las seis skills previas siguen sin modificarse: cada pieza visual se incorporó sin alterar el
-comportamiento de las existentes. El siguiente trabajo es el replanteamiento de `ux-critic` como
-`ux-audit`.
+Las siete skills visuales no cambiaron su contrato con ese reemplazo: solo se actualizaron las
+referencias operativas que nombraban a `ux-critic`. El siguiente trabajo es la pasada final de
+integración del sistema completo.

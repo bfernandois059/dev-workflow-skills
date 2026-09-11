@@ -79,7 +79,7 @@ dilo y deriva: adaptar una pantalla mal resuelta produce dos pantallas mal resue
 - Para **consolidar** el mismo patrón responsive repetido en muchas pantallas:
   `component-architecture`.
 - Para **normalizar clases** sin cambiar comportamiento: `tailwind-hygiene`.
-- Para una **auditoría UX profunda** con contexto de producto y usuario: `ux-critic`.
+- Para una **auditoría UX profunda** con contexto de producto y usuario: `ux-audit`.
 - Para **explorar una dirección visual** que no está decidida: `design-directions`.
 
 ---

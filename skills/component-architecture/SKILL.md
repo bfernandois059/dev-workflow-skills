@@ -91,7 +91,7 @@ sobre una base indecisa.
 - Para **revisar sin implementar** si algo se salió del sistema: `visual-consistency`.
 - Para **eliminar código muerto** no relacionado con esta consolidación: `tech-cleanup`.
 - Para **normalizar clases** sin cambiar el resultado: `tailwind-hygiene`.
-- Para una **auditoría UX profunda**: `ux-critic`.
+- Para una **auditoría UX profunda**: `ux-audit`.
 
 ---
 

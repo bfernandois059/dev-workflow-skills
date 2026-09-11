@@ -59,7 +59,7 @@ tarea**: se abre la sección del problema que tienes delante.
 
 - Para **explorar direcciones** que todavía no están decididas. Eso es `design-directions`, y es
   la derivación correcta cuando falta dirección (ver [abajo](#cuando-no-hay-dirección-suficiente)).
-- Para **revisar sin construir**: `visual-consistency` contra el sistema, `ux-critic` para una
+- Para **revisar sin construir**: `visual-consistency` contra el sistema, `ux-audit` para una
   auditoría profunda con contexto de producto y usuario.
 - Para **adaptar entre tamaños** una interfaz ya resuelta. Eso es `adaptive-layout`.
 - Para **consolidar repetición** en componentes compartidos. Eso es `component-architecture`.
