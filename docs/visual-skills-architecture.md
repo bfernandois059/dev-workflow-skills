@@ -8,12 +8,12 @@ Este documento es un contrato operativo, no un manifiesto de diseño. Se escribe
 agente —Claude Code, Codex u otro compatible— pueda decidir qué skill corresponde a una tarea
 sin adivinar, y para que la implementación posterior de cada pieza no invada a las demás.
 
-> **Estado:** seis de las siete están implementadas e instalables: `visual-foundation`,
-> `interface-craft`, `visual-consistency`, `adaptive-layout`, `component-architecture` y
-> `tailwind-hygiene` (`skills/visual-foundation/`, `skills/interface-craft/`,
-> `skills/visual-consistency/`, `skills/adaptive-layout/`, `skills/component-architecture/`,
-> `skills/tailwind-hygiene/`). Solo `design-directions` sigue sin existir: este documento define
-> su contrato y el siguiente PR implementará esa pieza.
+> **Estado:** las siete están implementadas e instalables: `visual-foundation`,
+> `design-directions`, `interface-craft`, `visual-consistency`, `adaptive-layout`,
+> `component-architecture` y `tailwind-hygiene` (`skills/visual-foundation/`,
+> `skills/design-directions/`, `skills/interface-craft/`, `skills/visual-consistency/`,
+> `skills/adaptive-layout/`, `skills/component-architecture/`, `skills/tailwind-hygiene/`). La
+> familia visual está completa; este documento sigue siendo el contrato que cada pieza respeta.
 
 ## Titularidad
 
@@ -120,7 +120,9 @@ crítica de interfaz, y la definición de arquitectura de información —eso es
 
 ---
 
-### `design-directions`
+### `design-directions` — implementada
+
+**Estado.** Disponible en [`skills/design-directions/`](../skills/design-directions/SKILL.md).
 
 **Propósito.** Explorar alternativas visuales realmente distintas antes de comprometerse con una.
 
@@ -129,21 +131,27 @@ propuesta es la única que se consideró; cuando el cliente pide "opciones" y el
 tres versiones del mismo layout.
 
 **Cuándo no usarla.** Cuando ya existe una referencia aprobada o un `ui-system.md` que fija la
-dirección. Cuando la tarea es implementar, no elegir. Cuando el problema es de detalle y no de
-dirección.
+dirección de esta pantalla. Cuando la tarea es implementar, no elegir. Cuando el problema es de
+detalle y no de dirección. Para inventar una marca que no existe: puede explorar **cómo aplicar**
+una identidad, no fundarla, y un sistema visual definido no significa que cada pantalla futura ya
+esté diseñada.
 
 **Entrada principal.** El problema de interfaz, el contexto de producto y usuario, y las
 referencias disponibles.
 
-**Salida esperada.** Alternativas comparables con su razonamiento, y una recomendación explícita
-con lo que se gana y se pierde en cada una.
+**Salida esperada.** Alternativas comparables —mismo alcance funcional, mismo contenido, mismos
+datos y acabado equivalente— con su razonamiento, y una recomendación explícita con lo que se gana
+y se pierde en cada una. La cantidad es proporcional a la decisión: no hay regla de tres, y si
+solo existe una dirección coherente con lo aprobado, eso se dice en vez de fabricar opciones.
 
 **Qué puede modificar.** Preferentemente nada del producto: trabaja en exploraciones aisladas. Si
 necesita código para mostrar la alternativa, va en archivos de exploración, no en la ruta
 productiva.
 
 **Qué no debe absorber.** La implementación definitiva por defecto. Elegir dirección y construirla
-en producción son dos decisiones distintas y la segunda pasa por `interface-craft`.
+en producción son dos decisiones distintas y la segunda pasa por `interface-craft`. Tampoco es
+dueña de `docs/ui-system.md`: si una dirección aprobada debe volverse regla del proyecto, eso pasa
+por `visual-foundation`, y una propuesta descartada nunca se convierte en regla.
 
 > **Regla dura.** Las alternativas deben divergir en estructura, composición, jerarquía o
 > interacción. Tres paletas sobre el mismo layout no son tres direcciones: son una sola con
@@ -540,6 +548,9 @@ la descripción del frontmatter: se lee siempre, aunque la skill no se use.
 Implementado:
 
 - `visual-foundation` — dueña de `docs/ui-system.md`, con su plantilla y sus evals.
+- `design-directions` — exploración de caminos visuales con divergencia estructural demostrada,
+  comparabilidad, trade-offs y recomendación, con sus criterios por eje y por tipo de producto en
+  `references/direction-criteria.md` y sus evals.
 - `interface-craft` — diseño, rediseño e implementación de una interfaz concreta, con sus
   criterios por área en `references/craft-criteria.md` y sus evals.
 - `visual-consistency` — revisión visual cotidiana de solo lectura sobre la interfaz renderizada,
@@ -553,11 +564,14 @@ Implementado:
   criterio por tipo de clase y configuración en `references/tailwind-normalization.md` y sus
   evals.
 
+Con `design-directions` la familia visual queda completa.
+
 Todavía no existe:
 
-- `design-directions`
-- `ux-audit` ni ninguna separación de `ux-critic`
+- `ux-audit` ni ninguna separación de `ux-critic` — sigue siendo un PR propio, pendiente y no
+  autorizado aquí (ver contradicción 1)
 - librerías, scripts o infraestructura compartida entre skills visuales
 
-Las cinco skills previas siguen sin modificarse: cada pieza visual se incorpora sin alterar el
-comportamiento de las existentes. La siguiente será `design-directions`.
+Las cinco skills previas siguen sin modificarse: cada pieza visual se incorporó sin alterar el
+comportamiento de las existentes. El siguiente trabajo es el replanteamiento de `ux-critic` como
+`ux-audit`.
