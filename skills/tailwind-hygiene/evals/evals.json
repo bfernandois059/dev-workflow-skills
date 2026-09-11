@@ -1,0 +1,77 @@
+{
+  "skill_name": "tailwind-hygiene",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Tenemos `p-[24px]` en este componente y el theme del proyecto define `p-6` como 24px. Límpialo.",
+      "expected_output": "Confirma la equivalencia contra el theme real del proyecto —config, @theme o preset— en lugar de asumir la escala por defecto de memoria. Aplica `p-6`, comprueba el render del consumidor antes y después y verifica que no cambió nada observable. No crea un token nuevo ni toca la configuración. Corre los checks técnicos existentes y distingue esa validación de la visual.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Hay muchos `gap-[22px]`. Tailwind tiene `gap-6` de 24px. Cámbialos para dejar de usar arbitrary values.",
+      "expected_output": "No redondea 22px a 24px: cercano no es equivalente, y el cambio alteraría el render. Conserva el valor mientras no exista una decisión aprobada que lo reemplace, y lo explica sin tratarlo como deuda por llevar corchetes. Puede señalar la repetición como candidata a formalizarse y derivar esa decisión a `visual-foundation`, sin crear el token por su cuenta. No sacrifica fidelidad visual por reducir arbitrary values.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Quiero eliminar `w-[calc(100%-var(--sidebar-width))]` porque no me gustan los corchetes.",
+      "expected_output": "Reconoce que el valor expresa una relación específica legítima —un cálculo sobre una variable— y no una decisión que el sistema haya olvidado aplicar. Conserva la expresión y explica brevemente que arbitrary no significa deuda. No inventa un token ni una variable nueva para eliminar los corchetes, y no sustituye el cálculo por un valor fijo que hoy coincida. Si el usuario insiste en el cambio, lo separa de la higiene porque puede alterar el layout.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Este elemento tiene `rounded-md rounded-lg`. Elimina la que sobra.",
+      "expected_output": "No decide por cuál aparece última en el string. Determina el estilo efectivo según el CSS generado, la configuración y los helpers del proyecto —`tailwind-merge` si existe—, y comprueba el radius realmente aplicado en el render. Elimina solo la clase demostrablemente redundante y conserva exactamente el radius actual, aunque sea el que parezca menos razonable. Si no puede demostrar cuál aplica, lo dice en vez de adivinar.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Tenemos `md:grid-cols-2 lg:grid-cols-3`, pero en tablet las cards quedan demasiado estrechas. Aprovecha la limpieza de Tailwind para arreglarlo.",
+      "expected_output": "Reconoce que cambiar la composición responsive no es higiene: mover o redefinir breakpoints altera cómo responde la interfaz. Deriva esa parte a `adaptive-layout` y lo dice explícitamente. Puede normalizar dentro del alcance las clases que sí son equivalentes —por ejemplo un valor arbitrario dentro de una variante— sin tocar el comportamiento, y declara qué quedó fuera. No presenta el ajuste responsive como una limpieza técnica.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "El título usa `text-[15px]`, pero debería verse mejor en `text-base`. Ya que estamos limpiando Tailwind, cámbialo.",
+      "expected_output": "Determina que los valores no son equivalentes y que el cambio altera el render, incluido el line-height que el role puede arrastrar. No lo introduce como normalización. Separa los dos hechos —el código no sigue la foundation y corregirlo cambia lo que se ve— y deriva el cambio visual a `interface-craft`, o a `visual-foundation` si lo que falta es la regla. No llama normalización a un rediseño, aunque el resultado sea mejor.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "El proyecto ya usa `cn` y `tailwind-merge`, pero este componente arma className con concatenaciones difíciles de seguir.",
+      "expected_output": "Inspecciona el helper vigente y lo reutiliza en lugar de introducir otro. Preserva el orden de los argumentos y la precedencia resultante, incluida la posición de `props.className`. Comprueba las combinaciones relevantes de props y estado, no solo el caso por defecto, y verifica que el render no cambió. No reescribe la API de clases del componente ni extiende el cambio a toda la familia: si eso hiciera falta, lo deriva a `component-architecture`.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "Aquí no usamos `tailwind-merge`. Instálalo para limpiar estas cuatro clases duplicadas.",
+      "expected_output": "No agrega una dependencia para una limpieza trivial. Resuelve las duplicaciones localmente cuando puede demostrar cuál regla aplica y que el resultado no cambia, respetando las convenciones reales del proyecto. Explica que introducir el helper es una decisión de dependencia con su propio criterio, no un paso de higiene. Si alguna colisión no se puede resolver sin él, lo declara en vez de forzar el cambio.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "`bg-[var(--surface-muted)]` se ve feo en el código. Cámbialo por `bg-gray-100`.",
+      "expected_output": "No sustituye una variable semántica por un color hardcodeado aunque hoy resuelvan al mismo valor: la variable puede expresar rol, theming o comportamiento en runtime, y fijar el color rompería el tema oscuro o el cambio de marca. Conserva la variable salvo que exista una utility semántica basada en esa misma variable y la equivalencia esté confirmada; en ese caso puede usarla. Explica el criterio en una línea en vez de limitarse a rechazar.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Encontré `gap-[18px]` en seis lugares. Agrégalo al theme como `gap-4.5` y migra todo.",
+      "expected_output": "Antes de decidir nada inspecciona la versión de Tailwind y la configuración real, porque de eso depende si hace falta un token. Si el proyecto soporta utilities numéricas dinámicas y el valor real de `--spacing` hace que `gap-4.5` resuelva exactamente a 18px, puede normalizar `gap-[18px] → gap-4.5` como higiene: usar una utility que la versión y el theme ya soportan no es crear un token nuevo, y no toca `@theme` ni la configuración. Si esa utility no existe en la versión instalada o no resuelve exactamente al mismo valor, conserva `gap-[18px]` sin redondear, señala la repetición como evidencia de una decisión no formalizada y deriva esa formalización a `visual-foundation`, sin inventar nomenclatura ni semántica. En ninguno de los dos casos agrega una entrada de theme por su cuenta ni cambia `--spacing` para hacer entrar el valor.",
+      "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "Mientras limpio clases vi que cinco pantallas tienen la misma Card copiada. Aprovechemos y dejemos un componente único.",
+      "expected_output": "No amplía la tarea. Termina la higiene del alcance actual, señala la duplicación como siguiente candidato y deriva la consolidación a `component-architecture`, explicando que son dos refactors distintos con criterios y riesgos distintos. No mezcla ambos en el mismo cambio ni empieza a crear el componente compartido de paso.",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "Normalicé todos estos arbitrary values y build, lint y typecheck pasan, pero no puedo abrir la aplicación.",
+      "expected_output": "No afirma equivalencia visual verificada. Distingue la validación técnica de la visual y dice explícitamente que ningún consumidor fue inspeccionado. Separa las transformaciones cuya equivalencia es demostrable técnicamente con alta confianza —un arbitrario idéntico a un token confirmado en el theme— de las que requieren render: contradicciones resueltas, cambios dentro de variantes de estado o responsive, y todo lo que dependa de CSS externo o de un helper de merge. Declara lo no verificado y puede proponer revertir o dejar pendientes las transformaciones sin comprobar.",
+      "files": []
+    }
+  ]
+}
