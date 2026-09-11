@@ -4,6 +4,72 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+### Integración del sistema de skills
+
+Primera pasada de integración del repositorio **como un solo sistema**, no como doce carpetas
+independientes. No se creó ninguna skill, no se rediseñó ninguna y no se modificó el
+comportamiento de ninguna: el trabajo es de selección, fronteras, documentación y limpieza de
+referencias.
+
+#### Added
+
+- `docs/skill-selection-guide.md`: **documento canónico de selección**. Concentra el routing
+  global de las doce skills —matriz de necesidad real → skill principal → *no usar cuando…*,
+  fronteras entre las skills que más se confunden, flujos recomendados y handoffs—. Es la fuente
+  para decidir qué skill usar; los `SKILL.md` siguen siendo la fuente del método de cada una.
+- Guía de selección: **tres reglas de enrutamiento explícitas**. *(1)* No hay pipeline
+  obligatorio: las skills son herramientas especializadas y se usa la que corresponde al problema
+  actual, agregando otra solo cuando aparece una responsabilidad distinta. *(2)* Una skill
+  principal y solo los apoyos necesarios: pertenecer a la misma familia no convierte a dos skills
+  en pasos consecutivos. *(3)* **Una tarea pequeña no necesita una skill** — *"¿este padding se ve
+  grande?"* se responde puntualmente, no abre `visual-consistency`.
+- Guía de selección: sección **«Auditoría no es corrección»**. `visual-consistency`, `ux-audit` y
+  `marcozen` son principalmente de diagnóstico; la implementación pasa a quien corresponda y una
+  auditoría no tiene que terminar inmediatamente en código.
+- Guía de selección: **fronteras documentadas por pares** — `visual-consistency` vs `ux-audit`,
+  `design-directions` vs `interface-craft`, `interface-craft` vs `adaptive-layout`,
+  `interface-craft` vs `component-architecture`, `component-architecture` vs `tailwind-hygiene`,
+  `ux-audit` vs `marcozen` y `marcozen` vs `tech-cleanup`.
+- Guía de selección y `README.md`: regla de versionado escrita — **una modificación del
+  repositorio no implica que todas las skills cambien de versión**; cada una se versiona según su
+  propio contrato.
+
+#### Changed
+
+- `README.md`: pasa de manual a **entrada rápida** (868 → 409 líneas). Se elimina el diagrama de
+  flujo lineal que sugería un recorrido obligatorio de once skills encadenadas, se añade la
+  filosofía de selección con enlace prominente a `docs/skill-selection-guide.md`, y se sustituye
+  la tabla de uso de treinta filas por una matriz compacta *necesito X → usa Y*. Las doce skills
+  siguen documentadas, condensadas a lo que distingue a cada una; el detalle de routing vive
+  ahora en la guía.
+- `README.md`: instalación simplificada — un solo ejemplo de `--skill <nombre>` con la lista de
+  nombres válidos, en vez de siete bloques repetidos, y `cp -R skills/*` en vez de doce líneas.
+- `docs/visual-skills-architecture.md`: se mantiene como **contrato de la familia visual** y se
+  declara explícitamente acotado a ella, con enlace a la guía de selección para el routing
+  global. No duplica la matriz de las doce.
+- `docs/visual-skills-architecture.md`: corregidos estados documentales obsoletos — «igual que
+  las cinco skills actuales» (que se leía como si el repositorio tuviera cinco), «ninguna skill
+  actual se modifica **en este PR**» y «el siguiente trabajo es la pasada final de integración
+  del sistema completo», que era justamente este trabajo.
+- `skills/tailwind-hygiene/references/tailwind-normalization.md`: precisión editorial pendiente en
+  **Arbitrary values**. La sección decía «el valor resuelto del token en el theme real» de forma
+  demasiado amplia y podía leerse como que solo un token nombrado prueba equivalencia. Ahora
+  explicita que una **utility dinámica que la versión instalada ya genera** también es una
+  expresión existente del sistema, y que antes de conservar o formalizar un arbitrary value hay
+  que comprobar si la versión y el theme actuales ya pueden expresarlo exactamente. Formalizar
+  algo que el theme ya expresa **no** es crear un token nuevo, así que no hay nada que derivar a
+  `visual-foundation`. No cambia la lógica de la skill ni su `VERSION`.
+
+#### Notes
+
+- **Ninguna `VERSION` se modificó.** Las doce skills conservan la suya: este trabajo no altera el
+  contrato material de ninguna.
+- `ux-critic` no existe como skill instalable. Las menciones que quedan son históricas —el
+  historial del `CHANGELOG.md`— o la explicación del reemplazo por `ux-audit`, que sigue siendo
+  útil para quien vuelve al repositorio.
+- La familia visual sigue siendo **7/7** y `ux-audit` sigue siendo transversal, no una octava
+  skill visual.
+
 ## ux-audit-v0.1.0 - 2026-09-11
 
 **`ux-audit` reemplaza a `ux-critic`.** Conserva la profundidad útil para auditar experiencia y

@@ -15,6 +15,11 @@ sin adivinar, y para que la implementación posterior de cada pieza no invada a 
 > `skills/adaptive-layout/`, `skills/component-architecture/`, `skills/tailwind-hygiene/`). La
 > familia visual está completa; este documento sigue siendo el contrato que cada pieza respeta.
 
+> **Alcance:** este documento cubre **solo la familia visual**. Para decidir cuál de las **doce**
+> skills del repositorio corresponde a un problema —incluidas `project-blueprint`,
+> `engineering-workflow`, `ux-audit`, `marcozen` y `tech-cleanup`—, la fuente es
+> **[docs/skill-selection-guide.md](skill-selection-guide.md)**.
+
 ## Titularidad
 
 Los nombres, la metodología y la arquitectura descritos aquí son propios de este repositorio.
@@ -22,8 +27,8 @@ No son un envoltorio de servicios, productos ni skills de terceros, no dependen 
 plataforma externa para funcionar y no replican un sistema ajeno.
 
 Lo que sí usan es el estándar abierto [Agent Skills](https://code.claude.com/docs/en/skills)
-como formato de empaquetado, igual que las cinco skills actuales. Una skill visual podrá
-**recomendar** una librería de terceros cuando sea la solución correcta —eso es la regla 5 del
+como formato de empaquetado, igual que el resto de las skills del repositorio. Una skill visual
+podrá **recomendar** una librería de terceros cuando sea la solución correcta —eso es la regla 5 del
 contrato común— pero el criterio, las fases y los cortes son de este repositorio.
 
 ## Por qué siete y no una
@@ -441,8 +446,10 @@ usuario. Que compile no es evidencia de que se vea bien.
 
 ## Fronteras con las skills actuales
 
-Las cinco skills existentes siguen funcionando sin cambios. Estas fronteras se resuelven
-**documentalmente**: ninguna skill actual se modifica en este PR.
+Las cinco skills no visuales del repositorio —`project-blueprint`, `engineering-workflow`,
+`ux-audit`, `marcozen` y `tech-cleanup`— conviven con la familia visual sin cambios. Estas
+fronteras se resuelven **documentalmente**: ninguna de ellas fue modificada para acomodar a las
+skills visuales.
 
 | Skill actual | Responsabilidad | Frontera con la familia visual |
 |---|---|---|
@@ -532,7 +539,8 @@ Reglas de autoría:
 - **No repetir el contrato común.** Las nueve reglas de este documento se citan, no se copian.
 - **`SKILL.md` deliberadamente compacto.** No hay límite artificial de líneas, pero si una regla
   no es necesaria en prácticamente todos los usos de la skill, se evalúa moverla a `references/`.
-- **Versión SemVer propia**, igual que las cinco actuales.
+- **Versión SemVer propia**, igual que el resto de las skills. Una modificación del repositorio
+  no obliga a subir la versión de todas: cada skill se versiona según su propio contrato.
 
 El costo de una regla que vive en `SKILL.md` se paga en cada invocación. El de una que vive en
 `references/` se paga solo cuando hace falta. Esa es la razón de la separación, y es la misma para
@@ -571,5 +579,9 @@ Todavía no existe:
 - librerías, scripts o infraestructura compartida entre skills visuales
 
 Las siete skills visuales no cambiaron su contrato con ese reemplazo: solo se actualizaron las
-referencias operativas que nombraban a `ux-critic`. El siguiente trabajo es la pasada final de
-integración del sistema completo.
+referencias operativas que nombraban a `ux-critic`, nombre que ya no existe como skill
+instalable y que hoy solo sobrevive en el historial del `CHANGELOG.md`.
+
+La integración del sistema completo —las doce skills documentadas como un solo sistema de
+selección— vive en **[docs/skill-selection-guide.md](skill-selection-guide.md)**. Este documento
+sigue acotado a la familia visual y no duplica esa matriz.

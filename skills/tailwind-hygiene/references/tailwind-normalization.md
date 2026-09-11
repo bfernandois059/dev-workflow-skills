@@ -48,16 +48,22 @@ qué significa preservar exactamente, validación antes/después y formato de en
 **Qué puede normalizarse.** El valor arbitrario que **duplica una decisión que el sistema ya
 expone** con un token exactamente igual: `mt-[24px] → mt-6` cuando el theme resuelve `6` a 24px.
 
-**Qué evidencia confirma equivalencia.** El valor resuelto del token en el theme real del
-proyecto —`tailwind.config.*`, `@theme`, preset o plugin—, no una escala recordada de memoria.
+**Qué evidencia confirma equivalencia.** El valor resuelto en el theme real del proyecto
+—`tailwind.config.*`, `@theme`, preset o plugin—, no una escala recordada de memoria. Ese valor
+puede venir de un token nombrado **o de una utility dinámica que la versión instalada ya genera**:
+ambas son expresiones existentes del sistema. Antes de conservar o formalizar un arbitrary value,
+comprueba si la versión y el theme actuales ya pueden expresarlo exactamente mediante una utility
+dinámica existente —ver [Tailwind v4 y `@theme`](#tailwind-v4-y-theme)—.
 
 **Qué dejar quieto.** `calc()`, variables CSS, grid templates, geometría del layout, valores
 derivados de otro elemento, `env()`, integraciones con primitives y todo valor que exprese una
 relación que no pertenece a una escala.
 
 **Cuándo es de otra skill.** Si el valor arbitrario es correcto pero nadie lo formalizó y
-conviene que exista como token, la decisión es de `visual-foundation`. Si el valor es simplemente
-el equivocado, es un cambio visual: `interface-craft`.
+conviene que exista como token, la decisión es de `visual-foundation` — pero solo después de
+comprobar que **no** existe ya una utility dinámica que lo exprese: que el theme actual pueda
+expresarlo así no equivale a crear un token nuevo, y ahí no hay nada que derivar. Si el valor es
+simplemente el equivocado, es un cambio visual: `interface-craft`.
 
 ---
 
