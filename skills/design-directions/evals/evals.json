@@ -1,0 +1,77 @@
+{
+  "skill_name": "design-directions",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Dame tres propuestas para este hero. Puedes mantener la misma estructura y cambiar colores, fotos y estilo.",
+      "expected_output": "No presenta tres tratamientos cosméticos como tres direcciones. Explica que si la estructura se mantiene y solo cambia el estilo, siguen siendo la misma interfaz, y puede agrupar color y fotografía como variantes posibles de una sola dirección. Identifica qué decisión estructural está realmente abierta —qué domina la pantalla, en qué orden se lee, qué relación hay entre media y contenido— y construye alternativas que difieran en composición, jerarquía o relación media/contenido. No convierte la petición en un catálogo de estéticas.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Este mockup ya fue aprobado por el cliente. Dame tres direcciones antes de implementarlo.",
+      "expected_output": "Detecta que la dirección ya está resuelta por una referencia aprobada y no fabrica alternativas por creatividad. Lo dice explícitamente y deriva la implementación a `interface-craft`. Puede señalar qué decisiones siguen abiertas dentro de ese mockup —si las hay— y ofrecer explorarlas, en vez de reabrir la decisión cerrada. No trata el mockup como un punto de partida a superar ni propone un rediseño no pedido.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Tenemos que rehacer la portada de una empresa industrial. Hay buenas fotos de proyectos y casos reales, pero hoy el sitio parece una plantilla SaaS genérica. Exploremos opciones.",
+      "expected_output": "Parte del problema y de los activos disponibles, no de un catálogo de estilos. Puede explorar, por ejemplo, una dirección donde la evidencia de proyecto domina frente a otra más técnica o más narrativa, y las alternativas difieren en composición, jerarquía y qué evidencia manda —no en paleta. No inventa certificaciones, cifras, clientes ni proyectos para reforzar una dirección; si una necesita evidencia que no consta, declara la dependencia. Recomienda según posicionamiento y calidad real de los activos, y nombra qué se pierde.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Quiero tres direcciones creativas para este CRM de agentes inmobiliarios.",
+      "expected_output": "No interpreta creatividad como convertir un sistema operacional en una landing visual. Explora direcciones operacionales reales —task-first, overview-first, exception-first, master/detail u otras justificadas— que cambian densidad, navegación, jerarquía de acciones o disclosure. Preserva capacidades, permisos, campos y el volumen real de datos, y no inventa funcionalidades para hacer una dirección más atractiva. Los trade-offs se expresan en términos de trabajo por sesión y visión de conjunto, no de estética.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "De estas tres ideas elige la más sencilla de programar.",
+      "expected_output": "Considera el esfuerzo como un trade-off legítimo, sin convertir «menos código» en criterio dominante automático. Evalúa cuál resuelve mejor el problema con complejidad proporcional, y puede recomendar la más simple si realmente resuelve igual de bien —diciéndolo por esa razón y no por el ahorro. Si la sencilla resuelve peor una necesidad concreta, lo declara y explica qué se estaría cambiando por facilidad de implementación. No descarta una dirección solo porque cueste más trabajo.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "No tenemos Brand Master ni sistema visual. Define tres direcciones y deja elegida la identidad de la marca.",
+      "expected_output": "No declara una identidad definitiva sin evidencia. Puede explorar hipótesis visuales para comparar caminos, manteniendo separados `Confirmado`, `Derivado para explorar` y `Pendiente de decisión`, y deja claro que una hipótesis de exploración no funda una marca. Señala que la ausencia de dirección de marca es una decisión que supera esta skill y que corresponde a una conversación de producto, con `visual-foundation` como destino una vez decidida. No escribe `docs/ui-system.md` ni presenta la paleta o la tipografía elegidas como hechos confirmados.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "A: azul y radius 8. B: negro y radius 0. C: morado y radius 16. ¿Cuál de estas tres direcciones usarías?",
+      "expected_output": "Reconoce que las tres son tratamientos de una misma estructura y no tres direcciones: si solo cambian color y radius, la interfaz es la misma. No simula diversidad eligiendo una como si fuera una decisión de dirección. Propone o pide ejes de divergencia significativos —qué domina la pantalla, qué orden de lectura, qué densidad, qué interacción— y sitúa la elección estética como una variante secundaria que puede resolverse después, o dentro de `visual-foundation` si lo que falta es la regla de color.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "Quiero una dirección muy fotográfica y cinematográfica, pero solo tenemos tres fotos de baja calidad del producto.",
+      "expected_output": "No finge que los assets existen ni maqueta con material que el proyecto no va a tener. Trata la disponibilidad y la calidad de imagen como una restricción real y evalúa si puede producirse más, con qué coste y quién lo mantiene. Puede proponer igualmente ese camino declarando explícitamente su dependencia —«requiere un sistema fotográfico que hoy no existe»— y ofrecer una alternativa viable con los activos actuales. No descarta la dirección únicamente porque exija más trabajo.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "Exploremos la ficha de producto. No sabemos si debería sentirse editorial o muy orientada a comparar información.",
+      "expected_output": "Reconoce que hay una decisión real y abierta. Propone caminos que cambian jerarquía, secuencia y qué información domina —no solo tratamiento—, manteniendo la misma información, funcionalidad y flujo comercial: precio, variantes, disponibilidad y la acción de compra siguen presentes en todas. Compara los trade-offs entre descubrimiento y decisión: qué gana la editorial en diferenciación y tono, qué pierde en claridad comparativa, y qué exige cada una del contenido y de los datos de atributos. Recomienda según el objetivo declarado, o condiciona la recomendación si ese objetivo no consta.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Dame cinco propuestas distintas para el dashboard.",
+      "expected_output": "No fabrica cinco alternativas para cumplir una cifra. Entrega las direcciones con divergencia real —las que cambian qué pregunta responde el panel: estado continuo, excepción, comparación, análisis— y explica que las restantes serían variaciones de esas mismas. Tampoco impone un máximo arbitrario: si existieran cinco caminos realmente distintos, los presenta. Prioriza la calidad de la decisión sobre la cantidad, y no inventa métricas ni widgets nuevos para diferenciar opciones.",
+      "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "Me quedo con la dirección B. Impleméntala en producción.",
+      "expected_output": "Reconoce que la exploración terminó y no sigue generando alternativas ni reabre la decisión. Resume las decisiones que definen B —qué domina, qué orden, qué densidad, qué interacción— para que sobrevivan a la implementación, y deriva explícitamente la construcción definitiva a `interface-craft`, señalando qué detalles quedan para esa fase: tokens, estados, breakpoints y componentes. Si algo de la dirección debería convertirse en regla del proyecto, lo deriva a `visual-foundation`; no escribe `ui-system.md` por su cuenta ni promueve a producción el prototipo de exploración.",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "Aquí están las tres direcciones. ¿Cuál eliges?",
+      "expected_output": "No responde automáticamente «depende de ustedes». Ejerce criterio usando problema, usuario, contenido, activos reales y restricciones, elige una y explica por qué, nombrando qué se acepta perder frente a las otras. Si falta una decisión de producto o de negocio que no le corresponde tomar, formula una recomendación condicionada —«si el objetivo es captación, B; si es demostrar profundidad técnica, A»— identificando explícitamente esa decisión pendiente, en vez de fingir una certeza que la información no permite.",
+      "files": []
+    }
+  ]
+}

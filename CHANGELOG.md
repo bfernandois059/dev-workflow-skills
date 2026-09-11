@@ -4,6 +4,124 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+## design-directions-v0.1.0 - 2026-09-10
+
+Séptima y última skill de la familia visual definida en `docs/visual-skills-architecture.md`: con
+ella la familia queda completa. Responde una sola pregunta: *¿qué caminos visuales distintos son
+razonables para resolver este problema, antes de elegir uno y construirlo?* Existe contra dos
+fallos simétricos de los agentes —que la primera idea razonable se convierta en «la dirección» sin
+que nadie compare nada, y que pedir «opciones» produzca tres versiones del mismo layout con
+distinto color presentadas como tres conceptos—.
+
+### Added
+
+- `design-directions` 0.1.0: nueva skill instalable que **explora alternativas visuales realmente
+  distintas antes de comprometerse con una, y recomienda cuál tomar**. Explora y compara; **no
+  implementa en producción por defecto**. Elegida la dirección, termina: la construcción
+  definitiva pasa a `interface-craft`.
+- `design-directions` 0.1.0: **regla central de divergencia estructural.** Una dirección debe
+  cambiar una decisión perceptible —composición, jerarquía, ritmo, densidad, relación
+  contenido/media, navegación o interacción—. Cambiar solo color, radius, sombras, iconos,
+  fotografía o tipografía dentro del mismo layout no constituye una dirección: esas variantes se
+  agrupan bajo una sola. Queda escrita la prueba de la diferencia falsa —*si mantengo la
+  estructura y solo cambio el estilo, ¿siguen siendo la misma interfaz?*— junto con las señales de
+  que dos propuestas conducen la mirada, ordenan el contenido y priorizan la evidencia de la misma
+  forma. Antes de entregar, una validación de diversidad exige poder describir la diferencia **sin
+  hablar de color**.
+- `design-directions` 0.1.0: **no explora decisiones ya tomadas.** Comprueba primero si la
+  dirección está fijada por la instrucción de la tarea, una referencia aprobada, Brand Master o
+  design system, `docs/ui-system.md`, patrones aprobados del producto, documentación necesaria o
+  la implementación actual como evidencia. Si una referencia aprobada fija composición,
+  tratamiento, jerarquía o carácter visual, lo dice y deriva a `interface-craft` en vez de
+  fabricar alternativas. Y distingue explícitamente **sistema visual existente** de **cada
+  pantalla futura ya diseñada**: casi siempre quedan decisiones abiertas dentro de un sistema
+  cerrado, y ahí es donde trabaja.
+- `design-directions` 0.1.0: **no inventa branding.** Puede explorar cómo aplicar una identidad,
+  no fundarla. Separa `Confirmado` / `Derivado para explorar` / `Pendiente de decisión`, y una
+  hipótesis de exploración no se convierte en «la marca es editorial y minimalista» sin evidencia.
+  Si el problema real es que no existe dirección de marca, eso supera la skill y se declara. No es
+  dueña de `docs/ui-system.md` y no lo escribe durante la exploración: una dirección aprobada que
+  deba volverse regla pasa por `visual-foundation`, y una propuesta descartada nunca se convierte
+  en regla del sistema.
+- `design-directions` 0.1.0: **el problema primero, el estilo después.** No parte de un catálogo de
+  estéticas —minimalista, brutalista, glassmorphism, Bento, premium— sino de qué debe comunicar la
+  interfaz, qué acción domina, qué contenido vale más, qué necesita comparar el usuario y qué
+  decisión está abierta. Una dirección no se justifica porque «se ve moderna», sino porque cambia
+  cómo la interfaz prioriza, explica, convence, permite explorar, permite operar, establece
+  confianza, transmite escala o reduce complejidad. Cada dirección se resume en una **tesis** que
+  dice qué decisión cambia, no en etiquetas como `Concepto A — Modern`.
+- `design-directions` 0.1.0: **cantidad proporcional, sin regla de tres.** Normalmente 2–4 alcanza,
+  pero el rango es una observación y no un requisito: si solo existe una dirección coherente con
+  lo aprobado se dice, y si piden una cifra que no corresponde a divergencia real se entregan las
+  reales explicando que el resto serían variaciones. El objetivo no es llenar una presentación con
+  opciones: es hacer visible una decisión real.
+- `design-directions` 0.1.0: **mismo alcance funcional y comparabilidad.** Las direcciones
+  resuelven el mismo problema: se preservan funcionalidad, datos, contenido confirmado,
+  capacidades, permisos y arquitectura de información —salvo que esa sea la decisión abierta—, y
+  no se inventan features, métricas, testimonios, clientes, precios ni certificaciones para hacer
+  una dirección más atractiva. La comparación se hace sobre condiciones equivalentes —mismo
+  contenido, mismos datos, mismo viewport, mismos assets, acabado equivalente— para que revele
+  diferencias de dirección y no de esfuerzo de presentación.
+- `design-directions` 0.1.0: **restricciones reales y factibilidad sin conservadurismo.** Stack,
+  contenido, tipo de usuario, volumen de datos, responsive, accesibilidad, assets realmente
+  disponibles y restricciones comerciales son parte del diseño: una dirección que depende de
+  material que hoy no existe puede proponerse **declarando esa dependencia**, nunca fingiendo que
+  el recurso está. El esfuerzo es un trade-off, no un veto ni un mérito: **la opción con menos
+  código no es automáticamente la mejor dirección**, y una compleja necesita beneficio perceptible
+  o funcional suficiente. Queda escrito el permiso explícito para explorar asimetría, densidad
+  deliberada, escalas contrastadas, imagen dominante o ritmo variable cuando el problema lo
+  soporte, con el límite de que **la novedad no es un objetivo**.
+- `design-directions` 0.1.0: **trade-offs y recomendación obligatorios.** Cada dirección declara
+  qué gana, qué pierde y qué exige del producto o del contenido —nada de «moderna, limpia,
+  atractiva»—. Y no termina en «las tres son buenas, depende de ustedes»: cuando hay información
+  suficiente recomienda una, explica por qué y dice qué se acepta perder; cuando falta una decisión
+  de producto o de negocio, formula una **recomendación condicionada** con esa decisión nombrada.
+  Recomendar no cierra todas las decisiones: padding, tokens, estados, breakpoints, API de
+  componentes y clases pertenecen a `interface-craft`.
+- `design-directions` 0.1.0: **exploración aislada.** Por defecto no modifica producción. Si
+  prototipar ayuda a comparar, el código va en la convención de exploración que el repositorio ya
+  tenga —`explorations/`, `playground/`, stories, una ruta no productiva— sin inventar una carpeta
+  estándar universal, y sin sustituir el componente actual, conectar lógica innecesaria, hacer
+  migraciones, tocar permisos ni preparar el merge. Si la tarea incluye implementar la elegida,
+  primero se completa la decisión y después se pasa explícitamente a `interface-craft`.
+- `design-directions` 0.1.0: `references/direction-criteria.md` con el criterio especializado
+  —ejes de divergencia, jerarquía, composición, narrativa y secuencia, densidad, relación
+  contenido/media, evidence-first, product-first, task-first, editorial, discovery, comparison,
+  master/detail, sitios comerciales y de servicios, e-commerce, dashboards, CRM e intranets y
+  sistemas operacionales, uso de referencias, activos y fotografía, motion e interacción,
+  comparación de alternativas, señales de falsa diversidad, evaluación de trade-offs y criterios de
+  recomendación—. Cada sección responde qué decisión cambia, qué problema podría resolver, qué
+  señales indican que aplica, qué riesgo introduce y cuándo sería una mala elección. **No es un
+  catálogo de estéticas ni un recetario**: `evidence-first` es un criterio posible, no una
+  plantilla de `hero + logos + 3 cards + testimonial + CTA`. Se consulta solo la sección de la
+  decisión abierta.
+- `design-directions` 0.1.0: evals iniciales (`evals/evals.json`) sobre diversidad y criterio, no
+  sobre enumerar estilos — tres opciones cosméticas presentadas como direcciones, mockup ya
+  aprobado que no debe reexplorarse, sitio B2B industrial con activos reales, CRM donde
+  «creativo» no significa landing, elección de la opción más fácil de programar, ausencia total de
+  branding, tres paletas sobre la misma estructura, dirección fotográfica sin activos suficientes,
+  ficha de producto entre editorial y comparación, petición de cinco propuestas, dirección ya
+  elegida que pasa a implementación, y recomendación que no puede resolverse con «depende».
+
+### Changed
+
+- `README.md`: `design-directions` pasa de futura a disponible en el flujo, las skills
+  documentadas, el versionado, la instalación, la tabla de uso, la estructura del repositorio y la
+  sección de seguridad; el total pasa de once a doce skills disponibles y la familia visual queda
+  declarada **completa (7 de 7)**, con `design-directions` situada entre `visual-foundation` e
+  `interface-craft`. `ux-audit` sigue siendo trabajo futuro separado y `ux-critic` se mantiene sin
+  cambios.
+- `docs/visual-skills-architecture.md`: actualizado el estado de `design-directions` y el de la
+  familia, que pasa a estar completa. Su «cuándo no usarla» precisa que la referencia aprobada fija
+  la dirección **de esa pantalla**, que inventar una marca inexistente queda fuera y que un sistema
+  visual definido no significa que cada pantalla futura esté diseñada; su «salida esperada»
+  incorpora la comparabilidad —mismo alcance, mismo contenido, acabado equivalente— y la cantidad
+  proporcional sin regla de tres; su «qué no debe absorber» agrega que no es dueña de
+  `docs/ui-system.md` y que una propuesta descartada nunca se vuelve regla. Sin esas precisiones,
+  «explorar alternativas» podía leerse como licencia para reabrir decisiones cerradas o para fundar
+  una identidad por el camino. En pendientes siguen figurando `ux-audit` y la eventual separación
+  de `ux-critic`.
+
 ## tailwind-hygiene-v0.1.0 - 2026-09-10
 
 Sexta skill de la familia visual definida en `docs/visual-skills-architecture.md`, y la última
