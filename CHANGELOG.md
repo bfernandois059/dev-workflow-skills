@@ -4,7 +4,7 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
-### engineering-workflow 1.3.1
+### engineering-workflow 1.4.0
 
 #### Changed
 
