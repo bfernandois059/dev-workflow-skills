@@ -4,6 +4,17 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+### engineering-workflow 1.3.1
+
+#### Changed
+
+- `engineering-workflow`: la Fase 10 separa los hallazgos que bloquean integración de los pendientes documentales que no la bloquean. CI fallida, defecto reproducible, riesgos de seguridad/datos, migración destructiva sin rollback, instrucción explícita incumplida y falta de autorización siguen bloqueando; estado documental, conteos, changelog, descripción del PR y documentación no conductual pasan a `READY TO MERGE` con pendiente anotado.
+- `engineering-workflow`: incorpora continuaciones acotadas al delta y al mismo PR/branch, con excepción para PR ya mergeado o branch inutilizable, máximo de dos rondas acumuladas y sin ampliar aceptación sin defecto demostrado.
+- `engineering-workflow`: aclara en Fases 3 y 4 que el riesgo escala validación, no ceremonia de implementación, y fija el hard delete de super admin como ejemplo proporcional.
+- `engineering-workflow`: conserva el alcance mínimo y las dependencias justificadas sin impedir usar la herramienta estándar y mantenida del dominio.
+- `engineering-workflow`: la Definition of Done exige inventario de paridad inspeccionado desde el origen para migraciones, ports y reimplementaciones.
+- `engineering-workflow`: añade una salida concisa y determinista para modo revisión: `MERGE` o `NO MERGE` con solo el contenido posterior permitido.
+
 ### Integración del sistema de skills
 
 Primera pasada de integración del repositorio **como un solo sistema**, no como doce carpetas
