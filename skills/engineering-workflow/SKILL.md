@@ -30,9 +30,9 @@ Ante duda razonable entre dos categorías, escala una categoría. Una mención e
 2. **Inspeccionar antes de modificar.** Revisar Git, instrucciones del repositorio, documentación y archivos relacionados.
 3. **Una branch, un propósito.** No mezclar cambios no relacionados.
 4. **No destruir trabajo existente.** No descartar, sobrescribir ni reescribir cambios ajenos sin autorización explícita.
-5. **Alcance controlado.** Implementar solo lo necesario para cumplir los criterios de aceptación.
-6. **Dependencias justificadas.** No añadir paquetes de producción sin explicar necesidad, mantenimiento, seguridad y alternativa.
-7. **Código y documentación viajan juntos.** La documentación afectada debe actualizarse dentro de la misma Pull Request.
+5. **Alcance controlado.** Implementar solo lo necesario para cumplir los criterios de aceptación. Alcance mínimo significa no hacer de más: no agregar funcionalidades no pedidas, no refactorizar de paso ni inventar abstracciones. No significa elegir la solución más pobre o más manual disponible. Usar la herramienta estándar y bien mantenida para el trabajo pedido **es** la implementación mínima, no una ampliación de alcance.
+6. **Dependencias justificadas.** No añadir paquetes de producción sin explicar necesidad, mantenimiento, seguridad y alternativa. La restricción apunta a dependencias innecesarias o exóticas, no a la herramienta obvia del dominio; ante duda, propón la librería con una línea de justificación en vez de auto-restringirte.
+7. **Código y documentación viajan juntos.** La documentación afectada debe actualizarse dentro de la misma Pull Request como norma de trabajo. Los pendientes documentales de estado que cumplan la excepción de la Fase 10 se anotan para un PR posterior y no bloquean por sí solos la integración.
 8. **Validar antes de declarar terminado.** Ejecutar los comandos reales de lint, typecheck, tests y build que correspondan.
 9. **Cambios sensibles requieren mayor rigor.** Datos, permisos, autenticación, pagos, archivos, emails, PDFs, migraciones e infraestructura exigen revisión específica.
 10. **No integrar automáticamente.** Preparar la integración, pero realizar merge o squash merge solo con autorización explícita.
@@ -198,6 +198,15 @@ Antes de crearla:
 
 No uses nombres genéricos como `changes`, `updates`, `test` o `new-feature`.
 
+## Continuaciones
+
+Cuando una tarea ya entregada requiere otra vuelta:
+
+- **Completar el delta, no reconstruir.** Continúa en la misma branch y la misma Pull Request, corrigiendo solo lo identificado; no vuelvas a tocar ni regeneres lo ya implementado y validado.
+- **Nunca abras una branch o Pull Request nueva “para partir limpio”**, salvo que la branch esté técnicamente inutilizable por conflictos irreconciliables o que el PR original ya esté mergeado y cerrado. En este segundo caso, branch y PR nuevas son correctas solo para el delta pendiente, deben referenciar el PR anterior como antecedente y no reabren lo ya integrado.
+- **Máximo dos rondas de corrección acumuladas por tarea, no por prompt.** El contador no se reinicia al abrir una conversación o prompt nuevo sobre el mismo objetivo. Al llegar a la segunda ronda, si se cumplen los criterios originales se cierra; si no, informa el bloqueo real en vez de abrir una tercera.
+- **No amplíes los criterios de aceptación en una continuación** salvo por un defecto demostrado: prueba que falla, bug reproducido o inconsistencia observada. Un endurecimiento o caso teórico ("podría fallar si...") se registra como punto detectado y queda fuera.
+
 ### Fase 3 — Plan de implementación
 
 Antes de editar, define un plan breve con:
@@ -210,7 +219,9 @@ Antes de editar, define un plan breve con:
 
 Confirma o ajusta el riesgo asignado en Fase 0 usando `references/change-risk-matrix.md`. Si sigue siendo `LOW`, usa la ruta rápida de Fase 0 y omite el resto de esta fase.
 
-A mayor riesgo, mayor profundidad de pruebas, revisión y documentación — la profundidad no es fija, escala con el nivel.
+A mayor riesgo, mayor profundidad de pruebas, revisión y documentación — la profundidad no es fija, escala con el nivel. **El nivel de riesgo determina la profundidad de validación, nunca la complejidad de la solución.** Que un cambio sea `HIGH` obliga a verificar bien el permiso, el borrado o el cálculo; no a construir ceremonia operativa alrededor.
+
+Antes de cerrar el plan, pregunta: *¿qué parte de esto protege un riesgo real y qué parte es solo ceremonia?* Elimina del plan lo segundo.
 
 #### Tareas grandes con dominios independientes
 
@@ -228,9 +239,13 @@ Reglas:
 - Mantén cambios pequeños y coherentes.
 - Evita duplicación, pero no abstraigas anticipadamente.
 - No agregues dependencias si una capacidad existente resuelve el problema.
+- El nivel de riesgo determina la profundidad de validación, nunca la complejidad de la solución. Un cambio `HIGH` requiere comprobar a fondo el permiso, el borrado o el cálculo, no agregar estados intermedios, trazabilidad, flujos de aprobación o tablas que nadie pidió.
+- La restricción de dependencias no obliga a elegir una solución manual o pobre: la herramienta estándar y bien mantenida del dominio es la implementación mínima cuando resuelve el trabajo pedido. Evita dependencias innecesarias o exóticas; ante duda, propón la librería con una línea de justificación.
 - No cambies contratos públicos sin identificar consumidores afectados.
 - Mantén compatibilidad hacia atrás cuando sea razonable.
 - Para TODOs, explica motivo, propietario o condición de cierre.
+
+Ejemplo de proporcionalidad: un hard delete restringido a super admin con purga automática a 30 días es `HIGH` por destructivo y por permisos. La implementación proporcional es endpoint solo para admin, borrado de archivos asociados en storage, job de purga, confirmación en UI y validación de rol. Nada más.
 
 #### Cambios de datos
 
@@ -305,7 +320,7 @@ Usa `scripts/pre_pr_check.py` como verificador documental complementario. No ree
 
 Usa `references/documentation-impact-matrix.md`, filtrada por el riesgo de Fase 3: en `LOW`, por defecto solo `CHANGELOG.md` si el cambio es visible para usuarios, y ni eso si es puramente interno. La lista de documentos frecuentes de abajo aplica a `MEDIUM`/`HIGH`/`CRITICAL` según el dominio tocado, no a cada tarea.
 
-La documentación se actualiza antes del merge, dentro de la misma branch y Pull Request.
+La documentación se actualiza antes del merge, dentro de la misma branch y Pull Request, como norma de trabajo. Si queda un pendiente documental de estado que no afecta el comportamiento y entra en la lista no bloqueante de la Fase 10, anótalo y resuélvelo en un PR documental posterior.
 
 Documentos frecuentes:
 
@@ -412,15 +427,25 @@ No afirmes que algo fue probado si no se ejecutó.
 
 Método preferido: **squash merge**, salvo que el repositorio defina otra política.
 
-Antes de integrar verifica:
+Antes de integrar, clasifica cualquier hallazgo así:
 
-- CI aprobada;
-- conversaciones resueltas;
-- documentación actualizada;
-- changelog correcto;
-- migraciones revisadas;
-- ausencia de conflictos;
-- autorización explícita para merge.
+**Bloquea merge:**
+
+- CI en rojo o pruebas que fallan realmente;
+- defecto funcional reproducible;
+- riesgo de seguridad, permisos o integridad de datos;
+- migración destructiva sin rollback definido;
+- incumplimiento de una instrucción explícita y puntual del usuario;
+- ausencia de autorización explícita para integrar.
+
+**No bloquea merge** (se resuelve en un PR documental posterior, salvo que el repositorio lo exija explícitamente):
+
+- backlog o documentación de estado desactualizada;
+- conteo de pruebas o entradas del changelog;
+- redacción de la descripción del PR;
+- documentación funcional desalineada, salvo que induzca de inmediato una implementación futura incorrecta.
+
+Si el hallazgo está en la segunda lista, el estado correcto es `READY TO MERGE` con el pendiente anotado, no `BLOCKED`. La norma de actualizar documentación en la misma PR se mantiene, pero no convierte documentación de estado —ni una discrepancia no conductual del changelog— en condición de integración.
 
 No hagas merge automáticamente solo porque las validaciones pasaron.
 
@@ -488,6 +513,16 @@ Riesgos o pendientes
 Próximo paso
 - Abrir/revisar Pull Request.
 ```
+
+## Formato de respuesta para modo revisión
+
+```text
+Veredicto: MERGE | NO MERGE
+```
+
+- Si es `NO MERGE`, continúa únicamente con el prompt de corrección listo para copiar.
+- Si es `MERGE`, usa como máximo dos líneas para los pendientes detectados, si los hay.
+- No incluyas resumen de lo revisado, justificación por criterio, recuento de commits ni narración del proceso, salvo que el usuario los pida. Si el veredicto es `NO MERGE`, el prompt de corrección ya explica qué está mal.
 
 ## Criterio de calidad
 
