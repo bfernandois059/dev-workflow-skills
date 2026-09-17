@@ -1,0 +1,77 @@
+{
+  "skill_name": "project-blueprint",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Tenemos que hacer una landing page simple para un evento de fin de semana: fecha, lugar, agenda de charlas y un enlace a Eventbrite para comprar entradas. Crea la estructura completa de arquitectura y documentación.",
+      "expected_output": "Identifica el proyecto como L0 (estático) en modo Greenfield. Resuelve las decisiones clave en docs/00-project-blueprint.md (hosting estático en CDN, framework liviano como HTML/CSS o Astro, enlaces externos para tickets). No genera infraestructura documental ficticia: no crea .env.example (no hay variables de entorno ni secretos), no crea base de datos, no crea sistema de autenticación, no genera docs/03-data-and-integrations.md ni desglosa la suite de 7 documentos modulares vacíos. Declara N/A con justificación en las áreas no aplicables y produce un blueprint autosuficiente, conciso y profesional sin burocracia.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Necesitamos renovar el sitio web de un estudio de abogados: páginas institucionales, áreas de práctica y un blog donde publicarán artículos semanalmente redactores no técnicos. Diseña el blueprint.",
+      "expected_output": "Clasifica el proyecto como L1 (contenido administrable) en modo Greenfield. Profundiza en el modelo editorial, estrategia de CMS (ej. headless CMS o CMS desacoplado intuitivo para no técnicos), previsualización de borradores, taxonomía de contenidos y SEO. No sobrediseña persistencia transaccional compleja: no inventa bases de datos relacionales pesadas, microservicios ni colas asíncronas innecesarias para un sitio corporativo. Define qué verificaciones de calidad aplican (accesibilidad, rendimiento web, enlaces, SEO) sin forzar matrices de tests no requeridas para el tipo de producto.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Vamos a construir un sistema interno de solicitudes de compras para una empresa: empleados crean solicitudes, supervisores aprueban hasta $5,000 y gerencia aprueba montos mayores. Define la arquitectura y especificación.",
+      "expected_output": "Clasifica como aplicación interna L2/L3. Profundiza en el modelo de datos (entidades solicitud, ítems, aprobaciones), autenticación corporativa y control de acceso (RBAC con matriz de permisos diferenciada entre empleado, supervisor y gerencia). Evalúa el flujo de estados y trazabilidad de aprobaciones. Al ser una herramienta puramente interna sin acceso público, descarta optimizaciones de SEO público y SSR complejo, favoreciendo una SPA sobre base de datos relacional transaccional (ej. PostgreSQL). Justifica desacoplar la matriz de permisos si la granularidad lo amerita.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Diseña la arquitectura para una plataforma de telemedicina donde pacientes reservan citas, pagan en línea y suben historiales médicos previos.",
+      "expected_output": "Identifica el sistema como L3/L4 crítico debido a procesamiento de pagos y manejo de datos de salud altamente sensibles. Aumenta proporcionalmente la profundidad: exige almacenamiento de archivos privado con URLs firmadas y cifrado en reposo/tránsito, pasarela de pagos con manejo de webhooks idempotentes, estricta separación de datos personales y registros médicos (cumplimiento de privacidad y normativas sanitarias), y auditoría de accesos. Justifica el desglose en documentos especializados (docs/05-security-and-operations.md, docs/compliance-and-privacy.md, matriz de permisos) sin omitir controles operativos ni de recuperación ante desastres.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Tenemos este repositorio en producción funcionando con un monolito Django y PostgreSQL en AWS. El equipo quiere rehacerlo en microservicios con Next.js y Supabase porque es lo moderno. Evalúa y genera el blueprint.",
+      "expected_output": "Actúa en modo Retrofit con criterio profesional y escepticismo ante modas tecnológicas. Evalúa las decisiones existentes del repositorio: si el monolito Django y PostgreSQL resuelve adecuadamente los flujos actuales con estabilidad, recomienda mantener la base tecnológica para evitar un costo y riesgo de migración injustificado. No valida ciegamente la reescritura a microservicios ni la adopción refleja de Supabase o Next.js sin una limitación técnica demostrada. Si existen mejoras puntuales necesarias (ej. caching, frontend interactivo en ciertas vistas), las acota sin destruir la arquitectura que ya opera con éxito.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Heredamos este repositorio de Node.js donde toda la lógica de negocio está metida en controladores Express de 2,000 líneas, no hay migraciones de base de datos, los secretos están quemados en el código y no hay tests. Haz el blueprint de ordenamiento.",
+      "expected_output": "Identifica el contexto como Retrofit con severa deuda técnica y operativa. Utiliza los hallazgos previos como evidencia técnica de entrada sin limitarse al diagnóstico pasivo. Establece la matriz Actual → Objetivo para cada área crítica (separación de responsabilidades en capas/servicios, gestión de secretos en variables de entorno seguras, migraciones versionadas y tests de integración mínimos para flujos críticos). Genera obligatoriamente docs/migration-plan.md priorizando la mitigación de riesgos de seguridad y estabilidad en pasos atómicos ejecutables por engineering-workflow.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "El sistema SaaS ya está en producción con su blueprint completo aprobado. Ahora necesitamos agregar una integración con HubSpot para sincronizar contactos cuando se registra un usuario. Genera el blueprint.",
+      "expected_output": "Opera estrictamente en modo Decision Patch. No vuelve a ejecutar el descubrimiento global ni regenera el blueprint completo del SaaS. Delimita el delta a la integración con HubSpot: flujo de eventos, manejo de webhooks/API de sincronización, reintentos asíncronos y mitigación de fallos de red. Actualiza únicamente la sección de integraciones de docs/00-project-blueprint.md (o docs/03-data-and-integrations.md si existía como archivo desacoplado), dejando intactas y cerradas las decisiones previas de auth, facturación, frontend y base de datos.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "En nuestra app web que actualmente solo tiene login básico por email y contraseña, queremos incorporar autenticación multifactor (MFA) y login federado con Google y Microsoft para clientes corporativos.",
+      "expected_output": "Reconoce un Decision Patch enfocado en autenticación y seguridad de acceso. Aunque el delta es acotado funcionalmente, reconoce el alto impacto y riesgo técnico del dominio: profundiza en la gestión de sesiones, compatibilidad de tokens, flujo de recuperación de cuentas bloqueadas por MFA, mapeo de identidades OIDC y seguridad de credenciales. Actualiza específicamente las especificaciones de seguridad y autenticación sin reabrir decisiones no relacionadas del proyecto (como hosting o sistema de diseño).",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "Quiero hacer un blog personal y exijo que usemos una arquitectura de microservicios con Kubernetes y base de datos distribuida Cassandra.",
+      "expected_output": "No acata ciegamente la exigencia como verdad arquitectónica indiscutible ni la rechaza de manera arrogante. Registra la solicitud del usuario como una restricción/preferencia impuesta pero analiza profesionalmente los trade-offs: documenta el enorme sobrecoste operativo, latencia y fragilidad innecesaria de microservicios y Cassandra para un blog personal frente a la complejidad mínima suficiente. Recomienda una alternativa proporcional (ej. generador estático o headless CMS simple), explica qué disparador real justificaría escalar y solicita confirmación informada al usuario antes de proceder.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Estamos diseñando la arquitectura para una intranet. Pregunté al cliente cuántos empleados la usarán en simultáneo y qué proveedor de correo tienen, pero no saben y no responderán hasta el próximo mes. ¿Qué hacemos con el blueprint?",
+      "expected_output": "No paraliza el avance del blueprint ni inventa certezas ficticias. Aplica separación epistemológica registrando supuestos razonables, conservadores y reversibles (ej. supuesto de concurrencia típica para intranet de tamaño medio < 50 usuarios simultáneos, proveedor de email transaccional estándar desacoplado). Marca estos puntos explícitamente como Supuesto y Pendiente de validar con su condición de revisión, avanza en las decisiones no bloqueantes y emite un Readiness Check READY WITH RISKS que permite trabajar sin quedar bloqueados.",
+      "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "Necesitamos un sitio web informativo tipo dossier para un documental de cine: sin usuarios, sin formularios, sin analítica ni base de datos, alojado en GitHub Pages. Define qué documentos y archivos debemos crear.",
+      "expected_output": "Aplica el principio de proporcionalidad y decisión completa: crea únicamente docs/00-project-blueprint.md concentrando las decisiones de diseño estático, hosting y assets multimedia. No crea .env.example porque no hay variables de entorno ni secretos. No crea tablas de base de datos ni modelos de datos ficticios en docs/03-data-and-integrations.md. No crea matriz de roles ni políticas de auth. Demuestra que menos documentos no significa menos rigor: las decisiones de rendimiento de video, CDN y accesibilidad quedan resueltas con claridad técnica.",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "Diseña el blueprint para un marketplace B2B financiero que procesa transacciones bancarias, conciliación en tiempo real, múltiples entidades legales, auditoría regulatoria y 5 roles de usuario.",
+      "expected_output": "Demuestra que la proporcionalidad documental no debilita la profundidad en sistemas complejos (L4). Despliega el análisis exhaustivo de arquitectura: aislamiento de datos multi-tenant, concurrencia transaccional ACID, auditoría inmutable de eventos financieros, colas de conciliación con idempotencia, matriz RBAC formal y compliance normativo. Desacopla la documentación en especificaciones especializadas (docs/01 a docs/07, docs/permissions-matrix.md, docs/compliance-and-privacy.md, docs/api-contracts.md) y emite un Readiness Check riguroso identificando riesgos y garantías operativas necesarias.",
+      "files": []
+    }
+  ]
+}
