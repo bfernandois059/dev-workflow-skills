@@ -72,6 +72,12 @@
       "prompt": "Diseña el blueprint para un marketplace B2B financiero que procesa transacciones bancarias, conciliación en tiempo real, múltiples entidades legales, auditoría regulatoria y 5 roles de usuario.",
       "expected_output": "Demuestra que la proporcionalidad documental no debilita la profundidad en sistemas complejos (L4). Despliega el análisis exhaustivo de arquitectura: aislamiento de datos multi-tenant, concurrencia transaccional ACID, auditoría inmutable de eventos financieros, colas de conciliación con idempotencia, matriz RBAC formal y compliance normativo. Desacopla la documentación en especificaciones especializadas (docs/01 a docs/07, docs/permissions-matrix.md, docs/compliance-and-privacy.md, docs/api-contracts.md) y emite un Readiness Check riguroso identificando riesgos y garantías operativas necesarias.",
       "files": []
+    },
+    {
+      "id": 13,
+      "prompt": "Este proyecto corporativo L1 ya pasó por project-blueprint 1.x y contiene docs/00-project-blueprint.md, docs/01 a docs/07, un ADR inicial, AGENTS.md, CLAUDE.md y .env.example. Actualmente usa Astro, un CMS sencillo y una única variable de entorno. Queremos actualizar el blueprint al contrato actual de project-blueprint.",
+      "expected_output": "Reconoce que el caso corresponde a Retrofit (normalización de blueprint heredado de v1.x), no a Greenfield ni a un Decision Patch puntual. Detecta la presencia de un footprint documental sobredimensionado heredado de v1.x pero no ejecuta una eliminación indiscriminada por patrón. Inspecciona el contenido de cada archivo para rescatar decisiones únicas, requisitos y contexto histórico relevante (preservando decisiones previas del ADR y del modelo de contenido). Consolida en docs/00-project-blueprint.md las decisiones que ya no justifican archivos desacoplados (como arquitectura simple o pruebas básicas en L1). Conserva .env.example porque existe una variable de entorno real documentada. Evalúa la necesidad de AGENTS.md y CLAUDE.md según si esos agentes continúan utilizándose en el flujo de desarrollo. Concluye con un footprint documental proporcional al nivel L1 sin haber provocado pérdida de decisiones ni de trazabilidad.",
+      "files": []
     }
   ]
 }

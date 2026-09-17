@@ -12,9 +12,9 @@ Evolución integral de la skill desde un modelo **document-driven** hacia un mod
 
 - **Tres modos de trabajo:**
   - `Greenfield`: proyectos nuevos o sin arquitectura previa; descubrimiento y diseño de decisiones completas antes de la implementación sustantiva.
-  - `Retrofit`: proyectos existentes; evalúa el estado `Actual → Objetivo`, juzga decisiones previas con criterio experto (mantener, ajustar, reemplazar) y genera obligatoriamente `docs/migration-plan.md` estructurado en pasos atómicos cuando existe una brecha real. Las auditorías (MarcoZen u otras) actúan como insumo técnico de entrada, nunca reemplazan al blueprint.
-  - `Decision Patch`: proyectos con arquitectura suficiente que necesitan resolver una decisión técnica o integración acotada (auth, PDFs, storage, integraciones, CMS, observabilidad); analiza y resuelve únicamente el delta sin regenerar el blueprint ni reabrir decisiones cerradas innecesarias.
-- `skills/project-blueprint/evals/evals.json`: batería de 12 casos de evaluación de criterio y fronteras que prueban proporcionalidad, manejo de restricciones, supuestos no bloqueantes, preservación vs reemplazo de stack y profundidad en sistemas críticos.
+  - `Retrofit`: proyectos existentes; evalúa el estado `Actual → Objetivo`, juzga decisiones previas con criterio experto (mantener, ajustar, reemplazar), normaliza conscientemente blueprints heredados de v1.x hacia el nuevo footprint proporcional sin pérdida de decisiones, y genera obligatoriamente `docs/migration-plan.md` estructurado en pasos atómicos cuando existe una brecha real. Las auditorías (MarcoZen u otras) actúan como insumo técnico de entrada, nunca reemplazan al blueprint.
+  - `Decision Patch`: proyectos con arquitectura suficiente que necesitan resolver una decisión técnica o integración acotada (auth, PDFs, storage, integraciones, CMS, observabilidad); analiza y resuelve únicamente el delta sin regenerar el blueprint, reabrir decisiones cerradas ni ejecutar limpiezas o normalizaciones documentales incidentales.
+- `skills/project-blueprint/evals/evals.json`: batería de 13 casos de evaluación de criterio y fronteras que prueban proporcionalidad, manejo de restricciones, supuestos no bloqueantes, preservación vs reemplazo de stack, normalización de blueprints heredados y profundidad en sistemas críticos.
 - Soporte para inicialización proporcional en `init_blueprint.py` mediante flags (`--modular`, `--retrofit`), creando por defecto únicamente la fuente canónica `docs/00-project-blueprint.md`.
 
 #### Changed

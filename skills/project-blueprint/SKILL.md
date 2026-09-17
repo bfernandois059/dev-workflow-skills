@@ -59,15 +59,39 @@ La skill opera en uno de tres modos según el estado y la necesidad del proyecto
 - **Entregable:** Blueprint completo (`docs/00-project-blueprint.md`) y los artefactos especializados que su nivel de complejidad justifique.
 
 ### 2. Retrofit (Proyecto existente que requiere orden o evolución)
-- **Contexto:** Repositorio existente cuyo diseño partió sin blueprint, acumuló deuda arquitectónica o necesita reestructurarse.
+- **Contexto:** Repositorio existente cuyo diseño partió sin blueprint, acumuló deuda arquitectónica, necesita reestructurarse o conserva un blueprint generado por una versión anterior de `project-blueprint` (v1.x) con un footprint documental rígido.
 - **Alcance:** Evalúa el estado existente contra el estado objetivo (`Actual → Objetivo`). Ejerce criterio profesional: clasifica qué decisiones mantener (por estabilidad o costo de migración), cuáles ajustar y cuáles reemplazar.
 - **Entregable:** Blueprint actualizado con matriz `Actual → Objetivo`. Si existe una brecha real que cerrar, **`docs/migration-plan.md` es el entregable central y obligatorio**, estructurado en pasos atómicos ejecutables por `engineering-workflow`.
 - **Relación con auditorías:** Un informe de auditoría (`marcozen` u otro) es **evidencia técnica de entrada**, nunca el resultado de esta skill. Una auditoría diagnostica la salud del código; `project-blueprint` define qué se construye, para quién y con qué arquitectura debe sostenerse.
+
+#### Normalización de blueprint heredado
+Cuando un proyecto existente ya contiene artefactos generados por una versión anterior de `project-blueprint`, **no asumir que esa estructura documental sigue siendo necesaria bajo el contrato actual**.
+
+Si el usuario solicita revisar, actualizar, migrar, modernizar u ordenar el blueprint existente, Retrofit debe evaluar también el footprint documental:
+1. Identifica los documentos heredados (`docs/01` a `docs/07`, ADRs iniciales, `AGENTS.md`, `CLAUDE.md`, `.env.example`).
+2. Revisa si contienen decisiones únicas, requisitos, riesgos o contexto histórico no replicado.
+3. Conserva documentos especializados que sigan teniendo una responsabilidad real e independiente según la complejidad actual del proyecto.
+4. Consolida en `docs/00-project-blueprint.md` información fragmentada que ya no justifique archivos separados.
+5. Retira artefactos redundantes **únicamente cuando se haya comprobado que no contienen información necesaria** o tras consolidar su contenido.
+
+**Regla de seguridad estricta para normalización:**  
+*Nunca eliminar documentos simplemente porque v2 ya no los considera obligatorios.* Antes de consolidar o retirar cualquier artefacto heredado:
+1. Inspeccionar su contenido íntegro.
+2. Identificar decisiones, requisitos, riesgos o información única.
+3. Determinar exactamente dónde vivirá esa información bajo el nuevo footprint canónico.
+4. Preservar la trazabilidad relevante (incluyendo decisiones históricas de ADRs si aportan contexto).
+5. Recién entonces retirar el archivo redundante.  
+*La reducción documental nunca puede significar pérdida de información.*
 
 ### 3. Decision Patch (Decisión arquitectónica acotada)
 - **Contexto:** Proyecto que ya cuenta con arquitectura o blueprint base suficiente, pero necesita resolver una decisión concreta o un grupo acotado de decisiones (ej. incorporar autenticación, definir estrategia de generación de PDFs, elegir almacenamiento de archivos, integrar una pasarela de pagos, agregar multiempresa, cambiar o incorporar CMS, decidir stack de observabilidad).
 - **Alcance:** No vuelve a ejecutar ni regenerar el blueprint completo. Inspecciona el contexto circundante necesario, resuelve el delta con la misma matriz de decisiones, evalúa riesgos y dependencias, y actualiza **únicamente** las fuentes y documentos afectados.
 - **Regla estricta:** Un Decision Patch no puede reabrir decisiones cerradas ni alterar partes del sistema que no sean necesarias para resolver el delta actual. No convertir un cambio puntual en una replanificación completa.
+- **Frontera con normalización heredada:** La normalización de un blueprint heredado **no debe ejecutarse incidentalmente durante un Decision Patch**. Si un proyecto originado en v1 contiene `docs/00` a `docs/07` y el usuario solicita únicamente agregar una integración (ej. HubSpot):
+  - Resuelve exclusivamente la integración y su impacto directo.
+  - Actualiza el documento o sección correspondiente.
+  - **No aprovechar el patch para fusionar o retirar documentación heredada.**  
+  La normalización documental se reserva estrictamente para cuando el alcance explícito solicitado sea revisar, actualizar, migrar o modernizar el blueprint (es decir, en modo Retrofit).
 
 ---
 
@@ -204,6 +228,9 @@ Desacoplar en archivos especializados **solo** cuando se cumplan estas condicion
 
 En **Decision Patch**:
 No se regenera la suite documental. Se actualiza la sección correspondiente de `docs/00-project-blueprint.md` y/o el documento especializado afectado (ej. si el patch es de auth, actualizar `docs/05-security-and-operations.md` o el blueprint, sin tocar el plan de entrega ni CMS).
+
+En **Retrofit con blueprint heredado (v1.x)**:
+Si el objetivo solicitado incluye modernizar u ordenar el blueprint, aplica el protocolo de normalización: nunca eliminar archivos por patrón; revisar decisiones únicas, consolidar en `docs/00-project-blueprint.md` y preservar trazabilidad e historial relevante antes de retirar cualquier documento redundante.
 
 ### Fase 5 — Reglas persistentes para IA
 
