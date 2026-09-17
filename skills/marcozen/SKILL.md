@@ -84,21 +84,23 @@ Cada control o hallazgo reportado debe basarse en evidencia observable:
 Todos los hallazgos se clasifican según su **impacto real en el contexto del producto**, no por la ausencia de una casilla en un checklist:
 
 - **P0 — Crítico / Bloqueador real:**
-  - Riesgo inminente de seguridad (secreto real expuesto, credencial filtrada).
+  - Riesgo inminente de seguridad (secreto real verificado expuesto, credencial sensible de producción comprometida).
   - Pérdida o corrupción de datos sin respaldo.
   - Transacciones financieras o pagos sin validación server-side.
   - Vulnerabilidad crítica activamente explotable en producción.
-  - El sistema no compila, no despliega o crashea al iniciar.
+  - El sistema no compila, no despliega o crashea al iniciar; fallo en tests de integración que bloquean un flujo de negocio crítico comprobado.
 - **P1 — Alto impacto:**
   - Problemas serios que comprometen la operación o el objetivo del producto antes de publicar.
   - Endpoints sensibles sin autenticación o autorización adecuada.
-  - Ausencia de sitemap/robots en un sitio web cuyo negocio depende del tráfico orgánico.
+  - Ausencia de sitemap en un sitio web grande o dinámico cuyo modelo depende críticamente de indexación orgánica, o archivo `robots.txt` mal configurado que bloquea por error rutas públicas que deban indexarse.
   - Operaciones destructivas sin posibilidad de rollback ni confirmación.
   - Formularios públicos transaccionales sin sanitización ni rate limiting.
 - **P2 — Mejora importante:**
   - Deuda técnica acumulada, falta de documentación crítica para handoff entre equipos.
-  - Dependencias desactualizadas (minor/patch) sin vulnerabilidades graves.
-  - Ausencia de tests de integración en flujos principales de aplicaciones L2+.
+  - Dependencias desactualizadas (minor/patch) sin vulnerabilidades graves, o CVEs en dependencias de desarrollo sin superficie explotable en producción.
+  - Fallos en tests no críticos (snapshots visuales secundarios desactualizados, tests flaky conocidos sin regresión funcional demostrada).
+  - Archivo `.env` versionado que solo contiene variables de configuración no sensibles (mala práctica / hallazgo contextual).
+  - Ausencia de `robots.txt` en un sitio público donde los buscadores pueden rastrear normalmente pero convendría declarar directivas o ruta de sitemap.
   - Documentación de arquitectura desactualizada o contradictoria.
 - **P3 — Optimización:**
   - Mejoras incrementales deseables (nice-to-have).
@@ -108,17 +110,23 @@ Todos los hallazgos se clasifican según su **impacto real en el contexto del pr
 
 ---
 
-## Reglas de seguridad en auditoría
+## Reglas de seguridad y evaluación contextual
 
 - **Solo lectura estricta:** La fase de auditoría inspecciona y diagnostica; no altera archivos, ramas ni configuraciones.
-- **No exponer secretos:** Si detectas claves API, tokens, contraseñas o connection strings versionadas:
-  - Reporta únicamente el **tipo de secreto** y el **archivo y línea** donde aparece.
-  - **NUNCA muestres el valor del secreto** en el informe ni en la conversación.
-  - Marca inmediatamente como **P0**.
-- **Descartar falsos positivos antes de alertar:**
+- **Inspección prioritaria de `.env` y secretos:**
+  - Si se detecta un `.env` versionado, **requiere inspección prioritaria**. Su sola presencia no demuestra exposición de secretos ni equivale automáticamente a P0.
+  - Clasifica como **P0** únicamente si se verifica que contiene o contenía credenciales, tokens, contraseñas, connection strings sensibles u otros secretos reales comprometidos.
+  - Si un `.env` versionado contiene exclusivamente configuración no sensible (puertos locales, flags, URLs públicas), repórtalo como hallazgo contextual o mala práctica (P2/P3) según el riesgo.
+  - **NUNCA muestres el valor del secreto** en el informe ni en la conversación. Reporta únicamente el tipo de credencial y su ubicación (`archivo:línea`).
+- **Descartar activamente falsos positivos antes de alertar:**
   - Roles de base de datos (`service_role`, `anon`, `authenticated` en sentencias SQL o RLS) son nombres de rol, no secretos.
   - Nombres de variable vacíos en plantillas (`.env.example`) son identificadores, no credenciales.
-  - Claves diseñadas para ser públicas (`NEXT_PUBLIC_*`, Stripe publishable key `pk_...`) no son secretos.
+  - Claves diseñadas para ser públicas (`NEXT_PUBLIC_*`, Stripe publishable key `pk_...`, Supabase anon key) no son secretos.
+  - Datos de prueba en mocks, fixtures o seeds (`test_password123`) no son secretos de producción.
+- **Evaluación contextual de tests rotos:**
+  - No asumir que cualquier test roto es P0/P1 automáticamente. Evalúa qué test falla, qué funcionalidad protege, si representa una regresión real, si bloquea build/deploy o si se trata de un test obsoleto o flaky.
+- **Evaluación contextual de dependencias vulnerables (CVEs):**
+  - No asumir que toda CVE detectada es P0/P1 automáticamente. Evalúa severidad oficial, versión afectada, alcance (dependencia de producción vs dev), reachability/explotabilidad real en la superficie del proyecto, mitigaciones existentes y si hay fix disponible.
 
 ---
 
@@ -168,20 +176,23 @@ Ejecuta la inspección detallada de los dominios aplicables:
 
 MarcoZen es prioritariamente de diagnóstico. La remediación de hallazgos solo se ejecuta bajo **autorización explícita**.
 
-- **Si el usuario solo pidió auditoría:** Entrega el informe y concluye en la Fase 1.
-- **Si el usuario autorizó previamente ("audita y corrige lo que encuentres"):** Procede con las correcciones seguras y de alcance claro tras presentar el diagnóstico, sin pedir confirmaciones redundantes.
+- **Si el usuario solo pidió auditoría:** Entrega el informe y concluye en la Fase 1 en modo estrictamente de solo lectura.
+- **Si el usuario autorizó previamente ("audita y corrige los problemas seguros que encuentres"):**
+  - Autoriza comenzar la fase de remediación sin pedir una segunda confirmación genérica para cambios seguros, no destructivos y claramente reversibles (corregir documentación, actualizar README, crear `.env.example`, limpiar basura local o archivos temporales no deseados).
+  - **NO constituye autorización implícita para borrar ramas remotas específicas.** La eliminación de ramas remotas es una acción destructiva sobre el historial del repositorio y exige siempre: inventario clasificado de ramas, verificación de integración, captura de SHAs y confirmación explícita sobre esas ramas antes de eliminarlas.
 - **Implementación controlada:** Toda remediación que toque archivos o ramas debe canalizarse a través de las prácticas de `engineering-workflow` (rama dedicada, validaciones y trazabilidad).
 
 **Acciones de poda segura permitidas tras autorización:**
 - Crear o completar `.env.example` con nombres de variables (sin secretos).
 - Actualizar o clarificar `README.md` y documentación contextual faltante.
-- Limpiar ramas remotas ya fusionadas en `main` tras verificar SHAs y confirmar con el usuario.
-- Eliminar archivos temporales, basura o `.DS_Store` rastreados por Git.
+- Limpiar archivos temporales, basura o `.DS_Store` rastreados por Git.
+- Poda de ramas remotas fusionadas: **requiere siempre inventario previo clasificado, captura de SHAs y confirmación explícita del usuario sobre las ramas exactas a borrar**.
 
 **Acciones NO permitidas en poda:**
 - Modificar lógica de negocio, cálculos de precios o flujos transaccionales.
 - Borrar código que pueda ser funcional sin validación previa.
 - Manipular o reescribir secretos reales sin un procedimiento seguro de rotación.
+- Borrar ramas remotas de forma desatendida o sin confirmación específica.
 
 ---
 
@@ -192,9 +203,9 @@ En el modo de pre-producción, MarcoZen responde: **¿Está este proyecto razona
 Clasifica los controles en tres niveles de criticidad:
 
 ### 1. Controles Required / Críticos (cuando aplican)
-- Build y despliegue automatizado funcional y reproducible.
-- Ausencia de secretos expuestos en código o historial.
-- Gestión segura de variables de entorno y configuración.
+- Un proceso de build y despliegue funcional, reproducible y suficientemente documentado según el riesgo y operación del proyecto (automatizado mediante CI/CD cuando el contexto operacional lo justifique; procedimiento manual documentado y reproducible cuando la simplicidad del proyecto lo haga válido).
+- Ausencia de secretos reales expuestos en código o historial.
+- Gestión segura de variables de entorno y configuración (inspección prioritaria de `.env`).
 - Autenticación y autorización robustas (RLS, RBAC, tokens) cuando existan usuarios.
 - Validación y sanitización server-side en todas las operaciones sensibles y formularios.
 - Verificación server-to-server e idempotencia en pagos y webhooks.
@@ -202,7 +213,7 @@ Clasifica los controles en tres niveles de criticidad:
 - Indexabilidad técnica básica garantizada si el producto es un sitio público.
 
 ### 2. Controles Contextuales (según producto)
-- Sitemap y robots correctamente configurados para páginas públicas.
+- Sitemap accesible y canónico para descubrimiento; archivo `robots.txt` evaluado contextualmente (su ausencia no bloquea el rastreo de buscadores; verificar que no bloquee por error rutas públicas que deban indexarse).
 - Metadatos Open Graph y URLs canónicas.
 - Páginas de error personalizadas (404 útil que preserva marca; 500 sin stack trace).
 - Medición analítica y tracking de eventos de conversión (si el negocio lo requiere).

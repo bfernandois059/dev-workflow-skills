@@ -13,11 +13,11 @@ Checklist para evaluar la preparación técnica, semántica y de confianza de si
 Los controles en este dominio se dividen en **Contextuales** y de **Optimización**:
 
 ### 1. Controles Contextuales (Importantes según modelo de negocio)
-Afectan directamente el rastreo y la indexación de páginas públicas. Su ausencia en un sitio comercial público suele constituir hallazgos **P1** o **P2**:
+Afectan directamente el rastreo y la indexación de páginas públicas. Su impacto depende de la arquitectura y modelo del proyecto:
 
-- **Rastreabilidad básica:**
-  - `robots.txt` no bloquea por error rutas públicas que deben indexarse.
-  - `sitemap.xml` presente, accesible y con URLs absolutas canónicas.
+- **Rastreabilidad y descubrimiento:**
+  - **`robots.txt`:** Verificar que **no bloquee accidentalmente** rutas públicas que deben indexarse (`Disallow: /` en producción es un hallazgo crítico P0/P1 de indexación). Su ausencia no bloquea el crawling por defecto de los buscadores; representa una recomendación contextual o P3 para indicar la ruta del sitemap y directivas específicas.
+  - **`sitemap.xml`:** Presente, accesible y con URLs absolutas canónicas. Su ausencia es un hallazgo prioritario (P1/P2) en sitios grandes, dinámicos o editoriales que dependen críticamente del descubrimiento orgánico continuo; en sitios pequeños o estáticos su impacto es menor.
 - **Canonical y duplicidad:**
   - Etiqueta `canonical` por página para prevenir contenido duplicado entre parámetros o protocolos.
 - **Status codes correctos:**

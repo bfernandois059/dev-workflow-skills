@@ -40,36 +40,45 @@ Verificar presencia y **utilidad real** según la naturaleza del proyecto:
 ### 4. Seguridad — Detección rigurosa y descarte de falsos positivos
 Búsqueda no destructiva de credenciales y variables versionadas:
 ```bash
-git ls-files | grep -E '(^|/)\.env($|\.)' | grep -v example   # .env versionado = P0
+git ls-files | grep -E '(^|/)\.env($|\.)' | grep -v example   # posibles .env versionados: inspección prioritaria
 grep -rInE '(api[_-]?key|secret|token|password|passwd|bearer|private[_-]?key)' \
   --include=*.{js,ts,json,yml,yaml,env,py,rb,go,php} . | head -20
 ```
 
-**Descarte obligatorio de falsos positivos antes de alertar P0:**
-- **Roles y permisos SQL/RLS:** Nombres como `service_role`, `anon`, `authenticated` en políticas RLS o archivos `.sql` son roles de base de datos, no secretos.
-- **Identificadores de variables:** `STRIPE_SECRET_KEY=` vacío en `.env.example` o referencias en código `process.env.MI_VARIABLE` son identificadores legítimos.
-- **Claves diseñadas para ser públicas:** `NEXT_PUBLIC_*`, anon keys de Supabase o claves publicables de Stripe (`pk_...`) no son secretos.
-- **Tokens simulados en tests:** Strings aleatorios dentro de suites de prueba o fixtures.
+**Inspección de `.env` y descarte de falsos positivos:**
+- **Inspección prioritaria de `.env`:** Encontrar un `.env` versionado requiere inspección inmediata del contenido, pero el nombre o presencia del archivo por sí solos no demuestran exposición de secretos.
+  - Clasifica como **P0** únicamente cuando se verifique que contiene o contenía credenciales, tokens, passwords, connection strings sensibles u otros secretos reales comprometidos.
+  - Un `.env` que solo contiene variables de configuración no sensibles (puertos locales, URLs públicas, flags de entorno) es una mala práctica potencial o hallazgo contextual, pero su severidad depende del riesgo real (P2/P3).
+  - **NUNCA muestres los valores encontrados en el informe ni en la conversación.**
+- **Descarte obligatorio de falsos positivos antes de alertar P0:**
+  - **Roles y permisos SQL/RLS:** Nombres como `service_role`, `anon`, `authenticated` en políticas RLS o archivos `.sql` son roles de base de datos, no secretos.
+  - **Identificadores de variables:** `STRIPE_SECRET_KEY=` vacío en `.env.example` o referencias en código `process.env.MI_VARIABLE` son identificadores legítimos.
+  - **Claves diseñadas para ser públicas:** `NEXT_PUBLIC_*`, anon keys de Supabase o claves publicables de Stripe (`pk_...`) no son secretos.
+  - **Tokens simulados en tests:** Strings aleatorios dentro de suites de prueba, mocks o fixtures.
 
 > **P0 Real:** Un valor auténtico de un secreto sensible o credencial de producción comprometido en el repositorio o en el historial.
 
 ### 5. Calidad técnica y verificación
 Adaptar al stack real del proyecto:
 - Proyectos con linter/formatter/typecheck: verificar si las herramientas están configuradas y corren limpias.
-- Tests automatizados: verificar presencia de pruebas donde aportan valor real (flujos transaccionales, lógica de dominio). Si un proyecto es puramente estático o declarativo, **no penalizar por falta de tests unitarios**.
+- **Evaluación contextual de tests rotos:** No declarar automáticamente que tests rotos = P0/P1. Evalúa qué test falla, qué funcionalidad protege, si representa una regresión real, si bloquea build/deploy o si es un test obsoleto o flaky (un E2E de checkout roto por regresión es P0/P1; un snapshot secundario desactualizado o test flaky sin impacto funcional es P2/P3). Si el proyecto es puramente estático o declarativo, **no penalizar por falta de tests unitarios**.
+- **Evaluación contextual de dependencias vulnerables (CVEs):** No asumir que CVE detectada = P0/P1 automáticamente. Evalúa severidad oficial, versión afectada, entorno (producción vs dependencias de desarrollo sin impacto en runtime), reachability y si existe fix o mitigación disponible.
 - Detección de deuda técnica visible:
 ```bash
 grep -rInE 'TODO|FIXME|HACK|XXX' --include=*.{js,ts,py,go,rb,php} . | wc -l
 ```
 
 ### 6. Despliegue y operación
-- ¿Existe configuración de hosting y despliegue automatizado? (`Dockerfile`, `.github/workflows/`, `vercel.json`, `fly.toml`, etc.).
+- Proceso de build y despliegue: verificar si existe un proceso funcional, reproducible y suficientemente documentado según el riesgo y operación del proyecto (automatizado mediante CI/CD cuando el contexto operacional lo justifique; procedimiento manual documentado y reproducible cuando la simplicidad del proyecto lo haga válido).
 - ¿Están identificadas las variables de entorno necesarias para operar en producción?
 - Para sistemas operacionales: verificar existencia de procedimientos de respaldo y rollback.
 
 ### 7. SEO, AEO e identidad visible (solo si es web pública indexable)
 - Si el proyecto es una API privada, herramienta interna o librería: marcar este dominio como **N/A**.
-- Si es web pública indexable: verificar `robots.txt`, `sitemap.xml`, metadatos, OpenGraph y páginas de error (404/500).
+- Si es web pública indexable:
+  - **`sitemap.xml`:** Evaluar presencia y canonicidad. Su ausencia es un hallazgo importante (P1/P2) en sitios grandes o dinámicos dependientes de captación orgánica continua; en sitios pequeños su impacto es menor.
+  - **`robots.txt`:** La ausencia de `robots.txt` no bloquea el crawling (los buscadores rastrean normalmente por defecto sin él); es una recomendación contextual o P3 para declarar sitemap o reglas directivas. En cambio, un `robots.txt` presente que bloquee por error rutas públicas que deban indexarse (`Disallow: /`) sí es un hallazgo crítico P0/P1.
+  - Metadatos, OpenGraph y páginas de error (404/500).
 - La falta de optimizaciones como `llms.txt` es **P3**, nunca un bloqueador de producción.
 
 ---
@@ -86,11 +95,11 @@ No modifiques archivos ni ramas durante esta auditoría. Solo audita.
 Inspecciona con evidencia verificable:
 1. Contexto y stack tecnológico real.
 2. Git y ramas: ramas activas, fusionadas y estado de sincronización.
-3. Seguridad: detección de secretos reales (sin exponer valores), .env versionados y dependencias críticas.
+3. Seguridad: detección de secretos reales (sin exponer valores), inspección prioritaria de .env versionados y dependencias críticas evaluadas por explotabilidad real.
 4. Arquitectura y dependencias: estructura modular, scripts y estado de dependencias.
-5. Calidad y verificación: validaciones reales adaptadas al stack (sin imponer tooling innecesario).
-6. Operación y deploy: configuración de ambientes, variables y reproducibilidad.
-7. SEO, identidad y errores: páginas 404/500, metadatos e indexabilidad (solo si es web pública).
+5. Calidad y verificación: validaciones reales adaptadas al stack (evaluando tests y CVEs según criticidad e impacto real).
+6. Operación y deploy: proceso de build y despliegue funcional y reproducible (automatizado o documentado según riesgo).
+7. SEO, identidad y errores: sitemap canónico y robots contextualmente evaluados (solo si es web pública).
 8. Documentación: evaluar presencia según necesidad operativa real.
 
 Entrega un informe con la siguiente estructura:

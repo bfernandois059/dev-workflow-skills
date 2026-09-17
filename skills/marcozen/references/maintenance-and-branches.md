@@ -37,13 +37,17 @@ pip-audit 2>/dev/null
 
 El orden de ramas aporta gran valor pero conlleva riesgo de pérdida de historial. **Nunca borres una rama remota sin confirmación explícita del usuario.**
 
-Procedimiento recomendado:
+> [!IMPORTANT]
+> **Frontera de autorización ("audita y corrige"):**  
+> Una instrucción previa como *"audita y corrige los problemas seguros que encuentres"* autoriza iniciar la fase de remediación para cambios no destructivos y claramente reversibles (documentación, README, `.env.example`, basura local o archivos temporales). **No constituye autorización implícita para borrar ramas remotas específicas.** La eliminación de ramas remotas es una acción destructiva sobre el historial del repositorio: siempre se debe actualizar referencias (`git fetch --prune`), clasificar cada rama, verificar integración, mostrar el inventario exacto propuesto para eliminación, capturar SHAs y obtener confirmación explícita del usuario sobre esas ramas antes de eliminarlas.
+
+Procedimiento seguro para eliminación de ramas:
 1. **`git fetch --prune origin`** para trabajar con el estado remoto actualizado.
 2. **Clasificar ramas:**
-   - **Fusionadas:** Ya integradas en la rama base (diff vacío). Son candidatas seguras a eliminar.
+   - **Fusionadas:** Ya integradas en la rama base (diff vacío). Son candidatas a eliminar.
    - **No fusionadas:** Contienen commits no presentes en la base; requieren revisión humana.
    - **Ramas de infraestructura o despliegue:** Preservar siempre (ej. `production`, `staging`, ramas vinculadas a webhooks de hosting).
-3. **Presentar inventario y solicitar confirmación** antes de ejecutar cualquier comando de eliminación.
+3. **Presentar inventario clasificado y solicitar confirmación explícita** para las ramas específicas antes de ejecutar cualquier comando de eliminación.
 4. **Capturar SHAs antes de podar:** Registrar `git rev-parse origin/<rama>` para permitir recuperación ante cualquier eventualidad.
 5. **Borrado autorizado:** `git push origin --delete <rama>` seguido de `git fetch --prune`.
 

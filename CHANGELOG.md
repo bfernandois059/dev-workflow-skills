@@ -16,7 +16,8 @@ Los cambios relevantes de las skills se registran en este archivo.
 - `marcozen`: escala de severidad unificada a 4 niveles: `P0 (Bloqueante / Crítico)`, `P1 (Alto)`, `P2 (Medio)` y `P3 (Bajo / Sugerencia)`.
 - `marcozen`: reestructuración de la auditoría de pre-producción en controles requeridos/críticos, contextuales y de optimización. `llms.txt` clasificado explícitamente como optimización P3 y nunca como blocker de publicación.
 - `marcozen`: eliminación de engine profile blocking gates rígidos y normalización de comandos de mantenimiento según el stack real del proyecto.
-- `marcozen`: actualización de todas las referencias operativas (`audit-prompt.md`, `preprod-seo-geo-aeo.md`, `preprod-security.md`, `preprod-identity-and-errors.md`, `doc-templates.md`, `maintenance-and-branches.md`, `pruning-phase1.md`) para reflejar la metodología basada en evidencia y proporcionalidad.
+- `marcozen`: precisión de severidad basada en evidencia e impacto real: `.env` versionado exige inspección prioritaria pero solo es P0 si contiene credenciales comprometidas; tests rotos y CVEs evaluados contextualmente según criticidad y alcance; proceso de build/deploy reproducible según riesgo sin imponer CI/CD como requisito universal; y sitemap ausente distinguido con claridad de `robots.txt` ausente.
+- `marcozen`: delimitación de la frontera de remediación: "audita y corrige" autoriza mejoras seguras y reversibles sin confirmación redundante, pero no autoriza la eliminación destructiva de ramas remotas sin confirmación explícita de inventario.
 - `marcozen`: expansión de la suite de evals a 14 casos que prueban razonamiento, límites, falsos positivos, dominios N/A, severidad P0 y comportamiento de solo lectura.
 
 ### engineering-workflow 1.4.0

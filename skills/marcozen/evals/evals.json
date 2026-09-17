@@ -10,13 +10,13 @@
     {
       "id": 2,
       "prompt": "Vamos a integrar la pasarela de pagos en este e-commerce la próxima semana. Haz una auditoría antes de conectar Stripe y salir a producción.",
-      "expected_output": "Enfoca la auditoría con máxima profundidad en seguridad, integridad transaccional y despliegue. Verifica si los pagos y webhooks se validan server-to-server con firmas criptográficas, comprueba la ausencia de secretos o variables privadas en el cliente, revisa que no haya .env versionado y evalúa la reproducibilidad del deploy y rollback. Trata los fallos en validación de cobro o secretos como bloqueadores P0/P1 críticos.",
+      "expected_output": "Enfoca la auditoría con máxima profundidad en seguridad, integridad transaccional y despliegue. Verifica si los pagos y webhooks se validan server-to-server con firmas criptográficas, comprueba la ausencia de secretos o variables privadas en el cliente, realiza una inspección prioritaria de la gestión de variables de entorno y evalúa la reproducibilidad del deploy y rollback. Trata los fallos en validación de cobro o secretos comprobados como bloqueadores P0/P1 críticos.",
       "files": []
     },
     {
       "id": 3,
       "prompt": "Audita este repositorio y corrige de inmediato los problemas evidentes de documentación y ramas muertas que encuentres.",
-      "expected_output": "Reconoce que el usuario autorizó explícitamente tanto el diagnóstico como las correcciones seguras. Realiza primero la auditoría en solo lectura reuniendo evidencia, y a continuación ejecuta las acciones de remediación autorizadas (como crear .env.example con placeholders, clarificar el README o limpiar ramas remotas ya fusionadas) en una rama de trabajo controlada sin detenerse a pedir una segunda confirmación artificial, absteniéndose de tocar código o lógica de negocio.",
+      "expected_output": "Reconoce que la instrucción autoriza iniciar la fase de remediación sin pedir una segunda confirmación genérica para cambios seguros y reversibles (como crear .env.example con placeholders, clarificar el README o limpiar basura local en una rama controlada). Sin embargo, diferencia correctamente los cambios reversibles de las acciones destructivas sobre historial: no borra ramas remotas automáticamente, sino que presenta el inventario clasificado de ramas propuestas y solicita confirmación explícita específica antes de eliminarlas, absteniéndose de tocar código o lógica de negocio.",
       "files": []
     },
     {
@@ -63,8 +63,8 @@
     },
     {
       "id": 11,
-      "prompt": "Audita este portal web de noticias que depende enteramente del tráfico orgánico de Google para subsistir. No encontramos sitemap.xml ni robots.txt.",
-      "expected_output": "Evalúa el impacto real de los hallazgos en función del modelo de negocio del producto. Al tratarse de un medio público dependiente de la captación orgánica, la ausencia de sitemap y robots se clasifica como hallazgo de alto impacto (P1), explicando concretamente cómo la falta de rastreo e indexación perjudica el objetivo del sitio y recomendando su generación urgente.",
+      "prompt": "Audita este portal web de noticias con alta frecuencia de publicación que depende críticamente del tráfico orgánico. No encontramos sitemap.xml ni robots.txt.",
+      "expected_output": "Distingue el impacto real de cada componente en lugar de tratarlos como equivalentes: clasifica la ausencia de sitemap.xml como hallazgo prioritario (P1/P2) debido a la escala y necesidad de descubrimiento continuo de noticias; mientras que la ausencia de robots.txt no se interpreta como bloqueo de crawling (los buscadores rastrean por defecto sin él), clasificándose como recomendación contextual o P3 para indicar la ruta del sitemap. Aclara además que solo un robots.txt presente que bloquee por error contenido indexable (Disallow: /) constituiría un bloqueo crítico P0/P1.",
       "files": []
     },
     {

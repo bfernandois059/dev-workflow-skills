@@ -2,16 +2,16 @@
 
 Checklist de seguridad para el **Modo 2 (pre-producción)** y **Modo 4 (seguridad)**. Objetivo: identificar vulnerabilidades, filtraciones y riesgos que comprometan la integridad, dinero, datos de usuarios o disponibilidad del sistema **antes de publicar**.
 
-> **Regla de oro sobre secretos:**  
+> **Regla de oro sobre secretos y severidad:**  
 > **NUNCA expongas credenciales.** Si encuentras secretos reales en el código o historial, reporta únicamente el **tipo de secreto y su ubicación (`archivo:línea`)**.  
-> Descarta falsos positivos (roles RLS en SQL, nombres de variable vacíos en `.env.example`, claves públicas de cliente) antes de declarar un P0.
+> Descarta activamente falsos positivos (roles RLS en SQL, nombres de variable vacíos en `.env.example`, claves públicas de cliente como Stripe pk o Supabase anon, datos de prueba en tests o mocks) antes de declarar un P0. La presencia de un `.env` versionado exige inspección prioritaria pero no equivale mecánicamente a P0 si solo contiene configuración no sensible.
 
 ---
 
 ## 1. Controles Required / Críticos (Bloqueadores P0 cuando fallan)
 
-- **Ausencia total de secretos expuestos:** Claves de API privadas, tokens de servicio, contraseñas de bases de datos o connection strings reales ausentes del código y del control de versiones.
-- **Gestión de `.env`:** El archivo `.env` con valores reales no está versionado y está cubierto por `.gitignore`.
+- **Ausencia total de secretos reales expuestos:** Claves de API privadas, tokens de servicio, contraseñas de bases de datos o connection strings reales ausentes del código y del control de versiones.
+- **Gestión e inspección de `.env`:** Un archivo `.env` versionado requiere inspección prioritaria (sin revelar valores). Si contiene o contenía secretos, credenciales o tokens sensibles reales, constituye un bloqueador **P0**. Si únicamente contiene variables de configuración no sensibles (puertos, URLs públicas o flags locales), se clasifica como hallazgo contextual o mala práctica (P2/P3) para moverlo a `.gitignore`, no como P0 automático.
 - **Integridad de pagos y transacciones:** Cualquier flujo de cobro o compra se valida server-to-server; el cliente frontend nunca valida ni confirma por sí solo el éxito de un pago.
 - **Integridad de webhooks:** Firmas criptográficas y secretos compartidos verificados server-side antes de procesar eventos externos (Stripe, MercadoPago, PayPal, etc.).
 - **Autorización efectiva:** En sistemas con autenticación y perfiles, las operaciones sensibles verifican permisos en el servidor (ej. políticas RLS en base de datos o middleware de autorización de sesión). Un usuario autenticado no debe poder leer ni mutar recursos ajenos.
@@ -24,7 +24,7 @@ Checklist de seguridad para el **Modo 2 (pre-producción)** y **Modo 4 (segurida
 - **Plantilla `.env.example`:** Presente con nombres de variables documentados (sin valores) **únicamente si el proyecto maneja variables de entorno**. Si no hay configuración externa, este punto es N/A.
 - **Cabeceras de seguridad HTTP:** HSTS, X-Content-Type-Options, X-Frame-Options / frame-ancestors y Referrer-Policy en endpoints web y APIs públicas.
 - **Protección de formularios públicos:** Rate limiting o captcha/Turnstile en formularios expuestos (contacto, registro, recuperación de contraseña) para mitigar abuso automatizado.
-- **Dependencias vulnerables:** Revisión de dependencias de producción. Si la herramienta de auditoría (`npm audit`, `pip-audit`, etc.) no puede ejecutarse por falta de red o entorno, reportar como **No verificado**, no como fallo asumido.
+- **Dependencias vulnerables (CVEs):** No asumir que toda CVE detectada es P0/P1 automáticamente. Evaluar severidad oficial, versión afectada, alcance (producción vs dependencias dev sin impacto en runtime), reachability y si existe fix o mitigación disponible. Si la herramienta de auditoría (`npm audit`, `pip-audit`, etc.) no puede ejecutarse por falta de red o entorno, reportar como **No verificado**, no como fallo asumido.
 - **Políticas de privacidad y términos:** Páginas legales visibles si la plataforma recolecta datos personales, cookies analíticas o procesa pagos.
 
 ---
