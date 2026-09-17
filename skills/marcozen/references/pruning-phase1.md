@@ -1,58 +1,31 @@
-# Poda Fase 1 — MarcoZen
+# Poda Fase 1 — Cambios Seguros y Remediación Autorizada
 
-Fase de **cambios seguros**. Se ejecuta **solo** después de una auditoría MarcoZen y con
-aprobación explícita del usuario. Ordena la documentación y la gobernanza del proyecto
-**sin tocar la lógica de negocio ni el comportamiento**.
+Fase de **remediación y orden documental**. Se ejecuta **únicamente bajo autorización del usuario** (sea tras revisar la auditoría o porque el usuario solicitó explícitamente desde el inicio "audita y corrige lo que encuentres").
 
-## Antes de empezar
+Objetivo: **Ordenar el repositorio y mitigar riesgos superficiales sin alterar la lógica de negocio ni romper funcionalidades**.
 
-- Trabaja sobre una rama dedicada, no directo en `main`.
-- Ten la auditoría a la vista: la poda se guía por sus hallazgos P0/P1/P2.
-- Si al crear `.env.example` descubres que hay un `.env` real versionado, **no lo borres
-  ni muevas en esta fase**: márcalo como riesgo P0 pendiente y avisa. La remediación de
-  secretos es una tarea aparte y sensible.
+---
 
-## Prompt reutilizable
+## Reglas de ejecución
 
-```
-Aplica la fase 1 de poda MarcoZen según la auditoría anterior.
+1. **Trabajar en branch dedicada:** Toda modificación debe realizarse en una rama específica, siguiendo las prácticas de `engineering-workflow`.
+2. **Proporcionalidad documental:** Crear únicamente los documentos cuya necesidad esté demostrada en la auditoría. No generar plantillas vacías.
+3. **Secretos reales no se tocan a ciegas:** Si se detecta un `.env` versionado con valores reales, **no lo borres precipitadamente en esta fase**: márcalo como bloqueador P0 para acordar la rotación y revocación segura de credenciales antes de eliminarlo del historial.
 
-Objetivo:
-Ordenar el proyecto sin cambiar funcionalidades.
+---
 
-Permitido:
-- actualizar README.md
-- crear o actualizar AGENTS.md
-- crear .env.example
-- crear docs/project-context.md
-- crear docs/deployment-runbook.md
-- crear docs/security-checklist.md
-- actualizar CHANGELOG.md
-- agregar enlaces entre documentos
-- marcar archivos obsoletos como deprecated si corresponde
+## Alcance de acciones permitidas
 
-No permitido:
-- borrar código funcional
-- cambiar lógica de negocio
-- tocar credenciales reales
-- cambiar productos, servicios, precios o contenido crítico
-- modificar diseño visual sin instrucción
-- hacer refactor profundo
+- Actualizar o clarificar `README.md` (instrucciones de arranque y mapa del proyecto).
+- Crear `.env.example` con identificadores y placeholders (sin valores reales).
+- Crear `AGENTS.md` si el proyecto será desarrollado con agentes autónomos.
+- Documentar runbooks de despliegue o checklists de seguridad necesarios.
+- Eliminar ramas remotas ya fusionadas (previa confirmación explícita del inventario).
+- Retirar archivos temporales o basura (`.DS_Store`, logs locales) del control de versiones.
 
-Entrega:
-1. Archivos creados.
-2. Archivos actualizados.
-3. Riesgos que quedan.
-4. Próxima fase recomendada.
-```
+## Acciones estrictamente PROHIBIDAS en esta fase
 
-## Notas de ejecución
-
-- `.env.example` se crea a partir de las variables que el código realmente usa, con
-  **placeholders** (`STRIPE_SECRET_KEY=`), nunca valores reales.
-- Al "marcar como deprecated" un archivo, no lo borres: agrega una nota al inicio
-  (`> ⚠️ DEPRECATED: reemplazado por docs/architecture.md`) y regístralo en el
-  `CHANGELOG.md`. El borrado real es decisión de una fase posterior.
-- Enlaza los documentos entre sí (README → docs/ → AGENTS) para que se naveguen solos.
-- Al terminar, resume qué quedó pendiente y cuál sería la Fase 2 (ej: remediar secretos,
-  borrar ramas muertas, consolidar duplicados, escribir tests).
+- Modificar lógica de negocio, cálculos de precios o flujos transaccionales.
+- Borrar código funcional.
+- Cambiar librerías mayores o dependencias core.
+- Alterar esquemas de bases de datos o migraciones.

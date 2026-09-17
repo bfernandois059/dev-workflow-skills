@@ -1,183 +1,84 @@
-# Plantillas de documentación mínima — MarcoZen
+# Plantillas de Documentación Proporcional — MarcoZen
 
-Plantillas listas para la Fase 2 (poda). Copia, completa lo que aplique y borra lo que no.
-Un documento a medio llenar con secciones vacías es peor que no tenerlo: sé concreto o
-elimina la sección.
+Plantillas de referencia para la Fase 2 (remediación autorizada).
+
+> **Principio rector:** Cada documento debe **ganarse su lugar** según la complejidad, tamaño y equipo del proyecto.  
+> No crees documentos vacíos ni recomiendes archivos que no respondan a una necesidad operativa real. Un proyecto pequeño o autoexplicativo no requiere la suite completa; basta con un buen `README.md` y un `.env.example` si maneja variables.
 
 ---
 
-## README.md
+## 1. README.md (Indispensable si el repo se entrega o colabora)
 
 ```markdown
 # [Nombre del proyecto]
 
-[Una línea: qué es y para quién.]
+[Una línea: propósito del producto y a quién sirve].
 
-## Qué hace
-[2–4 líneas de contexto funcional.]
+## Contexto y stack
+- **Entorno:** [Framework / Runtime / Versión]
+- **Persistencia / Servicios:** [Bases de datos, APIs de terceros]
+- **Hosting / Deploy:** [Plataforma donde corre]
 
-## Stack
-- Lenguaje/framework:
-- Base de datos / servicios externos:
-- Deploy:
-
-## Cómo correrlo localmente
+## Puesta en marcha local
 \`\`\`bash
-# requisitos previos (node X, etc.)
-cp .env.example .env   # completar variables
-npm install
+# Requisitos previos
+cp .env.example .env   # Solo si el proyecto requiere variables
+npm install            # Adaptar al gestor del repo (pnpm, pip, cargo, etc.)
 npm run dev
 \`\`\`
 
-## Estructura del repo
-[Mapa breve de carpetas clave y qué vive en cada una.]
+## Estructura clave
+[Mapa breve de directorios y responsabilidades principales].
 
-## Documentación
-- Contexto: docs/project-context.md
-- Deploy: docs/deployment-runbook.md
-- Seguridad: docs/security-checklist.md
-- Para agentes IA: AGENTS.md
+## Documentación adicional (solo si aplica)
+- Deploy y operaciones: `docs/deployment-runbook.md`
+- Seguridad: `docs/security-checklist.md`
+- Contexto de arquitectura: `docs/00-project-blueprint.md`
 ```
 
 ---
 
-## AGENTS.md
+## 2. AGENTS.md (Solo si el proyecto se opera con agentes de IA)
 
 ```markdown
 # AGENTS.md
 
-## Contexto del proyecto
-[Qué es, quiénes lo usan, qué problema resuelve.]
+## Propósito y usuarios
+[Descripción breve del problema y usuarios].
 
-## Orden de lectura para agentes
-1. README.md
-2. docs/project-context.md
-3. docs/architecture.md
-4. [lo específico de la tarea]
+## Orden de autoridad de fuentes
+1. Conversación directa con el usuario.
+2. `docs/00-project-blueprint.md` o documentación técnica aprobada.
+3. `README.md`
 
-## Reglas críticas
-- [Qué NO tocar sin confirmación: schema de BD, cálculos, precios, etc.]
-- [Convenciones obligatorias del repo.]
-- [Comandos de verificación antes de dar por hecho un cambio, ej: `npm run build`.]
-
-## Cosas que NO se implementan todavía
-- [Features fuera de alcance para evitar que un agente las agregue por su cuenta.]
+## Reglas no negociables
+- No inventar credenciales, endpoints, roles ni reglas de negocio no especificadas.
+- Registrar supuestos reversibles ante datos incompletos.
+- Comandos reales de verificación del repositorio: `[comandos reales, ej. npm run build]`.
+- No modificar lógica de pagos, transacciones ni esquema de base de datos sin autorización explícita.
 ```
 
 ---
 
-## .env.example
+## 3. .env.example (Solo si existen variables de entorno)
 
 ```bash
-# Copiar a .env y completar. NUNCA versionar el .env real.
-# Base de datos
+# NUNCA versionar el .env con valores reales. Solo identificadores de configuración.
+# Persistencia
 DATABASE_URL=
 
-# Servicios externos (placeholders, sin valores reales)
+# Servicios de terceros (placeholders, sin claves reales)
 STRIPE_SECRET_KEY=
-SENDGRID_API_KEY=
+API_SERVICE_KEY=
 
-# App
-NODE_ENV=development
-PORT=3000
+# Configuración pública de cliente
+NEXT_PUBLIC_API_URL=
 ```
 
 ---
 
-## docs/project-context.md
+## 4. Documentos operacionales condicionales
 
-```markdown
-# Contexto del proyecto
-
-## Problema que resuelve
-## Usuarios / roles
-## Decisiones clave y por qué
-## Qué está dentro y fuera de alcance
-## Glosario de términos del dominio
-```
-
----
-
-## docs/architecture.md (o docs/02-architecture.md)
-
-```markdown
-# Arquitectura
-
-## Diagrama / flujo principal
-## Capas y responsabilidades
-## Datos: modelos y relaciones principales
-## Integraciones externas
-## Decisiones y trade-offs (enlazar a docs/adr/ si existe)
-```
-
----
-
-## docs/deployment-runbook.md (o docs/03-deployment-runbook.md)
-
-```markdown
-# Runbook de deploy
-
-## Dónde está desplegado (plataforma, URL, cuenta)
-## Cómo se despliega (pasos o comando exacto)
-## Variables de entorno requeridas (ver .env.example)
-## Cómo verificar que quedó bien (healthcheck)
-## Cómo hacer rollback
-## Contactos / accesos necesarios
-```
-
----
-
-## docs/security-checklist.md (o docs/04-security-checklist.md)
-
-```markdown
-# Checklist de seguridad
-
-- [ ] No hay secretos versionados (.env fuera del repo, en .gitignore)
-- [ ] .env.example actualizado con todas las variables (sin valores reales)
-- [ ] Dependencias sin vulnerabilidades críticas conocidas
-- [ ] Auth y autorización revisadas en endpoints sensibles
-- [ ] Datos personales / de pago tratados según normativa aplicable
-- [ ] Logs no filtran secretos ni PII
-- [ ] Backups y recuperación definidos
-```
-
----
-
-## docs/05-seo-analytics-checklist.md (solo web/e-commerce público)
-
-```markdown
-# Checklist SEO / analítica / conversión
-
-- [ ] sitemap.xml generado y enviado
-- [ ] robots.txt correcto (no bloquea lo que debe indexarse)
-- [ ] Metadatos y OpenGraph por página clave
-- [ ] Analytics / tag manager instalado y verificado
-- [ ] Eventos de conversión definidos y disparando
-- [ ] Core Web Vitals dentro de rango
-```
-
----
-
-## docs/adr/README.md
-
-```markdown
-# Architecture Decision Records
-
-Cada decisión relevante va en un archivo `NNNN-titulo.md` con:
-fecha · contexto · decisión · alternativas consideradas · consecuencias.
-```
-
----
-
-## CHANGELOG.md
-
-```markdown
-# Changelog
-
-Formato basado en Keep a Changelog. Fechas en formato AAAA-MM-DD.
-
-## [No publicado]
-### Añadido
-### Cambiado
-### Corregido
-```
+- **`docs/deployment-runbook.md`**: Solo para aplicaciones críticas con procedimientos de despliegue, monitoreo o guardias.
+- **`docs/security-checklist.md`**: Para sistemas con cumplimiento normativo o datos de pago/salud.
+- **`CHANGELOG.md`**: Para proyectos que gestionan releases versionados y bibliotecas compartidas.

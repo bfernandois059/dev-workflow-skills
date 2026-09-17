@@ -1,186 +1,109 @@
-# Auditoría MarcoZen — detalle operativo y prompt maestro
+# Auditoría MarcoZen — Detalle Operativo y Prompt Maestro
 
-Este archivo tiene dos partes:
-1. **Guía operativa**: qué comandos correr y qué mirar en cada categoría (para ti, el
-   agente, cuando ejecutas la auditoría).
-2. **Prompt maestro reutilizable**: texto que puedes entregar tal cual a otro
-   desarrollador o agente IA para que corra la auditoría por su cuenta.
+Este archivo contiene:
+1. **Guía operativa por dominio**: Comandos y señales de inspección para el agente durante la auditoría.
+2. **Prompt maestro reutilizable**: Instrucción estructurada para ejecutar una auditoría MarcoZen evidence-first.
 
 ---
 
-## Parte 1 — Guía operativa por categoría
+## Parte 1 — Guía operativa por dominio
 
-Recuerda las reglas de la primera pasada: **solo lectura**, no exponer secretos.
+Reglas indispensables:
+- **Solo lectura estricta:** No modificar archivos, ramas ni configuraciones.
+- **Evidencia observable:** Distinguir entre `Verificado OK`, `Hallazgo`, `No verificado` y `N/A`.
+- **Máxima prudencia con secretos:** Nunca mostrar el valor de un secreto. Reportar solo tipo y ubicación (`archivo:línea`).
 
-### Orden Git y ramas (15 pts)
-
+### 1. Git y ramas
 Comandos útiles (solo lectura):
-
 ```bash
 git branch -a --sort=-committerdate                 # ramas por actividad reciente
-git branch --merged main                            # ramas ya fusionadas (candidatas a borrar)
-git branch --no-merged main                         # ramas con trabajo sin integrar
-git log --oneline -15                               # últimos commits
-git status --porcelain                              # working tree limpio o sucio
-git tag --sort=-creatordate | head                  # releases
-for b in $(git branch -r | grep -v HEAD); do echo "$b $(git log -1 --format=%cr $b)"; done
+git branch -r --merged origin/main                  # ramas remotas fusionadas (candidatas a poda)
+git branch -r --no-merged origin/main               # ramas con trabajo pendiente
+git log --oneline -10                               # últimos commits en rama activa
+git status --porcelain                              # estado del working tree
+git tag --sort=-creatordate | head -5               # releases recientes
 ```
+- **Hallazgo P1/P2:** Decenas de ramas abandonadas sin propósito, commits con mensajes crípticos continuos, ramas fusionadas que saturan el repositorio remoto.
+- **Verificado OK:** Poca dispersión de ramas, historial limpio, sincronización regular con la rama base.
 
-Penaliza: muchas ramas obsoletas sin cerrar, ramas fusionadas no borradas, working tree
-sucio, ausencia de convención de ramas, historia caótica. Premia: pocas ramas vivas y con
-propósito claro, `main` estable.
+### 2. Documentación
+Verificar presencia y **utilidad real** según la naturaleza del proyecto:
+- Proyectos con equipo/handoff: `README.md` (propósito, setup local, mapa del repo), variables en `.env.example`, runbook de despliegue si aplica.
+- Proyectos mantenidos por agentes: `AGENTS.md` o reglas persistentes.
+- **Importante:** La falta de un documento solo es hallazgo si existe una necesidad operativa no cubierta. Si el proyecto es mínimo y autoexplicativo, no exigir documentación extensa artificialmente.
 
-### Documentación (15 pts)
+### 3. Arquitectura y dependencias
+- Inspeccionar manifiestos según stack (`package.json`, `requirements.txt`, `go.mod`, `Cargo.toml`, `Gemfile`, `composer.json`).
+- Verificar scripts de ejecución, dependencias duplicadas o manifiestos inconsistentes.
+- Pregunta clave: ¿la estructura de carpetas expresa claramente los límites y responsabilidades del sistema?
 
-Verifica presencia y **utilidad real** (un README que solo dice `npm install` no vale
-mucho): `README.md`, `AGENTS.md`, `PRD.md`/`PRODUCT.md`, `.env.example`, `CHANGELOG.md`,
-`docs/`, `docs/adr/`. Marca documentos desactualizados o que se contradicen entre sí.
-
-### Arquitectura (15 pts)
-
-Revisa `package.json` (o `requirements.txt`, `go.mod`, etc.), scripts, estructura de
-carpetas, separación de responsabilidades, dependencias duplicadas o abandonadas.
-Pregunta clave: ¿la estructura se explica sola?
-
-### Seguridad (15 pts) — máxima prudencia
-
-Detecta **sin exponer** valores:
-
+### 4. Seguridad — Detección rigurosa y descarte de falsos positivos
+Búsqueda no destructiva de credenciales y variables versionadas:
 ```bash
 git ls-files | grep -E '(^|/)\.env($|\.)' | grep -v example   # .env versionado = P0
 grep -rInE '(api[_-]?key|secret|token|password|passwd|bearer|private[_-]?key)' \
-  --include=*.{js,ts,json,yml,yaml,env,py,rb,go} . | head       # posibles secretos
+  --include=*.{js,ts,json,yml,yaml,env,py,rb,go,php} . | head -20
 ```
 
-Si algo aparece, reporta **solo tipo + archivo:línea**, nunca el valor. Revisa también:
-`.gitignore` cubre `.env`, `node_modules`, builds; dependencias con CVE evidentes; claves
-o endpoints hardcodeados; auth básica.
+**Descarte obligatorio de falsos positivos antes de alertar P0:**
+- **Roles y permisos SQL/RLS:** Nombres como `service_role`, `anon`, `authenticated` en políticas RLS o archivos `.sql` son roles de base de datos, no secretos.
+- **Identificadores de variables:** `STRIPE_SECRET_KEY=` vacío en `.env.example` o referencias en código `process.env.MI_VARIABLE` son identificadores legítimos.
+- **Claves diseñadas para ser públicas:** `NEXT_PUBLIC_*`, anon keys de Supabase o claves publicables de Stripe (`pk_...`) no son secretos.
+- **Tokens simulados en tests:** Strings aleatorios dentro de suites de prueba o fixtures.
 
-**Descarta falsos positivos antes de reportar un P0.** Muchos matches del grep no son
-credenciales, son código legítimo. Los más comunes:
+> **P0 Real:** Un valor auténtico de un secreto sensible o credencial de producción comprometido en el repositorio o en el historial.
 
-- **Roles RLS de Supabase/Postgres**: `service_role`, `anon`, `authenticated` en policies
-  o `GRANT` (`.sql`, migraciones) son **nombres de rol**, no secretos. No son P0.
-- **Nombres de variable de entorno**: `SUPABASE_SERVICE_ROLE_KEY=` en `.env.example` o
-  `process.env.STRIPE_SECRET_KEY` en código es el **identificador**, no el valor.
-- **`NEXT_PUBLIC_*` / claves publicables**: la Supabase anon key o una publishable key de
-  Stripe (`pk_...`) están **diseñadas para exponerse** al cliente. Anótalas como contexto,
-  no como P0. El riesgo real es el *service_role key* o *secret key* (`sk_...`) filtrados.
-- **JWT de ejemplo/fixtures**: tokens en tests, seeds o docs de ejemplo.
-
-Antes de marcar P0, confirma que el match es un **valor real de un secreto sensible**
-comprometido en el repo. Si tras verificar es un rol, un nombre de var o una clave pública,
-dilo explícitamente como "falso positivo verificado" para que quien lea confíe en el juicio.
-
-### Calidad técnica (10 pts)
-
-Linter/formatter configurado, tests presentes y que corren, tipado, densidad de
-`TODO`/`FIXME`/`HACK`, código muerto o comentado.
-
+### 5. Calidad técnica y verificación
+Adaptar al stack real del proyecto:
+- Proyectos con linter/formatter/typecheck: verificar si las herramientas están configuradas y corren limpias.
+- Tests automatizados: verificar presencia de pruebas donde aportan valor real (flujos transaccionales, lógica de dominio). Si un proyecto es puramente estático o declarativo, **no penalizar por falta de tests unitarios**.
+- Detección de deuda técnica visible:
 ```bash
-grep -rInE 'TODO|FIXME|HACK|XXX' --include=*.{js,ts,py,go,rb} . | wc -l
+grep -rInE 'TODO|FIXME|HACK|XXX' --include=*.{js,ts,py,go,rb,php} . | wc -l
 ```
 
-### Diseño/contenido (10 pts)
+### 6. Despliegue y operación
+- ¿Existe configuración de hosting y despliegue automatizado? (`Dockerfile`, `.github/workflows/`, `vercel.json`, `fly.toml`, etc.).
+- ¿Están identificadas las variables de entorno necesarias para operar en producción?
+- Para sistemas operacionales: verificar existencia de procedimientos de respaldo y rollback.
 
-Solo si aplica: contenido placeholder ("Lorem ipsum", imágenes de ejemplo), coherencia
-visual, assets huérfanos o sin optimizar. Si el proyecto no tiene capa visual, marca N/A.
-
-### Deploy/operación (10 pts)
-
-¿Cómo y dónde se despliega? ¿Variables documentadas? ¿Hay CI/CD, runbook, healthcheck,
-rollback? Busca `Dockerfile`, `.github/workflows/`, `vercel.json`, `netlify.toml`,
-`Procfile`, `fly.toml`, etc.
-
-### SEO/analítica/conversión (10 pts)
-
-Solo web/e-commerce público: `sitemap.xml`, `robots.txt`, metadatos/OpenGraph, analytics
-o tag manager, tracking de conversión. Si no es público, N/A.
-
-### Basura y duplicados
-
-```bash
-git ls-files | grep -E 'node_modules/|\.log$|\.DS_Store|\.tmp$|~$'
-```
-
-Duplicados de documentación, binarios grandes versionados, carpetas temporales.
+### 7. SEO, AEO e identidad visible (solo si es web pública indexable)
+- Si el proyecto es una API privada, herramienta interna o librería: marcar este dominio como **N/A**.
+- Si es web pública indexable: verificar `robots.txt`, `sitemap.xml`, metadatos, OpenGraph y páginas de error (404/500).
+- La falta de optimizaciones como `llms.txt` es **P3**, nunca un bloqueador de producción.
 
 ---
 
 ## Parte 2 — Prompt maestro reutilizable
 
-Entrega este texto tal cual cuando alguien quiera correr la auditoría MarcoZen por su
-cuenta.
-
 ```
-Actúa como auditor técnico y project manager digital.
+Actúa como auditor técnico sénior bajo el marco MarcoZen de Proyectos.
 
-Objetivo:
-Auditar este repositorio bajo el marco MarcoZen de Proyectos, buscando dejarlo limpio,
-podado, entendible y mantenible para cualquier desarrollador o agente IA.
+Principio rector: Evidence and impact > checklist completion.
+Audita el proyecto que realmente existe, adaptando la profundidad al stack y contexto del producto.
+No modifiques archivos ni ramas durante esta auditoría. Solo audita.
 
-No modifiques archivos en esta primera pasada. Solo audita.
+Inspecciona con evidencia verificable:
+1. Contexto y stack tecnológico real.
+2. Git y ramas: ramas activas, fusionadas y estado de sincronización.
+3. Seguridad: detección de secretos reales (sin exponer valores), .env versionados y dependencias críticas.
+4. Arquitectura y dependencias: estructura modular, scripts y estado de dependencias.
+5. Calidad y verificación: validaciones reales adaptadas al stack (sin imponer tooling innecesario).
+6. Operación y deploy: configuración de ambientes, variables y reproducibilidad.
+7. SEO, identidad y errores: páginas 404/500, metadatos e indexabilidad (solo si es web pública).
+8. Documentación: evaluar presencia según necesidad operativa real.
 
-Revisa:
-- ramas activas
-- README.md
-- AGENTS.md
-- PRD.md / PRODUCT.md si existe
-- .env.example
-- CHANGELOG.md
-- docs/
-- package.json
-- estructura de carpetas
-- scripts
-- configuración de build
-- variables de entorno
-- integraciones
-- sitemap/robots si aplica
-- analytics si aplica
-- seguridad básica
-- deployment
-- TODOs críticos
-- archivos duplicados, obsoletos o basura
+Entrega un informe con la siguiente estructura:
+1. Resumen ejecutivo y contexto del proyecto.
+2. Alcance y tabla de aplicabilidad modular (distinguiendo Aplicable, Contextual, N/A y No verificado).
+3. Hallazgos priorizados por severidad:
+   - P0: Críticos / Bloqueadores reales.
+   - P1: Alto impacto.
+   - P2: Mejoras importantes.
+   - P3: Optimizaciones.
+   (Para cada hallazgo: qué se observó, evidencia concreta, impacto y acción recomendada).
+4. Estado de preparación y veredicto (Listo / Listo con observaciones / No listo).
+5. Próximos pasos recomendados.
 
-Evalúa con puntaje de 0 a 100:
-
-1. Orden Git y ramas — 15 pts
-2. Documentación — 15 pts
-3. Arquitectura — 15 pts
-4. Seguridad — 15 pts
-5. Calidad técnica — 10 pts
-6. Diseño/contenido — 10 pts
-7. Deploy/operación — 10 pts
-8. SEO/analítica/conversión — 10 pts
-
-Entrega:
-1. Resumen ejecutivo.
-2. Puntaje total.
-3. Tabla por categoría con puntaje, hallazgos y riesgos.
-4. Archivos existentes útiles.
-5. Archivos faltantes.
-6. Ramas que conviene cerrar, fusionar o revisar.
-7. Riesgos P0 críticos.
-8. Acciones P1 recomendadas.
-9. Mejoras P2.
-10. Plan de poda en orden:
-   - qué borrar
-   - qué documentar
-   - qué consolidar
-   - qué proteger
-   - qué revisar antes de producción
-11. Veredicto final:
-   - Bonsái premium
-   - Ordenado con ajustes
-   - Funcional pero dependiente
-   - Riesgo operativo
-   - Proyecto maleza
-
-Reglas:
-- No eliminar archivos.
-- No cambiar código.
-- No exponer secretos.
-- Si encuentras credenciales, no las muestres; solo indica el tipo de secreto y dónde está.
-- Si hay documentos duplicados, sugiere consolidación.
-- Si falta README, AGENTS, .env.example o deployment docs, márcalo como prioridad.
+(El puntaje /100 es opcional y solo debe incluirse si se solicita expresamente).
 ```

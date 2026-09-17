@@ -1,99 +1,52 @@
 # Auditoría SEO / GEO / AEO pre-producción — MarcoZen
 
-Checklist para evaluar si un sitio web o e-commerce está preparado, a nivel técnico,
-semántico y de confianza, para que **buscadores y sistemas de IA** puedan rastrearlo,
-entenderlo y representarlo. Aplica en el **Modo 2 (pre-producción)** y **Modo 3 (SEO/GEO/AEO)**.
+Checklist para evaluar la preparación técnica, semántica y de confianza de sitios web y e-commerce públicos indexables frente a buscadores y sistemas de IA.
 
-> **Regla de honestidad (repetir al usuario):** MarcoZen **no promete indexación inmediata
-> ni resultados garantizados**. Evalúa *preparación*: que el sitio sea rastreable,
-> entendible y confiable. El ranking depende de factores externos y del tiempo.
+> **Regla de aplicabilidad:** Este checklist aplica **exclusivamente a sitios web públicos que buscan indexación y captación orgánica**. Para APIs privadas, intranets, plataformas SaaS detrás de login o librerías de software, este dominio es **N/A** y no debe penalizar la auditoría.
 
-Marca cada punto como ✅ ok · ⚠️ pendiente/parcial · ❌ falta · N/A. Asigna severidad
-P0–P3 (ver `SKILL.md`). Solo lectura: no modifiques archivos en la fase de auditoría.
+> **Regla de honestidad:** MarcoZen **no promete indexación inmediata ni resultados garantizados**. Evalúa preparación técnica y semántica para que buscadores y agentes de IA puedan rastrear, interpretar y representar el sitio.
 
-## SEO técnico
+---
 
-- `sitemap.xml` o `sitemap.ts` presente, válido y con las URLs reales.
-- `robots.txt` o `robots.ts` correcto (no bloquea lo que debe indexarse; referencia el sitemap).
-- **Canonical** por página (evita contenido duplicado).
-- **Metadata por página**: no todas heredando el mismo title/description.
-- **Titles y descriptions** únicos, descriptivos, con longitud razonable.
-- **Open Graph** (`og:title`, `og:description`, `og:image`, `og:url`, `og:type`).
-  Tamaños, rutas, URL absoluta y regla de caché en
-  [`preprod-identity-and-errors.md`](preprod-identity-and-errors.md).
-- **Twitter/X cards** si aplica (`twitter:card`, etc.).
-- **Redirects** correctos (301 para permanentes; sin cadenas largas).
-- **Status codes** correctos (200 en páginas vivas, 404 real en inexistentes, sin 200 "blandos").
-  La **página 404** en sí —que exista, que conserve la marca y que ofrezca destinos útiles en
-  vez de un error genérico— se audita en
-  [`preprod-identity-and-errors.md`](preprod-identity-and-errors.md).
-- **Páginas huérfanas**: que toda página importante tenga enlaces entrantes.
-- **URLs limpias**: legibles, sin parámetros innecesarios, coherentes.
-- **Imágenes con `alt`** descriptivo.
-- **Performance mobile** razonable.
-- **Core Web Vitals** si hay datos (LCP, INP, CLS).
+## Clasificación de Controles y Severidad
 
-## Estructura semántica
+Los controles en este dominio se dividen en **Contextuales** y de **Optimización**:
 
-- Un **H1 claro por página** (uno solo, describe la página).
-- **H2/H3 ordenados** jerárquicamente (sin saltos arbitrarios).
-- **Contenido escaneable** (párrafos cortos, listas, subtítulos).
-- **Breadcrumbs** donde aporten navegación.
-- **Enlazado interno** coherente entre páginas relacionadas.
-- **Páginas fuente** (pilares de contenido) identificables.
-- **FAQs** cuando aportan valor real (no relleno).
+### 1. Controles Contextuales (Importantes según modelo de negocio)
+Afectan directamente el rastreo y la indexación de páginas públicas. Su ausencia en un sitio comercial público suele constituir hallazgos **P1** o **P2**:
 
-## Schema (datos estructurados) recomendado
+- **Rastreabilidad básica:**
+  - `robots.txt` no bloquea por error rutas públicas que deben indexarse.
+  - `sitemap.xml` presente, accesible y con URLs absolutas canónicas.
+- **Canonical y duplicidad:**
+  - Etiqueta `canonical` por página para prevenir contenido duplicado entre parámetros o protocolos.
+- **Status codes correctos:**
+  - URLs vivas devuelven HTTP 200.
+  - URLs inexistentes devuelven HTTP 404 real (nunca 200 "blando").
+  - Redirecciones permanentes utilizan 301 sin cadenas encadenadas.
+- **Metadatos esenciales:**
+  - `title` y `meta description` únicos y descriptivos en las páginas clave de captación.
+  - Open Graph básico (`og:title`, `og:description`, `og:image`, `og:url`) para enlaces compartidos en mensajería y redes sociales.
+- **Estructura semántica:**
+  - Un encabezado principal `<h1>` claro por página y jerarquía coherente de `<h2>`/`<h3>`.
+  - Imágenes principales con atributo `alt` descriptivo.
 
-Según el tipo de sitio, evaluar la presencia y validez de:
+---
 
-- `Organization` · `WebSite` · `BreadcrumbList` (base para casi todos).
-- `Product` · `Offer` · `ShippingDetails` (e-commerce).
-- `FAQPage` · `Article` · `Person` · `Service`.
-- `LocalBusiness` (negocio con ubicación física).
-- `Review` **solo si es real y verificable**.
-- `AggregateRating` **solo si hay reseñas verificables** (no inventar ratings).
+### 2. Controles de Optimización (Nice-to-have / Evolución futura)
+Mejoras incrementales de visibilidad, refinamiento semántico o presencia en agentes de IA. Constituyen hallazgos **P3**:
 
-Verificar que el schema **refleje el contenido real** de la página y valide sin errores.
+- **Archivos de contexto para IA:**
+  - `llms.txt` público con descripción resumida de la entidad y mapa de documentación.
+  - `llms-full.txt` para repositorios o catálogos extensos.
+- **Datos estructurados avanzados (Schema.org):**
+  - Esquemas complementarios (`FAQPage`, `BreadcrumbList`, `Service`). (Nota: `Review` y `AggregateRating` solo deben incluirse si existen testimonios reales verificables; nunca inventar ratings).
+- **AEO (Answer Engine Optimization):**
+  - Bloques de preguntas frecuentes concisas que respondan intenciones de búsqueda directa.
+  - Párrafos de definición autocontenidos tipo "¿qué es X?".
+- **Optimizaciones incrementales de Core Web Vitals:**
+  - Afinar métricas de rendimiento (LCP, INP, CLS) cuando ya se encuentran en umbrales aceptables.
 
-## YMYL / E-E-A-T (si aplica)
+---
 
-Para temas sensibles (**salud, finanzas, legal, educación**, u otros que afecten decisiones
-importantes de la persona), evaluar señales de experiencia, pericia, autoridad y confianza:
-
-- **Autoría visible** (quién escribe).
-- **Revisión profesional** cuando corresponde.
-- **Disclaimers** apropiados.
-- **Bibliografía o fuentes** citadas cuando corresponda.
-- **Páginas legales** completas.
-- **Datos de contacto** reales y visibles.
-- **Políticas claras** (privacidad, términos, devoluciones).
-- **Claims responsables** (sin promesas exageradas o falsas).
-- **Fecha de actualización** en contenidos críticos.
-
-## AEO (Answer Engine Optimization)
-
-Preparación para que motores de respuesta y asistentes extraigan respuestas claras:
-
-- **Respuestas breves y directas** a preguntas concretas.
-- **Definiciones claras** de conceptos clave.
-- **Bloques pregunta/respuesta**.
-- **FAQs útiles** (que respondan dudas reales).
-- Contenido que **responda la intención de búsqueda**, no solo palabras clave.
-- **Fragmentos resumibles** (un párrafo que se sostenga solo).
-- Secciones tipo **"qué es"**, **"para qué sirve"**, **"cuándo usar"**, **"precauciones"**.
-
-## GEO / visibilidad en IA
-
-Coherencia de entidad para que los sistemas de IA representen bien la marca:
-
-- **Entidad de marca consistente** en todo el sitio.
-- **Nombre comercial consistente** (mismo nombre en todas partes).
-- **Fundador/equipo** si aplica.
-- **Ubicación/país** si aplica.
-- **Páginas fuente claras** (dónde vive la información canónica).
-- **`llms.txt` público** (guía para agentes/IA sobre el sitio).
-- **`llms-full.txt`** si el sitio es complejo.
-- **Contenido canónico y actualizado** (sin versiones contradictorias).
-- **Coherencia entre sitio, redes, perfiles y documentación** (misma info clave).
-- **No prometer** indexación inmediata ni resultados garantizados.
+> **Regla estricta:** La ausencia de controles de optimización (como `llms.txt`, esquemas avanzados o micro-mejoras de CWV) **NUNCA debe ser considerada un bloqueador para salir a producción ni justificar un veredicto de "No listo para producción"**.
