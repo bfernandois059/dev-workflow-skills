@@ -4,27 +4,6 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
-### project-blueprint 2.0.0
-
-Evolución integral de la skill desde un modelo **document-driven** hacia un modelo **decision-driven**, estableciendo el principio central *Decision completeness > document completeness*. La calidad de un blueprint se mide por la resolución, coherencia y trazabilidad de las decisiones necesarias para construir y operar el proyecto, no por generar una cantidad predeterminada de documentos.
-
-#### Added
-
-- **Tres modos de trabajo:**
-  - `Greenfield`: proyectos nuevos o sin arquitectura previa; descubrimiento y diseño de decisiones completas antes de la implementación sustantiva.
-  - `Retrofit`: proyectos existentes; evalúa el estado `Actual → Objetivo`, juzga decisiones previas con criterio experto (mantener, ajustar, reemplazar), normaliza conscientemente blueprints heredados de v1.x hacia el nuevo footprint proporcional sin pérdida de decisiones, y genera obligatoriamente `docs/migration-plan.md` estructurado en pasos atómicos cuando existe una brecha real. Las auditorías (MarcoZen u otras) actúan como insumo técnico de entrada, nunca reemplazan al blueprint.
-  - `Decision Patch`: proyectos con arquitectura suficiente que necesitan resolver una decisión técnica o integración acotada (auth, PDFs, storage, integraciones, CMS, observabilidad); analiza y resuelve únicamente el delta sin regenerar el blueprint, reabrir decisiones cerradas ni ejecutar limpiezas o normalizaciones documentales incidentales.
-- `skills/project-blueprint/evals/evals.json`: batería de 13 casos de evaluación de criterio y fronteras que prueban proporcionalidad, manejo de restricciones, supuestos no bloqueantes, preservación vs reemplazo de stack, normalización de blueprints heredados y profundidad en sistemas críticos.
-- Soporte para inicialización proporcional en `init_blueprint.py` mediante flags (`--modular`, `--retrofit`), creando por defecto únicamente la fuente canónica `docs/00-project-blueprint.md`.
-
-#### Changed
-
-- `project-blueprint`: eliminada la obligatoriedad de generar siempre el mismo lote de 10 documentos. `docs/00-project-blueprint.md` se consolida como fuente canónica; los artefactos desacoplados (`docs/01` a `07`, `.env.example`, ADR, reglas de agentes) se generan únicamente cuando la complejidad, mantenimiento o necesidad real lo justifiquen, garantizando cero pérdida de información relevante.
-- `project-blueprint`: la clasificación de complejidad L0–L4 ahora determina la profundidad del descubrimiento, la cantidad de decisiones evaluadas, el nivel de detalle técnico, el footprint documental y el rigor de seguridad/operación.
-- `project-blueprint`: revisión y sustitución de dogmas absolutos en `SKILL.md`, `references/architecture-decision-matrix.md` y `references/discovery-questionnaire.md`. La estrategia de testing pasa de un listado universal inflexible a verificaciones adaptadas al stack, riesgo y runtime real.
-- `project-blueprint`: fortalecimiento de la separación epistemológica (`Confirmado`, `Recomendado`, `Supuesto`, `Pendiente de validar`), explicitando que la inferencia de código es evidencia y no requisito, la tecnología instalada no es automáticamente óptima, y las recomendaciones no son confirmadas sin aceptación.
-- `project-blueprint`: Architecture Readiness Check proporcional, admitiendo criterios `N/A` en dominios no aplicables y reservando `NOT READY` estrictamente para vacíos bloqueantes reales.
-
 ### engineering-workflow 1.4.0
 
 #### Changed
@@ -101,6 +80,26 @@ referencias.
   útil para quien vuelve al repositorio.
 - La familia visual sigue siendo **7/7** y `ux-audit` sigue siendo transversal, no una octava
   skill visual.
+
+## [project-blueprint-v2.0.0] - 2026-09-17
+
+### Producto
+* Evolución integral de `project-blueprint` desde un modelo document-driven hacia un modelo decision-driven (*Decision completeness > document completeness*): la completitud, coherencia y trazabilidad de decisiones manda sobre la cantidad de documentos generados.
+* Tres modos de operación proporcionales: **Greenfield** (proyectos nuevos o sin arquitectura previa), **Retrofit** (proyectos existentes con evaluación `Actual → Objetivo`, juicio experto de decisiones previas y plan de migración obligatorio cuando hay brecha) y **Decision Patch** (resolución quirúrgica de deltas acotados como auth, PDFs, almacenamiento, integraciones o CMS, sin regenerar todo el blueprint ni provocar limpiezas incidentales).
+* Proporcionalidad documental real: eliminación del núcleo obligatorio ciego de 10 archivos. `docs/00-project-blueprint.md` es la fuente canónica de decisiones y los documentos especializados se generan únicamente cuando la complejidad o necesidad real lo justifiquen.
+
+### Operación
+* Descubrimiento guiado por impacto: se formulan únicamente preguntas que alteren alcance, arquitectura, seguridad, operación o costo, omitiendo preguntas no aplicables y permitiendo supuestos reversibles en incertidumbres no bloqueantes.
+* Architecture Readiness Check proporcional: evaluación de decisiones resueltas, pendientes y riesgos, con soporte para criterios `N/A` y reservando `NOT READY` estrictamente para vacíos bloqueantes reales.
+* Inicialización documental proporcional en script `init_blueprint.py` (crea la fuente canónica por defecto con soporte modular `--modular` y `--retrofit` bajo demanda).
+* Protocolo de normalización de blueprints heredados en Retrofit: permite consolidar documentación fragmentada de v1.x hacia el nuevo footprint proporcional garantizando cero pérdida de información relevante.
+
+### Técnico
+* Matriz de decisiones de arquitectura reestructurada en señales de decisión y criterios analíticos comparativos (Necesidad, Elección, Motivo, Alternativa razonable, Disparador de cambio), descartando recetas universales dogmáticas.
+* Estrategia de testing proporcional adaptada a las realidades del stack, riesgo y runtime real del proyecto, eliminando el dogma universal de tooling rígido.
+* Separación epistemológica estricta (`Confirmado`, `Recomendado`, `Supuesto`, `Pendiente de validar`): la inferencia de código es evidencia y no requisito; la tecnología instalada no es automáticamente óptima; y las recomendaciones técnicas no son confirmadas sin aceptación.
+* Batería de 13 casos de evaluación en `skills/project-blueprint/evals/evals.json` que prueban razonamiento, límites, trade-offs y fronteras de la skill en proyectos L0 a L4.
+* Versión de la skill incrementada a `2.0.0` (MAJOR).
 
 ## ux-audit-v0.1.0 - 2026-09-11
 
