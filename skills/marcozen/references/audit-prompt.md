@@ -16,15 +16,20 @@ Reglas indispensables:
 ### 1. Git y ramas
 Comandos útiles (solo lectura):
 ```bash
+# 1. Detectar la rama base real del repositorio (sin asumir main, master ni develop):
+BASE_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || git rev-parse --abbrev-ref HEAD)
+# Si no puede determinarse con certeza, reportar como 'No verificado' o solicitar contexto al usuario.
+
+# 2. Inspección respecto a la base detectada:
 git branch -a --sort=-committerdate                 # ramas por actividad reciente
-git branch -r --merged origin/main                  # ramas remotas fusionadas (candidatas a poda)
-git branch -r --no-merged origin/main               # ramas con trabajo pendiente
+git branch -r --merged "origin/$BASE_BRANCH"        # ramas remotas fusionadas (candidatas a poda)
+git branch -r --no-merged "origin/$BASE_BRANCH"     # ramas con trabajo pendiente
 git log --oneline -10                               # últimos commits en rama activa
 git status --porcelain                              # estado del working tree
 git tag --sort=-creatordate | head -5               # releases recientes
 ```
 - **Hallazgo P1/P2:** Decenas de ramas abandonadas sin propósito, commits con mensajes crípticos continuos, ramas fusionadas que saturan el repositorio remoto.
-- **Verificado OK:** Poca dispersión de ramas, historial limpio, sincronización regular con la rama base.
+- **Verificado OK:** Poca dispersión de ramas, historial limpio, sincronización regular con la rama base detectada.
 
 ### 2. Documentación
 Verificar presencia y **utilidad real** según la naturaleza del proyecto:

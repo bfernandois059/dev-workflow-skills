@@ -138,11 +138,12 @@ El triage es un vistazo no destructivo para decidir **dónde enfocar la auditor�
 
 1. **Detectar stack y contexto:**
    - ¿Qué lenguaje y entorno se utiliza? (Node, Python, Go, PHP, estático, monorepo).
-   - ¿Cuál es la rama principal de trabajo? (No asumir siempre `main`; comprobar `git branch`).
+   - ¿Cuál es la rama base real de trabajo? (No asumir siempre `main`, `master` ni `develop`; detectar dinámicamente mediante refs remotas o `git branch`).
    - ¿Existe gestor de paquetes y manifiesto de dependencias?
 2. **Ejecutar comprobaciones no invasivas pertinentes:**
    ```bash
    git branch -a                                           # ramas existentes
+   BASE_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || git rev-parse --abbrev-ref HEAD) # rama base detectada
    git status --porcelain                                  # estado del working tree
    git ls-files | grep -E '(^|/)\.env($|\.)' | grep -v example  # posibles .env versionados
    git log -1 --format="%cd (%cr)"                         # actividad reciente
@@ -158,7 +159,7 @@ El triage es un vistazo no destructivo para decidir **dónde enfocar la auditor�
 
 Ejecuta la inspección detallada de los dominios aplicables:
 
-1. **Git y ciclo de ramas:** Ramas activas vs obsoletas, ramas fusionadas sin eliminar, commits recientes y convenciones.
+1. **Git y ciclo de ramas:** Detección de rama base real; ramas activas vs obsoletas, ramas fusionadas sin eliminar respecto de la base detectada, ramas de infraestructura evaluadas por evidencia (sin inmunidad permanente ni borrado ciego), commits recientes y convenciones.
 2. **Seguridad y secretos:** Auditoría de `.gitignore`, detección de variables sensibles, control de acceso, dependencias conocidas.
 3. **Arquitectura y código:** Estructura modular, dependencias, scripts de construcción, separación de capas.
 4. **Calidad y verificación:** Comandos reales del repositorio (lint, tipado, tests, build) según existan y aporten valor.
@@ -186,7 +187,7 @@ MarcoZen es prioritariamente de diagnóstico. La remediación de hallazgos solo 
 - Crear o completar `.env.example` con nombres de variables (sin secretos).
 - Actualizar o clarificar `README.md` y documentación contextual faltante.
 - Limpiar archivos temporales, basura o `.DS_Store` rastreados por Git.
-- Poda de ramas remotas fusionadas: **requiere siempre inventario previo clasificado, captura de SHAs y confirmación explícita del usuario sobre las ramas exactas a borrar**.
+- Poda de ramas remotas fusionadas: **requiere siempre inventario previo clasificado respecto de la base detectada, captura de SHAs y confirmación explícita del usuario sobre las ramas exactas a borrar** (las ramas de infraestructura o deploy se preservan mientras exista incertidumbre o dependencia operacional activa; se proponen para poda solo cuando la obsolescencia esté demostrada).
 
 **Acciones NO permitidas en poda:**
 - Modificar lógica de negocio, cálculos de precios o flujos transaccionales.
