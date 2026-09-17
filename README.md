@@ -38,7 +38,7 @@ Tres reglas resumen la filosofía:
 
 | Necesito… | Skill |
 |---|---|
-| Definir un producto nuevo: arquitectura, stack y documentación inicial | [`project-blueprint`](skills/project-blueprint/SKILL.md) |
+| Definir arquitectura, stack y decisiones clave (Greenfield, Retrofit o Decision Patch) | [`project-blueprint`](skills/project-blueprint/SKILL.md) |
 | Implementar una tarea con alcance, rama, validación y PR | [`engineering-workflow`](skills/engineering-workflow/SKILL.md) |
 | Definir o mantener la verdad visual del proyecto | [`visual-foundation`](skills/visual-foundation/SKILL.md) |
 | Explorar caminos visuales antes de elegir uno | [`design-directions`](skills/design-directions/SKILL.md) |
@@ -60,16 +60,13 @@ handoffs están en la [guía de selección](docs/skill-selection-guide.md).
 
 ### Producto y desarrollo
 
-#### [project-blueprint](skills/project-blueprint/SKILL.md) — antes de programar
+#### [project-blueprint](skills/project-blueprint/SKILL.md) — antes de programar o para decisiones clave
 
-Convierte una idea, solicitud comercial o repositorio inmaduro en una base de proyecto clara y
-validable. Entrevista, clasifica el proyecto, recomienda el stack mínimo suficiente y define
-arquitectura, datos, seguridad, documentos y reglas persistentes para agentes. **No construye:
-prepara.**
+Resuelve la arquitectura técnica, funcional y operativa bajo el principio *Decision completeness > document completeness*. Opera en tres modos: **Greenfield** (proyecto nuevo), **Retrofit** (`Actual → Objetivo` con `migration-plan.md` si hay brecha) y **Decision Patch** (resolución de un delta acotado sin regenerar todo el blueprint). **No construye: prepara y decide.**
 
-- Salida principal: **Blueprint de Proyecto** + documentos iniciales.
-- Separa `Confirmado` / `Recomendado` / `Supuesto` / `Pendiente de validar`.
-- Cada tecnología recomendada explica por qué se elige y qué alternativa se descartó.
+- Salida principal: **Blueprint de Proyecto** (`docs/00-project-blueprint.md`) y artefactos proporcionales según necesidad real (sin burocracia ni documentos vacíos).
+- Separa estrictamente `Confirmado` / `Recomendado` / `Supuesto` / `Pendiente de validar`.
+- Cada tecnología responde a una necesidad concreta, con motivo, alternativa evaluada y disparador de cambio.
 
 #### [engineering-workflow](skills/engineering-workflow/SKILL.md) — durante el desarrollo
 

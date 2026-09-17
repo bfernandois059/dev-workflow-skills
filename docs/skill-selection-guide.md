@@ -67,7 +67,7 @@ añadir proceso a cada interacción.
 
 | Necesidad real | Skill principal | No usar cuando… |
 |---|---|---|
-| Definir un producto o proyecto nuevo: arquitectura, stack y documentación inicial | `project-blueprint` | El proyecto ya tiene las decisiones que el cambio necesita, o la tarea es una implementación acotada |
+| Definir arquitectura, stack y decisiones clave (Greenfield, Retrofit o Decision Patch) | `project-blueprint` | El proyecto ya tiene las decisiones que el cambio necesita, o la tarea es una implementación acotada directa |
 | Implementar una tarea de desarrollo con alcance, rama, validación y PR | `engineering-workflow` | Es una consulta conceptual, un diagnóstico sin modificaciones o un ajuste local trivial y reversible |
 | Definir o mantener la verdad visual del proyecto | `visual-foundation` | El problema es una pantalla concreta y las reglas ya existen: eso es `interface-craft` |
 | Explorar caminos visuales antes de elegir uno | `design-directions` | La dirección ya está decidida —mockup aprobado, patrón fijado— o solo cambiaría color, radius o sombras |
