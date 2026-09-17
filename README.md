@@ -224,7 +224,7 @@ ocurre y recuperarse de los problemas?** Es de **solo lectura**: diagnostica y d
 Sistema de auditoría, poda y gobernanza para repositorios web, e-commerce y apps. Cinco modos
 sobre la misma metodología:
 
-1. **Auditoría rápida** — orden general, documentación, ramas y riesgos (puntaje 0–100).
+1. **Auditoría rápida** — orden general, documentación, ramas y riesgos (evidence-first, puntaje opcional).
 2. **Auditoría pre-producción** — ¿listo para publicarse?
 3. **Auditoría SEO/GEO/AEO** — indexación, metadata, schema, `llms.txt`.
 4. **Auditoría de seguridad** — secretos, headers, formularios, webhooks, pagos, dependencias.

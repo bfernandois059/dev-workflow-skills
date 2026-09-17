@@ -4,6 +4,21 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+### marcozen 2.0.0
+
+#### Changed
+
+- `marcozen`: evolución integral desde una auditoría centrada en checklist, puntaje sobre 100 y artefactos predeterminados hacia una auditoría **evidence-first, modular y proporcional al proyecto** (*Evidence and impact > checklist completion*).
+- `marcozen`: comportamiento por defecto estrictamente de **solo lectura**. No crea carpetas ni archivos `docs/marcozen/...` en el repositorio auditado sin solicitud o autorización explícita previa; los informes se entregan en el contexto de la interacción.
+- `marcozen`: el puntaje cuantitativo `/100` pasa a ser secundario y estrictamente opcional. Solo se calcula cuando el usuario lo solicita expresamente o para comparaciones históricas explícitas.
+- `marcozen`: clasificación modular de dominios de auditoría (`Aplicable — crítico`, `Aplicable — normal`, `Contextual`, `N/A`, `No verificado`). Un criterio o dominio `N/A` jamás cuenta como defecto, penalización ni pendiente.
+- `marcozen`: estados epistemológicos de evidencia rigurosos (`Verificado OK`, `Hallazgo`, `No verificado`, `N/A`).
+- `marcozen`: escala de severidad unificada a 4 niveles: `P0 (Bloqueante / Crítico)`, `P1 (Alto)`, `P2 (Medio)` y `P3 (Bajo / Sugerencia)`.
+- `marcozen`: reestructuración de la auditoría de pre-producción en controles requeridos/críticos, contextuales y de optimización. `llms.txt` clasificado explícitamente como optimización P3 y nunca como blocker de publicación.
+- `marcozen`: eliminación de engine profile blocking gates rígidos y normalización de comandos de mantenimiento según el stack real del proyecto.
+- `marcozen`: actualización de todas las referencias operativas (`audit-prompt.md`, `preprod-seo-geo-aeo.md`, `preprod-security.md`, `preprod-identity-and-errors.md`, `doc-templates.md`, `maintenance-and-branches.md`, `pruning-phase1.md`) para reflejar la metodología basada en evidencia y proporcionalidad.
+- `marcozen`: expansión de la suite de evals a 14 casos que prueban razonamiento, límites, falsos positivos, dominios N/A, severidad P0 y comportamiento de solo lectura.
+
 ### engineering-workflow 1.4.0
 
 #### Changed
