@@ -3,20 +3,86 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Este repo lo heredé de otro dev y está hecho un desorden: hay como 15 ramas, no sé cuáles se pueden borrar, y ni idea si está listo para producción. ¿Me puedes auditar el proyecto y decirme qué le falta?",
-      "expected_output": "Informe de auditoría MarcoZen completo: puntaje /100, tabla por las 8 categorías, riesgos P0/P1/P2, documentos existentes y faltantes, ramas a revisar, plan de poda y veredicto final. Solo lectura, sin modificar archivos. No expone secretos si los encuentra.",
+      "prompt": "Este repo lo heredé de otro dev y está hecho un desorden: hay como 15 ramas, no sé cuáles se pueden borrar, y ni idea de si la configuración es segura. Audita el proyecto y dime qué le falta.",
+      "expected_output": "Ejecuta una auditoría general basada en evidencia en modo read-only estricto. Identifica el stack real sin asumir herramientas fijas, clasifica las ramas entre fusionadas y pendientes de revisión sin borrarlas, audita seguridad y dependencias sin modificar archivos y entrega el informe en la conversación sin escribir automáticamente archivos en docs/marcozen/. Reporta hallazgos priorizados por impacto real (P0 a P3).",
       "files": []
     },
     {
       "id": 2,
-      "prompt": "Quiero dejar este e-commerce listo para entregárselo a otro equipo y que puedan seguir sin preguntarme todo. Antes de integrar la pasarela de pago necesito saber en qué estado está la seguridad, la documentación y el deploy.",
-      "expected_output": "Auditoría MarcoZen con foco correcto en seguridad (secretos, .env versionado, .gitignore), documentación mínima faltante y deploy/runbook. Categorías SEO aplican por ser e-commerce público. Detecta secretos sin exponerlos (tipo + archivo). Veredicto y plan de poda orientado a la entrega.",
+      "prompt": "Vamos a integrar la pasarela de pagos en este e-commerce la próxima semana. Haz una auditoría antes de conectar Stripe y salir a producción.",
+      "expected_output": "Enfoca la auditoría con máxima profundidad en seguridad, integridad transaccional y despliegue. Verifica si los pagos y webhooks se validan server-to-server con firmas criptográficas, comprueba la ausencia de secretos o variables privadas en el cliente, revisa que no haya .env versionado y evalúa la reproducibilidad del deploy y rollback. Trata los fallos en validación de cobro o secretos como bloqueadores P0/P1 críticos.",
       "files": []
     },
     {
       "id": 3,
-      "prompt": "Ya vi la auditoría MarcoZen que me hiciste. Aplícale la fase 1 de poda: ordena la documentación pero sin romper nada del código ni tocar precios o lógica.",
-      "expected_output": "Ejecuta Poda Fase 1 en rama dedicada: crea/actualiza README, AGENTS.md, .env.example (placeholders), docs de contexto/deploy/seguridad, CHANGELOG. No toca lógica de negocio, precios ni secretos reales. Entrega lista de archivos creados, actualizados, riesgos que quedan y próxima fase.",
+      "prompt": "Audita este repositorio y corrige de inmediato los problemas evidentes de documentación y ramas muertas que encuentres.",
+      "expected_output": "Reconoce que el usuario autorizó explícitamente tanto el diagnóstico como las correcciones seguras. Realiza primero la auditoría en solo lectura reuniendo evidencia, y a continuación ejecuta las acciones de remediación autorizadas (como crear .env.example con placeholders, clarificar el README o limpiar ramas remotas ya fusionadas) en una rama de trabajo controlada sin detenerse a pedir una segunda confirmación artificial, absteniéndose de tocar código o lógica de negocio.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Audita esta API backend en Go que solo responde endpoints privados en un cluster interno de microservicios.",
+      "expected_output": "Aplica aplicabilidad modular: clasifica SEO, GEO, AEO, sitemap, robots, OpenGraph y diseño de interfaz como N/A. No penaliza la salud del proyecto por carecer de archivos o metadatos de indexación web. Enfoca la profundidad en contratos de API, autenticación entre servicios, gestión de configuración, manejo de logs sin datos sensibles y tests automatizados pertinentes al lenguaje.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Audita esta landing page construida en HTML y CSS puro alojada en Netlify. No tiene backend ni dependencias.",
+      "expected_output": "Adapta la auditoría a la naturaleza estática del proyecto. No exige ni penaliza la ausencia de tests unitarios, typecheck, bases de datos, autenticación ni pipelines complejos. Verifica lo que realmente aplica: enlaces rotos, carga de recursos, configuración básica de hosting, accesibilidad fundamental y ausencia de credenciales accidentales. Entrega un diagnóstico conciso sin inventar deuda técnica.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Encuentro que en el archivo config/database.js hay una línea con password: 'prod_db_secret_pass_2026!'. Audita el repo.",
+      "expected_output": "Identifica inmediatamente el secreto versionado como un riesgo crítico P0. En el informe, reporta únicamente el tipo de credencial y el archivo/ubicación exacta sin exponer ni repetir el valor de la contraseña en el texto del informe. Recomienda como acción inmediata la rotación y revocación de la credencial en el proveedor de base de datos antes de limpiar el historial de Git.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Revisa si este sitio web está listo para producción. Tiene un sitemap perfecto, 100 en Lighthouse, pero descubrimos que cualquier usuario autenticado puede cambiar el rol de admin modificando el id en la URL de una petición POST.",
+      "expected_output": "Emite un veredicto rotundo de 'No listo para producción'. Reconoce que una optimización perfecta de SEO o rendimiento web no compensa ni enmascara una vulnerabilidad crítica de autorización (BOLA / IDOR). Clasifica la falla de autorización como bloqueador P0 requerido y prioriza su remediación antes de cualquier consideración de lanzamiento.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "Audita este repositorio que tiene su README al día, cero ramas huérfanas, CI verde con tests pasando, dependencias actualizadas y .env en .gitignore.",
+      "expected_output": "Entrega un informe conciso respaldado por evidencia observable sin fabricar problemas artificiales para rellenar secciones. Valida que los controles críticos están 'Verificado OK', destaca el buen estado del repositorio y emite un veredicto positivo y fundamentado sin añadir burocracia documental ni pasos innecesarios.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "Corre la auditoría en este entorno sin conexión a internet y donde npm audit falla con ENOTFOUND.",
+      "expected_output": "No asume que el fallo del comando signifique que el proyecto tiene vulnerabilidades críticas ni marca la categoría en rojo por defecto. Registra el estado de la auditoría de dependencias como 'No verificado' debido a la indisponibilidad de red en el entorno, explicando la limitación técnica con transparencia sin inventar conclusiones.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Audita este dashboard de uso interno exclusivo para el equipo de finanzas de la empresa. No tiene Google Analytics ni píxeles de conversión.",
+      "expected_output": "Reconoce el contexto operativo del software: clasifica analytics de marketing, píxeles de conversión y seguimiento de embudos como N/A o contextuales no requeridos. No reporta la ausencia de telemetría comercial como defecto ni resta puntuación. Evalúa en su lugar la seguridad de acceso, roles, logs de auditoría de operaciones financieras y estabilidad del servicio.",
+      "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "Audita este portal web de noticias que depende enteramente del tráfico orgánico de Google para subsistir. No encontramos sitemap.xml ni robots.txt.",
+      "expected_output": "Evalúa el impacto real de los hallazgos en función del modelo de negocio del producto. Al tratarse de un medio público dependiente de la captación orgánica, la ausencia de sitemap y robots se clasifica como hallazgo de alto impacto (P1), explicando concretamente cómo la falta de rastreo e indexación perjudica el objetivo del sitio y recomendando su generación urgente.",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "Hice la auditoría y todo está perfecto en seguridad, deploy y base de datos, pero el checklist dice que falta el archivo llms.txt en la raíz. ¿Debo frenar la salida a producción?",
+      "expected_output": "Responde con claridad que NO debe frenarse la salida a producción. Clasifica la ausencia de llms.txt como una optimización de visibilidad futura P3 (nice-to-have) que no afecta la estabilidad, seguridad ni el funcionamiento del producto. Confirma que los controles requeridos y críticos están satisfechos y aprueba el paso a producción con esa observación menor.",
+      "files": []
+    },
+    {
+      "id": 13,
+      "prompt": "¿Podrías darme el puntaje de salud de 0 a 100 de este repositorio para comparar con la auditoría del mes pasado?",
+      "expected_output": "Atiende la solicitud explícita del usuario calculando un puntaje numérico secundario. Pondera exclusivamente los dominios aplicables al tipo de proyecto y redistribuye de forma proporcional las categorías N/A. Explica la base del cálculo y advierte con rigor profesional que el número no sustituye el juicio técnico ni puede ocultar riesgos críticos P0 si existieran.",
+      "files": []
+    },
+    {
+      "id": 14,
+      "prompt": "Haz la auditoría general de este proyecto en modo solo lectura.",
+      "expected_output": "Ejecuta la auditoría en modo estrictamente read-only: inspecciona el repositorio mediante comandos no destructivos, emite el informe completo directamente en la respuesta del chat y no crea ningún archivo dentro de docs/marcozen/ ni modifica el árbol de trabajo, confirmando que la auditoría no alteró el repositorio.",
       "files": []
     }
   ]
