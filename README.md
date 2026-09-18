@@ -241,9 +241,9 @@ por riesgo. Framework-agnostic.
 
 - Cada hallazgo requiere evidencia antes de clasificarse — nunca "sin import = sin uso".
 - Clasificación A–E (seguro de borrar → archivar) y dificultad Baja/Media/Alta.
-- Modo multiagente opcional para repos grandes, con revisor crítico final. Consume más tokens.
-- Fase 1 (auditoría) es siempre de solo lectura; la limpieza es una Fase 2 aparte, por etapas y
-  con aprobación explícita.
+- Modo multiagente opcional para repos grandes, con revisión crítica obligatoria; un solo agente es plenamente válido.
+- Dos modos: AUDIT (estrictamente solo lectura en conversación) y AUDIT + EXECUTE SAFE (diagnóstico y eliminación segura de Categoría A dentro de alcance sin confirmación redundante).
+- Limpieza organizada en lotes coherentes y reversibles, sin etapas fijas obligatorias.
 
 ---
 

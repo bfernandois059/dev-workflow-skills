@@ -158,7 +158,7 @@ retirar elementos confirmados como innecesarios → tech-cleanup
 
 `tech-cleanup` también tiene su propia fase de detección con evidencia: no exige una auditoría
 previa de `marcozen` para empezar. La diferencia es el objeto — `marcozen` juzga orden,
-gobernanza y riesgo; `tech-cleanup` demuestra que algo no se usa y lo elimina por etapas.
+gobernanza y riesgo; `tech-cleanup` demuestra que algo no se usa y lo elimina en lotes coherentes y seguros.
 
 ---
 
