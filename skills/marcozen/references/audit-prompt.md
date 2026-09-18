@@ -16,19 +16,27 @@ Reglas indispensables:
 ### 1. Git y ramas
 Comandos útiles (solo lectura):
 ```bash
-# 1. Detectar la rama base/default real del remoto (sin asumir main, master ni develop, y sin usar la rama checkout local como fallback):
+# 1. Detectar y validar la rama base/default real del remoto (sin asumir main, master ni develop, y sin usar la rama checkout local):
 BASE_BRANCH=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | sed 's@^origin/@@')
 [ -z "$BASE_BRANCH" ] && BASE_BRANCH=$(git remote show origin 2>/dev/null | sed -n 's/.*HEAD branch: //p')
 
-# Si ninguna fuente verificable permite determinar la rama base:
+# Validar que no esté vacía, que no sea '(unknown)' y que la referencia remota exista realmente:
+if [ -n "$BASE_BRANCH" ] && [ "$BASE_BRANCH" != "(unknown)" ] && git show-ref --verify --quiet "refs/remotes/origin/$BASE_BRANCH"; then
+  DEFAULT_BRANCH_VERIFIED=true
+else
+  BASE_BRANCH=""
+  DEFAULT_BRANCH_VERIFIED=false
+fi
+
+# Si DEFAULT_BRANCH_VERIFIED no es true (ej. origin/HEAD ausente, remoto devuelve (unknown) o referencia inexistente):
 # NO inventar un nombre ni sustituir por la rama local actualmente checkout.
 # Reportar: "No verificado: no fue posible determinar con certeza la rama base/default del repositorio."
 # No ejecutar comparaciones --merged/--no-merged sobre una base incierta (solicitar confirmación al usuario si es indispensable).
 
-# 2. Inspección respecto a la base remota demostrada (solo si BASE_BRANCH fue verificada):
+# 2. Inspección respecto a la base remota demostrada (solo si DEFAULT_BRANCH_VERIFIED es true):
 git branch -a --sort=-committerdate                 # ramas por actividad reciente
-[ -n "$BASE_BRANCH" ] && git branch -r --merged "origin/$BASE_BRANCH"        # ramas remotas fusionadas (candidatas a poda)
-[ -n "$BASE_BRANCH" ] && git branch -r --no-merged "origin/$BASE_BRANCH"     # ramas con trabajo pendiente
+[ "$DEFAULT_BRANCH_VERIFIED" = true ] && git branch -r --merged "origin/$BASE_BRANCH"        # ramas remotas fusionadas (candidatas a poda)
+[ "$DEFAULT_BRANCH_VERIFIED" = true ] && git branch -r --no-merged "origin/$BASE_BRANCH"     # ramas con trabajo pendiente
 git log --oneline -10                               # últimos commits en rama activa
 git status --porcelain                              # estado del working tree
 git tag --sort=-creatordate | head -5               # releases recientes
