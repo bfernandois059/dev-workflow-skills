@@ -4,40 +4,6 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
-### engineering-workflow 2.0.0
-
-#### Changed
-
-- `engineering-workflow`: evolución de la política de routing hacia un modelo **runtime-agnostic, capability-aware y no bloqueante** (*Task risk controls validation depth. Runtime capability influences execution strategy, but never becomes ceremony or an artificial blocker*).
-- `engineering-workflow`: eliminación del punto de control bloqueante de modelo. Si el entorno no permite cambiar de modelo o la capacidad es desconocida (*unknown runtime capability is not a failure state*), el trabajo continúa sin detenerse, compensando con mejor descomposición, inspección y validación.
-- `engineering-workflow`: separación estricta y explícita entre **Riesgo** (`LOW / MEDIUM / HIGH / CRITICAL`, determina profundidad de validación y pruebas) y **Capacidad** (`ALTO / MEDIO / BAJO`, orientación conceptual interna para estructurar y delegar). Los cambios HIGH/CRITICAL no se bloquean esperando un modelo ALTO, sino que exigen pruebas y evidencias exhaustivas de sus invariantes.
-- `engineering-workflow`: estrategia de recuperación tras dos intentos fallidos desacoplada del modelo y sin obligación de reinicio con contexto limpio. Ante dos fallos en la misma subtarea, se prohíbe repetir el mismo enfoque ciego y se exige revisar evidencia y supuestos causales para cambiar de estrategia.
-- `engineering-workflow`: subagentes y tareas concurrentes desacoplados de herramientas específicas o parámetros de llamada (`model:`). Son una optimización opcional para dominios independientes; el workflow es 100% operativo con un único agente.
-- `engineering-workflow`: eliminación de la tabla estática fechada de modelos (Opus, Sonnet, Haiku) en `references/engine-routing.md` en favor de perfiles conceptuales dinámicos.
-- `engineering-workflow`: salida limpia sin burocracia; se elimina la obligación de emitir reportes de motor en respuestas normales.
-- `engineering-workflow`: corrección del supuesto universal de rama principal (`main`), generalizando las reglas operativas y snippets para soportar la rama predeterminada del repositorio (`main`, `master`, etc.).
-- `engineering-workflow`: versión incrementada a `2.0.0` (MAJOR).
-
-#### Added
-
-- `engineering-workflow`: suite de 14 evaluaciones orientadas a decisiones en `skills/engineering-workflow/evals/evals.json`.
-
-#### Removed
-
-- `engineering-workflow`: eliminado el gate bloqueante previo a la implementación basado en el perfil del modelo.
-- `engineering-workflow`: eliminada la regla de tratar la incertidumbre del modelo como desajuste en tareas HIGH/CRITICAL.
-
-### engineering-workflow 1.4.0
-
-#### Changed
-
-- `engineering-workflow`: la Fase 10 separa los hallazgos que bloquean integración de los pendientes documentales que no la bloquean. CI fallida, defecto reproducible, riesgos de seguridad/datos, migración destructiva sin rollback, instrucción explícita incumplida y falta de autorización siguen bloqueando; estado documental, conteos, changelog, descripción del PR y documentación no conductual pasan a `READY TO MERGE` con pendiente anotado.
-- `engineering-workflow`: incorpora continuaciones acotadas al delta y al mismo PR/branch, con excepción para PR ya mergeado o branch inutilizable, máximo de dos rondas acumuladas y sin ampliar aceptación sin defecto demostrado.
-- `engineering-workflow`: aclara en Fases 3 y 4 que el riesgo escala validación, no ceremonia de implementación, y fija el hard delete de super admin como ejemplo proporcional.
-- `engineering-workflow`: conserva el alcance mínimo y las dependencias justificadas sin impedir usar la herramienta estándar y mantenida del dominio.
-- `engineering-workflow`: la Definition of Done exige inventario de paridad inspeccionado desde el origen para migraciones, ports y reimplementaciones.
-- `engineering-workflow`: añade una salida concisa y determinista para modo revisión: `MERGE` o `NO MERGE` con solo el contenido posterior permitido.
-
 ### Integración del sistema de skills
 
 Primera pasada de integración del repositorio **como un solo sistema**, no como doce carpetas
@@ -103,6 +69,28 @@ referencias.
   útil para quien vuelve al repositorio.
 - La familia visual sigue siendo **7/7** y `ux-audit` sigue siendo transversal, no una octava
   skill visual.
+
+## [engineering-workflow-v2.0.0] - 2026-09-18
+
+### Producto
+* Evolución integral de `engineering-workflow` hacia una política de routing **runtime-agnostic, capability-aware y no bloqueante** (*Task risk controls validation depth. Runtime capability influences execution strategy, but never becomes ceremony or an artificial blocker*): eliminación de la burocracia de selección de motor y de los puntos de control bloqueantes en el flujo de desarrollo.
+* Comportamiento ante capacidad desconocida: *Unknown runtime capability is not a failure state*. Desconocer el modelo en ejecución no detiene el workflow ni infiere desajuste; la competencia y calidad del cambio se demuestran con evidencia técnica y validación proporcional.
+* Modos y salidas limpias: salida determinista y concisa para modo revisión (`MERGE` o `NO MERGE`) y eliminación de líneas ceremoniales de reporte de motor en respuestas habituales.
+
+### Operación
+* Separación estricta y ortogonal entre **Riesgo** (`LOW / MEDIUM / HIGH / CRITICAL`, que determina la profundidad de validación, rigor de pruebas, atención a seguridad/datos y rollback) y **Capacidad** (`ALTO / MEDIO / BAJO`, orientación conceptual interna para estructurar razonamiento o delegar). Los cambios HIGH/CRITICAL no se bloquean esperando un modelo ALTO, sino que exigen pruebas y evidencias exhaustivas de sus invariantes.
+* La Fase 10 separa los hallazgos que bloquean integración de los pendientes documentales que no la bloquean: CI fallida, defecto reproducible, riesgos de seguridad/datos, migración destructiva sin rollback, instrucción explícita incumplida y falta de autorización siguen bloqueando; estado documental, conteos, changelog, descripción del PR y documentación no conductual pasan a `READY TO MERGE` con pendiente anotado.
+* Continuaciones de desarrollo acotadas estrictamente al delta y en la misma branch/PR, con máximo dos rondas de corrección acumuladas y prohibición de ampliar criterios de aceptación sin defecto demostrado.
+* Estrategia de recuperación tras dos intentos fallidos desacoplada del modelo y sin obligación dogmática de reiniciar contexto: ante dos fallos en la misma subtarea, se prohíbe repetir el mismo enfoque ciego y se exige revisar evidencia y supuestos causales para cambiar de estrategia.
+* Proporcionalidad real: el riesgo escala la profundidad de validación, no la ceremonia de implementación. Conserva el alcance controlado y dependencias justificadas sin impedir usar las herramientas estándar y mantenidas del dominio.
+* Compatibilidad con ramas principales no llamadas `main`: soporte explícito para la rama predeterminada o default del repositorio (`main`, `master`, etc.) en todas las directivas y scripts del flujo.
+
+### Técnico
+* Desacoplamiento total de subagentes y tareas concurrentes respecto de herramientas propietarias (`Agent tool`) o parámetros específicos de llamada (`model:`). El paralelismo es una optimización opcional para dominios independientes; el workflow es 100% operativo con un único agente.
+* Eliminación de la tabla estática fechada de modelos (Opus, Sonnet, Haiku) en `references/engine-routing.md` en favor de perfiles conceptuales dinámicos.
+* Definition of Done exige inventario de paridad inspeccionado desde el origen para migraciones, ports y reimplementaciones.
+* Incorporación de la suite de 14 evaluaciones orientadas a decisiones en `skills/engineering-workflow/evals/evals.json`.
+* Versión de la skill incrementada a `2.0.0` (MAJOR).
 
 ## [tech-cleanup-v2.0.0] - 2026-09-18
 
