@@ -138,12 +138,12 @@ El triage es un vistazo no destructivo para decidir **dónde enfocar la auditor�
 
 1. **Detectar stack y contexto:**
    - ¿Qué lenguaje y entorno se utiliza? (Node, Python, Go, PHP, estático, monorepo).
-   - ¿Cuál es la rama base real de trabajo? (No asumir siempre `main`, `master` ni `develop`; detectar dinámicamente mediante refs remotas o `git branch`).
+   - ¿Cuál es la rama base/default real del remoto? (No asumir siempre `main`, `master` ni `develop`; detectar mediante metadata verificable del remoto, nunca sustituir silenciosamente con la rama local checkout).
    - ¿Existe gestor de paquetes y manifiesto de dependencias?
 2. **Ejecutar comprobaciones no invasivas pertinentes:**
    ```bash
    git branch -a                                           # ramas existentes
-   BASE_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || git rev-parse --abbrev-ref HEAD) # rama base detectada
+   BASE_BRANCH=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | sed 's@^origin/@@') # rama default remota (o git remote show origin; si no es verificable, marcar 'No verificado')
    git status --porcelain                                  # estado del working tree
    git ls-files | grep -E '(^|/)\.env($|\.)' | grep -v example  # posibles .env versionados
    git log -1 --format="%cd (%cr)"                         # actividad reciente

@@ -12,13 +12,18 @@ La revisión se realiza en **solo lectura** reuniendo evidencia concreta con los
 # Sincronización de referencias remotas
 git fetch --prune origin
 
-# Detección dinámica de la rama base real (sin asumir main, master ni develop):
-BASE_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || git rev-parse --abbrev-ref HEAD)
-# Si no puede determinarse con certeza, reportar como 'No verificado' o solicitar contexto al usuario.
+# Detección dinámica de la rama base/default del remoto (sin asumir main, master ni develop, y sin usar la rama checkout local como fallback):
+BASE_BRANCH=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | sed 's@^origin/@@')
+[ -z "$BASE_BRANCH" ] && BASE_BRANCH=$(git remote show origin 2>/dev/null | sed -n 's/.*HEAD branch: //p')
 
-# Inspección de ramas respecto de la base detectada:
-git branch -r --merged "origin/$BASE_BRANCH" | grep -v HEAD      # ramas remotas ya fusionadas
-git branch -r --no-merged "origin/$BASE_BRANCH" | grep -v HEAD   # ramas con trabajo sin integrar
+# Si ninguna fuente verificable permite determinar la rama base:
+# NO inventar un nombre ni sustituir por la rama local actualmente checkout.
+# Reportar: "No verificado: no fue posible determinar con certeza la rama base/default del repositorio."
+# Omitir las comparaciones --merged/--no-merged sobre una base incierta (solicitar confirmación al usuario si es indispensable).
+
+# Inspección de ramas respecto de la base remota demostrada (solo si BASE_BRANCH fue verificada):
+[ -n "$BASE_BRANCH" ] && git branch -r --merged "origin/$BASE_BRANCH" | grep -v HEAD      # ramas remotas ya fusionadas
+[ -n "$BASE_BRANCH" ] && git branch -r --no-merged "origin/$BASE_BRANCH" | grep -v HEAD   # ramas con trabajo sin integrar
 
 # Dependencias (ejecutar la herramienta correspondiente al gestor detectado):
 # Node (npm/pnpm/yarn/bun):

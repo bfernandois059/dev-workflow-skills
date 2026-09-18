@@ -16,14 +16,19 @@ Reglas indispensables:
 ### 1. Git y ramas
 Comandos útiles (solo lectura):
 ```bash
-# 1. Detectar la rama base real del repositorio (sin asumir main, master ni develop):
-BASE_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || git rev-parse --abbrev-ref HEAD)
-# Si no puede determinarse con certeza, reportar como 'No verificado' o solicitar contexto al usuario.
+# 1. Detectar la rama base/default real del remoto (sin asumir main, master ni develop, y sin usar la rama checkout local como fallback):
+BASE_BRANCH=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | sed 's@^origin/@@')
+[ -z "$BASE_BRANCH" ] && BASE_BRANCH=$(git remote show origin 2>/dev/null | sed -n 's/.*HEAD branch: //p')
 
-# 2. Inspección respecto a la base detectada:
+# Si ninguna fuente verificable permite determinar la rama base:
+# NO inventar un nombre ni sustituir por la rama local actualmente checkout.
+# Reportar: "No verificado: no fue posible determinar con certeza la rama base/default del repositorio."
+# No ejecutar comparaciones --merged/--no-merged sobre una base incierta (solicitar confirmación al usuario si es indispensable).
+
+# 2. Inspección respecto a la base remota demostrada (solo si BASE_BRANCH fue verificada):
 git branch -a --sort=-committerdate                 # ramas por actividad reciente
-git branch -r --merged "origin/$BASE_BRANCH"        # ramas remotas fusionadas (candidatas a poda)
-git branch -r --no-merged "origin/$BASE_BRANCH"     # ramas con trabajo pendiente
+[ -n "$BASE_BRANCH" ] && git branch -r --merged "origin/$BASE_BRANCH"        # ramas remotas fusionadas (candidatas a poda)
+[ -n "$BASE_BRANCH" ] && git branch -r --no-merged "origin/$BASE_BRANCH"     # ramas con trabajo pendiente
 git log --oneline -10                               # últimos commits en rama activa
 git status --porcelain                              # estado del working tree
 git tag --sort=-creatordate | head -5               # releases recientes
