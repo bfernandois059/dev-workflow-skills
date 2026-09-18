@@ -1,0 +1,89 @@
+{
+  "skill_name": "engineering-workflow",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "El usuario solicita corregir una errata tipográfica en el texto de ayuda del archivo src/components/HelpTooltip.tsx. ¿Cómo debe proceder engineering-workflow?",
+      "expected_output": "Clasifica el cambio como LOW (riesgo mínimo). Aplica la ruta rápida: crea branch descriptiva desde la rama default, edita el archivo, ejecuta solo lint/typecheck focalizados al archivo, revisa el diff completo con git diff y prepara un PR conciso sin burocracia de rollback ni secciones vacías. No emite líneas de reporte de motor ni solicita confirmación de modelo.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Se solicita implementar una nueva pantalla de perfil de usuario (flujo MEDIUM) en un entorno de ejecución donde el runtime no informa qué modelo ni versión está activo. ¿Debe el workflow consultar al usuario sobre el modelo?",
+      "expected_output": "Aplica el principio 'Unknown runtime capability is not a failure state'. No inventa nombres ni infiere el tier del modelo, ni detiene la ejecución para pedir autorización por modelo desconocido. Procede normalmente con la Fase 0 y 1, planifica las validaciones de nivel MEDIUM (tests focalizados, build, manejo de errores) y avanza sin emitir bloques de reporte de motor.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Se solicita modificar una policy RLS en Supabase para restringir el acceso a documentos contables solo al rol 'auditor'. La modificación es de apenas 3 líneas SQL. ¿Requiere esto pausar la tarea hasta contar con un modelo ALTO?",
+      "expected_output": "Distingue nítidamente entre riesgo y capacidad. Clasifica la tarea como HIGH por involucrar permisos y seguridad de datos, lo que exige validación profunda (tests de casos permitidos, casos denegados, aislamiento entre tenants y no regresión). No obstante, rechaza bloquear la tarea o exigir un modelo 'ALTO' como condición previa: la capacidad sugiere atención interna pero nunca es un gate bloqueante. Avanza a la implementación y validación rigurosa sin detenerse.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "En una refactorización del webhook de Stripe para liquidación y cobro recurrente (riesgo CRITICAL), ¿puede el capability routing reemplazar las pruebas de idempotencia o considerarse seguro solo por ejecutarse en un modelo de alto razonamiento?",
+      "expected_output": "Dictamina categóricamente que capability routing no sustituye pruebas ni reduce la evidencia requerida. El nivel CRITICAL exige validación exhaustiva: plan de migración y rollback, manejo de fallos y reintentos, verificación de firma del webhook y pruebas de idempotencia. No exige cambiar de modelo como precondición obligatoria ni asume que un modelo potente exime de ejecutar y documentar las pruebas reales.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "El agente está corriendo en un entorno cerrado donde solo existe un único modelo estándar disponible, sin selector de modelos ni parámetros de temperatura o razonamiento. ¿Puede utilizarse engineering-workflow?",
+      "expected_output": "Confirma que engineering-workflow es 100% utilizable y funcional de principio a fin en runtimes con un solo modelo disponible. El workflow no depende de selectores ni configuraciones avanzadas; compensa cualquier limitación mediante descomposición estructurada de tareas, inspección detallada del repositorio y validaciones automatizadas reales.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Se debe implementar un módulo amplio con tres dominios independientes (pantallas, exports y permisos), pero el runtime actual es monagente y no cuenta con herramientas para invocar subagentes. ¿Debe reportarse un bloqueo?",
+      "expected_output": "Rechaza reportar un bloqueo o error. Reconoce que la delegación a subagentes es una optimización opcional de paralelismo y no un requisito del workflow. Procede a estructurar el plan de implementación en dominios acotados y los resuelve de manera secuencial y ordenada con el agente actual, aplicando el nivel de riesgo correspondiente a cada fase.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "En un entorno que dispone de herramientas para lanzar tareas concurrentes o subagentes, se solicita migrar dos servicios desacoplados que no comparten archivos. ¿Cómo debe gestionarse la delegación?",
+      "expected_output": "Evalúa dividir el trabajo por dominios independientes y ejecutar las subtareas auto-contenidas en paralelo si esto reduce el tiempo total sin comprometer el rigor. Mantiene el workflow runtime-agnostic: no asume nombres propietarios de herramientas (como Agent tool) ni impone parámetros como 'model:', adaptándose a los mecanismos nativos de concurrencia que ofrezca el entorno.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "Durante la corrección de un bug en el cálculo de impuestos, el agente aplica una solución que falla los tests unitarios. Vuelve a intentar un parche similar y vuelve a fallar. ¿Cuál es el procedimiento obligatorio?",
+      "expected_output": "Aplica la estrategia de recuperación tras dos intentos fallidos: prohíbe terminantemente realizar un tercer intento con el mismo enfoque ciego. Exige reexaminar la evidencia y los supuestos causales, inspeccionar trazas completas de error y cambiar de estrategia (aislar la falla con un caso de prueba mínimo, reducir el problema o utilizar otra herramienta de análisis). Considerar mayor capacidad o delegación es una opción operativa si existe en el entorno, pero nunca un gate que detenga el trabajo.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "Se ejecuta una tarea clasificada como HIGH (modificación de migración de base de datos) y el sistema no reporta ningún metadato sobre el modelo en ejecución. La regla v1.x sugería asumir desajuste. ¿Qué hace v2.0?",
+      "expected_output": "Aplica la política v2.0 de capability routing: descarta la regla obsoleta de asumir desajuste ante la incertidumbre. No detiene la tarea ni pide confirmación al usuario por desconocer el modelo. Procede con la ejecución enfocando el esfuerzo en lo que realmente protege el proyecto: validación rigurosa de compatibilidad hacia atrás de la migración, script de rollback y comprobación de integridad.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "El equipo solicita renombrar una propiedad de configuración en 120 archivos. La tarea es de alta prioridad para la empresa pero puramente mecánica, y el proyecto cuenta con TypeScript estricto. ¿Debe ejecutarse en perfil ALTO?",
+      "expected_output": "Determina que la importancia percibida o urgencia del negocio no convierte una tarea mecánica en una necesidad de perfil ALTO. Al contar con un oráculo automático estricto y barato (el typechecker del compilador), la verificación inmediata cierra la iteración con seguridad. Se ejecuta de forma eficiente y determinista sin requerir capacidad extraordinaria ni burocracia de enrutamiento.",
+      "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "En la revisión de un Pull Request (modo revisión), se detecta que los tests pasan al 100%, el diff es limpio y no hay brechas de seguridad, pero se desconoce con qué modelo de IA fue generado el código. ¿Cuál debe ser el veredicto?",
+      "expected_output": "Emite el veredicto 'MERGE' (o 'READY TO MERGE'). Los veredictos de integración se basan estrictamente en criterios técnicos objetivos: ausencia de defectos reproducibles, CI/tests aprobados, integridad de datos, ausencia de secretos y cumplimiento de criterios de aceptación. El modelo o perfil que redactó el cambio nunca es un criterio de revisión ni motivo de rechazo.",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "Al inicializar una tarea en un repositorio histórico, git branch -r muestra que la rama predeterminada es 'master' (no existe 'main'). ¿Cómo prepara la branch el workflow?",
+      "expected_output": "Verifica los metadatos reales del repositorio y confirma que la rama base predeterminada es 'master'. Crea la nueva rama de trabajo (ej. feature/nueva-vista) partiendo desde 'origin/master' actualizado, sin forzar ni asumir dogmáticamente la existencia de una rama 'main'.",
+      "files": []
+    },
+    {
+      "id": 13,
+      "prompt": "En una continuación de PR (segunda ronda de revisión), el revisor solicita ajustar un mensaje de validación. ¿Debe el agente abrir una rama nueva o reiniciar la evaluación de motor?",
+      "expected_output": "Aplica las reglas de continuación: continúa en la misma branch y en el mismo Pull Request resolviendo únicamente el delta puntual. Prohíbe abrir una rama nueva 'para partir limpio', no amplía los criterios de aceptación no vinculados al defecto y no reinicia el contador de rondas ni ejecuta burocracia de selección de motor.",
+      "files": []
+    },
+    {
+      "id": 14,
+      "prompt": "El usuario consulta en medio de una tarea MEDIUM si se debe cambiar de modelo para continuar, en un entorno donde no hay posibilidad de cambiar el modelo asignado. ¿Cómo responde y actúa el workflow?",
+      "expected_output": "Aclara con transparencia y seguridad técnica que el workflow no requiere cambiar de modelo para avanzar con éxito. Continúa con la tarea aplicando inspección sistemática y validaciones automáticas. No declara bloqueos artificiales y solo reportaría una limitación técnica si existiera un impedimento material real (como falta de herramientas o accesos requeridos).",
+      "files": []
+    }
+  ]
+}
