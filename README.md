@@ -344,7 +344,7 @@ skills/
 ├── tailwind-hygiene/                     # SKILL.md · VERSION · references/ · scripts/ · evals/
 ├── ux-audit/                             # SKILL.md · VERSION · references/ · scripts/ · evals/
 ├── marcozen/                             # SKILL.md · VERSION · references/ · scripts/ · evals/
-└── tech-cleanup/                         # SKILL.md · VERSION · references/ · scripts/
+└── tech-cleanup/                         # SKILL.md · VERSION · references/ · scripts/ · evals/
 ```
 
 Cada `SKILL.md` contiene el comportamiento esencial de la skill; `references/` el conocimiento

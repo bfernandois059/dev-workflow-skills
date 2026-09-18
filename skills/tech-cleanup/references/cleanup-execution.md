@@ -1,6 +1,6 @@
 # Limpieza en lotes coherentes y reversibles — detalle operativo
 
-La ejecución de cambios de limpieza sigue la disciplina de `engineering-workflow`: branches dedicadas, commits trazables con Conventional Commits, validaciones pertinentes antes de dar por terminado el trabajo y nunca operar directamente sobre la rama principal (`main`).
+La ejecución de cambios de limpieza delega la disciplina Git (creación de branches, commits, validaciones pertinentes, Pull Requests y merge) a `engineering-workflow` o al estándar del repositorio, sin operar nunca directamente sobre la rama principal/default del repositorio.
 
 Principio rector:
 > **Coherent and reversible batches > fixed cleanup stages.**

@@ -17,13 +17,17 @@ Reglas indispensables:
 1. **Preferir herramientas que el proyecto ya tenga configuradas** en sus scripts o dependencias de desarrollo.
 2. **La salida de un analizador es evidencia analítica, jamás autorización automática de borrado.**
 3. **Validar falsos positivos** confrontando los resultados contra convenciones de framework, plugins dinámicos y configuración de runtime.
-4. **No agregar dependencias persistentes al proyecto** exclusivamente para correr la auditoría. Si se ejecuta mediante npx/dlx, verificar que no altere `package.json` ni el lockfile.
-5. **Si la herramienta no está disponible o falla en el entorno**, continuar con las demás fuentes de evidencia y declarar esa comprobación como no realizada.
-6. **`depcheck`** puede utilizarse como alternativa o fallback secundario, pero no debe presentarse como la referencia principal universal para JS/TS moderno.
+4. **Nunca descargar ni instalar analizadores automáticamente para auditar:** no descargar ni instalar herramientas como Knip, depcheck u otros analizadores sobre la marcha para correr una comprobación. Emplear banderas que impidan la descarga si no existen localmente (`npx --no-install`) o los ejecutores del gestor de paquetes del proyecto (`pnpm exec`, `yarn run`, etc.).
+5. **Si el analizador no existe en el proyecto ni está disponible localmente sin instalación:**
+   - No se descarga ni se instala.
+   - La comprobación se marca y registra explícitamente como no ejecutada.
+   - La investigación continúa rigurosamente con las demás fuentes de evidencia disponibles.
+6. **No alterar el manifest ni el lockfile:** no agregar dependencias persistentes ni modificar `package.json` o equivalentes exclusivamente para correr la auditoría.
+7. **`depcheck`** puede utilizarse como alternativa o fallback secundario si está disponible localmente, pero no debe presentarse como la referencia principal universal para JS/TS moderno.
 
 ```bash
-# Ejecución no invasiva de analizadores si el entorno lo soporta (ejemplo JS/TS):
-npx knip --no-exit-code 2>/dev/null || npx depcheck 2>/dev/null || true
+# Ejecución no invasiva sin descarga si la herramienta ya está disponible localmente (ejemplo JS/TS):
+npx --no-install knip --no-exit-code 2>/dev/null || npx --no-install depcheck 2>/dev/null || true
 ```
 
 ---

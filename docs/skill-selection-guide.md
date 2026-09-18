@@ -77,8 +77,8 @@ añadir proceso a cada interacción.
 | Consolidar responsabilidades y patrones compartidos en componentes | `component-architecture` | Todavía no está decidido cómo debe verse el patrón, o el problema es solo cómo están escritas las clases |
 | Normalizar Tailwind sin cambiar la interfaz | `tailwind-hygiene` | El cambio alteraría el render, el responsive o un estado — deja de ser higiene |
 | Auditar si una persona puede entender y completar una tarea | `ux-audit` | Solo hay deriva visual sin costo sobre la tarea, o lo que se busca es salud técnica del repo |
-| Auditar salud general del repositorio: seguridad, SEO técnico y deuda amplia | `marcozen` | Lo que se audita es la experiencia de una persona, o ya está confirmado qué sobra y solo falta retirarlo |
-| Eliminar código, dependencias, assets y archivos realmente sin uso | `tech-cleanup` | Todavía no está determinado qué sobra: eso es `marcozen` |
+| Auditar salud general del repositorio: seguridad, SEO técnico y deuda amplia | `marcozen` | Lo que se audita es la experiencia de una persona (`ux-audit`), o el objetivo exclusivo es investigar y podar desuso específico de código/assets (`tech-cleanup`) |
+| Eliminar código, dependencias, assets y archivos realmente sin uso | `tech-cleanup` | El objetivo es evaluar la salud transversal, seguridad o gobernanza global del repositorio: eso es `marcozen` |
 
 ---
 
@@ -152,13 +152,16 @@ salud transversal del repositorio o del producto → marcozen
 ### `marcozen` vs `tech-cleanup`
 
 ```text
-determinar qué deuda o riesgo existe            → marcozen
-retirar elementos confirmados como innecesarios → tech-cleanup
+salud transversal, seguridad, gobernanza y readiness → marcozen
+demostrar y retirar elementos realmente sin uso     → tech-cleanup
 ```
 
-`tech-cleanup` también tiene su propia fase de detección con evidencia: no exige una auditoría
-previa de `marcozen` para empezar. La diferencia es el objeto — `marcozen` juzga orden,
-gobernanza y riesgo; `tech-cleanup` demuestra que algo no se usa y lo elimina en lotes coherentes y seguros.
+`tech-cleanup` no exige una auditoría previa de `marcozen` para operar: incluye su propia
+investigación de evidencia de desuso y puede activarse directamente ante sospecha de código muerto,
+acumulación técnica o una solicitud directa de limpieza. La diferencia radica en el objeto de
+análisis: `marcozen` evalúa salud transversal, gobernanza, seguridad, readiness y deuda amplia del
+repositorio; `tech-cleanup` investiga específicamente si componentes, dependencias o assets concretos
+carecen de uso real y ejecuta su eliminación segura en lotes proporcionales y reversibles.
 
 ---
 
