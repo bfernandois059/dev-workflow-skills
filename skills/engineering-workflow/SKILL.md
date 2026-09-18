@@ -26,7 +26,7 @@ Ante duda razonable entre dos categorías, escala una categoría. Una mención e
 
 ## Principios obligatorios
 
-1. **Nunca trabajar directamente sobre `main`.** Todo cambio persistente debe realizarse en una branch específica.
+1. **Nunca trabajar directamente sobre la rama principal o predeterminada del repositorio (`main`, `master`, etc.).** Todo cambio persistente que requiera branch debe realizarse en una rama dedicada.
 2. **Inspeccionar antes de modificar.** Revisar Git, instrucciones del repositorio, documentación y archivos relacionados.
 3. **Una branch, un propósito.** No mezclar cambios no relacionados.
 4. **No destruir trabajo existente.** No descartar, sobrescribir ni reescribir cambios ajenos sin autorización explícita.
@@ -36,7 +36,7 @@ Ante duda razonable entre dos categorías, escala una categoría. Una mención e
 8. **Validar antes de declarar terminado.** Ejecutar los comandos reales de lint, typecheck, tests y build que correspondan.
 9. **Cambios sensibles requieren mayor rigor.** Datos, permisos, autenticación, pagos, archivos, emails, PDFs, migraciones e infraestructura exigen revisión específica.
 10. **No integrar automáticamente.** Preparar la integración, pero realizar merge o squash merge solo con autorización explícita.
-11. **No trabajar bajo el perfil de motor requerido.** Si la tarea exige un perfil de razonamiento mayor que el del modelo actual y el riesgo es `MEDIUM` o superior, detenerse y obtener autorización explícita antes de avanzar. Ver `references/engine-routing.md`.
+11. **Estrategia de ejecución adaptada a capacidades (Capability-Aware).** El riesgo de la tarea gobierna la profundidad de validación; la capacidad del runtime influye en la estrategia de ejecución, pero nunca se convierte en ceremonia o bloqueo artificial. Desconocer el modelo no es un estado de fallo ni impide avanzar. Ver `references/engine-routing.md`.
 
 ## Orden de autoridad
 
@@ -99,21 +99,14 @@ No implementes una solicitud ambigua si puede alterar datos, permisos, arquitect
 
 Asigna el nivel de riesgo desde este momento usando `references/change-risk-matrix.md` (`LOW` / `MEDIUM` / `HIGH` / `CRITICAL`). No esperes a Fase 3 para clasificarlo: este nivel determina cuánto esfuerzo real reciben las Fases 4 a 9. Un cambio `LOW` (texto, copy, estilos acotados, corrección localizada sin datos) usa la **ruta rápida** descrita abajo; el resto de este documento describe la profundidad completa para `MEDIUM`/`HIGH`/`CRITICAL`, no un piso mínimo para todo.
 
-#### Selección de motor
+#### Estrategia de capacidad (Capability Routing)
 
-Con el riesgo ya asignado, decide también **con qué modelo conviene resolverla** usando `references/engine-routing.md`. El criterio no es el costo por token sino el costo por tarea resuelta: un modelo menor que necesita cuatro intentos sale más caro que uno mayor que cierra al primero. Al revés también — no uses el perfil más capaz para renombres o cambios de copy con verificación automática.
+Con el riesgo ya asignado, evalúa internamente la **capacidad de razonamiento conveniente** usando `references/engine-routing.md`. El criterio rector es la eficiencia por tarea resuelta: no sobredimensionar capacidad en tareas mecánicas con verificación automática barata, ni asumir que una tarea debe detenerse si el runtime no ofrece un modelo específico.
 
-**Si el perfil requerido es mayor que el del modelo actual y el riesgo es `MEDIUM` o superior, es un punto de control bloqueante: pide autorización explícita y no avances a la Fase 1 sin respuesta.** Rige la misma regla que para merge o migraciones de producción — no basta con avisar y seguir. Formato de la pregunta y opciones en `references/engine-routing.md`.
-
-Cuando no hay desajuste no hay punto de control: una línea junto al riesgo y sigues.
-
-```markdown
-Motor: ALTO (coincide con el modelo actual) — delegable a MEDIO: tests, CHANGELOG y PR
-```
-
-Poder bajar de perfil nunca bloquea: dilo en una línea y continúa. En riesgo `LOW` omite el bloque completo. Pregunta **una vez por tarea**, no una vez por fase.
-
-Segundo gatillo, en cualquier fase: si la misma subtarea falla dos veces con el modelo actual, no hagas un tercer intento — detente y aplica el mismo punto de control.
+- **Riesgo y capacidad son ejes independientes:** El riesgo (`LOW / MEDIUM / HIGH / CRITICAL`) determina la profundidad de validación y rigor de pruebas; la capacidad conceptual (`ALTO / MEDIO / BAJO`) es una guía interna de estructuración o delegación. Un cambio `HIGH` puede ser técnicamente simple y no requiere bloquearse esperando un perfil `ALTO`, pero exige validación exhaustiva de sus invariantes.
+- **Sin bloqueos artificiales:** Si el entorno permite elegir modelo o delegar, úsalo donde agregue valor. Si el entorno no permite cambiar, tiene un solo modelo o la capacidad es desconocida (*unknown runtime capability is not a failure state*), continúa normalmente compensando con mejor inspección, descomposición en pasos acotados y validación rigurosa. Nunca detengas una tarea bajo el pretexto de que el modelo actual parece inferior al recomendado.
+- **Salida limpia:** El routing de capacidad es una decisión interna. No agregues líneas ceremoniales de reporte de motor en la salida habitual.
+- **Estrategia tras dos intentos fallidos:** Si una misma subtarea falla dos veces, no repitas por tercera vez el mismo enfoque ciego. Revisa la evidencia y los supuestos causales, e introduce un cambio de estrategia (inspeccionar más contexto, aislar la falla con pruebas unitarias focalizadas, reducir el problema, o delegar si el runtime lo permite). Solo declara un bloqueo si se demuestra una limitación técnica material del entorno que impida verificar un criterio.
 
 #### Ruta rápida (riesgo LOW)
 
@@ -191,7 +184,7 @@ migration/add-equipment-history
 
 Antes de crearla:
 
-1. Confirma la branch base.
+1. Confirma la branch base (la rama principal o default del repositorio, como `main` o `master`).
 2. Actualiza referencias remotas.
 3. Evita cambiar de branch si existen cambios no relacionados que puedan perderse.
 4. Crea o reutiliza una branch solo si su propósito coincide exactamente.
@@ -225,9 +218,9 @@ Antes de cerrar el plan, pregunta: *¿qué parte de esto protege un riesgo real 
 
 #### Tareas grandes con dominios independientes
 
-Si el cambio es grande pero se descompone en subtareas independientes (p. ej. un módulo de administrador con pantallas, permisos y reportes separados), no lo proceses como un solo bloque secuencial. Divide el plan por dominio y evalúa delegar subtareas auto-contenidas a subagentes en paralelo (Agent tool), especialmente cuando no comparten estado ni archivos. Esto reduce tiempo total sin reducir rigor: cada subagente sigue aplicando el nivel de riesgo que le corresponde a su parte, no el nivel más alto del conjunto.
+Si el cambio es grande pero se descompone en subtareas independientes (p. ej. un módulo de administrador con pantallas, permisos y reportes separados), no lo proceses como un solo bloque secuencial si el entorno permite concurrencia. Divide el plan por dominio y evalúa ejecutar subtareas auto-contenidas en paralelo mediante subagentes o tareas concurrentes, especialmente cuando no comparten estado ni archivos. Esto reduce tiempo total sin reducir rigor: cada subtarea o subagente sigue aplicando el nivel de riesgo que le corresponde a su parte, no el nivel más alto del conjunto.
 
-Aquí el motor sí se enruta solo: el `Agent` tool acepta `model`, así que asigna a cada subagente el perfil que le corresponde según `references/engine-routing.md` en vez de correr todo en el perfil más alto del conjunto. El patrón habitual es decidir en ALTO y ejecutar en MEDIO — plan, causa raíz y decisiones de diseño arriba; tests, documentación y redacción abajo, ya con el plan cerrado.
+Si el runtime permite configurar capacidades o modelos por tarea, asigna el perfil conceptual conveniente (`references/engine-routing.md`) —el patrón habitual es decidir en ALTO y ejecutar en MEDIO: plan, causa raíz y diseño arriba; tests, documentación y redacción abajo—. Si el runtime no soporta subagentes o no permite configurar capacidades independientes, ejecuta el plan de forma secuencial y estructurada con el agente actual sin que esto constituya un bloqueo.
 
 ### Fase 4 — Implementación controlada
 

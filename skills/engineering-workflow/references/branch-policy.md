@@ -2,7 +2,7 @@
 
 ## Base
 
-- La branch estable predeterminada es `main`, salvo definición explícita del repositorio.
+- La branch estable predeterminada corresponde a la rama default configurada en el repositorio (`main`, `master`, etc.), salvo definición explícita.
 - No se permiten cambios directos en la branch estable.
 - Cada branch debe representar un propósito único y revisable.
 
@@ -38,7 +38,8 @@ Preferido para mantener un commit claro por Pull Request. El título final debe 
 Después de integrar:
 
 ```bash
-git switch main
-git pull --ff-only origin main
+git switch <base-branch>
+git pull --ff-only origin <base-branch>
 git status --short --branch
 ```
+(donde `<base-branch>` es la rama default del proyecto, comúnmente `main` o `master`).
