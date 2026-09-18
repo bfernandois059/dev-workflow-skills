@@ -4,27 +4,6 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
-### tech-cleanup 2.0.0
-
-#### Changed
-
-- `tech-cleanup`: evolución integral de la skill hacia un modelo **evidence-first, stack-aware y proporcional** (*Prove unused before deleting. Absence of a direct reference is evidence, not proof*).
-- `tech-cleanup`: dos modos principales de operación:
-  - **`AUDIT`**: estrictamente de solo lectura, reúne evidencia multifuente, clasifica en A–E y entrega el informe directamente en la conversación sin generar carpetas ni archivos `docs/tech-cleanup/` en el repositorio ni alterar el working tree.
-  - **`AUDIT + EXECUTE SAFE`**: activado por solicitudes explícitas de limpieza (*"limpia el proyecto"*, *"elimina lo que no se usa"*); autoriza a diagnosticar y ejecutar directamente las eliminaciones claramente seguras (Categoría A) sin requerir una segunda confirmación genérica redundante.
-- `tech-cleanup`: la persistencia formal del reporte en `docs/tech-cleanup/audit-AAAA-MM-DD.md` pasa a ser opcional y bajo demanda (solo si el usuario lo solicita explícitamente o el flujo acordado lo requiere).
-- `tech-cleanup`: eliminación de las 5 etapas fijas obligatorias y la regla de "un PR por etapa". Se adopta la organización en lotes coherentes y reversibles (*Coherent and reversible batches > fixed cleanup stages*), agrupando por unidad funcional, interdependencia atómica o aislamiento de riesgo.
-- `tech-cleanup`: herramientas especializadas (como `Knip` para JS/TS moderno o analizadores nativos del stack) tratadas como evidencia fuerte, **nunca como oráculo**. Validación de falsos positivos contra convenciones de framework, plugins y runtime sin agregar dependencias persistentes solo para la auditoría. `depcheck` se posiciona como fallback.
-- `tech-cleanup`: triage y validaciones realmente stack-aware, eliminando la asunción universal ciega de comandos npm (`npm ci`, `npm run lint`, `npm test`, etc.) y utilizando exclusivamente las herramientas presentes en el proyecto (Node, Python, Go, PHP, etc.).
-- `tech-cleanup`: protección explícita de convenciones de framework (rutas de file-based routing como `loading`, `error`, `not-found`, `opengraph-image`, `sitemap`, `robots`), imports dinámicos y diferidos, dependencias de tooling/CI/peer, y assets dinámicos referenciados mediante template literals (ej. `/images/${slug}.webp`), impidiendo que sean catalogados como Categoría A por simple búsqueda literal.
-- `tech-cleanup`: corrección de la terminología de detección: calificar como inactivo código realmente en uso es un **falso positivo** de código muerto, reforzando la aversión al riesgo y degradando la categoría ante cualquier duda no resuelta.
-- `tech-cleanup`: desacoplamiento del modo multiagente, convirtiéndolo en una optimización opcional para proyectos extensos y eliminando los puntos de control bloqueantes basados en perfiles de motor (ALTO/MEDIO). El modo de agente único con auto-revisión crítica es 100% válido y suficiente.
-- `tech-cleanup`: delimitación nítida de fronteras respecto de `marcozen`, `project-blueprint`, `engineering-workflow`, `ux-audit` y la familia visual, prohibiendo refactors oportunistas de arquitectura o diseño durante las limpiezas.
-
-#### Added
-
-- `skills/tech-cleanup/evals/evals.json`: suite de 14 casos de evaluación que cubren componentes huérfanos, imports dinámicos, archivos de convención de framework, assets dinámicos, dependencias de tooling y CI, analizadores como evidencia vs oráculo, refactor previo (Categoría C), modos AUDIT vs AUDIT + EXECUTE SAFE, validación visual de UI y preservación de documentos históricos (Categoría E).
-
 ### engineering-workflow 1.4.0
 
 #### Changed
@@ -101,6 +80,28 @@ referencias.
   útil para quien vuelve al repositorio.
 - La familia visual sigue siendo **7/7** y `ux-audit` sigue siendo transversal, no una octava
   skill visual.
+
+## [tech-cleanup-v2.0.0] - 2026-09-18
+
+### Producto
+* Evolución integral de `tech-cleanup` hacia un modelo **evidence-first, stack-aware y proporcional** (*Prove unused before deleting. Absence of a direct reference is evidence, not proof*): la comprobación rigurosa de desuso real prima sobre supuestos estáticos o checklists dogmáticos.
+* Dos modos principales de interacción:
+  - `AUDIT`: estrictamente de solo lectura, analiza y clasifica candidatos entregando el informe en la conversación sin alterar el working tree ni generar archivos no solicitados en disco.
+  - `AUDIT + EXECUTE SAFE`: activado por solicitudes directas de limpieza (*"limpia el proyecto"*, *"elimina lo que no se usa"*), autoriza a diagnosticar y ejecutar directamente las eliminaciones de Categoría A claramente seguras sin requerir confirmaciones redundantes.
+* Persistencia documental en `docs/tech-cleanup/audit-AAAA-MM-DD.md` bajo demanda: opcional y generada solo cuando el usuario lo solicita explícitamente o el flujo acordado lo requiere.
+
+### Operación
+* Eliminación de las 5 etapas fijas secuenciales obligatorias y la fragmentación ceremonial en múltiples Pull Requests. Adopción de **lotes coherentes, autónomos y reversibles** (*Coherent and reversible batches > fixed cleanup stages*).
+* Desacoplamiento del modo multiagente: optimización opcional para repositorios extensos, garantizando que el modo de agente único con auto-revisión crítica sea 100% válido y autosuficiente.
+* Delimitación nítida de la frontera con `marcozen` en la guía de selección: se diferencian por su objeto de análisis (salud transversal y gobernanza para MarcoZen vs investigación de desuso y poda segura para Tech Cleanup), sin que Tech Cleanup requiera una auditoría previa de MarcoZen para operar.
+
+### Técnico
+* Analizadores especializados (`Knip` para JS/TS moderno, `depcheck` como fallback o herramientas nativas del stack) tratados como evidencia analítica y nunca como oráculo de borrado automático. Se prohíbe la descarga o instalación automática de herramientas para la auditoría (`npx --no-install`), registrando la comprobación como no realizada si no existen localmente y sin alterar el manifest ni el lockfile.
+* Detección y protección stack-aware de convenciones de framework: file-based routing (`page`, `layout`, `loading`, `error`, `not-found`, `opengraph-image`, `sitemap`, `robots`), imports dinámicos y diferidos (`React.lazy()`, `dynamic()`, `import()`), dependencias de tooling/CI/peer y assets dinámicos con template literals (`/images/${slug}.webp`).
+* Delegación de la disciplina Git a `engineering-workflow` o al estándar del repositorio, sin prescribir convenciones rígidas ni asumir nombres fijos de rama principal.
+* Corrección terminológica rigurosa: calificar como inactivo código realmente en uso se define como falso positivo de código muerto.
+* Incorporación de la suite de 14 evaluaciones en `skills/tech-cleanup/evals/evals.json`.
+* Versión de la skill incrementada a `2.0.0` (MAJOR).
 
 ## [marcozen-v2.0.0] - 2026-09-17
 
