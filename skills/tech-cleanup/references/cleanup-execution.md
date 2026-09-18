@@ -1,74 +1,76 @@
-# Limpieza por etapas — detalle operativo
+# Limpieza en lotes coherentes y reversibles — detalle operativo
 
-Fase 2. Se ejecuta **solo** después de una auditoría Tech Cleanup y con aprobación explícita
-del usuario sobre qué etapa abordar. Sigue la disciplina de `engineering-workflow`: branch
-dedicada por etapa, nunca directo en `main`, validaciones reales antes de declarar terminado.
+La ejecución de cambios de limpieza sigue la disciplina de `engineering-workflow`: branches dedicadas, commits trazables con Conventional Commits, validaciones pertinentes antes de dar por terminado el trabajo y nunca operar directamente sobre la rama principal (`main`).
 
-## Antes de empezar
+Principio rector:
+> **Coherent and reversible batches > fixed cleanup stages.**
 
-- Ten la auditoría a la vista (`docs/tech-cleanup/audit-AAAA-MM-DD.md`): cada eliminación se
-  justifica con la fila correspondiente de la tabla maestra, no de memoria.
-- Una branch por etapa (ej. `chore/cleanup-etapa-1-assets-sin-uso`), no una branch gigante
-  para todas las etapas.
-- Si durante la limpieza aparece un secreto o credencial versionada, **no la borres ni la
-  muevas en esta fase**: repórtala como riesgo aparte. Remediar secretos es una tarea
-  distinta y más sensible que la limpieza de código sin uso.
+Se descartan las etapas fijas secuenciales obligatorias (1 a 5) y la imposición de múltiples Pull Requests fragmentados artificialmente. La eliminación se estructura en **lotes coherentes, autónomos y fácilmente reversibles**.
 
-## Etapa 1 — Limpieza segura (Categoría A, dificultad baja)
+---
 
-- Elimina únicamente lo que la auditoría clasificó como A con dificultad baja.
-- Corre las validaciones del proyecto (lint, typecheck, tests, build) después de cada
-  bloque de eliminaciones, no solo al final.
-- Si una validación falla, esa eliminación no era tan segura como parecía: revierte ese
-  cambio puntual, no toda la etapa, y anota por qué en el PR.
+## 1. Criterios para estructurar un lote coherente
 
-## Etapa 2 — Limpieza validada (Categoría B)
+Agrupar las eliminaciones y modificaciones según su relación técnica y riesgo real, no por una división artificial:
 
-- Antes de eliminar, corre exactamente la validación que la auditoría indicó para ese
-  elemento (build, test específico, revisión visual en preview, confirmación de uso
-  dinámico).
-- Si la validación no es concluyente, reclasifica el elemento a Categoría C en vez de
-  forzar la eliminación.
-- Revisión visual: para componentes o assets con superficie de UI, levanta un preview y
-  confirma manualmente antes de mergear — no solo confiar en que el build pasó.
+1. **Unidad Funcional**:
+   Elementos que pertenecen a un mismo subsistema o funcionalidad abandonada (ej. un módulo de integración descontinuado con sus rutas, componentes y helpers).
+2. **Unidad Interdependiente**:
+   Elementos vinculados directamente entre sí que carecen de sentido por separado (ej. una dependencia externa en desuso eliminada junto a su archivo de configuración y su script asociado en `package.json`).
+3. **Naturaleza del Recurso**:
+   Recursos homogéneos de bajo riesgo (ej. un conjunto de 20 imágenes estáticas huérfanas confirmadas) pueden eliminarse conjuntamente en un único lote seguro.
+4. **Aislamiento de Riesgo**:
+   No mezclar en un mismo lote recursos de bajo impacto (assets estáticos) con modificaciones sensibles (eliminación de dependencias de build, reestructuración de rutas o refactors de código).
 
-## Etapa 3 — Refactor y consolidación (Categoría C)
+---
 
-- Sigue el orden que la auditoría indicó: primero migrar lo que depende del elemento
-  duplicado/antiguo, después eliminar.
-- Cada migración es su propio commit (o su propio PR si el volumen lo amerita) para poder
-  revertir un paso sin deshacer todo el refactor.
-- No mezcles la consolidación con eliminaciones de otras etapas en el mismo PR.
+## 2. Ejecución según el modo de operación
 
-## Etapa 4 — Archivo y documentación (Categoría E)
+### En modo `AUDIT + EXECUTE SAFE`
+Cuando el usuario solicita explícitamente *"limpia el proyecto"*, *"elimina lo que no se usa"* o *"audita y elimina lo seguro"*:
+- La instrucción ya constituye la autorización para diagnosticar y ejecutar directamente los lotes de **Categoría A (seguro de borrar)** dentro del alcance indicado.
+- **No se formula una segunda pregunta genérica de confirmación** para proceder con Categoría A.
+- Se ejecutan las eliminaciones seguras, se corren las comprobaciones pertinentes del proyecto y se informa el resultado.
 
-- No se borra: se mueve a una ubicación de histórico (ej. `docs/_archive/`) o se marca
-  explícitamente como archivado, preservando el valor de trazabilidad.
-- Actualiza referencias cruzadas si algún documento vigente apuntaba al material archivado.
-- Si el usuario pide explícitamente eliminar en vez de archivar, confírmalo antes de hacerlo
-  — no es el comportamiento por defecto de esta etapa.
+### Límites estrictos de ejecución segura
+Aun en modo `AUDIT + EXECUTE SAFE`, **NO se ejecutan automáticamente**:
+- **Categoría B**: requiere la validación específica previa indicada en la auditoría (preview visual en UI, test puntual, compilación específica).
+- **Categoría C**: requiere migrar primero los consumidores activos antes de borrar el elemento.
+- **Secretos y credenciales**: nunca se tocan ni se eliminan en una sesión de limpieza técnica; se reportan como hallazgo de seguridad independiente.
+- **Refactors de diseño o arquitectura**: fuera del alcance de tech-cleanup.
 
-## Etapa 5 — Revisión posterior
+---
 
-- Repite el análisis de referencias, tests y build sobre el estado final, no solo etapa por
-  etapa: confirma que la suma de las eliminaciones no dejó nada roto que cada validación
-  individual no detectó por separado.
-- Compara el resultado de build/bundle contra el estado previo a la limpieza si la
-  herramienta lo permite — es la confirmación más concreta de que la limpieza tuvo efecto.
+## 3. Protocolo operativo por categoría
 
-## Checklist de rollback
+### Lotes de Categoría A (Seguro de borrar)
+- Se eliminan los archivos huérfanos o dependencias confirmadas sin uso.
+- Se ejecutan las validaciones del proyecto (build, tests pertinentes, lint).
+- Si alguna validación falla, se revierte de inmediato el cambio puntual causante, se reclasifica el elemento (a B o C) y se reporta en el resumen.
 
-Antes de mergear cualquier etapa, confirma que puedes responder que sí a todo esto:
+### Lotes de Categoría B (Borrable con validación)
+- Antes de eliminar, se ejecuta la comprobación estipulada en el informe (inspección de bundle, test específico, confirmación de configuración).
+- Para componentes de UI o assets con impacto visual en pantalla, **se requiere comprobación visual en preview local o entorno de pruebas** antes de confirmar el borrado.
+- Si la validación deja dudas o no es concluyente, el elemento no se elimina; se reclasifica a C o se mantiene (D).
 
-- [ ] Cada PR de esta etapa es revertible de forma independiente (no depende de otro PR de
-      la misma etapa que aún no se mergeó).
-- [ ] Las validaciones reales del proyecto (lint, typecheck, tests, build) pasaron sobre el
-      estado final de la etapa, no solo sobre commits intermedios.
-- [ ] Si algo de esta etapa toca producción visualmente (componentes, assets, rutas), hubo
-      revisión visual en preview antes del merge.
-- [ ] Existe un registro (PR, changelog) de qué se eliminó/archivó y por qué, para poder
-      diagnosticar rápido si algo se rompe después del merge.
-- [ ] No quedaron secretos, credenciales o `.env` reales tocados durante la limpieza.
+### Lotes de Categoría C (Requiere refactor previo)
+- Se aborda en dos fases trazables:
+  1. Migración o actualización de los consumidores que aún dependen del elemento.
+  2. Eliminación del elemento original una vez desacoplado.
+- Nunca se elimina el elemento en el mismo paso en que sus consumidores siguen apuntando a él.
 
-Al cerrar cada etapa, resume: qué se eliminó/archivó, resultado de las validaciones, y qué
-queda pendiente para la etapa siguiente.
+### Lotes de Categoría E (Archivar material histórico)
+- No se elimina: se traslada a una carpeta de histórico (ej. `docs/_archive/`) o se marca formalmente como archivado, preservando su valor de trazabilidad.
+- Solo se procede a borrado destructivo si el usuario lo ordena de forma explícita e inequívoca.
+
+---
+
+## 4. Checklist de seguridad y rollback
+
+Antes de dar por concluido un lote de limpieza, verifica que se cumpla cada uno de los siguientes puntos:
+
+- [ ] **Independencia y atomicidad**: el lote es autónomo y puede revertirse mediante `git revert <commit>` sin dejar el repositorio en estado inconsistente.
+- [ ] **Validación stack-aware**: las herramientas pertinentes disponibles en el proyecto (build, pruebas automatizadas, linting o typecheck) pasaron exitosamente sobre el estado resultante.
+- [ ] **Verificación visual**: los componentes de UI o assets eliminados fueron verificados visualmente en preview para asegurar que no existan huecos visuales ni imágenes rotas.
+- [ ] **Secretos intactos**: no se modificaron credenciales, archivos `.env` reales ni tokens de acceso.
+- [ ] **Registro de cambios**: se documenta con claridad qué elementos se eliminaron o archivaron y la evidencia que sustentó la decisión.
