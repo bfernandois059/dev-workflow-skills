@@ -4,22 +4,6 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
-### marcozen 2.0.0
-
-#### Changed
-
-- `marcozen`: evolución integral desde una auditoría centrada en checklist, puntaje sobre 100 y artefactos predeterminados hacia una auditoría **evidence-first, modular y proporcional al proyecto** (*Evidence and impact > checklist completion*).
-- `marcozen`: comportamiento por defecto estrictamente de **solo lectura**. No crea carpetas ni archivos `docs/marcozen/...` en el repositorio auditado sin solicitud o autorización explícita previa; los informes se entregan en el contexto de la interacción.
-- `marcozen`: el puntaje cuantitativo `/100` pasa a ser secundario y estrictamente opcional. Solo se calcula cuando el usuario lo solicita expresamente o para comparaciones históricas explícitas.
-- `marcozen`: clasificación modular de dominios de auditoría (`Aplicable — crítico`, `Aplicable — normal`, `Contextual`, `N/A`, `No verificado`). Un criterio o dominio `N/A` jamás cuenta como defecto, penalización ni pendiente.
-- `marcozen`: estados epistemológicos de evidencia rigurosos (`Verificado OK`, `Hallazgo`, `No verificado`, `N/A`).
-- `marcozen`: escala de severidad unificada a 4 niveles: `P0 (Bloqueante / Crítico)`, `P1 (Alto)`, `P2 (Medio)` y `P3 (Bajo / Sugerencia)`.
-- `marcozen`: reestructuración de la auditoría de pre-producción en controles requeridos/críticos, contextuales y de optimización. `llms.txt` clasificado explícitamente como optimización P3 y nunca como blocker de publicación.
-- `marcozen`: eliminación de engine profile blocking gates rígidos y normalización de comandos de mantenimiento según el stack real del proyecto.
-- `marcozen`: precisión de severidad basada en evidencia e impacto real: `.env` versionado exige inspección prioritaria pero solo es P0 si contiene credenciales comprometidas; tests rotos y CVEs evaluados contextualmente según criticidad y alcance; proceso de build/deploy reproducible según riesgo sin imponer CI/CD como requisito universal; y sitemap ausente distinguido con claridad de `robots.txt` ausente.
-- `marcozen`: delimitación de la frontera de remediación: "audita y corrige" autoriza mejoras seguras y reversibles sin confirmación redundante, pero no autoriza la eliminación destructiva de ramas remotas sin confirmación explícita de inventario.
-- `marcozen`: expansión de la suite de evals a 14 casos que prueban razonamiento, límites, falsos positivos, dominios N/A, severidad P0 y comportamiento de solo lectura.
-
 ### engineering-workflow 1.4.0
 
 #### Changed
@@ -96,6 +80,27 @@ referencias.
   útil para quien vuelve al repositorio.
 - La familia visual sigue siendo **7/7** y `ux-audit` sigue siendo transversal, no una octava
   skill visual.
+
+## [marcozen-v2.0.0] - 2026-09-17
+
+### Producto
+* Evolución integral de `marcozen` hacia un modelo **evidence-first, modular y proporcional al proyecto** (*Evidence and impact > checklist completion*): la evidencia concreta e impacto real mandan sobre el cumplimiento ciego de checklists.
+* Comportamiento por defecto estrictamente de **solo lectura**: no genera archivos ni carpetas `docs/marcozen/...` en el repositorio sin solicitud o autorización previa expresa; los hallazgos se entregan directamente en el contexto conversacional.
+* Clasificación modular de dominios (`Aplicable — crítico`, `Aplicable — normal`, `Contextual`, `N/A`, `No verificado`): los dominios no pertinentes al tipo de proyecto (`N/A`) no penalizan ni se computan como defectos.
+* Puntaje cuantitativo `/100` secundario y opcional: reservado para cuando el usuario lo solicita explícitamente o para evaluar evolución histórica de un mismo proyecto.
+
+### Operación
+* Estados epistemológicos de evidencia rigurosos: `Verificado OK`, `Hallazgo`, `No verificado` y `N/A`. Cuando una comprobación carece de acceso o entorno para verificarse, se declara con honestidad técnica sin emitir falsos positivos.
+* Escala de severidad unificada a 4 niveles: `P0 (Bloqueante / Crítico)`, `P1 (Alto)`, `P2 (Medio)` y `P3 (Bajo / Sugerencia)`.
+* Pre-producción reestructurada: separación estricta entre requeridos/críticos, contextuales y de optimización. `llms.txt` clasificado explícitamente como optimización P3 y nunca como blocker de release.
+* Frontera de remediación delimitada: "audita y corrige" autoriza mejoras seguras y reversibles sin confirmación redundante, pero no autoriza la eliminación destructiva de ramas remotas sin confirmación explícita de inventario.
+
+### Técnico
+* Detección y validación dinámica de la rama base/default remota: no asume nombres fijos (`main`, `master`, `develop`), descarta valores inválidos como `(unknown)` y valida la existencia de la referencia remota real con `git show-ref --verify --quiet`, reportando `No verificado` y omitiendo `--merged`/`--no-merged` sobre bases inciertas.
+* Criterio de severidad basado en evidencia e impacto real: `.env` versionado exige inspección prioritaria pero solo es P0 si contiene secretos comprometidos; tests rotos y CVEs evaluados según criticidad y runtime; build/deploy reproducible según riesgo sin imponer CI/CD universal; y sitemap ausente distinguido de `robots.txt`.
+* Normalización de comandos de mantenimiento y auditoría según el stack real del proyecto (Node, Python, Go, PHP, monorepos), eliminando dependencias dogmáticas de tooling.
+* Suite de evaluación expandida a 14 casos en `skills/marcozen/evals/evals.json` que prueban razonamiento, límites, falsos positivos, dominios N/A, severidad P0 y comportamiento de solo lectura.
+* Versión de la skill incrementada a `2.0.0` (MAJOR).
 
 ## [project-blueprint-v2.0.0] - 2026-09-17
 
