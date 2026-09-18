@@ -1,175 +1,118 @@
-# Engine Routing
+# Engine / Capability Routing
 
-Cómo elegir con qué modelo conviene resolver una tarea, y cuándo delegarla a otro.
+Cómo dimensionar la capacidad de razonamiento requerida para una tarea y estructurar su ejecución sin burocracia ni bloqueos artificiales.
 
-Este archivo es la fuente única de la política de motor para todas las skills del
-repositorio. `marcozen` y `tech-cleanup` referencian los perfiles definidos aquí; los
-nombres concretos de modelos solo viven en este archivo para que envejezca un archivo y no
-cuatro skills.
+Este archivo define el contrato conceptual de capacidad para las skills del repositorio. Establece perfiles y estrategias runtime-agnostic, aplicables en cualquier entorno de ejecución (Claude Code, Codex, Antigravity, ChatGPT u otros), exista o no selector de modelo, soporte de subagentes o conocimiento explícito del modelo actual.
 
-## Principio
+## Principio rector
 
-La métrica no es el costo por token, es el **costo por tarea resuelta, incluyendo las
-iteraciones**. Un modelo menor que necesita cuatro intentos, tres correcciones y una
-reconstrucción de contexto sale más caro —en tokens, tiempo y riesgo de error silencioso—
-que uno mayor que cierra al primero.
+> **Task risk controls validation depth. Runtime capability influences execution strategy, but never becomes ceremony or an artificial blocker.**
 
-La regla inversa también es cierta: usar el modelo más capaz para renombrar un archivo o
-listar rutas es desperdicio puro. La decisión es un juicio sobre **cuántas iteraciones
-espera la tarea**, no sobre qué tan importante se siente.
+La métrica de eficiencia es el costo total por tarea resuelta (incluyendo iteraciones), pero la capacidad disponible nunca debe convertirse en un bloqueo artificial ni en una ceremonia que detenga el trabajo.
 
-## Perfiles
+La calidad del software se demuestra mediante **evidencia, pruebas y validación proporcional**, no mediante el nombre o tier supuesto del modelo.
 
-No razones en nombres de modelo, razona en perfiles. Los nombres cambian; los perfiles no.
+## Perfiles conceptuales de capacidad
 
-| Perfil | Qué hace bien | Tareas típicas |
+Los perfiles representan **necesidades de capacidad de la tarea**, no requisitos de producto ni marcas de modelos:
+
+| Perfil | Necesidad de capacidad | Tareas típicas |
 |---|---|---|
-| **ALTO** — razonamiento profundo | Sostiene muchas restricciones a la vez, encuentra causa raíz, evalúa trade-offs, detecta lo que falta | Diagnóstico de bugs sin causa evidente, diseño y arquitectura, refactor transversal, cambios `HIGH`/`CRITICAL`, especificación ambigua, revisión crítica final |
-| **MEDIO** — ejecución guiada | Aplica un plan ya definido con buen criterio local | Implementar un plan cerrado, seguir un patrón existente del repo, tests focalizados, cambios `MEDIUM` acotados, redacción de documentación y PR |
-| **BAJO** — mecánico | Transformaciones deterministas y volumen | Renombres, formato, aplicar una edición ya especificada archivo por archivo, inventarios, extracción y conteo, búsquedas amplias |
+| **ALTO** — razonamiento profundo | Sostener múltiples invariantes simultáneos, aislar causas raíz no evidentes, resolver ambigüedad sustantiva y evaluar trade-offs arquitectónicos complejos. | Diagnóstico de bugs sin causa aparente, diseño de arquitectura, refactors estructurales amplios, especificación ambigua, revisión crítica y auditoría de seguridad compleja. |
+| **MEDIO** — ejecución guiada | Aplicar un plan ya definido con buen criterio local, siguiendo patrones establecidos del repositorio. | Implementación de planes cerrados, extensión de patrones existentes, tests focalizados, cambios acotados y redacción de documentación o Pull Requests. |
+| **BAJO** — mecánico | Transformaciones deterministas, volumen repetitivo y cambios completamente especificados. | Renombres, formato, edición mecánica archivo por archivo, inventarios, extracción, conteo y búsquedas amplias. |
+
+Estos perfiles son **recomendaciones de ejecución interna**, no gates ni condiciones de parada.
 
 ## Ejes de decisión
 
-Evalúa los cinco. Si dos o más empujan hacia arriba, sube de perfil.
+Para estimar internamente si una tarea se beneficia de mayor concentración de razonamiento, evalúa estos cinco ejes:
 
-1. **Ambigüedad de la especificación.** ¿Hay que inferir intención, o está todo dicho? La
-   ambigüedad es el mayor predictor de iteraciones perdidas.
-2. **Profundidad de razonamiento.** ¿Decidir entre alternativas con trade-offs reales, o
-   aplicar un patrón que ya existe en el repositorio?
-3. **Amplitud de contexto.** Cuántos archivos, dominios o invariantes hay que sostener
-   simultáneamente para no romper algo a distancia.
-4. **Costo del error.** El nivel de `references/change-risk-matrix.md` y qué tan reversible
-   es. `HIGH`/`CRITICAL` no se optimizan por costo.
-5. **Verificabilidad barata.** ¿Existe un oráculo automático —tests, tipos, lint, build—
-   que atrape el error en segundos?
+1. **Ambigüedad de la especificación:** ¿Hay que inferir intención o resolver requisitos contradictorios, o está todo especificado?
+2. **Profundidad de razonamiento:** ¿Implica trade-offs reales entre alternativas, o es aplicar una solución estándar del repositorio?
+3. **Amplitud de contexto:** Cuántos módulos, servicios o invariantes concurrentes deben mantenerse en mente para no introducir regresiones.
+4. **Costo del error:** Impacto si el cambio falla en producción (según `references/change-risk-matrix.md`).
+5. **Verificabilidad barata:** ¿Existe un oráculo automático rápido (tests unitarios, typecheck, lint, build) que capture fallos de inmediato?
 
-El quinto eje es el que más se olvida y el que más ahorra: **cuando la verificación es
-automática y barata, un perfil menor es seguro**, porque la iteración la cierra la máquina
-y no una revisión humana. Cuando el error solo se detecta en producción, en datos o a los
-tres días, sube de perfil aunque la tarea parezca simple.
+**El oráculo automático barato es el mayor estabilizador:** cuando la verificación es inmediata y confiable, una ejecución directa es segura porque la máquina cierra la iteración. Cuando el error solo se detectaría en producción o en datos corruptos, prioriza descomposición e inspección rigurosa.
 
-## Reglas de escalamiento
+## Ortogonalidad: Riesgo vs Capacidad
 
-- **Regla de los dos intentos.** Si el perfil menor no cerró la tarea en dos intentos, no
-  hay un tercero: sube de perfil y **reinicia con contexto limpio**, no encima del contexto
-  contaminado por los intentos fallidos. Dos iteraciones fallidas ya costaron más que haber
-  empezado arriba. Esto dispara el punto de control de abajo — no sigas intentando por tu
-  cuenta.
-- **Riesgo manda sobre ahorro.** `HIGH` y `CRITICAL` van en perfil ALTO, aunque el cambio
-  se vea pequeño. Un cambio de una línea en permisos sigue siendo un cambio de permisos.
-- **No subas por importancia percibida.** Una tarea puede ser urgente y visible y aun así
-  ser mecánica. Sube por ambigüedad, amplitud, costo del error o falta de oráculo — no por
-  ansiedad.
-- **Ante empate, sube uno.** Es el mismo criterio que la matriz de riesgo.
+El riesgo de la tarea y la capacidad de ejecución son ejes distintos:
 
-## Perfil mixto: la tarea no es una sola pieza
+- **Riesgo (`LOW / MEDIUM / HIGH / CRITICAL`):** Determina la profundidad obligatoria de validación, atención a seguridad, datos, permisos, planes de rollback y evidencia requerida antes de integrar.
+- **Capacidad (`ALTO / MEDIO / BAJO`):** Orientación interna sobre cuánto razonamiento concentrar, qué descomponer, qué tareas son mecánicas o cuándo delegar si el runtime lo soporta.
 
-Una tarea rara vez tiene un solo perfil. Lo normal es **decidir en ALTO y ejecutar en
-MEDIO**: el plan, la causa raíz y las decisiones de diseño en el perfil alto; los tests, la
-documentación, el `CHANGELOG` y la PR en el perfil medio, ya con el plan cerrado.
+**No existe una equivalencia rígida como "HIGH siempre exige perfil ALTO":**
+- Un cambio de una línea en una política RLS o una regla de autorización es `HIGH` por riesgo, pero su implementación técnica puede ser sumamente directa. Lo obligatorio es la validación exhaustiva (caso permitido, caso denegado, aislamiento, regresión e integridad), no detenerse a exigir un modelo determinado.
+- Una tarea mecánica compleja puede involucrar cientos de archivos y alta importancia, pero tener verificación barata por compilador y no requerir capacidad extraordinaria.
 
-Divide por fase antes de asumir que toda la tarea necesita el perfil más caro.
+## Runtime-Agnostic y Capacidad Desconocida
 
-## Punto de control de motor — bloqueante
+El workflow debe operar fluidamente en cualquier entorno:
 
-Cuando el perfil requerido es **mayor** que el del modelo que está corriendo, **detente y
-pide autorización explícita antes de avanzar**, igual que para un merge o una migración de
-producción. No es una sugerencia al pasar: es un punto de control. Un aviso que se emite y
-se ignora en la misma respuesta no cambia nada — por eso esto bloquea.
+> **Unknown runtime capability is not a failure state.**
 
-Una skill no puede cambiar el modelo en el que corre; lo único que puede hacer es **no
-seguir** hasta que el usuario decida. Eso es exactamente lo que hace falta.
+- **Si el runtime expone información de capacidades o permite elegir modelo:** selecciona la capacidad conveniente cuando aporte valor real y delega subtareas cuando acelere el trabajo.
+- **Si el runtime no expone el modelo, tiene un solo modelo o no permite cambiar:**
+  - No intentes adivinar el nombre ni deducir el tier del modelo.
+  - No detengas el workflow ni pidas autorización por este motivo.
+  - Continúa con la capacidad disponible, compensando con inspección exhaustiva, descomposición en pasos pequeños y validación rigurosa.
+- **Nunca detengas una tarea diciendo que "el modelo actual parece inferior al recomendado".** La competencia de la solución se valida con los tests y el diff, no con metadatos del entorno.
 
-### Cuándo dispara
+## Estrategia de recuperación tras intentos fallidos
 
-Dos gatillos, cualquiera de los dos basta:
+No repetir indefinidamente el mismo intento, pero sin acoplar la recuperación al cambio forzoso de modelo.
 
-1. **Desajuste inicial.** El perfil requerido por la tarea es mayor que el del modelo
-   actual, y el riesgo es `MEDIUM` o superior (o la auditoría es profunda). Dispara antes
-   de editar o de lanzar la auditoría, no después.
-2. **Dos intentos fallidos.** La misma subtarea falló dos veces con el modelo actual. No
-   hagas un tercer intento: detente y pregunta. Este gatillo es el que más ahorra, porque
-   corrige una estimación inicial equivocada antes de que se convierta en cinco iteraciones.
+Si una subtarea falla dos veces consecutivas:
 
-Si no puedes determinar con certeza en qué modelo estás corriendo, trata la incertidumbre
-como desajuste cuando el riesgo sea `HIGH`/`CRITICAL`, y pregunta igual.
+1. **No repetir una tercera vez exactamente el mismo enfoque.**
+2. **Revisar la evidencia y el supuesto causal:** releer trazas de error, logs reales e hipótesis iniciales.
+3. **Cambiar de estrategia:**
+   - Inspeccionar más contexto del código y dependencias.
+   - Reducir el problema al caso mínimo reproducible.
+   - Escribir una prueba unitaria focalizada para aislar el comportamiento.
+   - Explorar una herramienta o enfoque alternativo.
+   - Si el entorno ofrece modelos más capaces o delegación, aprovecharlos como opción operativa.
 
-### Cuándo NO dispara
+Si existe una limitación técnica demostrada del entorno o herramientas (p. ej., falta de acceso a red, credenciales ausentes o APIs inaccesibles):
+- Repórtala con precisión técnica al usuario.
+- Entrega todo lo que sí pudo verificarse.
+- Registra lo pendiente como no validado (`PARTIALLY VALIDATED`).
 
-Que sea bloqueante no significa que sea frecuente. Un punto de control que aparece siempre
-se vuelve ruido y se empieza a responder sin leer — ahí muere la utilidad. **No preguntes**
-cuando:
+## Subagentes y tareas concurrentes (Opcional)
 
-- el perfil requerido es igual o menor que el actual;
-- el riesgo es `LOW`;
-- ya preguntaste por esta tarea (es **una vez por tarea**, no una por fase);
-- la tarea es un ahorro posible, no un riesgo: si podrías bajar de perfil, dilo en una línea
-  y sigue — bajar de perfil nunca bloquea.
+Para tareas extensas con dominios independientes (p. ej., módulos desacoplados, pantallas separadas o tests paralelos):
+- **Si el runtime soporta subagentes o ejecución concurrente:** evalúa delegar subtareas independientes para reducir tiempo o aumentar cobertura.
+- **Si el runtime es monagente o no ofrece delegación:** resuelve secuencialmente de manera estructurada con el agente actual.
 
-### Cómo se pregunta
+No asumas nombres de herramientas específicas, parámetros particulares de llamada ni la capacidad de fijar el motor de los subagentes. El workflow funciona al 100% con un único agente.
 
-Con `AskUserQuestion` si está disponible; si no, en texto plano, y **detén el turno ahí**.
-Sin párrafos previos, sin empezar a trabajar "mientras tanto".
+## Salida limpia sin burocracia
 
-```markdown
-Punto de control — motor
-Tarea: [una línea]  ·  Riesgo: [NIVEL]  ·  Perfil requerido: [ALTO/MEDIO]
-Modelo actual: [nombre] (perfil [ALTO/MEDIO/BAJO])
-Motivo del desajuste: [media línea: ambigüedad / amplitud / costo del error / sin oráculo]
+El routing de capacidad es una decisión de ejecución interna del agente.
 
-A) Cambias de modelo y retomo — me detengo hasta que confirmes.
-B) Sigo con el modelo actual — registro el desvío y continúo.
-C) Delego solo las partes de razonamiento a un subagente de perfil ALTO y ejecuto el resto aquí.
-```
+- **No incluyas líneas de motor en la salida estándar** (evita burocracia como `Motor: ALTO (...)`).
+- **Menciona capacidades o modelos al usuario únicamente cuando:**
+  1. Exista una limitación técnica demostrada que impida avanzar.
+  2. El usuario pregunte explícitamente sobre el modelo o configuración.
+  3. Recomendar un cambio de configuración en una tarea excepcionalmente difícil represente una ventaja tangible para el usuario.
 
-Reglas de la espera:
+## Blockers reales vs preferencias
 
-- **No asumas B por silencio.** Sin respuesta no hay avance.
-- Si eligen **B**, deja el desvío por escrito en el plan y en la PR: *"Ejecutado en perfil
-  MEDIO con riesgo HIGH por decisión explícita del usuario."* La decisión es del usuario;
-  esconderla no.
-- Si eligen **C**, es la salida que no requiere que el usuario cambie nada: tú enrutas los
-  subagentes y sigues.
+Eliminar gates artificiales de modelo refuerza la seriedad de los blockers reales.
 
-## Los otros dos mecanismos
+**Bloqueos reales (detienen el trabajo o impiden merge):**
+- Falta de datos o especificación indispensable en cambios críticos.
+- Falta de permisos o credenciales necesarias para ejecutar una validación sensible.
+- Conflicto irresoluble de requisitos que comprometería datos o seguridad.
+- Migración destructiva sin plan de rollback acordado.
+- CI o tests reales que fallan en el repositorio.
+- Defecto funcional reproducible no resuelto.
+- Ausencia de autorización explícita para merge.
 
-Además del punto de control, hay dos formas de aplicar el perfil. Sé honesto sobre cuál
-corresponde:
-
-- **Subagentes — enrutamiento real, sin preguntar.** El `Agent` tool acepta `model`, y las
-  definiciones en `.claude/agents/*.md` fijan modelo y esfuerzo. Aquí se aplica solo:
-  delega las subtareas de perfil MEDIO/BAJO y quédate con las de perfil ALTO. Esto no
-  necesita autorización porque no cambia nada del entorno del usuario.
-- **Otras herramientas (Codex, Antigravity, etc.) — solo mención.** Puedes recomendar mover
-  la tarea a otra herramienta cuando encaja mejor, pero no la invoques desde la skill: mete
-  autenticación, costo y salidas no verificables dentro de un flujo que se supone trazable.
-
-## Formato cuando no hay desajuste
-
-Cuando el perfil coincide o podrías bajar, no hay punto de control: una línea junto al
-riesgo y sigues.
-
-```markdown
-Motor: ALTO (coincide con el modelo actual) — delegable a MEDIO: tests, CHANGELOG y PR
-```
-
-No conviertas esto en una sección con justificación larga: el valor está en la decisión, no
-en el informe sobre la decisión.
-
-## Modelos vigentes
-
-Tabla de conveniencia, **no** la política. La política son los perfiles de arriba.
-
-Verificada al **2026-07-28**. Los nombres de modelo cambian rápido; si esta fecha quedó
-lejos, confirma antes de citarla y actualiza este bloque en la misma PR.
-
-| Perfil | Claude Code (sesión) | `Agent` tool (`model:`) |
-|---|---|---|
-| ALTO | Opus 5, razonamiento alto | `opus` |
-| MEDIO | Sonnet 5 | `sonnet` |
-| BAJO | Haiku 4.5 | `haiku` |
-
-Para herramientas fuera de Claude Code (Codex, Antigravity y similares), no fijes nombres
-de versión aquí: pide el modelo más capaz disponible en esa herramienta para perfil ALTO, y
-su esfuerzo de razonamiento alto cuando exista ese control. Sus catálogos rotan por su
-cuenta y una tabla desactualizada es peor que ninguna.
+**Falsos bloqueos (NUNCA detienen el trabajo):**
+- "Preferiría un modelo de mayor razonamiento para esta tarea."
+- "No conozco el modelo en el que estoy corriendo."
+- "El entorno no soporta subagentes."
+- "El runtime no me permite cambiar de motor."
