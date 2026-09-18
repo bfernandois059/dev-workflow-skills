@@ -1,0 +1,89 @@
+{
+  "skill_name": "tech-cleanup",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Audita este repositorio. Encontramos el archivo src/components/LegacyBanner.tsx, el cual no tiene ningún import estático ni dinámico en todo el proyecto, no figura en ningún archivo de configuración ni ruta, no tiene referencias en tests ni estilos, y el git log muestra que quedó huérfano tras un rediseño hace 8 meses.",
+      "expected_output": "Clasifica el componente como Categoría A (Seguro de borrar). Confirma mediante evidencia concluyente que no participa en runtime, build, routing ni configuración, y recomienda incluirlo en un lote de limpieza segura con la validación de build/tests correspondiente tras la eliminación.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Grep no encuentra ningún import estático de src/components/HeavyChart.tsx en el código. ¿Podemos clasificarlo como Categoría A y eliminarlo de inmediato?",
+      "expected_output": "Rechaza clasificarlo como Categoría A únicamente por la ausencia de import estático. Aplica el principio \"Prove unused before deleting\" y busca imports dinámicos (dynamic(), React.lazy(), import()). Al verificar que es importado dinámicamente bajo demanda para code-splitting, lo clasifica como Categoría D (Mantener) con su justificación técnica.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "En un proyecto Next.js App Router, el archivo app/dashboard/loading.tsx no tiene ninguna sentencia import que lo llame desde ningún otro archivo. ¿Es código muerto que deba borrarse?",
+      "expected_output": "Reconoce que app/dashboard/loading.tsx es un archivo especial por convención de framework en Next.js App Router que React Suspense y el router invocan automáticamente sin requerir import explícito. Lo clasifica como Categoría D (Mantener) y advierte que eliminarlo degradaría la experiencia de usuario durante transiciones de ruta.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "En la carpeta app/ existen los archivos opengraph-image.png, favicon.ico, robots.ts y sitemap.ts. Ninguno es importado por layout.tsx ni page.tsx. ¿Son candidatos a Categoría A?",
+      "expected_output": "Identifica que se trata de archivos especiales de convención del framework para metadatos, SEO e indexación web. No dependen de imports directos porque el framework los sirve y vincula en tiempo de build o runtime. Los clasifica como Categoría D (Mantener), evitando un falso positivo crítico de código muerto.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "En public/products/ tenemos 50 imágenes .webp. Una búsqueda exacta de nombres de archivo como \"product-12.webp\" en el código no arroja resultados. Sin embargo, en ProductCard.tsx encontramos: const src = `/products/${product.slug}.webp`. ¿Podemos borrar las imágenes que no aparecen textualmente en el código?",
+      "expected_output": "Aplica la regla de protección de assets dinámicos: el patrón de template string `/products/${product.slug}.webp` demuestra que los recursos se consumen dinámicamente en runtime. Prohíbe clasificar estos archivos como Categoría A basándose únicamente en búsquedas literales de texto y exige cruzar contra los slugs reales de la base de datos o catálogo antes de considerar cualquier candidato.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "En package.json está instalada la dependencia \"@tailwindcss/typography\", pero grep no encuentra ningún \"import\" ni \"require\" de ella en src/. ¿Es una dependencia innecesaria para borrar en Categoría A?",
+      "expected_output": "Comprueba el uso indirecto de dependencias antes de clasificar. Inspecciona los archivos de configuración (tailwind.config.js / postcss.config.js) y verifica que la librería está declarada en el array de plugins de Tailwind. Dictamina que la dependencia está en uso activo en tiempo de compilación y la clasifica como Categoría D (Mantener).",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "depcheck reporta que \"postcss\" es una dependencia no utilizada porque ningún archivo .js o .ts la importa directamente. ¿La eliminamos en el próximo lote?",
+      "expected_output": "Reconoce que analizadores como depcheck o Knip son fuentes de evidencia pero nunca oráculos definitivos. Verifica que postcss actúa como peer dependency y motor de procesamiento CSS para Tailwind y el pipeline de build. No la clasifica como Categoría A; explica su necesidad en tooling y la mantiene (Categoría D).",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "La dependencia \"cypress\" y el script \"test:e2e\" en package.json no se llaman en ningún archivo de src/ ni en los scripts de build habituales. Sin embargo, en .github/workflows/e2e.yml se ejecuta \"npm run test:e2e\". ¿Debe eliminarse por no usarse en la app?",
+      "expected_output": "Verifica el uso en todo el ciclo de vida del proyecto, incluyendo CI/CD. Al constatar que la dependencia y el script se ejecutan en el pipeline automatizado de integración continua, rechaza su eliminación y los clasifica como Categoría D (Mantener), justificando su rol en la garantía de calidad.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "Ejecutamos Knip y marca como unused dependency el paquete \"dotenv-expand\". Sin embargo, en next.config.mjs se carga dinámicamente según una variable de entorno en despliegue. ¿Qué criterio aplicamos?",
+      "expected_output": "Aplica el principio de que las herramientas especializadas aportan evidencia fuerte pero su salida nunca autoriza por sí sola una eliminación. Revisa la configuración del runtime y confirma el uso condicional de la dependencia, descartando el falso positivo generado por el analizador y manteniéndola en Categoría D.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Tenemos un componente antiguo src/components/OldModal.tsx que fue reemplazado por NewModal.tsx en casi toda la app, pero todavía queda una página secundaria en settings/ que lo importa y renderiza. ¿Lo borramos como código muerto?",
+      "expected_output": "Clasifica el componente como Categoría C (Requiere refactor previo antes de borrar), jamás como Categoría A. Detalla que aún tiene un consumidor activo en settings/, prescribe el orden de remediación (primero migrar la página a NewModal.tsx, validar el cambio y recién entonces eliminar OldModal.tsx en pasos desacoplados).",
+      "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "Audita este repositorio y dime qué dependencias y archivos podemos podar.",
+      "expected_output": "Opera en modo AUDIT estricto: recopila evidencia de forma no invasiva, clasifica los hallazgos en la taxonomía A-E y entrega el diagnóstico estructurado directamente en la conversación. No modifica ningún archivo del repositorio, no crea ramas y no genera automáticamente carpetas ni archivos en docs/tech-cleanup/ sin petición explícita.",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "Limpia el proyecto y elimina lo que no se usa de forma segura.",
+      "expected_output": "Reconoce que la instrucción explícita del usuario autoriza el modo AUDIT + EXECUTE SAFE. Realiza primero el diagnóstico con rigor de evidencia, identifica los candidatos Categoría A demostrados, y procede a ejecutar su eliminación en lotes coherentes sin solicitar una segunda confirmación genérica redundante. Respeta estrictamente los límites: no toca Categoría B/C, no hace refactors arbitrarios ni altera secretos.",
+      "files": []
+    },
+    {
+      "id": 13,
+      "prompt": "En la auditoría detectamos una variante de botón en UI clasificada como Categoría B (Borrable con validación) porque no parece tener usos pero comparte estilos globales con el sistema de diseño. ¿Podemos borrarla directamente en un lote automatizado?",
+      "expected_output": "Exige la validación previa requerida para Categoría B. Establece que los componentes o assets con superficie visual en UI requieren obligatoriamente una verificación visual en preview local o entorno de prueba antes de autorizar el borrado, asegurando que no se rompan layouts ni se generen regresiones visuales inadvertidas.",
+      "files": []
+    },
+    {
+      "id": 14,
+      "prompt": "Encontramos el archivo docs/qa-report-2025-04.md y un log de pruebas de carga de una versión previa. No participan en runtime ni build. ¿Debemos borrarlos como basura técnica?",
+      "expected_output": "Clasifica estos archivos como Categoría E (Archivar / Histórico), no como Categoría A. Explica que poseen valor de trazabilidad, contexto histórico y aseguramiento de calidad, por lo que deben trasladarse a una carpeta de archivo histórico (ej. docs/_archive/) o preservarse, evitando su destrucción accidental.",
+      "files": []
+    }
+  ]
+}
