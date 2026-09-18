@@ -4,6 +4,29 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+### engineering-workflow 2.0.0
+
+#### Changed
+
+- `engineering-workflow`: evolución de la política de routing hacia un modelo **runtime-agnostic, capability-aware y no bloqueante** (*Task risk controls validation depth. Runtime capability influences execution strategy, but never becomes ceremony or an artificial blocker*).
+- `engineering-workflow`: eliminación del punto de control bloqueante de modelo. Si el entorno no permite cambiar de modelo o la capacidad es desconocida (*unknown runtime capability is not a failure state*), el trabajo continúa sin detenerse, compensando con mejor descomposición, inspección y validación.
+- `engineering-workflow`: separación estricta y explícita entre **Riesgo** (`LOW / MEDIUM / HIGH / CRITICAL`, determina profundidad de validación y pruebas) y **Capacidad** (`ALTO / MEDIO / BAJO`, orientación conceptual interna para estructurar y delegar). Los cambios HIGH/CRITICAL no se bloquean esperando un modelo ALTO, sino que exigen pruebas y evidencias exhaustivas de sus invariantes.
+- `engineering-workflow`: estrategia de recuperación tras dos intentos fallidos desacoplada del modelo y sin obligación de reinicio con contexto limpio. Ante dos fallos en la misma subtarea, se prohíbe repetir el mismo enfoque ciego y se exige revisar evidencia y supuestos causales para cambiar de estrategia.
+- `engineering-workflow`: subagentes y tareas concurrentes desacoplados de herramientas específicas o parámetros de llamada (`model:`). Son una optimización opcional para dominios independientes; el workflow es 100% operativo con un único agente.
+- `engineering-workflow`: eliminación de la tabla estática fechada de modelos (Opus, Sonnet, Haiku) en `references/engine-routing.md` en favor de perfiles conceptuales dinámicos.
+- `engineering-workflow`: salida limpia sin burocracia; se elimina la obligación de emitir reportes de motor en respuestas normales.
+- `engineering-workflow`: corrección del supuesto universal de rama principal (`main`), generalizando las reglas operativas y snippets para soportar la rama predeterminada del repositorio (`main`, `master`, etc.).
+- `engineering-workflow`: versión incrementada a `2.0.0` (MAJOR).
+
+#### Added
+
+- `engineering-workflow`: suite de 14 evaluaciones orientadas a decisiones en `skills/engineering-workflow/evals/evals.json`.
+
+#### Removed
+
+- `engineering-workflow`: eliminado el gate bloqueante previo a la implementación basado en el perfil del modelo.
+- `engineering-workflow`: eliminada la regla de tratar la incertidumbre del modelo como desajuste en tareas HIGH/CRITICAL.
+
 ### engineering-workflow 1.4.0
 
 #### Changed

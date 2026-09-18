@@ -75,7 +75,7 @@ validaciones → documentación → changelog → PR → merge → limpieza.
 
 - Política híbrida: obligatoria para implementación, PR/merge y cambios sensibles; opcional
   para documentación y ajustes triviales; innecesaria para consultas o lectura.
-- Nunca trabaja sobre `main`; una branch, un propósito. Código y documentación viajan en la
+- Nunca trabaja directamente sobre la rama principal o predeterminada del repositorio (`main`, `master`, etc.); una branch, un propósito. Código y documentación viajan en la
   misma Pull Request.
 - Valida con los comandos reales —lint, typecheck, tests, build— antes de declarar terminado.
   El merge requiere autorización explícita.
@@ -334,7 +334,7 @@ docs/
 └── visual-skills-architecture.md         # contrato de la familia de skills visuales
 skills/
 ├── project-blueprint/                    # SKILL.md · VERSION · references/ · assets/ · scripts/
-├── engineering-workflow/                 # SKILL.md · VERSION · references/ · assets/ · scripts/
+├── engineering-workflow/                 # SKILL.md · VERSION · references/ · assets/ · scripts/ · evals/
 ├── visual-foundation/                    # SKILL.md · VERSION · assets/ · scripts/ · evals/
 ├── design-directions/                    # SKILL.md · VERSION · references/ · scripts/ · evals/
 ├── interface-craft/                      # SKILL.md · VERSION · references/ · scripts/ · evals/
