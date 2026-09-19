@@ -4,30 +4,6 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
-### visual-consistency 0.2.0
-
-Evolución orientada a una **revisión visual más perceptual, contextual y accionable**, capaz de detectar desviaciones de jerarquía, agrupaciones deficientes, relaciones rotas de spacing, semejanzas engañosas, énfasis indiscriminado y pérdida de intención entre diseño e implementación sin convertir la skill en una auditoría UX ni en un checklist rígido.
-
-#### Added
-
-- `visual-consistency` 0.2.0: **Principios rectores explícitos**: *Visual consistency is consistency of intent and role, not mechanical equality of values*, *Review relationships before measurements*, *A numerical difference matters when it creates, hides or contradicts a perceptual relationship*, *Preserve visual intent before chasing pixel equality*, *If mathematically aligned looks visually misaligned, the rendered result wins* y *Frequency is evidence, not authority*.
-- `visual-consistency` 0.2.0: **Relaciones perceptuales antes que mediciones numéricas**: comprobación de qué domina, qué pertenece junto, qué parece equivalente y qué compite; un desvío numérico microscópico (ej. padding 23px vs 24px) no es defecto si la relación visual se mantiene.
-- `visual-consistency` 0.2.0: **Lentes perceptuales acotados y sin recitar teoría**: integración de proximidad, semejanza, región común y distinción de énfasis como herramientas analíticas de relaciones, excluyendo heurísticas de interacción (Hick, Fitts, etc.) y prohibiendo nombres de leyes en la salida para describir defectos perceptuales concretos.
-- `visual-consistency` 0.2.0: **Criterio de proximidad vs superficies**: verificación de si proximidad y alineación ya comunican la agrupación antes de aceptar cards, bordes o fondos redundantes que añaden ruido; delimitación de superficies justificadas por unidad interactiva, estado, contexto o elevación.
-- `visual-consistency` 0.2.0: **Semejanza funcional y consistencia por rol**: diferenciación estricta entre *Deriva* (mismo rol, distinto tratamiento), *Diferencia válida* (distinto rol, distinto tratamiento) y *Problema semántico visual* (distinto rol, tratamiento idéntico que oculta la distinción).
-- `visual-consistency` 0.2.0: **Énfasis como recurso escaso**: atención al tratamiento distintivo excesivo sin la restricción dogmática de "solo un elemento destacado", evaluando si el destaque coincide con lo que realmente demanda atención.
-- `visual-consistency` 0.2.0: **Normalización previa de condiciones de comparación**: regla *Normalize what can materially change the visual result before attributing the difference to inconsistency* para contrastar viewports (ej. 1440px vs 1280px), DPR, zoom, estado y datos antes de declarar discrepancias de layout o container, marcando aspectos inciertos como `No verificado`.
-- `visual-consistency` 0.2.0: **Paridad visual y prueba de pérdida de intención**: preservación de la intención visual rectora frente a mockups sobre la igualdad exacta de píxeles, evaluando si la decisión de diseño que hacía funcionar la referencia sobrevivió al implementarse.
-- `visual-consistency` 0.2.0: **Clasificación de desviaciones**: orientación ágil en *Local* (`interface-craft`), *Repetida* (`component-architecture`) y *Sistémica* (`visual-foundation`).
-- `visual-consistency` 0.2.0: **Alineación óptica sobre matemática**: principio *If mathematically aligned looks visually misaligned, the rendered result wins*, prohibiendo inferir desalineaciones desde código sin ver el render.
-- `visual-consistency` 0.2.0: Cuatro nuevas evaluaciones en `evals/evals.json` (11 a 14) que cubren comparación con distinto viewport, frecuencia como evidencia vs autoridad ante ui-system y mockup, igualdad de tokens con agrupación perceptual rota, y diferencias legítimas de elevación y radius justificadas por rol.
-
-#### Changed
-
-- `skills/visual-consistency/SKILL.md`: actualización del contrato con principios rectores, lentes perceptuales, proximidad vs superficies, consistencia por rol, normalización de comparación, intención visual y formato de hallazgo articulado (qué veo → qué relación rompe → dirección de corrección).
-- `skills/visual-consistency/references/visual-review-criteria.md`: profundización técnica y preguntas operacionales en jerarquía, composición, tipografía, spacing relacional, alineación óptica, superficies y componentes.
-- `skills/visual-consistency/VERSION`: incrementada a `0.2.0`.
-
 ### Integración del sistema de skills
 
 Primera pasada de integración del repositorio **como un solo sistema**, no como doce carpetas
@@ -93,6 +69,30 @@ referencias.
   útil para quien vuelve al repositorio.
 - La familia visual sigue siendo **7/7** y `ux-audit` sigue siendo transversal, no una octava
   skill visual.
+
+## [visual-consistency-v0.2.0] - 2026-09-19
+
+### Producto
+* Enfoque centrado en relaciones perceptuales antes que mediciones numéricas: las diferencias microscópicas de píxeles o tokens (ej. padding de 23px vs 24px) no constituyen un defecto visible per se; en contraste, agrupaciones cruzadas o metadata con igual peso que el dato central representan inconsistencias severas aunque usen tokens válidos.
+* Principios rectores explícitos: *Visual consistency is consistency of intent and role, not mechanical equality of values*, *Review relationships before measurements*, *A numerical difference matters when it creates, hides or contradicts a perceptual relationship*, *Preserve visual intent before chasing pixel equality*, *If mathematically aligned looks visually misaligned, the rendered result wins* y *Frequency is evidence, not authority*.
+* Criterio de proximidad vs superficies: comprobación de si la proximidad y alineación ya comunican la relación antes de admitir cards, bordes o fondos redundantes; justificación de superficies por unidad interactiva, estado, contexto o elevación sin concluir dogmáticamente "card = defecto".
+* Semejanza funcional y consistencia por rol: diferenciación estricta entre *Deriva* (mismo rol, distinto tratamiento), *Diferencia válida* (distinto rol, distinto tratamiento) y *Problema semántico visual* (distinto rol, tratamiento idéntico que oculta la distinción).
+* Énfasis como recurso escaso: atención al tratamiento distintivo excesivo sin la restricción dogmática de "solo un elemento destacado", evaluando si el destaque coincide con lo que realmente demanda atención.
+* Paridad visual sobre pixel equality: preservación de la intención visual rectora frente a mockups sobre la igualdad exacta de píxeles, evaluando si la decisión de diseño que hacía funcionar la referencia sobrevivió al implementarse.
+
+### Operación
+* Lentes perceptuales acotados y sin recitar teoría: integración de proximidad, semejanza, región común y distinción de énfasis como herramientas analíticas de relaciones, excluyendo heurísticas de interacción (Hick, Fitts, etc.) y prohibiendo nombres de leyes en la salida para describir defectos perceptuales concretos.
+* Normalización previa de condiciones de comparación: regla *Normalize what can materially change the visual result before attributing the difference to inconsistency* para contrastar viewports (ej. 1440px vs 1280px), DPR, zoom, estado y datos antes de declarar discrepancias de layout o container, marcando aspectos inciertos como `No verificado`.
+* Frecuencia como evidencia, no autoridad (*Frequency is evidence, not authority*): la mayoría numérica no prevalece sobre la referencia aprobada ni sobre `ui-system.md`.
+* Clasificación de desviaciones: orientación ágil en *Local* (`interface-craft`), *Repetida* (`component-architecture`) y *Sistémica* (`visual-foundation`).
+* Formato de entrega articulado: cada hallazgo comunica qué se ve en el render → qué relación se rompe → dirección de corrección (sin código CSS ni rediseños).
+* Suite de evaluación ampliada y verificada: 14 escenarios de decisión en `evals/evals.json` que validan comparación con distinto viewport, frecuencia vs autoridad ante ui-system y mockup, igualdad de tokens con agrupación perceptual rota, y diferencias legítimas de elevación y radius justificadas por rol.
+
+### Técnico
+* Alineación óptica sobre igualdad matemática: principio *If mathematically aligned looks visually misaligned, the rendered result wins*, prohibiendo inferir desalineaciones desde código sin ver el render.
+* Spacing como relación conceptual: aplicación de la regla `distancia interna < distancia entre grupos < distancia entre secciones` evitando el *pixel nudging* arbitrario.
+* Consistencia tipográfica por rol: distinción perceptible entre niveles y erradicación de micro-nudges cosméticos para disimular jerarquías no resueltas.
+* Versión de la skill incrementada a `0.2.0` (MINOR).
 
 ## [interface-craft-v0.2.0] - 2026-09-19
 
