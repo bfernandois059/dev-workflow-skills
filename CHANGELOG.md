@@ -2,30 +2,31 @@
 
 Los cambios relevantes de las skills se registran en este archivo.
 
-## [interface-craft-v0.2.0] - 2026-09-19
-
-### Producto
-* Calidad y diversidad en decisiones de interfaz: erradicación de interfaces genéricas, simetría forzada y layouts tipo plantilla sin justificación funcional.
-* Principio rector explícito: las decisiones visuales se justifican por el contenido, la tarea y el producto, nunca por ser el patrón más fácil o predecible de generar.
-* Agrupación perceptual sobre contenedores (*Grouping does not imply containers*): prioridad a proximidad, alineación, jerarquía, ritmo y tipografía antes de encapsular elementos en cards, bordes o paneles redundantes.
-* Énfasis reservado (*Von Restorff*): el tratamiento visual distintivo se gestiona como recurso escaso para dirigir la atención intencionalmente sin sobrecargar la pantalla ni forzar artificialmente un único destacado.
-* Semejanza funcional: equivalencia visual restringida a elementos con la misma función, evitando que controles primarios, secundarios, destructivos o informativos compartan estilos confusos.
-* Validación visual orientada a la intención: comprobación de la experiencia renderizada centrada en verificar que la intención de diseño (dominancia, agrupaciones naturales, densidad adecuada y facilidad de adquisición) sea inmediatamente comprensible.
-
-### Operación
-* Principios de percepción e interacción integrados como herramientas de decisión contextuales y no como checklists dogmáticos o prescripciones rígidas (*Use perception and interaction principles as decision tools, never as a checklist*).
-* Genericity test contextual antes de implementar: comprobación reflexiva (*«Si reemplazo el contenido por el de otro producto distinto, ¿esta composición seguiría funcionando prácticamente igual?»*) para diagnosticar composiciones genéricas sin descalificar patrones familiares cuando resuelven la tarea.
-* Prominencia y facilidad de adquisición de acciones (*Fitts*): evaluación del target interactivo completo, clearance y proximidad al contexto de decisión sin requerir precisión innecesaria de puntero ni imponer ubicaciones físicas universales.
-* Reducción de competencia de decisiones (*Hick*): priorización por frecuencia, consecuencia e intención del usuario sin preasignar destinos rígidos ni ocultar operaciones habituales.
-* Suite de evaluación ampliada y verificada: 14 escenarios de decisión en `evals/evals.json` que validan descarte de cards innecesarias, mitigación de toolbars sobrecargadas, resolución de acciones difíciles de adquirir y jerarquización de dashboards con KPIs competitivos.
-
-### Técnico
-* Jerarquía tipográfica por roles intencionales: sustitución de micro-ajustes arbitrarios (`font-weight`, ligeros incrementos de tamaño) por contrastes estructurales de posición, escala y peso según el rol funcional del texto.
-* Spacing como relación conceptual: aplicación de la regla `distancia interna < distancia entre grupos < distancia entre secciones` evitando el *pixel nudging* arbitrario.
-* Criterios estrictos de build-vs-buy para componentes complejos: directrices para adoptar librerías mantenidas en visualizaciones de datos avanzadas (con ejes, escalas y tooltips dinámicos), tablas con ordenamiento/paginación y primitivas accesibles (combobox, modales, portales), delimitando el alcance para prohibir rediseños o migraciones transversales no autorizadas.
-* Versión de la skill incrementada a `0.2.0` (MINOR).
-
 ## Unreleased
+
+### visual-consistency 0.2.0
+
+Evolución orientada a una **revisión visual más perceptual, contextual y accionable**, capaz de detectar desviaciones de jerarquía, agrupaciones deficientes, relaciones rotas de spacing, semejanzas engañosas, énfasis indiscriminado y pérdida de intención entre diseño e implementación sin convertir la skill en una auditoría UX ni en un checklist rígido.
+
+#### Added
+
+- `visual-consistency` 0.2.0: **Principios rectores explícitos**: *Visual consistency is consistency of intent and role, not mechanical equality of values*, *Review relationships before measurements*, *A numerical difference matters when it creates, hides or contradicts a perceptual relationship*, *Preserve visual intent before chasing pixel equality*, *If mathematically aligned looks visually misaligned, the rendered result wins* y *Frequency is evidence, not authority*.
+- `visual-consistency` 0.2.0: **Relaciones perceptuales antes que mediciones numéricas**: comprobación de qué domina, qué pertenece junto, qué parece equivalente y qué compite; un desvío numérico microscópico (ej. padding 23px vs 24px) no es defecto si la relación visual se mantiene.
+- `visual-consistency` 0.2.0: **Lentes perceptuales acotados y sin recitar teoría**: integración de proximidad, semejanza, región común y distinción de énfasis como herramientas analíticas de relaciones, excluyendo heurísticas de interacción (Hick, Fitts, etc.) y prohibiendo nombres de leyes en la salida para describir defectos perceptuales concretos.
+- `visual-consistency` 0.2.0: **Criterio de proximidad vs superficies**: verificación de si proximidad y alineación ya comunican la agrupación antes de aceptar cards, bordes o fondos redundantes que añaden ruido; delimitación de superficies justificadas por unidad interactiva, estado, contexto o elevación.
+- `visual-consistency` 0.2.0: **Semejanza funcional y consistencia por rol**: diferenciación estricta entre *Deriva* (mismo rol, distinto tratamiento), *Diferencia válida* (distinto rol, distinto tratamiento) y *Problema semántico visual* (distinto rol, tratamiento idéntico que oculta la distinción).
+- `visual-consistency` 0.2.0: **Énfasis como recurso escaso**: atención al tratamiento distintivo excesivo sin la restricción dogmática de "solo un elemento destacado", evaluando si el destaque coincide con lo que realmente demanda atención.
+- `visual-consistency` 0.2.0: **Normalización previa de condiciones de comparación**: regla *Normalize what can materially change the visual result before attributing the difference to inconsistency* para contrastar viewports (ej. 1440px vs 1280px), DPR, zoom, estado y datos antes de declarar discrepancias de layout o container, marcando aspectos inciertos como `No verificado`.
+- `visual-consistency` 0.2.0: **Paridad visual y prueba de pérdida de intención**: preservación de la intención visual rectora frente a mockups sobre la igualdad exacta de píxeles, evaluando si la decisión de diseño que hacía funcionar la referencia sobrevivió al implementarse.
+- `visual-consistency` 0.2.0: **Clasificación de desviaciones**: orientación ágil en *Local* (`interface-craft`), *Repetida* (`component-architecture`) y *Sistémica* (`visual-foundation`).
+- `visual-consistency` 0.2.0: **Alineación óptica sobre matemática**: principio *If mathematically aligned looks visually misaligned, the rendered result wins*, prohibiendo inferir desalineaciones desde código sin ver el render.
+- `visual-consistency` 0.2.0: Cuatro nuevas evaluaciones en `evals/evals.json` (11 a 14) que cubren comparación con distinto viewport, frecuencia como evidencia vs autoridad ante ui-system y mockup, igualdad de tokens con agrupación perceptual rota, y diferencias legítimas de elevación y radius justificadas por rol.
+
+#### Changed
+
+- `skills/visual-consistency/SKILL.md`: actualización del contrato con principios rectores, lentes perceptuales, proximidad vs superficies, consistencia por rol, normalización de comparación, intención visual y formato de hallazgo articulado (qué veo → qué relación rompe → dirección de corrección).
+- `skills/visual-consistency/references/visual-review-criteria.md`: profundización técnica y preguntas operacionales en jerarquía, composición, tipografía, spacing relacional, alineación óptica, superficies y componentes.
+- `skills/visual-consistency/VERSION`: incrementada a `0.2.0`.
 
 ### Integración del sistema de skills
 
@@ -92,6 +93,29 @@ referencias.
   útil para quien vuelve al repositorio.
 - La familia visual sigue siendo **7/7** y `ux-audit` sigue siendo transversal, no una octava
   skill visual.
+
+## [interface-craft-v0.2.0] - 2026-09-19
+
+### Producto
+* Calidad y diversidad en decisiones de interfaz: erradicación de interfaces genéricas, simetría forzada y layouts tipo plantilla sin justificación funcional.
+* Principio rector explícito: las decisiones visuales se justifican por el contenido, la tarea y el producto, nunca por ser el patrón más fácil o predecible de generar.
+* Agrupación perceptual sobre contenedores (*Grouping does not imply containers*): prioridad a proximidad, alineación, jerarquía, ritmo y tipografía antes de encapsular elementos en cards, bordes o paneles redundantes.
+* Énfasis reservado (*Von Restorff*): el tratamiento visual distintivo se gestiona como recurso escaso para dirigir la atención intencionalmente sin sobrecargar la pantalla ni forzar artificialmente un único destacado.
+* Semejanza funcional: equivalencia visual restringida a elementos con la misma función, evitando que controles primarios, secundarios, destructivos o informativos compartan estilos confusos.
+* Validación visual orientada a la intención: comprobación de la experiencia renderizada centrada en verificar que la intención de diseño (dominancia, agrupaciones naturales, densidad adecuada y facilidad de adquisición) sea inmediatamente comprensible.
+
+### Operación
+* Principios de percepción e interacción integrados como herramientas de decisión contextuales y no como checklists dogmáticos o prescripciones rígidas (*Use perception and interaction principles as decision tools, never as a checklist*).
+* Genericity test contextual antes de implementar: comprobación reflexiva (*«Si reemplazo el contenido por el de otro producto distinto, ¿esta composición seguiría funcionando prácticamente igual?»*) para diagnosticar composiciones genéricas sin descalificar patrones familiares cuando resuelven la tarea.
+* Prominencia y facilidad de adquisición de acciones (*Fitts*): evaluación del target interactivo completo, clearance y proximidad al contexto de decisión sin requerir precisión innecesaria de puntero ni imponer ubicaciones físicas universales.
+* Reducción de competencia de decisiones (*Hick*): priorización por frecuencia, consecuencia e intención del usuario sin preasignar destinos rígidos ni ocultar operaciones habituales.
+* Suite de evaluación ampliada y verificada: 14 escenarios de decisión en `evals/evals.json` que validan descarte de cards innecesarias, mitigación de toolbars sobrecargadas, resolución de acciones difíciles de adquirir y jerarquización de dashboards con KPIs competitivos.
+
+### Técnico
+* Jerarquía tipográfica por roles intencionales: sustitución de micro-ajustes arbitrarios (`font-weight`, ligeros incrementos de tamaño) por contrastes estructurales de posición, escala y peso según el rol funcional del texto.
+* Spacing como relación conceptual: aplicación de la regla `distancia interna < distancia entre grupos < distancia entre secciones` evitando el *pixel nudging* arbitrario.
+* Criterios estrictos de build-vs-buy para componentes complejos: directrices para adoptar librerías mantenidas en visualizaciones de datos avanzadas (con ejes, escalas y tooltips dinámicos), tablas con ordenamiento/paginación y primitivas accesibles (combobox, modales, portales), delimitando el alcance para prohibir rediseños o migraciones transversales no autorizadas.
+* Versión de la skill incrementada a `0.2.0` (MINOR).
 
 ## [engineering-workflow-v2.0.0] - 2026-09-18
 
