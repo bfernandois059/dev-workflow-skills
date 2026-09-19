@@ -4,6 +4,43 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+## [design-directions-v0.2.0] - 2026-09-19
+
+### Producto
+
+* **Dirección como hipótesis coherente.** Una dirección no es una colección de decisiones
+  interesantes: las decisiones dentro de una dirección deben reforzarse entre sí.
+  Coherence test antes de entregar.
+* **Exploración sobre tensiones reales.** Identificar la tensión del problema antes de elegir
+  ejes de divergencia. No convertir tensiones en binaries rígidos: una tercera respuesta es
+  legítima si representa otra hipótesis real.
+* **Familiaridad vs diferenciación.** Familiar interaction patterns and distinctive composition
+  can coexist. Distinctiveness without a benefit is decoration. La dirección decide dónde
+  conservar convenciones y dónde diferenciarse con razón.
+* **Consecuencias perceptibles.** Una buena dirección cambia cómo se entiende, recorre, compara
+  o usa la interfaz, no solo cómo se ve.
+* **Set diversity test.** Validar que el conjunto de direcciones expone decisiones realmente
+  distintas, no tratamientos de una misma estrategia.
+* **Prevención de dirección Frankenstein.** Evitar propuestas incoherentes que cambian
+  demasiadas variables sin tesis común.
+* **Test de supervivencia.** Detectar direcciones cuyo valor depende de una maqueta idealizada.
+  Dependencias declaradas como trade-offs, no como suposiciones invisibles.
+* **Recomendación según problema.** No recomendar la más espectacular ni crear rankings
+  artificiales. El trade-off explicado vale más que un score.
+* **Handoff de invariantes.** Handoff the intent, not the implementation. Resumir qué domina,
+  qué aparece primero, qué densidad busca y qué trade-off no debe perderse.
+
+### Técnico
+
+* `SKILL.md`: 8 inserciones quirúrgicas sin reestructurar (coherencia, consecuencias,
+  familiaridad, set diversity, supervivencia, workflow con tensiones, handoff, recomendación).
+* `references/direction-criteria.md`: 7 secciones nuevas + 3 fortalecidas (tensiones reales,
+  coherencia interna, consecuencias, familiaridad, diversidad del set, supervivencia, handoff,
+  referencias transferibles, igualdad de evidencia, recomendación sin espectacularidad).
+* `evals/evals.json`: 12 → 14 evals (eval 13: originalidad vs familiaridad; eval 14: dirección
+  Frankenstein).
+* `VERSION`: `0.1.0` → `0.2.0`.
+
 ### Integración del sistema de skills
 
 Primera pasada de integración del repositorio **como un solo sistema**, no como doce carpetas
