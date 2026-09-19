@@ -15,6 +15,10 @@ qué decisión cambia · qué problema podría resolver · qué señales indican
 **Índice**
 
 - [Ejes de divergencia](#ejes-de-divergencia)
+- [Tensiones reales](#tensiones-reales)
+- [Coherencia interna de una dirección](#coherencia-interna-de-una-dirección)
+- [Consecuencias perceptibles](#consecuencias-perceptibles)
+- [Familiaridad vs diferenciación](#familiaridad-vs-diferenciación)
 - [Jerarquía](#jerarquía)
 - [Composición](#composición)
 - [Narrativa y secuencia](#narrativa-y-secuencia)
@@ -35,9 +39,12 @@ qué decisión cambia · qué problema podría resolver · qué señales indican
 - [Activos y fotografía](#activos-y-fotografía)
 - [Motion e interacción](#motion-e-interacción)
 - [Comparación de alternativas](#comparación-de-alternativas)
+- [Diversidad del set de direcciones](#diversidad-del-set-de-direcciones)
+- [Supervivencia de la dirección](#supervivencia-de-la-dirección)
 - [Señales de falsa diversidad](#señales-de-falsa-diversidad)
 - [Evaluación de trade-offs](#evaluación-de-trade-offs)
 - [Criterios de recomendación](#criterios-de-recomendación)
+- [Handoff de dirección aprobada](#handoff-de-dirección-aprobada)
 
 ---
 
@@ -64,6 +71,158 @@ color.
 **Un eje útil no es cualquier eje distinto.** Cambiar la navegación de una landing de una sección
 es una diferencia técnica sin consecuencia perceptible. El eje tiene que mover algo que el usuario
 note al usar la interfaz.
+
+---
+
+## Tensiones reales
+
+Antes de elegir ejes de divergencia, identificar **qué tensión real existe en el problema**. No
+elegir ejes solo porque producen interfaces visualmente distintas.
+
+Ejemplos de tensiones que pueden estar presentes:
+
+```text
+explicar ↔ demostrar
+visión general ↔ acción inmediata
+explorar ↔ decidir
+densidad ↔ foco
+contenido ↔ producto
+familiaridad ↔ diferenciación
+comparación simultánea ↔ disclosure progresivo
+```
+
+Estas no son dicotomías universales ni una lista para recorrer. Son ejemplos de tensiones que
+pueden existir en un problema concreto. Si el usuario necesita comparar 100 registros, explorar
+`minimalista ↔ expresiva` probablemente aporta poco; explorar `visión global ↔ task-first` puede
+cambiar realmente cómo se trabaja.
+
+> **Divergence should happen where the product actually has a meaningful choice.**
+
+### No forzar binaries
+
+Una tensión no significa que existan únicamente dos extremos. Por ejemplo, `evidence-first`,
+`product-first` y `narrative` pueden ser respuestas distintas a *¿qué debe convencer primero?*.
+No forzar siempre A = extremo izquierdo, B = extremo derecho. Una tercera dirección es legítima
+si representa otra hipótesis real.
+
+> **Use tensions to expose the decision space, not to force artificial binaries.**
+
+---
+
+## Coherencia interna de una dirección
+
+> **Una dirección es una hipótesis coherente sobre cómo la interfaz prioriza, comunica o permite
+> operar.**
+
+No basta con que una propuesta contenga varias decisiones diferentes de la alternativa B. Las
+decisiones **dentro de una misma dirección deben reforzarse entre sí**.
+
+**Ejemplo incoherente:**
+
+```text
+Hero editorial muy narrativo
++ dashboard ultra denso
++ navegación de discovery
++ CTA agresivo de conversión
++ fotografía cinematográfica
+```
+
+Cada recurso parece interesante, pero no forman una tesis: la narrativa editorial pide lectura
+guiada mientras el dashboard pide escaneo rápido; el discovery pide recorrido abierto mientras el
+CTA pide conversión inmediata. Son recursos de distintas direcciones mezclados en una sola.
+
+**La pregunta:** ¿estas decisiones forman una misma tesis o estamos mezclando recursos de
+distintas direcciones?
+
+### Coherence test
+
+Antes de entregar una dirección:
+
+> Si describo su tesis en una frase, ¿puedo explicar por qué composición, jerarquía, densidad,
+> media e interacción apoyan esa tesis?
+
+No todas las dimensiones deben cambiar. Pero las que cambien no deberían contradecirse sin una
+razón concreta.
+
+**Ejemplo coherente:** una dirección task-first reduce overview para priorizar la acción
+frecuente, usa densidad alta para minimizar navegación y disclosure solo cuando interrumpiría la
+tarea. Composición, densidad e interacción apuntan al mismo lugar.
+
+---
+
+## Consecuencias perceptibles
+
+> **Una buena dirección produce una consecuencia perceptible sobre cómo se entiende, recorre,
+> compara o usa la interfaz.**
+
+**Cambio real — evidence-first:**
+
+```text
+la prueba aparece antes que la explicación
+→ la credibilidad se establece primero
+→ exige casos y assets reales
+```
+
+**Cambio real — task-first:**
+
+```text
+la acción frecuente domina
+→ menos navegación
+→ menos overview simultáneo
+```
+
+**No dirección:**
+
+```text
+tipografía serif + radius 0 + fondo beige
+```
+
+…si el orden, jerarquía, interacción y tarea siguen iguales. Eso es un tratamiento, no una
+dirección.
+
+---
+
+## Familiaridad vs diferenciación
+
+La familiaridad reduce esfuerzo cuando el usuario necesita:
+
+- operar rápido;
+- reconocer patrones;
+- usar controles conocidos;
+- repetir tareas;
+- tomar decisiones sin aprender una interfaz nueva.
+
+La diferenciación aporta valor cuando ayuda a:
+
+- posicionar;
+- establecer carácter;
+- jerarquizar contenido único;
+- demostrar una propuesta difícil de expresar con una solución indiferenciada.
+
+> **Familiar interaction patterns and distinctive composition can coexist.**
+
+No asumir `más original = mejor dirección` ni `más familiar = siempre más usable`. La dirección
+debe decidir **dónde conviene conservar convenciones y dónde existe valor real en diferenciarse**.
+
+Un CRM puede conservar tabla, filtros y acciones familiares, pero diferenciarse en jerarquía,
+overview, master/detail y presentación de contexto. No hace falta reinventar el checkbox para
+evitar que el producto se vea genérico.
+
+### La diferenciación debe ganarse
+
+Antes de proponer una ruptura de convención:
+
+> ¿Qué gana el producto con esta diferencia que no obtendría usando el patrón familiar?
+
+Respuestas válidas pueden incluir: comprensión, prioridad, velocidad, comparación, credibilidad,
+carácter, percepción de escala, diferenciación comercial, mejor aprovechamiento de evidencia
+real.
+
+No válida: *«se ve más original»*.
+
+> **Distinctiveness without a benefit is decoration.**
+
+No prohibir exploración ambiciosa. Exigir razón.
 
 ---
 
@@ -367,6 +526,11 @@ por cómo se opera.
 **Cómo usarlas.** Nombra la decisión, no la marca: *"de esta referencia interesa que la evidencia
 ocupe el primer scroll"* es utilizable; *"hagamos algo como Stripe"* no.
 
+**Extraer decisiones transferibles.** ¿Qué funcionaría todavía si quitamos la marca de la
+referencia? Buscar: jerarquía, relación media/contenido, secuencia, densidad, patrón de
+navegación, forma de demostrar, forma de comparar. Evitar copiar colores, efectos, iconografía o
+composición exacta sin entender la razón.
+
 **Riesgo.** Mezclar principios incompatibles de tres referencias produce una interfaz sin criterio
 propio; copiar la apariencia sin la estructura produce una imitación que no funciona con este
 contenido.
@@ -424,6 +588,95 @@ Y explicita **qué cambia** en cada una en términos de decisión, no de acabado
 se ve mejor porque está más terminada, la comparación no mide direcciones: mide esfuerzo de
 presentación.
 
+### Igualdad de evidencia
+
+No favorecer una dirección mediante copy más persuasivo, mejor fotografía, más ejemplos, datos
+más favorables, mockup más trabajado ni estado ideal frente a estado normal en otra. Cuando una
+dirección **necesite** un asset distinto para existir, declararlo: no fingir que ambas parten de
+iguales recursos.
+
+---
+
+## Diversidad del set de direcciones
+
+Antes de entregar múltiples direcciones, revisar el conjunto completo. No basta con que cada una
+pase individualmente la prueba estructural.
+
+> **Can I explain why choosing A instead of B changes a meaningful product/design decision?**
+
+**Ejemplo de falso set:**
+
+```text
+A: evidence-first con hero asimétrico
+B: evidence-first con hero centrado
+C: evidence-first con video
+```
+
+Representan **una misma dirección estratégica** con tres tratamientos.
+
+**Ejemplo de set real:**
+
+```text
+A: evidence-first
+B: product-first
+C: narrative/trust-first
+```
+
+Pueden constituir hipótesis diferentes si realmente cambian qué domina, secuencia, información
+prioritaria, dependencia de activos y forma de convencer.
+
+### Evitar la diversidad Frankenstein
+
+El error inverso: crear propuestas distintas cambiando simultáneamente contenido, features,
+audiencia, navegación, assets, densidad y datos hasta volver imposible saber **qué decisión se
+está comparando**.
+
+Las direcciones pueden diferir en más de un eje cuando esos cambios forman una misma tesis. Pero
+deben seguir siendo comparables.
+
+> **Enough divergence to expose the decision; enough control to understand the trade-off.**
+
+---
+
+## Supervivencia de la dirección
+
+Una dirección no debería funcionar solo con copy perfecto, fotografía ideal, datos cortos, cuatro
+registros o viewport de maqueta.
+
+> **¿La tesis de esta dirección sobrevive cuando entra el contenido real?**
+
+Considerar cuando corresponda:
+
+- textos más largos de lo mostrado;
+- datos reales en lugar de datos ideales;
+- ausencia de fotografía si el proyecto no la produce;
+- más registros de los que caben en la maqueta;
+- estados normales, no solo el estado perfecto;
+- estados sin evidencia cuando la dirección depende de ella;
+- contenido que cambia con el tiempo.
+
+No convertir esto en QA responsive ni spec de producción. La idea es detectar direcciones cuyo
+valor depende exclusivamente de una maqueta idealizada. Si la tesis solo funciona con cuatro
+fotos espectaculares, esa dependencia se declara.
+
+### Dependencias como trade-offs
+
+Una dirección puede requerir mejores fotografías, casos reales, nuevos assets, contenido
+editorial, atributos comparables o datos históricos. Eso no la vuelve automáticamente incorrecta.
+Pero la recomendación debe distinguir:
+
+```text
+funciona con lo disponible hoy
+```
+
+vs.
+
+```text
+funciona si el proyecto produce X
+```
+
+> **Dependencies are trade-offs, not invisible assumptions.**
+
 ---
 
 ## Señales de falsa diversidad
@@ -476,7 +729,43 @@ Cuando hay información suficiente, se recomienda. En orden:
 
 La recomendación dice qué se elige, por qué, y **qué se acepta perder** frente a las otras.
 
+### No recomendar por espectacularidad
+
+No recomendar automáticamente la más distinta, la más ambiciosa, la más fácil, la más moderna ni
+la más visual. **La recomendación responde al problema.** El trade-off explicado vale más que un
+ranking numérico artificial. No crear scores ponderados ni convertir la elección en
+`A 8.4 / B 7.9 / C 8.7`.
+
+### Recomendación condicionada sin evasión
+
 Cuando falta una decisión de producto o de negocio que no corresponde tomar aquí, la salida es una
 recomendación condicionada —*"si el objetivo es X, A; si es Y, B"*— con la decisión pendiente
 nombrada explícitamente. No es lo mismo que *"depende de ustedes"*: la condición se identifica y
 cada rama queda resuelta.
+
+Pero no fabricar condiciones innecesarias solo para evitar elegir. Si existe información
+suficiente, recomendar.
+
+---
+
+## Handoff de dirección aprobada
+
+Cuando una dirección se aprueba, resumir únicamente sus **invariantes de dirección**:
+
+```text
+qué domina
+qué aparece primero
+cómo se agrupa
+qué densidad busca
+qué rol tiene la imagen
+qué comportamiento define la navegación
+qué trade-off aceptado no debe perderse
+```
+
+> **Handoff the intent, not the implementation.**
+
+No convertir el handoff en spec de componentes, tokens, CSS, breakpoints detallados ni API. Así
+`interface-craft` puede diseñar sin diluir la tesis ni quedar amarrada a una maqueta prematura.
+
+Si algo de la dirección aprobada debería convertirse en regla del proyecto, derivar a
+`visual-foundation`. No escribir `docs/ui-system.md` desde aquí.
