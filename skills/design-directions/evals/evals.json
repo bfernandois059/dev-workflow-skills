@@ -72,6 +72,18 @@
       "prompt": "Aquí están las tres direcciones. ¿Cuál eliges?",
       "expected_output": "No responde automáticamente «depende de ustedes». Ejerce criterio usando problema, usuario, contenido, activos reales y restricciones, elige una y explica por qué, nombrando qué se acepta perder frente a las otras. Si falta una decisión de producto o de negocio que no le corresponde tomar, formula una recomendación condicionada —«si el objetivo es captación, B; si es demostrar profundidad técnica, A»— identificando explícitamente esa decisión pendiente, en vez de fingir una certeza que la información no permite.",
       "files": []
+    },
+    {
+      "id": 13,
+      "prompt": "Quiero dos direcciones: una segura y familiar y otra totalmente original. La original debería ser mejor porque quiero diferenciarnos.",
+      "expected_output": "No acepta que originalidad sea sinónimo de calidad. Identifica dónde la familiaridad reduce esfuerzo —operar rápido, reconocer patrones, repetir tareas— y dónde diferenciación aporta valor —posicionar, jerarquizar contenido único, demostrar una propuesta difícil de expresar con lo convencional—. Puede mantener patrones de interacción familiares dentro de una composición distintiva. Exige un beneficio concreto para cualquier ruptura de convención: «se ve más original» no es razón suficiente. Ambas direcciones siguen resolviendo el mismo problema y alcance. Recomienda según contexto —tarea, usuario, contenido, identidad—, no según grado de novedad.",
+      "files": []
+    },
+    {
+      "id": 14,
+      "prompt": "Opción A es editorial, con hero fotográfico, navegación de discovery, dashboard muy denso y wizard paso a paso. Me gusta porque tiene muchas ideas distintas.",
+      "expected_output": "No confunde cantidad de recursos con coherencia. Exige una tesis única que conecte las decisiones: la narrativa editorial pide lectura guiada mientras el dashboard pide escaneo rápido, el discovery pide recorrido abierto mientras el wizard impone pasos. Revisa si composición, jerarquía, densidad, navegación e interacción se refuerzan o se contradicen. Conserva solo decisiones que formen una hipótesis coherente y separa otras ideas como posibles direcciones distintas si representan decisiones reales. No construye una propuesta «creativa» acumulando recursos de distintas direcciones.",
+      "files": []
     }
   ]
 }
