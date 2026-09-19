@@ -38,8 +38,10 @@ cuál es la acción principal, qué es contexto, qué es metadata y qué puede e
 
 > **El tratamiento distintivo es un recurso escaso** (*distinctive treatment is a scarce resource*).
 > El elemento diferente llama la atención solo cuando la mayoría no intenta llamar la atención al mismo
-> tiempo. Si cinco elementos rompen simultáneamente el patrón con acentos, badges o fondos especiales,
-> ninguno es excepcional.
+> tiempo. Si todos los elementos rompen simultáneamente el patrón con acentos, badges o fondos especiales,
+> ninguno es excepcional. El tratamiento distintivo se reserva para lo que realmente requiere atención
+> o acción prioritaria, sin que esto signifique limitar artificialmente a exactamente uno: pueden existir
+> dos alertas críticas o ninguna si el estado es nominal.
 
 > **Semejanza: elementos visualmente iguales se perciben como equivalentes.** Acciones con distinta
 > prioridad no deben parecer idénticas; controles con el mismo comportamiento deben mantener tratamiento
@@ -58,8 +60,8 @@ cuál es la acción principal, qué es contexto, qué es metadata y qué puede e
 4. **Quitar el color.** En escala de grises, ¿sigue habiendo orden? Si la jerarquía desaparece,
    estaba sostenida solo por color.
 5. **Énfasis reservado (Von Restorff).** Antes de usar color de acento, tamaño excepcional, badge,
-   borde destacado, sombra o icono llamativo, pregunta: *¿qué elemento merece realmente romper el
-   patrón?* Si todos los KPI o cards están destacados, reduce los secundarios a un tratamiento más silencioso.
+   borde destacado, sombra o icono llamativo, pregunta: *¿qué elementos merecen realmente romper el
+   patrón?* Si múltiples KPI o cards compiten sin justificación, reduce los secundarios a un tratamiento más silencioso.
 6. **Prueba de semejanza.** Si intercambio dos elementos visualmente iguales, ¿seguiría entendiendo cuál
    es primario, interactivo, destructivo o meramente informativo? Si no, el tratamiento está ocultando
    diferencias funcionales relevantes.
@@ -105,7 +107,9 @@ el título de la página más grande que el contenido que importa.
 
 1. **Prueba de genericidad (*Genericity test*).** Si reemplazo el contenido por el de otro producto
    completamente distinto, ¿esta composición seguiría funcionando prácticamente igual? Si la respuesta
-   es sí, comprueba si estás respondiendo a esta tarea o rellenando una plantilla mental automática.
+   es sí, comprueba qué decisiones de la estructura responden específicamente al contenido, a la tarea
+   o al producto actual. Que un patrón sea reutilizable (master/detail, formulario con acciones, tabla con filtros)
+   no lo hace genérico; el problema surge cuando ninguna decisión relevante responde al caso concreto.
    *Los patrones familiares son útiles; la composición genérica no es familiaridad.*
 2. **Contenido dominante.** ¿Hay un elemento que merece dominar —una tabla, un gráfico, una
    imagen, un formulario? Si lo hay y está compitiendo en una grilla de iguales, la composición no
@@ -278,14 +282,15 @@ listado; imagen que carga después y desplaza el contenido.
 > verse importante, debe ser **fácil de alcanzar y activar**. Considera en conjunto: tamaño del target,
 > espacio alrededor (clearance), ubicación en el flujo de la tarea, frecuencia de uso, consecuencia y
 > dispositivo. Destacar un botón con color de acento no compensa que su target mida 20 px, que el área
-> interactiva se limite al texto visible o que esté ubicado lejos de donde concluye el formulario.
+> interactiva se limite al texto visible o que esté ubicado desconectado del punto natural de decisión o
+> confirmación de la tarea (considerando el layout, acciones sticky o convenciones del producto).
 
 > **Demasiadas opciones simultáneas con igual peso aumentan el esfuerzo de decisión** (*too many
 > simultaneous choices with equal weight increase decision effort*). Cuando múltiples acciones compiten al
-> mismo nivel, organiza mediante priorización, agrupación, progressive disclosure, defaults inteligentes y
-> menús secundarios. **Reducir competencia no significa esconder lo frecuente**: una toolbar con
-> `Guardar · Exportar · Duplicar · Archivar · Eliminar · Imprimir · Compartir` no necesita siete botones de
-> peso primario, pero tampoco se resuelve ocultando `Guardar` o `Exportar` dentro de un menú para que la
+> mismo nivel, evalúa su frecuencia, consecuencia y contexto para organizarlas mediante priorización,
+> agrupación, progressive disclosure, defaults inteligentes o menús secundarios. **Reducir competencia no
+> significa esconder lo frecuente**: en una barra con varias opciones no todas necesitan botones de peso
+> primario, pero tampoco se resuelve ocultando operaciones habituales dentro de un menú solo para que la
 > interfaz parezca minimalista.
 
 **Pruebas**
@@ -293,8 +298,8 @@ listado; imagen que carga después y desplaza el contenido.
 1. **Una acción principal por vista.** Nómbrala. Si hay tres candidatas con el mismo peso, no hay
    ninguna. Reserva el énfasis principal para el objetivo central del flujo.
 2. **Facilidad de adquisición (Fitts).** ¿La acción principal y las frecuentes tienen un target generoso,
-   con área clickeable en todo el elemento y no solo en el texto? ¿Están ubicadas de forma natural donde
-   la persona termina su recorrido visual o de datos?
+   con área clickeable en todo el elemento y no solo en el texto? ¿Están ubicadas cerca del punto donde se
+   completa o confirma la tarea, según el layout, acciones sticky o contexto del producto?
 3. **Competencia entre opciones (Hick).** Si una barra o bloque acumula muchas opciones, ¿las acciones
    frecuentes están accesibles de inmediato mientras las excepcionales se agrupan en un menú secundario?
    ¿Las destructivas están separadas en apariencia y espacio de las seguras?
@@ -303,11 +308,11 @@ listado; imagen que carga después y desplaza el contenido.
 5. **Ubicación previsible y etiqueta de resultado.** La acción vive donde ya vive en el producto y su
    etiqueta dice con precisión qué ocurrirá: "Guardar cambios" sobre "Aceptar", "Eliminar cuenta" sobre "Continuar".
 
-**Señales de falla**: barra de herramientas con 6-8 botones del mismo peso visual compitiendo entre sí;
-operaciones frecuentes escondidas bajo menús colapsados para forzar un diseño minimalista; botón principal
-con target pequeño o clickeable solo en el texto y ubicado lejos del final de la tarea; acción secundaria
-pegada físicamente a una destructiva sin espacio de protección; acciones destructivas con el tratamiento
-más vistoso o indistinguible de las ordinarias.
+**Señales de falla**: barra de herramientas con 6-8 botones del mismo peso visual compitiendo entre sí sin
+jerarquía de uso; operaciones frecuentes escondidas bajo menús colapsados para forzar un diseño minimalista;
+botón principal con target pequeño o clickeable solo en el texto y ubicado lejos del punto de decisión;
+acción secundaria pegada físicamente a una destructiva sin espacio de protección; acciones destructivas con
+el tratamiento más vistoso o indistinguible de las ordinarias.
 
 ---
 
