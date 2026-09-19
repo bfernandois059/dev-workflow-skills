@@ -60,6 +60,30 @@
       "prompt": "Revisa esto antes de mostrárselo al cliente.",
       "expected_output": "Si solo hay dos desviaciones materiales, reporta dos: no completa una cuota de hallazgos ni infla el informe para demostrar exhaustividad. Incluye qué conviene mantener y declara contra qué referencia juzgó. No entrega scores numéricos por área salvo que se los pidan, y no convierte una revisión de pre-entrega en una auditoría completa.",
       "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "Compara estas dos capturas. Una es 1440px y otra 1280px; veo containers distintos.",
+      "expected_output": "No declara inconsistencia automáticamente: normaliza las condiciones de visualización y reconoce que la diferencia de container puede responder a la adaptación fluida prevista o al cambio de breakpoint entre ambos viewports. Compara las relaciones internas que siguen siendo válidas (jerarquía, proporciones, roles tipográficos, tratamiento de acciones) y marca lo que no pueda comprobarse inequívocamente bajo No verificado sin bloquear la revisión.",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "Cuatro pantallas usan H1 44px, una usa 40px. ui-system.md dice 40px y el mockup aprobado también.",
+      "expected_output": "Aplica el principio de que la frecuencia es evidencia y no autoridad: la mayoría numérica no prevalece sobre la referencia aprobada ni sobre ui-system.md. No declara que la quinta pantalla sea el defecto por estar en minoría; concluye que las cuatro pantallas en 44px son las que presentan deriva respecto a las fuentes superiores y recomienda corregir la divergencia hacia 40px mediante interface-craft o component-architecture.",
+      "files": []
+    },
+    {
+      "id": 13,
+      "prompt": "Dos grupos usan exactamente gap-6, pero en uno el título parece más relacionado con el bloque siguiente que con su contenido.",
+      "expected_output": "Reconoce que la igualdad de tokens no garantiza consistencia perceptual: una diferencia numérica importa cuando crea o rompe una relación visible. Identifica que la distancia entre el título y su contenido frente a la distancia hacia el bloque siguiente produce una agrupación cruzada en pantalla (por márgenes, line-height o estructura del bloque), y reporta el defecto por la relación perceptual rota en lugar de limitarse a validar mecánicamente el valor CSS.",
+      "files": []
+    },
+    {
+      "id": 14,
+      "prompt": "El modal tiene radius mayor y más sombra que las cards del dashboard. ¿Lo normalizamos todo?",
+      "expected_output": "No exige igualdad automática de propiedades aisladas entre componentes: la consistencia visual es de rol e intención, no igualdad matemática universal. Comprueba que el modal y las cards de lista cumplen roles y planos de elevación funcionalmente distintos en el sistema (capa de diálogo superpuesta vs contenedor en plano base). Solo reporta deriva si el sistema o ui-system.md prescribe explícitamente que deben compartir tratamiento, advirtiendo que forzar igualdad indiscriminada empobrecería la jerarquía espacial.",
+      "files": []
     }
   ]
 }
