@@ -205,7 +205,7 @@ Antes de implementar o comprometer una composición, aplica la **prueba de gener
 
 > **Si reemplazo el contenido por el de otro producto completamente distinto, ¿esta composición seguiría funcionando prácticamente igual?**
 
-Si la respuesta es sí, la estructura casi con seguridad proviene de una plantilla mental automática y no del contenido actual. Pregúntate: *¿estoy usando esta estructura porque responde a esta tarea o porque es el patrón más fácil de generar?*
+Si la respuesta es sí, comprueba qué parte de la estructura está justificada por el contenido, la tarea o el producto actual. Que un patrón sea reutilizable no lo vuelve incorrecto; el problema aparece cuando ninguna decisión relevante responde al caso concreto. Pregúntate: *¿estoy usando esta estructura porque responde a esta tarea o porque es el patrón más fácil de generar?*
 
 Combinaciones que delatan la fórmula cuando aparecen **sin justificación**: todo dentro de
 tarjetas; tarjetas dentro de tarjetas; radius excesivo; sombras decorativas constantes; gradientes
