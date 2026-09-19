@@ -45,6 +45,31 @@ todos**: se abre la sección del defecto que ya observaste.
 
 ---
 
+## Principios rectores
+
+1. **Consistencia de intención y rol antes que igualdad mecánica:**
+   > *Visual consistency is consistency of intent and role, not mechanical equality of values.*
+   Consistencia no significa forzar el mismo valor numérico o token en todos los componentes. Mismo rol visual exige misma lógica de tratamiento; roles distintos pueden y deben resolverse de formas diferentes.
+
+2. **Relaciones antes que mediciones:**
+   > *Review relationships before measurements.*
+   > *A numerical difference matters when it creates, hides or contradicts a perceptual relationship.*
+   Una discrepancia en píxeles o tokens importa si altera lo que el ojo percibe (dominancia, agrupación, separación). Dos elementos con tokens idénticos son inconsistentes si la relación perceptual se quiebra en pantalla.
+
+3. **Intención visual antes que pixel perfect:**
+   > *Preserve visual intent before chasing pixel equality.*
+   Al contrastar con un mockup o captura aprobada, el objetivo es verificar si la decisión de diseño que hacía funcionar la referencia sobrevivió en el navegador, no imponer una réplica matemática rígida insensible a la web.
+
+4. **Alineación óptica sobre igualdad matemática:**
+   > *If mathematically aligned looks visually misaligned, the rendered result wins.*
+   El render percibido manda sobre las coordenadas y el box-model. Nunca fuerces una alineación matemática que descompense ópticamente la interfaz.
+
+5. **Frecuencia como evidencia, nunca como autoridad:**
+   > *Frequency is evidence, not authority.*
+   La repetición mayoritaria de un patrón entre varias pantallas es un indicio valioso para detectar anomalías, pero la precedencia de fuentes superiores (referencia aprobada, `ui-system.md`) prevalece siempre sobre la mayoría.
+
+---
+
 ## Cuándo usar esta skill
 
 - Alguien mira una pantalla y dice **"algo se ve raro"** sin poder nombrarlo.
@@ -117,16 +142,19 @@ Cuando dos fuentes se contradicen, manda la de arriba:
 5. **Documentación funcional** necesaria para entender la pantalla.
 6. **La implementación actual.**
 
-Es la misma precedencia de `visual-foundation` e `interface-craft`, y aquí tiene una consecuencia
-propia:
+Es la misma precedencia de `visual-foundation` e `interface-craft`, y aquí tiene dos consecuencias
+críticas:
 
 > Una **referencia aprobada más reciente puede superseder `ui-system.md`**. Si el mockup aprobado
 > ayer contradice la foundation, **la implementación no está incumpliendo**: la foundation quedó
-> atrás.
+> atrás. Declara la discrepancia —qué dice el sistema, qué dice la referencia, cuál aplicó la
+> implementación— y **recomienda actualizar la foundation con `visual-foundation`**.
 
-Cuando ocurra: no acuses a la pantalla de violar una regla obsoleta. **Declara la discrepancia**
-—qué dice el sistema, qué dice la referencia, cuál aplicó la implementación— y **recomienda
-actualizar la foundation con `visual-foundation`**.
+> **La frecuencia es evidencia, nunca autoridad (*Frequency is evidence, not authority*).**
+> Si cuatro pantallas aplican un tratamiento divergente y una quinta se apega al diseño aprobado
+> o a `ui-system.md`, no concluyas que la quinta es un outlier erróneo por ser minoría: las cuatro
+> son las desviadas. La mayoría ayuda a detectar anomalías cuando no existe una fuente superior,
+> pero la precedencia de fuentes siempre manda.
 
 > El código existente es **evidencia de cómo está construido el producto, no prueba de que esa
 > decisión visual sea correcta.** Nunca gana solo por existir.
@@ -147,6 +175,44 @@ revisarla.
 Pide contexto solo cuando su ausencia **impida realmente juzgar una decisión concreta** —y pide
 ese dato, no una entrevista. "¿Este panel es para uso diario o para un visitante ocasional?" es
 legítimo. Un cuestionario de intake, no.
+
+---
+
+## Relaciones perceptuales antes que diferencias numéricas
+
+Cuando algo "se ve raro", la revisión debe interrogar primero las **relaciones perceptuales**:
+- ¿Qué domina la vista y qué pasa a segundo plano?
+- ¿Qué elementos pertenecen juntos y cuáles están visualmente separados?
+- ¿Qué elementos parecen equivalentes y cuáles rompen el patrón?
+- ¿Qué controles parecen interactivos frente a contenido puramente informativo?
+- ¿Qué elementos compiten entre sí con el mismo peso visual?
+
+> *A numerical difference matters when it creates, hides or contradicts a perceptual relationship.*
+
+Una diferencia de píxeles o valores numéricos (ej. dos cards con padding de 23px y 24px) casi nunca representa un problema visible por sí misma. En cambio:
+- un label separado de su valor a la misma distancia que lo separa del grupo siguiente;
+- una acción secundaria con el mismo peso y apariencia que la acción primaria;
+- metadata tipográfica con el mismo protagonismo que el dato central;
+
+sí constituyen inconsistencias perceptuales graves, aun cuando cada valor utilice un token válido del sistema.
+
+Asimismo, **la alineación óptica manda sobre la matemática (*If mathematically aligned looks visually misaligned, the rendered result wins*)**: iconos con formas asimétricas o texto en mayúsculas pueden exigir compensación visual para verse alineados. Nunca inventes un problema de alineación desde el código sin verificar el render.
+
+---
+
+## Lentes perceptuales y límites estrictos
+
+Utiliza únicamente principios perceptuales que ayuden a evaluar relaciones concretas en pantalla:
+- **Proximidad:** los elementos cercanos se perciben como grupo o unidad conceptual.
+- **Semejanza:** elementos visualmente equivalentes despiertan la expectativa de cumplir el mismo rol.
+- **Región común:** bordes, fondos o contenedores delimitan un espacio funcional compartido.
+- **Énfasis perceptual:** el tratamiento distintivo (color, escala, contraste) guía el orden de atención.
+
+**Límites estrictos de la skill:**
+- **No importar Laws of UX como checklist o doctrina:** No evaluar aquí leyes de interacción o arquitectura cognitiva como Hick, Fitts, Tesler, memoria de trabajo, journeys, funnels ni modelos mentales (pertenecen a `interface-craft` o `ux-audit`).
+- **Describir el defecto observado, nunca recitar teoría:** Los nombres conceptuales pueden apoyar el criterio interno, pero la salida al usuario describe el hecho visual concreto.
+  - *Evitar:* `Ley de proximidad: incumplida. Von Restorff: fallido.`
+  - *Correcto:* `El label está más cerca del bloque siguiente que de su propio valor, por lo que la agrupación se lee cruzada.`
 
 ---
 
@@ -183,6 +249,76 @@ mejora la percepción al corregirlos**, no cuán fácil es de detectar.
 - Incluye siempre **qué conviene mantener**. Una revisión que solo enumera defectos invita a
   romper lo que ya funcionaba.
 
+### Proximidad vs superficies
+
+Al revisar un bloque o sección, pregúntate:
+> ¿La proximidad y la alineación ya comunican suficientemente la relación entre estos elementos?
+
+Si la respuesta es sí, agregar una card, borde, sombra o fondo adicional suele introducir ruido visual, profundidad ficticia y contenedores anidados sin función. Una superficie está justificada cuando su límite físico comunica algo real:
+- una unidad interactiva autónoma;
+- un cambio de contexto funcional o elevación en la interfaz;
+- un estado seleccionado o diferenciado.
+
+No concluyas `card = defecto`. El hallazgo debe explicar con precisión qué relación queda duplicada, distorsionada o asfixiada por el contenedor innecesario.
+
+### Semejanza y consistencia por rol
+
+La semejanza visual despierta en el usuario la expectativa de que los elementos con apariencia idéntica comparten el mismo comportamiento o nivel de importancia.
+
+Preguntas clave:
+- ¿Dos elementos visualmente idénticos cumplen realmente el mismo rol?
+- ¿Dos acciones con el mismo rol cambiaron de tratamiento sin motivo aparente?
+- ¿Un elemento informativo (ej. badge o pill estática) parece botón interactivo porque comparte exactamente su forma, padding o fondo?
+
+Distingue con rigor:
+- **Deriva:** Mismo rol + tratamiento diferente sin justificación.
+- **Diferencia válida:** Roles diferentes + tratamientos diferentes (ej. un modal y una card de lista tienen diferente radio y sombra porque sus niveles de elevación y contexto en el sistema son distintos).
+- **Problema semántico visual:** Roles diferentes + tratamientos idénticos que ocultan o confunden la diferencia funcional.
+
+La revisión no debe imponer igualdad numérica forzada solo porque dos componentes tengan geometrías similares.
+
+### Énfasis como recurso escaso (sin dogmas de "solo uno")
+
+El tratamiento distintivo (colores de acento, badges llamativos, iconos de color, sombras pronunciadas) funciona como un recurso limitado: si todo compite por destacar, nada se percibe prioritario.
+
+Sin embargo, **no establezcas la regla dogmática de que "solo puede existir un elemento destacado"**. En interfaces reales pueden existir legítimamente dos alertas críticas simultáneas, tres métricas fuera de rango o ninguna acción dominante en una vista de consulta. La pregunta rectora es:
+> ¿El tratamiento distintivo coincide con aquello que realmente demanda la atención del usuario en este momento?
+
+### Normalización de condiciones de comparación
+
+Antes de declarar divergencias entre una implementación y su mockup, o entre dos capturas de pantalla, comprueba si las condiciones de visualización son razonablemente equivalentes:
+> *Normalize what can materially change the visual result before attributing the difference to inconsistency.*
+
+Comprueba y normaliza cuando aplique:
+- Viewport (ej. no reportar diferencias de grilla o container si una captura está en 1440px y la otra en 1280px);
+- Zoom y escala de densidad de píxeles (DPR);
+- Estado de la pantalla (menús desplegados, modales abiertos, tabs activas);
+- Datos reales y longitud de strings (wrapping dinámico vs textos simulados);
+- Posición de scroll;
+- Theme claro u oscuro y breakpoint resuelto.
+
+Si las condiciones no pueden normalizarse en el entorno: revisa las relaciones que sigan siendo válidas, declara los aspectos no comparables bajo `No verificado`, y **nunca bloquees la revisión completa por una discrepancia de viewport**.
+
+### Paridad visual ≠ pixel perfect: preservación de intención
+
+Cuando existe un mockup o diseño aprobado, la meta no es una réplica mecánica milimétrica insensible a las realidades del navegador:
+> *Preserve visual intent before chasing pixel equality.*
+
+- **Debe conservarse:** la jerarquía relativa, proporciones dominantes, agrupaciones perceptuales, ritmo vertical, roles tipográficos, tratamiento de acciones, intención de densidad, color por rol y estructura visual.
+- **Puede variar legítimamente:** contenido dinámico real, wrapping de texto, renderizado de tipografías entre sistemas operativos, pequeñas compensaciones ópticas del motor del navegador y adaptaciones fluidas previstas.
+
+**La prueba de intención:** no preguntes únicamente *"¿se parece?"*, sino:
+> ¿La decisión visual rectora que hacía funcionar la referencia aprobada sobrevivió en la implementación?
+
+Si un KPI dominaba por escala y posición, y en la implementación quedó aplanado en una fila de cuatro tarjetas simétricas de igual peso, hay una regresión visual grave aunque cada valor CSS esté formalmente "cerca".
+
+### Clasificación de desviaciones: local, repetida y sistémica
+
+Clasifica la inconsistencia encontrada para orientar la corrección sin crear taxonomías pesadas:
+- **Local:** Una vista o componente puntual se desvió de un patrón establecido. → Derivar a `interface-craft`.
+- **Repetida:** Varias pantallas presentan la misma discrepancia originada en un componente común. → Resolver la decisión visual y derivar consolidación a `component-architecture`.
+- **Sistémica:** Muchas pantallas contradicen `ui-system.md` de forma uniforme y deliberada. → Comprobar si existe una referencia aprobada más reciente o si la foundation quedó atrás; derivar sincronización a `visual-foundation`.
+
 ### Cuando hay varias pantallas
 
 Compara **patrones equivalentes** entre ellas: `PageHeader`, `Card`, `Panel`, `Table`,
@@ -190,9 +326,7 @@ Compara **patrones equivalentes** entre ellas: `PageHeader`, `Card`, `Panel`, `T
 diferencias sin justificación en tipografía, spacing, radius, color, layout, iconografía,
 densidad y jerarquía.
 
-Dos límites: **elementos parecidos que cumplen funciones distintas no tienen por qué ser
-idénticos**, y consistencia no significa el mismo valor en todo. Aquí se **detecta el patrón
-divergente**; la consolidación transversal es `component-architecture`.
+Recuerda: *Frequency is evidence, not authority*. Si cuatro pantallas comparten un error respecto al diseño aprobado o a `ui-system.md`, las cuatro están desviadas; la quinta pantalla no es defectuosa por estar en minoría.
 
 ### Densidad y tipo de producto
 
@@ -223,16 +357,18 @@ Señálalo cuando el problema sea **visible y relevante**. No recomiendes creati
 
 ## Dirección de corrección, sin implementar
 
-Cada hallazgo termina en una dirección lo bastante concreta para que el siguiente agente entienda
-el problema sin volver a diagnosticarlo.
+Cada hallazgo comunica con claridad:
+**Qué se ve en el render → Qué relación perceptual o de sistema se rompe → Qué dirección debe tomar la corrección.**
 
 | No sirve | Sirve |
 |---|---|
-| "Mejorar jerarquía." | "El título y el KPI principal compiten. Reduce el peso del encabezado y convierte el KPI en el ancla visual de la vista, conservando las métricas secundarias agrupadas." |
+| "Mejorar jerarquía." | "El título y el KPI principal compiten con el mismo peso. Reduce el peso del encabezado y convierte el KPI en el ancla visual de la vista, conservando las métricas secundarias agrupadas." |
+| "Cambia el grid a `grid-cols-[2fr_1fr]`, usa `gap-8` y pon el KPI en `text-4xl`." | "El gráfico y los KPI compiten como primarios. La corrección debe devolver protagonismo al dato que dispara acción y bajar las métricas contextuales a un nivel secundario." |
 
-No escribas el código de la solución y no modifiques archivos. Si el problema es estructural, la
-dirección tampoco puede ser `subir font-weight` / `aumentar padding` / `agregar shadow` /
-`cambiar radius`: eso es maquillar una composición sin resolver.
+**Límites de la dirección:**
+- **No diseñes la composición completa ni rediseñes la pantalla:** la solución compositiva pertenece a `interface-craft`.
+- **No elijas librerías, no escribas componentes y no produzcas código CSS o tokens nuevos.**
+- Si el problema es estructural, la dirección tampoco puede ser micro-ajustes cosméticos (`subir font-weight`, `aumentar 4px de padding`, `cambiar radius`): eso maquilla una composición sin resolver.
 
 Si además de revisar te piden corregir: **termina la revisión y entrégala**. La implementación es
 `interface-craft`, manteniendo el alcance original.
