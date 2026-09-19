@@ -169,6 +169,9 @@ overview/detail · forma de comparar información.
 Cambiar solo colores, radius, sombras, iconos, fotografía o tipografía **dentro del mismo layout**
 no basta. Esos cambios pueden **apoyar** una dirección; no la constituyen.
 
+> **Una buena dirección produce una consecuencia perceptible sobre cómo se entiende, recorre,
+> compara o usa la interfaz.**
+
 ### La prueba de la diferencia falsa
 
 Antes de presentar dos propuestas como direcciones distintas:
@@ -194,6 +197,28 @@ Cada dirección debe resumirse en una frase que diga **qué decisión cambia**:
 ```
 
 Los nombres pueden existir, pero `Concepto A — Modern` / `Concepto B — Premium` no explican nada.
+
+### Dirección = hipótesis coherente
+
+> **Una dirección es una hipótesis coherente sobre cómo la interfaz prioriza, comunica o permite
+> operar.**
+
+No basta con que una propuesta contenga varias decisiones diferentes de la alternativa B. Las
+decisiones **dentro de una misma dirección deben reforzarse entre sí**. Un hero editorial muy
+narrativo + un dashboard ultra denso + una navegación de discovery + un CTA agresivo de
+conversión + fotografía cinematográfica no forman una dirección: forman una colección de recursos
+sin tesis común.
+
+**Coherence test.** Antes de entregar una dirección:
+
+```text
+Si describo su tesis en una frase, ¿puedo explicar por qué
+composición, jerarquía, densidad, media e interacción apoyan esa tesis?
+```
+
+No todas las dimensiones deben cambiar. Pero las que cambien no deberían contradecirse sin una
+razón concreta. Ver
+[`Coherencia interna de una dirección`](references/direction-criteria.md#coherencia-interna-de-una-dirección).
 
 ---
 
@@ -273,6 +298,29 @@ variable e interacción progresiva **cuando el problema y la identidad lo soport
 
 Pero **la novedad no es un objetivo**. Una dirección debe ser memorable porque responde mejor al
 contenido, no porque viola convenciones arbitrariamente.
+
+---
+
+## Familiaridad vs diferenciación
+
+> **Familiar interaction patterns and distinctive composition can coexist.**
+
+No asumir que más original = mejor dirección, ni que más familiar = siempre más usable.
+
+La familiaridad reduce esfuerzo cuando el usuario necesita operar rápido, reconocer patrones,
+usar controles conocidos, repetir tareas o decidir sin aprender una interfaz nueva. La
+diferenciación aporta valor cuando ayuda a posicionar, jerarquizar contenido único o demostrar
+una propuesta difícil de expresar con una solución indiferenciada.
+
+La dirección debe decidir **dónde conviene conservar convenciones y dónde existe valor real en
+diferenciarse**. Un CRM puede conservar tabla, filtros y acciones familiares y diferenciarse en
+jerarquía, overview y presentación de contexto. No hace falta reinventar el checkbox para evitar
+que el producto se vea genérico.
+
+> **Distinctiveness without a benefit is decoration.**
+
+No prohibir exploración ambiciosa. Exigir razón. Ver
+[`Familiaridad vs diferenciación`](references/direction-criteria.md#familiaridad-vs-diferenciación).
 
 ---
 
@@ -361,6 +409,10 @@ Exige:  fotografía y proyectos reales suficientemente buenos
 **No termines con "las tres son buenas, depende de ustedes".** Cuando hay información suficiente,
 ejerce criterio: recomienda una, explica por qué y señala qué se pierde respecto de las otras.
 
+No recomendar automáticamente la más distinta, la más ambiciosa, la más fácil, la más moderna ni
+la más visual. **La recomendación responde al problema.** El trade-off explicado vale más que un
+ranking numérico artificial.
+
 Cuando falta una decisión de producto o de negocio que no te corresponde tomar, la salida correcta
 es una **recomendación condicionada**, no una certeza inventada:
 
@@ -393,6 +445,35 @@ Revisa las alternativas entre sí:
 No hace falta que cambien todas. Pero si **no cambia ninguna**, son variantes cosméticas:
 reagrúpalas y vuelve a buscar la divergencia real.
 
+### Set diversity test
+
+Además de validar cada dirección individualmente, revisa el conjunto:
+
+> **Can I explain why choosing A instead of B changes a meaningful product/design decision?**
+
+Si no, agrupa. Tres propuestas evidence-first con distinto hero siguen siendo una sola dirección
+estratégica con tratamientos.
+
+Evita también la **diversidad Frankenstein**: propuestas distintas porque cada una cambia
+contenido, features, audiencia, navegación, assets, densidad y datos simultáneamente, volviendo
+imposible saber qué decisión se está comparando.
+
+> **Enough divergence to expose the decision; enough control to understand the trade-off.**
+
+### Supervivencia de la dirección
+
+Una dirección no debería funcionar solo con copy perfecto, fotografía ideal, datos cortos o
+cuatro registros en la maqueta.
+
+> **¿La tesis de esta dirección sobrevive cuando entra el contenido real?**
+
+Considerar cuando corresponda: textos más largos, datos reales, ausencia de fotografía, más
+registros, estados normales, contenido variable. No convertir esto en QA responsive ni spec: la
+idea es detectar direcciones cuyo valor depende exclusivamente de una maqueta idealizada. Si una
+dirección tiene esa dependencia, **declararla**.
+
+> **Dependencies are trade-offs, not invisible assumptions.**
+
 ---
 
 ## Relación con `docs/ui-system.md`
@@ -415,12 +496,16 @@ Una propuesta descartada **nunca** se convierte en regla del sistema.
 entender problema y restricciones
 → identificar qué decisiones ya están cerradas
 → definir qué decisión sigue abierta
-→ identificar ejes de divergencia útiles
+→ identificar qué tensión real existe en el problema
+→ elegir ejes de divergencia que expongan esa tensión
 → construir alternativas realmente diferentes
+→ validar coherencia interna de cada dirección
 → comparar bajo condiciones equivalentes
 → explicitar trade-offs
 → recomendar
 ```
+
+> **Divergence should happen where the product actually has a meaningful choice.**
 
 Con referencias:
 
@@ -434,6 +519,13 @@ Cuando una dirección queda aprobada:
 ```text
 design-directions termina → interface-craft implementa
 ```
+
+> **Handoff the intent, not the implementation.**
+
+Resume las **invariantes de dirección** —qué domina, qué aparece primero, cómo se agrupa, qué
+densidad busca, qué rol tiene la imagen, qué trade-off aceptado no debe perderse— para que
+`interface-craft` pueda diseñar sin diluir la tesis ni quedar amarrada a una maqueta prematura.
+No convertir el handoff en spec de componentes, tokens, CSS ni breakpoints detallados.
 
 No sigas con la implementación definitiva salvo que la tarea explícitamente incluya esa fase.
 
