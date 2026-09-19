@@ -60,6 +60,30 @@
       "prompt": "Diseña desde cero la portada del sitio. No tenemos referencia, ni marca definida, ni sabemos qué estilo queremos: algo moderno y limpio.",
       "expected_output": "Primero comprueba si existe algo que sirva de referencia —ui-system.md, otra pantalla aprobada, un patrón compartido, marca con estructura definida, una captura o un mockup. Si no hay nada y las direcciones posibles son materialmente distintas, no improvisa una dirección definitiva ni la rellena con una UI genérica ('moderno y limpio' no es una dirección). Declara que la dirección visual no está resuelta, nombra en concreto qué decisión falta y deriva la exploración a design-directions. No construye tres propuestas dentro de esta skill ni abre una entrevista larga de descubrimiento.",
       "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "Tenemos un label, valor y texto de apoyo. El agente propone meterlos dentro de una card para 'agruparlos'.",
+      "expected_output": "Primero evalúa si la relación puede expresarse mediante proximidad, alineación, tipografía y espacio antes de introducir una superficie o contenedor: agrupar no implica contenedores (grouping does not imply containers). No crea una card, borde o superficie si el límite no aporta información ni función adicional (common region solo cuando el espaciado no alcanza). La card es válida únicamente si existe una razón funcional o perceptual real (separar contextos disjuntos, delimitar una unidad manipulable/interactiva o diferenciar un estado). Evita el anti-patrón de anidar cards innecesarias para envolver datos simples.",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "Guardar, Exportar, Duplicar, Compartir, Imprimir, Archivar y Eliminar aparecen en la barra de herramientas como siete botones con el mismo peso visual.",
+      "expected_output": "Reconoce que demasiadas opciones simultáneas con igual peso visual aumentan el esfuerzo de decisión (Hick). No elimina capacidades ni esconde operaciones frecuentes para fingir un diseño minimalista. Prioriza la acción principal y frecuente (Guardar con tratamiento primario), mantiene accesibles las operaciones habituales, agrupa las acciones excepcionales o contextuales en un menú secundario (Duplicar, Imprimir, Archivar), distingue visualmente y separa físicamente la acción destructiva (Eliminar) para prevenir errores, y reduce la competencia visual sin sumar fricción a la tarea.",
+      "files": []
+    },
+    {
+      "id": 13,
+      "prompt": "El botón de envío principal del formulario tiene un color de acento muy llamativo, pero el target mide apenas 24px de alto, el área clickeable se limita al texto y está ubicado arriba a la derecha, lejos de donde termina el flujo de campos.",
+      "expected_output": "Evalúa la acción con criterio conjunto de prominencia y facilidad de adquisición (Fitts): destacar un botón con color de acento no resuelve que sea difícil de alcanzar o activar. Corrige su ubicación trasladándolo al final natural del flujo del formulario donde la persona termina de rellenar los datos, amplía el área interactiva y el padding del target para que todo el botón sea clickeable con holgura (sin requerir precisión innecesaria de puntero), y asegura separación adecuada de controles secundarios o destructivos. No se limita a cambiar color o subir font-weight.",
+      "files": []
+    },
+    {
+      "id": 14,
+      "prompt": "En este dashboard, cada uno de los cuatro KPI tiene un color de acento distinto, un badge brillante, un icono decorativo y un fondo resaltado para que 'ninguno pase desapercibido'.",
+      "expected_output": "Reconoce que el tratamiento distintivo es un recurso escaso (Von Restorff): si todos los elementos intentan romper el patrón con acentos, badges y fondos especiales, se destruye la jerarquía y ninguno destaca. Reserva el tratamiento excepcional exclusivamente para la métrica crítica que realmente dispara acción inmediata o requiere atención urgente. Devuelve a los KPI secundarios y de contexto un tratamiento visual más silencioso, homogéneo y coherente, permitiendo que la información relevante resalte por contraste real y no por saturación de adornos.",
+      "files": []
     }
   ]
 }
