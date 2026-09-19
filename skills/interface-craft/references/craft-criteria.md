@@ -7,6 +7,8 @@ hacen mirando la pantalla— y las señales de falla que hay que buscar.
 > relevantes al problema que tienes delante. Esto es una guía de criterio, no una lista de
 > verificación obligatoria: una tarea de tipografía no necesita abrir la sección de tablas.
 
+Los principios de percepción e interacción incorporados en este documento son **herramientas de decisión y preguntas concretas**, nunca un checklist teórico que deba recitarse en la entrega. Su propósito es resolver la interfaz que tienes delante con criterio visual y funcional; no sustituyen a `ux-audit`, que audita funnels, abandono y recorridos transversales de usuario.
+
 Lo que ya está en [`SKILL.md`](../SKILL.md) no se repite aquí: alcance, precedencia de fuentes,
 orden de decisión, los dos modos de fallo, regla de librerías, validación visual y derivaciones.
 Este archivo entra **después** de esas decisiones, cuando ya sabes qué área tienes que resolver.
@@ -34,9 +36,18 @@ Este archivo entra **después** de esas decisiones, cuando ya sabes qué área t
 Una interfaz con jerarquía responde sin que nadie la explique: qué importa primero, qué después,
 cuál es la acción principal, qué es contexto, qué es metadata y qué puede esperar.
 
+> **El tratamiento distintivo es un recurso escaso** (*distinctive treatment is a scarce resource*).
+> El elemento diferente llama la atención solo cuando la mayoría no intenta llamar la atención al mismo
+> tiempo. Si cinco elementos rompen simultáneamente el patrón con acentos, badges o fondos especiales,
+> ninguno es excepcional.
+
+> **Semejanza: elementos visualmente iguales se perciben como equivalentes.** Acciones con distinta
+> prioridad no deben parecer idénticas; controles con el mismo comportamiento deben mantener tratamiento
+> coherente; y elementos meramente informativos no deben lucir interactivos.
+
 **Pruebas**
 
-1. **Entrecerrar los ojos.** Desenfoca la pantalla —o míralas en miniatura. Lo que sigue
+1. **Entrecerrar los ojos.** Desenfoca la pantalla —o mírala en miniatura—. Lo que sigue
    destacando es la jerarquía real. Si no destaca nada, o destaca lo secundario, ahí está el
    problema.
 2. **El primer elemento.** Nombra el elemento que el ojo toca primero. ¿Coincide con lo más
@@ -46,6 +57,12 @@ cuál es la acción principal, qué es contexto, qué es metadata y qué puede e
    buena parte de los bloques compite como primario, no hay jerarquía: hay una lista.
 4. **Quitar el color.** En escala de grises, ¿sigue habiendo orden? Si la jerarquía desaparece,
    estaba sostenida solo por color.
+5. **Énfasis reservado (Von Restorff).** Antes de usar color de acento, tamaño excepcional, badge,
+   borde destacado, sombra o icono llamativo, pregunta: *¿qué elemento merece realmente romper el
+   patrón?* Si todos los KPI o cards están destacados, reduce los secundarios a un tratamiento más silencioso.
+6. **Prueba de semejanza.** Si intercambio dos elementos visualmente iguales, ¿seguiría entendiendo cuál
+   es primario, interactivo, destructivo o meramente informativo? Si no, el tratamiento está ocultando
+   diferencias funcionales relevantes.
 
 **Herramientas de jerarquía** — no es solo `font-size`:
 
@@ -54,35 +71,69 @@ imagen · ritmo · disclosure progresivo.
 
 **Señales de falla**: todo con el mismo peso visual; jerarquía construida únicamente subiendo
 `font-weight` mientras composición y spacing siguen planos; dos o tres CTA compitiendo al mismo
-nivel; metadata con el mismo tratamiento que el dato principal; el título de la página más grande
-que el contenido que importa.
+nivel; cada bloque o KPI con color propio, badge y fondo decorativo para que "ninguno pase desapercibido";
+elementos informativos que parecen botones interactivos; metadata con el mismo tratamiento que el dato principal;
+el título de la página más grande que el contenido que importa.
 
 ---
 
 ## Composición
 
+> **Agrupar no implica contenedores** (*grouping does not imply containers*). Antes de introducir una
+> card, borde, fondo, panel o box anidado, comprueba si la relación puede expresarse mediante
+> proximidad, alineación, jerarquía, ritmo, espacio o tipografía. La región común (*common region*) es
+> útil cuando el límite aporta información que el espaciado por sí solo no puede comunicar: delimitar
+> una unidad manipulable, separar contextos disjuntos, diferenciar estados o aislar una región funcional.
+> Una card no se justifica simplemente diciendo *"estos elementos van juntos"*: la proximidad ya hace eso.
+
+> **Anti-patrón de anidamiento innecesario**:
+> ```text
+> sección
+> └── card
+>     └── card
+>         └── título + valor
+> ```
+> si las superficies anidadas no añaden relación contextual ni comportamiento interactivo real.
+
+> **Composición según información dominante**: antes de elegir una cuadrícula uniforme, decide qué
+> información domina, qué necesita comparación, qué lectura secuencial, qué exploración y qué es mero
+> contexto. Si la importancia de los bloques es desigual, una grilla simétrica nivela artificialmente el
+> contenido. Usa asimetría, contraste de escala, master/detail, layouts editoriales, bloques dominantes,
+> agrupaciones secundarias o rail lateral según la tarea.
+
 **Pruebas**
 
-1. **¿Responde al contenido?** Dibuja los bloques como rectángulos, sin texto. ¿Esa distribución
-   dice algo sobre lo que contiene, o serviría igual para cualquier otra pantalla?
+1. **Prueba de genericidad (*Genericity test*).** Si reemplazo el contenido por el de otro producto
+   completamente distinto, ¿esta composición seguiría funcionando prácticamente igual? Si la respuesta
+   es sí, comprueba si estás respondiendo a esta tarea o rellenando una plantilla mental automática.
+   *Los patrones familiares son útiles; la composición genérica no es familiaridad.*
 2. **Contenido dominante.** ¿Hay un elemento que merece dominar —una tabla, un gráfico, una
    imagen, un formulario? Si lo hay y está compitiendo en una grilla de iguales, la composición no
    lo reconoce.
-3. **Simetría injustificada.** Tres tarjetas iguales para tres cosas de importancia distinta es
+3. **¿La proximidad basta o hace falta superficie?** Evalúa si el grupo ya se entiende por proximidad,
+   alineación y espacio antes de meterlo dentro de una card o borde.
+4. **Simetría injustificada.** Tres tarjetas iguales para tres cosas de importancia distinta es
    una decisión que niega el contenido.
-4. **Prueba de recorte.** Tapa la mitad inferior. ¿Lo que queda arriba es lo que debía quedar?
+5. **Prueba de recorte.** Tapa la mitad inferior. ¿Lo que queda arriba es lo que debía quedar?
 
 **Recursos disponibles cuando corresponden**: asimetría, ritmo editorial, contraste de escala,
 contenido dominante, agrupaciones no uniformes, disclosure, navegación contextual, visualización
-de datos, imagen, espacios de descanso, densidad intencional.
+de datos, imagen, espacios de descanso, densidad intencional, master/detail.
 
 **Señales de falla**: la estructura por defecto (badge → título → párrafo → dos botones → tres
-tarjetas; o título → KPI → gráfico → tabla) aplicada sin que el contenido la pida; cada bloque en
-su propia superficie; anidamiento de contenedores para separar cosas que el espacio ya separaba.
+tarjetas; o título → KPI → gráfico → tabla) aplicada sin que el contenido la pida; cards envolviendo
+simplemente un label y un valor; cards anidadas dentro de cards sin separación de contexto; cada
+bloque en su propia superficie decorativa; grilla perfectamente simétrica para contenidos de peso desigual.
 
 ---
 
 ## Tipografía
+
+> **Jerarquía por roles, no por nudges**: cuando una jerarquía no funciona, **no la resuelvas automáticamente**
+> subiendo cuatro píxeles o engrosando una variante (`40px → 44px`, `font-medium → font-semibold`).
+> Revisa antes: posición, espacio alrededor, ancho, contraste, escala relativa, relación título/contenido
+> y el peso del bloque completo. Una diferencia tipográfica debe responder a un **rol funcional o semántico**,
+> no a un ajuste cosmético aislado.
 
 **Antes de introducir un tamaño nuevo**, en este orden:
 
@@ -91,28 +142,30 @@ su propia superficie; anidamiento de contenedores para separar cosas que el espa
 3. Decide si el tamaño nuevo representa **realmente un rol nuevo**, o solo "un poquito más" para
    esta pantalla.
 
-Escalas accidentales como `15 / 16 / 17 / 18 / 19 / 20` no se diseñaron: se acumularon, un
+Escalas accidentales como `14 / 15 / 16 / 17 / 18 / 20 / 22 / 24` no se diseñaron: se acumularon, un
 "poquito más" por vez. Prefiere **roles semánticos** —título de pantalla, título de sección,
-cuerpo, apoyo, metadata— sobre una lista de píxeles.
+cuerpo, apoyo, metadata— sobre una lista dispersa de píxeles.
 
 **Pruebas**
 
-1. **Cuenta los niveles en uso** en la vista. Más de cinco o seis en una pantalla suele indicar
-   que dos son el mismo rol con distinto valor.
+1. **Cuenta los niveles en uso** en la vista. Si varios niveles tienen diferencias sutiles sin roles
+   distinguibles, simplifica hacia los roles existentes del sistema.
 2. **Distancia perceptual.** Dos niveles que se distinguen por 2 px no son dos niveles: quien mira
    no los diferencia, y quien implementa los confunde.
 3. **Ancho de línea.** El texto corrido se lee mejor en columnas estrechas —del orden de 45 a 75
    caracteres como referencia orientativa, no como umbral de aprobación—. Lo que se juzga es si
    el ojo encuentra el inicio de la línea siguiente: un párrafo a todo el ancho de un contenedor
    grande no se lee, se recorre.
+4. **Prueba de rol.** Nombra el rol funcional de cada estilo de texto en la pantalla. Si dos textos
+   tienen tamaños o pesos distintos pero el mismo rol, uno de los dos es una desviación.
 
 **Se revisan en conjunto**, no aislados: `font-size`, `line-height`, `weight`, `tracking`, ancho
 de línea, contraste y la relación entre niveles. Subir el tamaño sin bajar el `line-height`
 proporcional produce títulos que flotan.
 
-**Señales de falla**: un tamaño nuevo por pantalla; jerarquía apoyada solo en `weight`;
-`line-height` heredado del cuerpo aplicado a un título grande; mayúsculas con `tracking` por
-defecto; texto de apoyo tan claro que deja de leerse.
+**Señales de falla**: un tamaño nuevo por pantalla; jerarquía apoyada solo en `weight` o en micro-nudges
+de 2-4 px; `line-height` heredado del cuerpo aplicado a un título grande; mayúsculas con `tracking` por
+defecto; texto de apoyo tan claro que deja de leerse; escalas tipográficas accidentales sin roles.
 
 ---
 
@@ -121,22 +174,39 @@ defecto; texto de apoyo tan claro que deja de leerse.
 El spacing **expresa relaciones**. Dos elementos cerca se leen como uno; separados, como dos. Esa
 es toda su función; decorar no lo es.
 
+> **Relación conceptual antes que número**:
+> ```text
+> distancia dentro de un grupo
+> <
+> distancia entre grupos
+> <
+> distancia entre secciones
+> ```
+> Esta jerarquía espacial es una **relación conceptual**, no una fórmula matemática rígida. Antes de
+> ajustar un gap o padding, identifica primero qué relación representa en la jerarquía de la pantalla.
+> Evita el *pixel nudging* del agente (`gap-5 → gap-[22px]`, `padding-6 → padding-[26px]`) cuando no
+> existe una decisión perceptual nueva que lo fundamente. Si el sistema ya ofrece una expresión equivalente,
+> úsala; si no la resuelve, deriva el problema sistémico a `visual-foundation`.
+
 **Distingue funciones antes de elegir un valor**: separación entre secciones · entre grupos ·
 entre elementos relacionados · padding interno · entre controles · densidad de datos.
 
 **Pruebas**
 
-1. **Ley de proximidad.** ¿La distancia entre un label y su valor es menor que la distancia al
+1. **Relación conceptual de proximidad.** ¿Se cumple que la distancia dentro de un grupo es menor que
+   entre grupos distintos, y esta menor que entre secciones? Si la distancia entre elementos inconexos es
+   menor que entre elementos relacionados, la pantalla se leerá invertida.
+2. **Ley de proximidad.** ¿La distancia entre un label y su valor es menor que la distancia al
    siguiente par? Si es igual o mayor, los pares se leen cruzados.
-2. **Revisa la escala existente** antes de agregar un valor. Un `gap-[22px]` nuevo junto a un
+3. **Revisa la escala existente** antes de agregar un valor. Un `gap-[22px]` nuevo junto a un
    `gap-6` existente casi siempre es el mismo rol con otro número.
-3. **Consistencia no es igualdad.** Valores distintos son correctos cuando expresan relaciones
+4. **Consistencia no es igualdad.** Valores distintos son correctos cuando expresan relaciones
    distintas. No impongas el mismo gap en toda la pantalla: eso destruye la agrupación.
 
-**Señales de falla**: series como `gap-[18px] / gap-[22px] / gap-[26px] / gap-[30px]` sin razón
-perceptual; espacio uniforme entre todo, que aplana los grupos; padding grande usado para
-compensar la falta de jerarquía; márgenes que dependen del orden de los elementos en vez de su
-relación.
+**Señales de falla**: pixel nudging del agente (`gap-5 → gap-[22px]`, `p-6 → p-[26px]`); series como
+`gap-[18px] / gap-[22px] / gap-[26px] / gap-[30px]` sin razón perceptual; espacio uniforme entre todo,
+que aplana los grupos; padding grande usado para compensar la falta de jerarquía; márgenes que dependen
+del orden de los elementos en vez de su relación.
 
 ---
 
@@ -204,19 +274,40 @@ listado; imagen que carga después y desplaza el contenido.
 
 ## Acciones
 
+> **Prominencia visual y facilidad de adquisición van juntas**: una acción importante no solo debe
+> verse importante, debe ser **fácil de alcanzar y activar**. Considera en conjunto: tamaño del target,
+> espacio alrededor (clearance), ubicación en el flujo de la tarea, frecuencia de uso, consecuencia y
+> dispositivo. Destacar un botón con color de acento no compensa que su target mida 20 px, que el área
+> interactiva se limite al texto visible o que esté ubicado lejos de donde concluye el formulario.
+
+> **Demasiadas opciones simultáneas con igual peso aumentan el esfuerzo de decisión** (*too many
+> simultaneous choices with equal weight increase decision effort*). Cuando múltiples acciones compiten al
+> mismo nivel, organiza mediante priorización, agrupación, progressive disclosure, defaults inteligentes y
+> menús secundarios. **Reducir competencia no significa esconder lo frecuente**: una toolbar con
+> `Guardar · Exportar · Duplicar · Archivar · Eliminar · Imprimir · Compartir` no necesita siete botones de
+> peso primario, pero tampoco se resuelve ocultando `Guardar` o `Exportar` dentro de un menú para que la
+> interfaz parezca minimalista.
+
 **Pruebas**
 
 1. **Una acción principal por vista.** Nómbrala. Si hay tres candidatas con el mismo peso, no hay
-   ninguna.
-2. **Peso proporcional a la frecuencia y a la consecuencia.** Lo que se hace siempre es visible;
-   lo destructivo no compite en el mismo peso que lo constructivo.
-3. **Ubicación previsible.** La acción de una fila, de una tarjeta o de un panel vive donde ya
-   vive en el resto del producto.
-4. **Etiqueta que dice el resultado.** "Guardar cambios" sobre "Aceptar".
+   ninguna. Reserva el énfasis principal para el objetivo central del flujo.
+2. **Facilidad de adquisición (Fitts).** ¿La acción principal y las frecuentes tienen un target generoso,
+   con área clickeable en todo el elemento y no solo en el texto? ¿Están ubicadas de forma natural donde
+   la persona termina su recorrido visual o de datos?
+3. **Competencia entre opciones (Hick).** Si una barra o bloque acumula muchas opciones, ¿las acciones
+   frecuentes están accesibles de inmediato mientras las excepcionales se agrupan en un menú secundario?
+   ¿Las destructivas están separadas en apariencia y espacio de las seguras?
+4. **Peso proporcional a la frecuencia y a la consecuencia.** Lo que se hace siempre es visible y
+   fácil; lo destructivo no compite en el mismo peso ni en la misma proximidad física que lo constructivo.
+5. **Ubicación previsible y etiqueta de resultado.** La acción vive donde ya vive en el producto y su
+   etiqueta dice con precisión qué ocurrirá: "Guardar cambios" sobre "Aceptar", "Eliminar cuenta" sobre "Continuar".
 
-**Señales de falla**: el mismo CTA repetido tres veces en la misma vista sin cambio de contexto;
-botones secundarios con el mismo peso que el primario; acciones destructivas con el tratamiento
-más llamativo; una barra de acciones con seis botones donde cinco son excepcionales.
+**Señales de falla**: barra de herramientas con 6-8 botones del mismo peso visual compitiendo entre sí;
+operaciones frecuentes escondidas bajo menús colapsados para forzar un diseño minimalista; botón principal
+con target pequeño o clickeable solo en el texto y ubicado lejos del final de la tarea; acción secundaria
+pegada físicamente a una destructiva sin espacio de protección; acciones destructivas con el tratamiento
+más vistoso o indistinguible de las ordinarias.
 
 ---
 
@@ -232,9 +323,12 @@ más llamativo; una barra de acciones con seis botones donde cinco son excepcion
 4. **Errores junto al campo**, con el texto de cómo corregirlo, no solo qué falló.
 5. **Qué es obligatorio** se ve antes de enviar, no después.
 
+**Sobre las primitives accesibles**: no recrees a mano controles complejos que involucran accesibilidad delicada —combobox, date pickers, popovers, menús o diálogos modales—. Prefiere las primitives accesibles que el proyecto ya utilice (Radix, React Aria, Headless UI, etc.) para garantizar navegación por teclado, focus trapping y roles ARIA correctos.
+
 **Señales de falla**: una columna de campos idénticos sin agrupación; labels dentro del campo que
 desaparecen al escribir; validación que solo aparece al enviar; acción primaria deshabilitada sin
-decir qué falta; formularios metidos dentro de tarjetas que no aportan separación.
+decir qué falta; formularios metidos dentro de tarjetas que no aportan separación; combobox o diálogos
+construidos artesanalmente sin soporte de teclado ni foco accesible.
 
 ---
 
@@ -254,14 +348,18 @@ decir qué falta; formularios metidos dentro de tarjetas que no aportan separaci
    distribución → histograma o caja; correlación → dispersión.
 5. **Del dato a la acción.** ¿Qué se puede hacer desde aquí cuando el número está mal?
 
-**Sobre la librería**: los ejes, escalas, tooltips, leyendas y series múltiples los resuelve una
-librería de gráficos —la que el proyecto ya use—. Se integra al sistema visual del producto:
-colores del sistema, tipografía del sistema, grillas discretas. Un gráfico con la paleta por
-defecto de la librería se ve como un widget pegado.
+**Sobre la librería**: si el requisito incluye varios de estos elementos —ejes, escalas, series múltiples,
+tooltips enriquecidos, leyendas interactivas, resize reactivo, accesibilidad, zoom/pan o formateo numérico
+complejo—, **un SVG artesanal construido a mano debe considerarse una señal para revisar la decisión técnica**,
+no la opción por defecto. Reutiliza la librería de gráficos que el proyecto ya tenga instalada; si no existe,
+evalúa una dependencia estándar y mantenida. Intégrala siempre al sistema visual del producto: colores del
+sistema, tipografía del sistema y grillas discretas, en vez de adoptar la paleta o tipografías por defecto
+de la librería.
 
 **Señales de falla**: seis KPI del mismo tamaño; gráficos sin unidades; leyendas que obligan a
 mirar dos veces cuando la etiqueta cabía junto a la serie; ejes truncados que exageran la
-variación; un gráfico donde bastaba un número.
+variación; un gráfico donde bastaba un número; gráficos complejos dibujados a mano en SVG habiendo librerías
+adecuadas en el proyecto.
 
 ---
 
@@ -279,12 +377,15 @@ variación; un gráfico donde bastaba un número.
 5. **Acciones por fila** sin abrir cinco iconos por registro: lo frecuente visible, lo demás en un
    menú.
 
-**Sobre la librería**: sorting, filtering, paginación y selección múltiple no se construyen desde
-cero cuando el producto necesita una tabla avanzada y ya existe una solución adecuada.
+**Sobre la librería**: una tabla simple de consulta puede ser HTML nativo limpio. Sin embargo, si la tarea
+exige sorting interactivo, filtros combinados, paginación, selección múltiple, resizing o visibilidad de columnas,
+**no debe reconstruirse artesanalmente desde cero** si el proyecto ya cuenta con una solución adecuada o una
+librería estándar probada (p. ej. TanStack Table u homólogos) que reduzca significativamente la complejidad.
 
 **Señales de falla**: convertir una tabla en tarjetas y perder la comparación entre filas; ocho
 columnas con el mismo peso; celdas con texto largo sin truncado ni tooltip; una tabla con
-paginación de diez filas en una pantalla que cabía treinta.
+paginación de diez filas en una pantalla que cabía treinta; lógica de sorting y selección compleja
+reprogramada a mano con bugs de estado.
 
 ---
 

@@ -34,6 +34,9 @@ ahorrar un archivo.
 
 Esta skill existe para que la interfaz se decida, no se rellene.
 
+> **Las decisiones de diseño deben responder al contenido, a la tarea y al producto — no al patrón de UI más fácil de generar.**
+> **Los principios de percepción e interacción son herramientas de decisión, nunca un checklist.**
+
 El contrato común de la familia visual —las nueve reglas compartidas y las fronteras entre
 skills— vive en
 [`docs/visual-skills-architecture.md`](https://github.com/bfernandois059/dev-workflow-skills/blob/main/docs/visual-skills-architecture.md)
@@ -178,7 +181,7 @@ Tres consecuencias directas:
   principal.
 - **No añadas sombras ni bordes** para compensar una composición mal resuelta. Una superficie no
   arregla una prioridad.
-- **No agregues containers** para suplir una jerarquía débil. Anidar no ordena.
+- **No agregues containers** para suplir una jerarquía débil. Anidar no ordena: **agrupar no implica contenedores** (*grouping does not imply containers*). Antes de envolver en una card, borde o panel, comprueba si la proximidad, la alineación o el espacio ya comunican la relación. Una superficie o región común aporta valor cuando el límite añade información que el espacio por sí solo no puede expresar.
 
 Un cambio de detalle es correcto cuando la capa de arriba ya está resuelta. Si no lo está, el
 detalle es maquillaje.
@@ -198,10 +201,11 @@ pantalla no obliga a mantener tímido *cómo se ve*.
 
 ### Diseño genérico
 
-Antes de implementar, una sola pregunta interna:
+Antes de implementar o comprometer una composición, aplica la **prueba de genericidad** (*Genericity test*):
 
-> ¿Estoy usando esta estructura porque responde al contenido, o porque es el patrón más fácil de
-> generar?
+> **Si reemplazo el contenido por el de otro producto completamente distinto, ¿esta composición seguiría funcionando prácticamente igual?**
+
+Si la respuesta es sí, la estructura casi con seguridad proviene de una plantilla mental automática y no del contenido actual. Pregúntate: *¿estoy usando esta estructura porque responde a esta tarea o porque es el patrón más fácil de generar?*
 
 Combinaciones que delatan la fórmula cuando aparecen **sin justificación**: todo dentro de
 tarjetas; tarjetas dentro de tarjetas; radius excesivo; sombras decorativas constantes; gradientes
@@ -213,7 +217,9 @@ mayúsculas por todas partes; interfaz excesivamente aireada en una aplicación 
 **Ninguno está prohibido.** Todos son correctos cuando cumplen una función. Lo que se prohíbe es
 usarlos como relleno de una decisión que no se tomó.
 
-La alternativa no es originalidad. Es **composición propia del problema**: asimetría cuando el
+> **Los patrones familiares son útiles; la composición genérica no es familiaridad.**
+
+La alternativa no es originalidad por sí misma. Es **composición propia del problema**: asimetría cuando el
 contenido es asimétrico, contraste de escala cuando hay algo dominante, ritmo editorial cuando hay
 narrativa, disclosure cuando hay profundidad, agrupaciones desiguales cuando los grupos son
 desiguales, espacio de descanso cuando hace falta respirar, densidad intencional cuando el trabajo
@@ -243,8 +249,11 @@ No diseñes una intranet como una landing, ni una landing como un panel de admin
 
 ## Herramientas y librerías
 
-> **La cantidad mínima de código no es un objetivo de diseño. El objetivo es la solución más
-> simple, sólida y mantenible que entregue el resultado esperado.**
+> **Minimizar dependencias es una restricción válida; minimizar la calidad de implementación no lo es.**
+> **Agregar una librería donde el código nativo es más simple es igualmente una mala decisión.**
+
+La cantidad mínima de código no es un objetivo de diseño. El objetivo es la solución más
+simple, sólida y mantenible que entregue el resultado esperado.
 
 Antes de construir a mano una capacidad: **inspecciona qué usa ya el proyecto** → reutilízalo si
 es adecuado → si no existe, evalúa una dependencia estándar y mantenida cuando resuelva mejor el
@@ -252,19 +261,22 @@ problema.
 
 | Necesidad | Construir a mano | Usar librería |
 |---|---|---|
-| Gráficos | Visuales simples, iconografía, formas específicas, un sparkline controlado | Ejes, escalas, tooltips, leyendas, series múltiples, interacción |
+| Gráficos | Visuales simples, iconografía, formas específicas, un sparkline controlado | Ejes, escalas, tooltips, leyendas, series múltiples, interacción, accesibilidad, zoom/pan |
 | Motion | Transiciones y hover con CSS | Gestos, secuencias coordinadas, estados de entrada/salida orquestados |
 | Primitives accesibles | — | Focus trapping, navegación por teclado, portals, dialogs, menus, combobox, tooltips sofisticados |
-| Tablas | Listado simple con orden fijo | Sorting, filtering, paginación, selección, columnas configurables |
+| Tablas | Listado simple con orden fijo | Sorting, filtering, paginación, selección, resizing, columnas configurables |
 
 Dos reglas de corte, en las dos direcciones:
 
 - **No reimplementes a mano lo que una librería ya presente resuelve bien.** Dibujar un gráfico
-  complejo en SVG o escribir cientos de líneas de CSS para evitar una dependencia que el proyecto
+  complejo en SVG o escribir cientos de líneas de CSS/JS para evitar una dependencia que el proyecto
   ya tiene no es austeridad: es fragilidad con más trabajo.
 - **No agregues una dependencia por una operación trivial.** Debe reducir complejidad real, no
   trasladarla. Si el proyecto ya tiene una solución para eso, se usa esa y no se introduce una
   segunda.
+- **Las librerías no autorizan un rediseño técnico transversal.** Resolver una vista concreta con una
+  librería adecuada no autoriza a migrar el resto de las pantallas del proyecto ni a reescribir
+  soluciones existentes fuera del alcance asignado.
 
 Cuando agregues una dependencia, justifícala en una línea —qué resuelve, qué alternativa se
 descartó— y respeta la política de dependencias de `engineering-workflow`.
@@ -317,8 +329,13 @@ build ✓   lint ✓   typecheck ✓        ← no es validación visual
 El orden es:
 
 **A. Comparación visual real** contra la referencia aprobada, `ui-system.md`, el patrón aprobado
-del producto o el objetivo visual explícito de la tarea. Revisa al menos: jerarquía, composición,
-tipografía, spacing, color, densidad, fidelidad a la marca y los estados visibles relevantes.
+del producto o el objetivo visual explícito de la tarea. Validar no es solo paridad cosmética ("se parece al mockup"); es comprobar que **las decisiones que motivaron el cambio se perciben en el render**:
+- el elemento primario domina claramente;
+- los grupos se leen por proximidad y relación, sin containers o decoración innecesaria;
+- la densidad corresponde al uso real y no elimina datos útiles;
+- las acciones tienen jerarquía perceptible y son fáciles de adquirir e interactuar;
+- el contenido dominante manda sobre la cuadrícula;
+- el resultado pertenece orgánicamente al producto.
 
 **B. Validación técnica existente**, con los comandos reales del proyecto.
 
