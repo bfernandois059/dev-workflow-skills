@@ -2,33 +2,30 @@
 
 Los cambios relevantes de las skills se registran en este archivo.
 
+## [interface-craft-v0.2.0] - 2026-09-19
+
+### Producto
+* Calidad y diversidad en decisiones de interfaz: erradicación de interfaces genéricas, simetría forzada y layouts tipo plantilla sin justificación funcional.
+* Principio rector explícito: las decisiones visuales se justifican por el contenido, la tarea y el producto, nunca por ser el patrón más fácil o predecible de generar.
+* Agrupación perceptual sobre contenedores (*Grouping does not imply containers*): prioridad a proximidad, alineación, jerarquía, ritmo y tipografía antes de encapsular elementos en cards, bordes o paneles redundantes.
+* Énfasis reservado (*Von Restorff*): el tratamiento visual distintivo se gestiona como recurso escaso para dirigir la atención intencionalmente sin sobrecargar la pantalla ni forzar artificialmente un único destacado.
+* Semejanza funcional: equivalencia visual restringida a elementos con la misma función, evitando que controles primarios, secundarios, destructivos o informativos compartan estilos confusos.
+* Validación visual orientada a la intención: comprobación de la experiencia renderizada centrada en verificar que la intención de diseño (dominancia, agrupaciones naturales, densidad adecuada y facilidad de adquisición) sea inmediatamente comprensible.
+
+### Operación
+* Principios de percepción e interacción integrados como herramientas de decisión contextuales y no como checklists dogmáticos o prescripciones rígidas (*Use perception and interaction principles as decision tools, never as a checklist*).
+* Genericity test contextual antes de implementar: comprobación reflexiva (*«Si reemplazo el contenido por el de otro producto distinto, ¿esta composición seguiría funcionando prácticamente igual?»*) para diagnosticar composiciones genéricas sin descalificar patrones familiares cuando resuelven la tarea.
+* Prominencia y facilidad de adquisición de acciones (*Fitts*): evaluación del target interactivo completo, clearance y proximidad al contexto de decisión sin requerir precisión innecesaria de puntero ni imponer ubicaciones físicas universales.
+* Reducción de competencia de decisiones (*Hick*): priorización por frecuencia, consecuencia e intención del usuario sin preasignar destinos rígidos ni ocultar operaciones habituales.
+* Suite de evaluación ampliada y verificada: 14 escenarios de decisión en `evals/evals.json` que validan descarte de cards innecesarias, mitigación de toolbars sobrecargadas, resolución de acciones difíciles de adquirir y jerarquización de dashboards con KPIs competitivos.
+
+### Técnico
+* Jerarquía tipográfica por roles intencionales: sustitución de micro-ajustes arbitrarios (`font-weight`, ligeros incrementos de tamaño) por contrastes estructurales de posición, escala y peso según el rol funcional del texto.
+* Spacing como relación conceptual: aplicación de la regla `distancia interna < distancia entre grupos < distancia entre secciones` evitando el *pixel nudging* arbitrario.
+* Criterios estrictos de build-vs-buy para componentes complejos: directrices para adoptar librerías mantenidas en visualizaciones de datos avanzadas (con ejes, escalas y tooltips dinámicos), tablas con ordenamiento/paginación y primitivas accesibles (combobox, modales, portales), delimitando el alcance para prohibir rediseños o migraciones transversales no autorizadas.
+* Versión de la skill incrementada a `0.2.0` (MINOR).
+
 ## Unreleased
-
-### interface-craft 0.2.0
-
-Evolución orientada a la **calidad real de las decisiones visuales e interactivas** que toma un agente al diseñar o rediseñar interfaces. Los principios de percepción e interacción se integran como herramientas de decisión y preguntas concretas (sin crear un framework teórico o checklist), priorizando la relación perceptual sobre el empaquetado en contenedores y garantizando que las decisiones respondan al contenido y a la tarea y no al patrón más fácil de generar.
-
-#### Added
-
-- `interface-craft` 0.2.0: **Principio rector explícito**: *Design decisions must be explained by the content, task and product — not by the easiest UI pattern to generate*, acompañado de *Use perception and interaction principles as decision tools, never as a checklist*.
-- `interface-craft` 0.2.0: **Agrupación perceptual antes que contenedores (*Grouping does not imply containers*)**. Comprobación de si proximidad, alineación, jerarquía, ritmo o tipografía ya comunican la relación antes de introducir cards, bordes, fondos o paneles. Anti-patrón de anidamiento de cards sin función de límite. Regla: *Common region is useful when the boundary communicates something that spacing alone cannot*.
-- `interface-craft` 0.2.0: **Genericity test antes de implementar**. Herramienta de comprobación para evitar convergencia automática en plantillas: *«Si reemplazo el contenido por el de otro producto completamente distinto, ¿esta composición seguiría funcionando prácticamente igual?»*. Si el resultado es afirmativo, se analiza qué decisiones responden al caso concreto antes de asumir genericidad. Regla: *Familiar patterns are useful. Generic composition is not the same as familiarity*.
-- `interface-craft` 0.2.0: **Énfasis reservado (*Von Restorff*)**. Regla: *Distinctive treatment is a scarce resource*. El tratamiento distintivo llama la atención solo cuando la mayoría no intenta llamar la atención al mismo tiempo; reservar los tratamientos excepcionales para los elementos que realmente demandan atención o acción, sin limitar artificialmente a exactamente uno.
-- `interface-craft` 0.2.0: **Principio de semejanza funcional**. Elementos visualmente iguales se perciben equivalentes; prueba de intercambio para verificar que acciones primarias, interactivas, destructivas o informativas no compartan la misma apariencia.
-- `interface-craft` 0.2.0: **Prominencia + facilidad de adquisición de acciones (*Fitts*)**. Destacar visualmente no basta si la acción es difícil de alcanzar o activar; evaluación de target interactivo completo, clearance, cercanía al contexto de decisión y separación de controles destructivos sin requerir precisión innecesaria de puntero ni imponer ubicaciones físicas universales.
-- `interface-craft` 0.2.0: **Reducción de competencia sin pérdida de información útil (*Hick*)**. *Too many simultaneous choices with equal weight increase decision effort*: evaluación de frecuencia, consecuencia y contexto para priorizar y agrupar sin preasignar destinos rígidos ni esconder operaciones habituales.
-- `interface-craft` 0.2.0: **Composición según información dominante**. Cuadrículas simétricas rechazadas cuando el peso del contenido es desigual; soporte para asimetría, contraste de escala, layouts editoriales y bloques dominantes según la tarea.
-- `interface-craft` 0.2.0: **Jerarquía tipográfica por roles y no por nudges**. Rechazo a micro-ajustes arbitrarios (`40px → 44px`, `font-medium → font-semibold`) para maquillar jerarquías no resueltas; revisión estructural de posición, contraste y escala relativa.
-- `interface-craft` 0.2.0: **Spacing como relación conceptual**. `distancia dentro de un grupo < distancia entre grupos < distancia entre secciones` como relación conceptual, evitando el *pixel nudging* arbitrario (`gap-5 → gap-[22px]`).
-- `interface-craft` 0.2.0: **Refuerzo de build-vs-buy y alcance acotado de librerías**. Señal de alerta técnica ante SVGs artesanales para gráficos complejos con ejes/tooltips/escalas; primitives accesibles para combobox, modales y portales; y tablas con sorting/paginación mediante librerías probadas. Regla: *Minimizing dependencies is a constraint. Minimizing implementation quality is not* y rechazo a rediseños o migraciones técnicas transversales no autorizadas.
-- `interface-craft` 0.2.0: **Validación visual orientada a la intención**. La comparación renderizada juzga si se percibe la intención del cambio (dominancia del primario, lectura de grupos por proximidad, densidad real, facilidad de adquisición, ausencia de cards superfluas).
-- `interface-craft` 0.2.0: Cuatro nuevas evaluaciones en `skills/interface-craft/evals/evals.json` (11 a 14) que cubren card innecesaria, toolbar saturada con 7 acciones de igual peso, acción principal difícil de adquirir y dashboard con todos los KPI destacados simultáneamente.
-
-#### Changed
-
-- `skills/interface-craft/SKILL.md`: actualización contractual con principios rectores, criterio de agrupación sin containers, Genericity test, build-vs-buy reforzado y validación de intención.
-- `skills/interface-craft/references/craft-criteria.md`: profundización técnica y pruebas operacionales en jerarquía, composición, tipografía, spacing, acciones, dashboards y tablas.
-- `skills/interface-craft/VERSION`: incrementada a `0.2.0`.
 
 ### Integración del sistema de skills
 
