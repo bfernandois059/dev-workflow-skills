@@ -4,43 +4,6 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
-## [design-directions-v0.2.0] - 2026-09-19
-
-### Producto
-
-* **Dirección como hipótesis coherente.** Una dirección no es una colección de decisiones
-  interesantes: las decisiones dentro de una dirección deben reforzarse entre sí.
-  Coherence test antes de entregar.
-* **Exploración sobre tensiones reales.** Identificar la tensión del problema antes de elegir
-  ejes de divergencia. No convertir tensiones en binaries rígidos: una tercera respuesta es
-  legítima si representa otra hipótesis real.
-* **Familiaridad vs diferenciación.** Familiar interaction patterns and distinctive composition
-  can coexist. Distinctiveness without a benefit is decoration. La dirección decide dónde
-  conservar convenciones y dónde diferenciarse con razón.
-* **Consecuencias perceptibles.** Una buena dirección cambia cómo se entiende, recorre, compara
-  o usa la interfaz, no solo cómo se ve.
-* **Set diversity test.** Validar que el conjunto de direcciones expone decisiones realmente
-  distintas, no tratamientos de una misma estrategia.
-* **Prevención de dirección Frankenstein.** Evitar propuestas incoherentes que cambian
-  demasiadas variables sin tesis común.
-* **Test de supervivencia.** Detectar direcciones cuyo valor depende de una maqueta idealizada.
-  Dependencias declaradas como trade-offs, no como suposiciones invisibles.
-* **Recomendación según problema.** No recomendar la más espectacular ni crear rankings
-  artificiales. El trade-off explicado vale más que un score.
-* **Handoff de invariantes.** Handoff the intent, not the implementation. Resumir qué domina,
-  qué aparece primero, qué densidad busca y qué trade-off no debe perderse.
-
-### Técnico
-
-* `SKILL.md`: 8 inserciones quirúrgicas sin reestructurar (coherencia, consecuencias,
-  familiaridad, set diversity, supervivencia, workflow con tensiones, handoff, recomendación).
-* `references/direction-criteria.md`: 7 secciones nuevas + 3 fortalecidas (tensiones reales,
-  coherencia interna, consecuencias, familiaridad, diversidad del set, supervivencia, handoff,
-  referencias transferibles, igualdad de evidencia, recomendación sin espectacularidad).
-* `evals/evals.json`: 12 → 14 evals (eval 13: originalidad vs familiaridad; eval 14: dirección
-  Frankenstein).
-* `VERSION`: `0.1.0` → `0.2.0`.
-
 ### Integración del sistema de skills
 
 Primera pasada de integración del repositorio **como un solo sistema**, no como doce carpetas
@@ -106,6 +69,30 @@ referencias.
   útil para quien vuelve al repositorio.
 - La familia visual sigue siendo **7/7** y `ux-audit` sigue siendo transversal, no una octava
   skill visual.
+
+## [design-directions-v0.2.0] - 2026-09-19
+
+### Producto
+* **Dirección como hipótesis coherente**: Una dirección no es una colección de decisiones interesantes; las decisiones internas deben reforzarse entre sí apoyando una tesis única.
+* **Exploración sobre tensiones reales**: Identificación de la tensión del problema antes de elegir ejes de divergencia, sin forzar binaries rígidos ni dicotomías artificiales.
+* **Familiaridad vs diferenciación**: *Familiar interaction patterns and distinctive composition can coexist*. La diferenciación debe ganarse con beneficios perceptibles o funcionales concretos (*Distinctiveness without a benefit is decoration*).
+* **Consecuencias perceptibles**: Una dirección debe producir cambios tangibles sobre cómo se entiende, recorre, compara o usa la interfaz, no limitarse a tratamientos de estilo.
+* **Diversidad del set vs Falsa diversidad**: Validación de que el conjunto de alternativas expone decisiones reales y no variantes cosméticas de una misma estrategia.
+* **Prevención de dirección Frankenstein**: Evitar acumular recursos de distintas direcciones sin tesis común.
+* **Supervivencia de la dirección**: Prueba proporcional de supervivencia ante textos largos, ausencia de fotos ideales y estados reales; dependencias declaradas como trade-offs.
+* **Recomendación según problema**: Selección basada en adecuación a la tarea, usuario y restricciones, erradicando sesgos por espectacularidad visual y prescindiendo de scores o rankings ponderados artificiales.
+* **Handoff de intención**: Traspaso enfocado exclusivamente en invariantes de dirección a `interface-craft` (*Handoff the intent, not the implementation*).
+
+### Operación
+* *Coherence test* operativo previo a la entrega: comprobación de que composición, jerarquía, densidad, media e interacción apoyan la tesis explicada en una sola frase.
+* *Set diversity test*: verificación de que elegir A en lugar de B cambia una decisión significativa de diseño o producto.
+* Recomendaciones condicionadas sin evasión: identificación explícita de ramas pendientes de decisión de negocio sin fabricar condicionales innecesarios cuando hay información suficiente.
+* Suite de evaluación ampliada y verificada: 14 escenarios de decisión en `evals/evals.json`, integrando eval 13 (originalidad vs familiaridad) y eval 14 (dirección Frankenstein).
+
+### Técnico
+* `SKILL.md`: 8 inserciones contractuales estratégicas (hipótesis coherente, consecuencias, familiaridad, set diversity, supervivencia, workflow con tensiones, handoff de invariantes y recomendación).
+* `references/direction-criteria.md`: 7 secciones nuevas + 3 fortalecidas (tensiones reales, coherencia interna, consecuencias perceptibles, familiaridad vs diferenciación, diversidad del set, supervivencia, handoff, referencias transferibles, igualdad de evidencia y recomendación).
+* Versión de la skill incrementada a `0.2.0` (MINOR).
 
 ## [visual-consistency-v0.2.0] - 2026-09-19
 
