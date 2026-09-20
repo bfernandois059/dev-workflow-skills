@@ -21,9 +21,24 @@ problemas, sin fricción, incertidumbre ni errores evitables?**
 
 Esa es la única pregunta. Todo lo demás en este documento sirve para responderla con evidencia.
 
-Una interfaz no se evalúa contra una lista de heurísticas: se evalúa contra **alguien concreto
-intentando hacer algo concreto**. La misma pantalla puede ser excelente para un operador que
-entra diez veces al día e inservible para quien llega desde un anuncio, apurado y sin contexto.
+Dos principios rectores rigen cada juicio:
+
+> **Audit the cost to the task, not the presence of a pattern.**
+> Una interfaz no se evalúa por la presencia de patrones o componentes (modales, dropdowns,
+> tablas densas, formularios largos, scrolls, menús secundarios, confirmaciones o pasos múltiples),
+> sino por el costo concreto que introducen para esta persona completando esta tarea. Si no existe
+> costo demostrable, no se fabrica un hallazgo.
+
+> **Friction is a cost to evaluate, not automatically a defect to remove.**
+> Toda interacción adicional demanda esfuerzo, pero la fricción no es automáticamente un defecto.
+> La fricción accidental debe reducirse; la fricción protectora (confirmar acciones destructivas,
+> verificar montos o permisos) y la necesaria del dominio (requisitos legales, seguridad operativa)
+> deben evaluarse según la consecuencia de la acción y su reversibilidad.
+
+Una interfaz no se evalúa contra una lista de heurísticas ni apelando a nombres de leyes o autores:
+se evalúa contra **alguien concreto intentando hacer algo concreto**. La misma pantalla puede ser
+excelente para un operador que entra diez veces al día e inservible para quien llega desde un anuncio,
+apurado y sin contexto.
 
 El centro del trabajo es el recorrido, no el inventario de pantalla:
 
@@ -45,12 +60,13 @@ pantalla → checklist → 40 observaciones de UI
 produce efectos reales y no implementa correcciones. Eso no le impide recorrer la tarea — ver
 [Recorrer sin mutar](#recorrer-sin-mutar).
 
-Los criterios especializados por área —orientación, navegación, acciones, feedback, errores,
-estados, formularios, copy, confianza, e-commerce, dashboards, sistemas operacionales, usuarios
-frecuentes, móvil, accesibilidad observable, eficiencia, confirmaciones y acciones destructivas—
-están en [`references/audit-criteria.md`](references/audit-criteria.md). El criterio para
-auditar productos grandes, en [`references/site-scale.md`](references/site-scale.md). **No se
-recorren enteros**: se abre la sección de la tarea que tienes delante.
+Los criterios especializados por área —orientación, navegación, acciones y decisiones, fricción y
+protección, contexto y memoria, automatización y control, feedback, errores, confirmaciones, acciones
+destructivas, estados, formularios, copy, confianza, e-commerce, dashboards, sistemas operacionales,
+eficiencia, móvil cuando afecta la tarea y accesibilidad observable— están en
+[`references/audit-criteria.md`](references/audit-criteria.md). El criterio para auditar productos
+grandes, en [`references/site-scale.md`](references/site-scale.md). **No se recorren enteros**: se abre
+la sección de la tarea que tienes delante.
 
 ---
 
@@ -91,19 +107,31 @@ cotidiano.
 ### Diagnostica; no implementa
 
 Puedes recomendar reorganizar, eliminar un paso, reformular una acción, cambiar la jerarquía,
-agregar feedback o simplificar un formulario. La ejecución va a la skill correspondiente:
+agregar feedback o simplificar un formulario. La recomendación da una **dirección suficiente**,
+no un diseño completo:
+
+```text
+problema observado → costo para la tarea → dirección de corrección → skill propietaria
+```
+
+No diseñes componentes concretos, layouts completos, clases de Tailwind ni arquitectura de estado
+dentro de la auditoría. Y **no conviertas cada hallazgo en tres propuestas visuales**: un hallazgo, su
+costo, su dirección de corrección y a dónde va. Solo presenta alternativas si la dirección
+estructural está genuinamente abierta y comparar opciones agrega valor (`design-directions`).
+
+La ejecución va a la skill correspondiente:
 
 - corrección visual clara → `interface-craft`;
 - **la dirección misma está abierta** y hay varias soluciones estructurales legítimas →
   `design-directions`;
-- la tarea se rompe entre tamaños → `adaptive-layout` (**no audites breakpoints por sí mismos**
-  ni rediseñes el responsive aquí);
-- el mismo problema se repite porque hay un componente o patrón compartido detrás →
-  `component-architecture`, sin convertir la auditoría en revisión de arquitectura React;
-- cambios funcionales, de datos o de permisos → `engineering-workflow`.
-
-**No conviertas cada hallazgo en tres propuestas visuales.** Un hallazgo, su costo, su dirección
-de corrección y a dónde va.
+- la tarea se rompe entre tamaños o pierde capacidades → `adaptive-layout` (**no audites
+  breakpoints por sí mismos** ni rediseñes el responsive aquí; recuerda que el dispositivo o
+  ancho no prueban la intención: `Device or viewport does not prove user intent`);
+- el mismo problema se repite en varias pantallas → evalúa su origen probable antes de derivar:
+  si proviene de un componente compartido o de la arquitectura UI va a `component-architecture`;
+  si se debe a una regla funcional, persistencia de estado o permisos, va a `engineering-workflow`.
+  Sistémico no significa automáticamente componente compartido;
+- cambios funcionales, de datos, contratos o persistencia → `engineering-workflow`.
 
 ---
 
@@ -127,8 +155,12 @@ siendo útil sin ella, avanza con una hipótesis explícita:
  cambia la prioridad de los hallazgos de densidad."
 ```
 
-No abras una entrevista de UX antes de opinar sobre una pantalla que ya tiene contexto
-suficiente, y no exijas etapas, niveles ni registros previos para empezar.
+**La frecuencia debe estar respaldada.** No asumas ni afirmes que "los usuarios hacen esto todo el
+día" sin evidencia (contexto entregado, telemetría, observación de uso o manuales de operación). Si no
+hay datos de frecuencia, decláralo como hipótesis: *"Si esta acción es frecuente, el costo acumulado
+sería relevante"*. No conviertas una hipótesis en un hecho. No abras una entrevista de UX antes de
+opinar sobre una pantalla que ya tiene contexto suficiente, y no exijas etapas, niveles ni registros
+previos para empezar.
 
 ---
 
@@ -150,6 +182,41 @@ claro **qué ocurre · dónde se observó · qué le cuesta a la persona · por 
 El código **no es evidencia visual**, pero sí aporta contexto sobre estados posibles, rutas,
 flujo, condiciones y componentes compartidos — siempre distinguiéndolo de lo observado.
 
+### Separar síntoma observado de causa inferida
+
+> **Observe the failure; label the hypothesized cause as inference until verified.**
+
+Si observas que tres personas vuelven al listado y deben reconstruir sus filtros, ese es el síntoma
+observado (`Verificado`). Que el estado no persista porque el componente se desmonta o la URL no
+guarda los parámetros es una causa técnica inferida (`Inferido`) hasta verificar el código. No
+presentes hipótesis técnicas como hechos vistos.
+
+Esto aplica también a las explicaciones psicológicas: evita muletillas automáticas como *"esto
+genera carga cognitiva"*. Describe el costo observable concreto: *"la persona debe recordar cuatro
+valores de la pantalla anterior para poder decidir aquí"*. Es más preciso y accionable.
+
+### No diagnosticar estados mentales sin evidencia
+
+No afirmes sin evidencia empírica directa:
+- *"el usuario está confundido"*;
+- *"el usuario se siente inseguro"*;
+- *"esto genera ansiedad"*;
+- *"la persona no confía"*.
+
+Prefiere describir los hechos observables y sus costos funcionales: la acción no comunica su
+resultado; dos opciones no se distinguen en pantalla; el costo aparece después de decidir; no
+existe confirmación de guardado; la persona debe probar a ciegas para entender. Si existe
+investigación cualitativa real que documenta la reacción del usuario, cítala como evidencia.
+
+### Convenciones como contexto, no como prueba
+
+> **A convention is supporting context, not proof of a problem.**
+
+Evita emitir hallazgos formulados como *"las best practices dicen que…"* o *"normalmente se
+recomienda…"*. Una convención o patrón conocido sirve para plantear una hipótesis de trabajo; el
+hallazgo real exige demostrar un costo demostrable para esta persona, en esta tarea y bajo este
+contexto.
+
 ### Cuando no hay render disponible
 
 No bloquees automáticamente. Puedes ejecutar una **UX risk review** sobre flujo aparente,
@@ -166,9 +233,10 @@ pantalla para convertirla en auditoría.
 
 ```text
 ¿lo observé realmente?
-¿depende de una suposición?
-¿hay una explicación funcional válida?
-¿el costo para la persona está claro?
+¿separé el síntoma visto de la causa inferida?
+¿depende de una suposición de frecuencia o intención?
+¿hay una explicación funcional o protectora válida?
+¿el costo para la persona está demostrado?
 ¿pertenece a UX y no a otra skill?
 ```
 
@@ -181,16 +249,155 @@ ronda formal de autocrítica; hace falta no publicar lo que no sostiene.
 
 Según lo que sea relevante para **esta** tarea —no como checklist—: claridad del propósito ·
 orientación inicial · arquitectura de información · navegación e information scent · prioridad
-de acciones · comprensión del contenido · copy que afecta decisiones · carga cognitiva · pasos y
-decisiones innecesarios · información o acciones duplicadas · prevención y recuperación de
-errores · confirmaciones · feedback y system status · loading · estados vacíos, de error, de
-éxito y deshabilitados · formularios, campos y validación · persistencia de lo ingresado ·
-contexto perdido entre pasos · regreso e interrupciones · confianza · claridad comercial ·
-eficiencia en tareas repetidas · densidad cuando afecta la operación · responsive **solo cuando
-cambia la capacidad de completar la tarea** · accesibilidad observable cuando afecta el uso.
+de acciones · comprensión del contenido · copy que afecta decisiones · esfuerzo y memoria
+requeridos · pasos y decisiones innecesarios · información o acciones duplicadas · prevención y
+recuperación de errores · confirmaciones y fricción protectora · feedback y system status ·
+loading · estados vacíos, de error, de éxito y deshabilitados · formularios, campos y validación ·
+persistencia de lo ingresado · contexto perdido entre pasos · regreso e interrupciones · confianza ·
+claridad comercial · eficiencia en tareas repetidas · densidad cuando afecta la operación ·
+responsive **solo cuando cambia la capacidad de completar la tarea** · accesibilidad observable
+cuando afecta el uso.
 
 **Abre solo lo relevante.** Recorrer la lista entera en cada auditoría produce el informe
 genérico que esta skill existe para evitar.
+
+---
+
+## Evaluar costo a la tarea
+
+### Auditar costo de tarea, no presencia de patrones
+
+> **Audit the cost to the task, not the presence of a pattern.**
+
+No emitas hallazgos porque una pantalla contenga un modal, un dropdown, un scroll, un formulario
+largo, una tabla densa, muchas acciones, varias pantallas, un menú secundario, una confirmación o
+un disclosure. La pregunta siempre es:
+
+> **¿Qué costo concreto introduce esto para esta persona intentando completar esta tarea?**
+
+El costo demostrable puede ser:
+- inducir un error;
+- provocar una decisión equivocada o desinformada;
+- pérdida de contexto o de trabajo realizado;
+- trabajo repetido o pasos redundantes;
+- espera o bloqueo innecesario;
+- navegación errática o incapacidad de encontrar una acción;
+- pérdida de información relevante;
+- incertidumbre operativa;
+- riesgo irreversible.
+
+Si no existe un costo demostrable para la persona o la tarea, **no fabriques un hallazgo**.
+
+### Fricción accidental vs fricción protectora
+
+> **Friction is a cost to evaluate, not automatically a defect to remove.**
+
+Una interacción adicional o un paso más no es automáticamente un defecto. Distingue tres tipos
+de fricción:
+
+1. **Fricción accidental:** pedir el mismo dato dos veces, obligar a reconstruir filtros al volver,
+   anidar acciones frecuentes tras tres menús, obligar a retroceder para consultar datos necesarios o
+   mostrar confirmaciones redundantes en acciones inocuas. **Candidata prioritaria a reducirse.**
+2. **Fricción protectora:** exigir confirmación clara antes de una acción destructiva e irreversible,
+   revisar monto y destinatario antes de transferir fondos, advertir que un cambio expondrá datos a
+   terceros o verificar cambios críticos de permisos. **Es deseable y necesaria para evitar desastres.**
+3. **Fricción necesaria del dominio:** información obligatoria por regulación legal, verificaciones de
+   seguridad requeridas o revisiones obligatorias del negocio. **No se elimina solo para acortar el flujo.**
+
+> **Reduce accidental friction; preserve or redesign protective friction according to consequence and reversibility.**
+
+### Cantidad de clics no es puntaje de calidad
+
+> **Interaction count is evidence of effort, not a quality score.**
+
+Evita conclusiones superficiales como *"3 clics = malo, 1 clic = mejor"*. La cantidad de
+interacciones evidencia esfuerzo, no calidad de experiencia. Una acción crítica como *"Eliminar
+organización"* requiere más deliberación y resguardo que *"Abrir ficha de cliente"*. Evalúa
+frecuencia, consecuencia, reversibilidad, riesgo de error, claridad y contexto disponible sin
+establecer umbrales universales de clics.
+
+### Opciones y ambigüedad de decisión
+
+> **Reduce decision ambiguity, not necessarily the number of choices.**
+
+No apliques reglas ciegas como *"hay 8 opciones → esconder 5"*. Múltiples opciones visibles son
+correctas cuando la tarea las necesita, la persona las conoce, corresponden a un entorno operacional,
+permiten comparar o están categorizadas con claridad. El problema aparece cuando compiten sin
+jerarquía, son ambiguas, se presentan antes de tener datos para decidir o mezclan acciones
+rutinarias con excepcionales. Recomienda jerarquía, agrupación semántica, disclosure progresivo o
+mejores etiquetas antes de ocultar capacidades útiles.
+
+### Decisión en el momento correcto
+
+> **Ask for a decision when the person has enough information to make it.**
+
+Detecta decisiones prematuras (elegir plan antes de conocer precio, aceptar términos sin conocer
+su alcance, configurar opciones sin comprender qué alteran) e información crítica que llega tarde
+(costos adicionales o restricciones revelados en el último paso). El costo es retroceso, decisiones
+al azar, frustración y abandono.
+
+### Información en el punto de decisión y continuidad de memoria
+
+> **Keep decision-relevant context available where the decision is made.**
+
+No obligues a recordar información de pantallas previas (dirección, precio, estado, cliente) para
+decidir en el paso actual. Proporciona resúmenes, contexto persistente, breadcrumbs o etiquetas
+visibles donde se toma la decisión, sin repetir pantallas completas.
+
+> **Do not make the user remember information the interface already knows when that memory is required to continue the task.**
+
+Si la interfaz ya conoce el filtro aplicado, el registro en edición, la restricción activa o el código
+seleccionado, muéstralo donde se requiera para continuar. No obligues a memorizar datos que el sistema
+ya tiene.
+
+### Continuidad de estado entre pasos y sesiones
+
+Evalúa si al navegar, filtrar, buscar, seleccionar o ingresar borradores se pierde el estado.
+Pregunta: **¿perder este estado obliga a repetir trabajo o reconstruir contexto necesario?** Si la
+respuesta es sí, es un hallazgo UX legítimo.
+
+### Defaults y automatización: ahorro vs sorpresa
+
+> **Automation is helpful when it removes work without hiding consequential decisions.**
+
+Preseleccionar, autocompletar o guardar automáticamente ahorra esfuerzo, pero debe evaluarse por
+su visibilidad, reversibilidad y facilidad de corrección. Si una automatización genera efectos
+importantes (cambios de estado, cobros, envío de datos), la persona debe comprender qué ocurrió y
+poder modificarlo.
+
+### No esconder consecuencias para aparentar simplicidad
+
+> **A shorter flow is not better if it makes the decision less informed.**
+
+En pagos, borrados, permisos, publicaciones, suscripciones o cambios comerciales, simplificar no
+puede significar ocultar precio, renovación, alcance, destinatario, irreversibilidad ni consecuencias.
+
+### Familiaridad sin dogmas
+
+Una interacción inesperada produce costo si obliga a adivinar o reaprender controles habituales.
+Pero no declares que algo está mal solo porque difiere de otros sitios web. Pregunta: **¿la
+diferencia aporta una ventaja suficiente para compensar el aprendizaje o la incertidumbre
+adicional?** Guíate por las convenciones del producto y su dominio, sin copiar ciegamente a la
+competencia ni citar nombres de leyes o autores.
+
+### Feedback proporcional a la incertidumbre
+
+> **Add feedback when uncertainty has a cost; do not add feedback as decoration.**
+
+No toda interacción requiere spinner, toast o modal. Evalúa la duración real, si el resultado ya es
+visible de inmediato, el riesgo de doble envío y la importancia de saber si se completó. Agrega
+feedback cuando la incertidumbre genere costo; no lo agregues por adorno ni impongas tiempos
+universales.
+
+### Prevención, costo y recuperación ante errores
+
+Sigue un orden riguroso:
+```text
+evitar el error cuando sea razonable → detectar → explicar con claridad → preservar trabajo → ofrecer recuperación
+```
+Para acciones reversibles, ofrecer `undo` suele ser superior a interrumpir con diálogos de
+confirmación. Para acciones irreversibles o de alto impacto, la fricción protectora está justificada.
+La pregunta clave es: **¿qué cuesta equivocarse y qué tan fácil es recuperarse?**
 
 ---
 
@@ -244,48 +451,76 @@ cuando sea útil
 Sin cantidad fija de pantallas, sin scripts de barrido obligatorios. **Cobertura no es calidad.**
 La salida declara qué tareas y arquetipos se revisaron, qué quedó fuera, qué parece sistémico y
 qué parece local. Puedes apoyarte en herramientas automatizadas si están disponibles y ayudan,
-pero **nunca como prerrequisito**. Criterio completo en
-[`references/site-scale.md`](references/site-scale.md).
+pero **nunca como prerrequisito**. La medición automatizada es evidencia de apoyo, pero la herramienta
+no reemplaza el juicio de recorrido: **Measurement is evidence; it is not the UX judgment itself.**
+Criterio completo en [`references/site-scale.md`](references/site-scale.md).
 
 ---
 
-## Severidad
+## Severidad y prioridad
 
-Por impacto observado sobre la tarea, y solo cuando ayude a priorizar:
+> **Severity describes impact; priority also considers exposure, reversibility, scope and evidence.**
 
-- **Alta** — impide completar, induce un error importante, hace probable una decisión
-  incorrecta, destruye la confianza necesaria o no permite recuperarse.
-- **Media** — agrega fricción, confunde, obliga a releer, añade pasos evitables u oculta una
-  acción importante.
-- **Baja** — costo menor: comprensión o eficiencia ligeramente afectadas.
+La **severidad** describe el impacto intrínseco sobre la tarea cuando el problema ocurre:
+
+- **Alta** — impide completar la tarea, induce un error importante o irreversible, hace probable una
+  decisión crítica incorrecta, destruye la confianza necesaria o no permite recuperarse.
+- **Media** — agrega fricción evitable, confunde, obliga a releer, añade pasos innecesarios u oculta
+  una acción importante.
+- **Baja** — costo menor: comprensión o eficiencia ligeramente afectadas sin bloquear la tarea.
 
 ```text
 acabado visual sin costo UX  →  no es "Baja": es visual-consistency
 ```
 
-**No inventes scores.** Nada de 0–100, puntajes por pantalla ni "health score": un número
-inventado da precisión falsa a un juicio cualitativo. Y **no inventes métricas de impacto**:
+La **prioridad** de resolución define el orden recomendado para abordar los hallazgos. Se determina
+combinando la severidad con factores operativos demostrables:
+- **frecuencia o exposición real:** un problema de severidad Media que afecta a operadores 80 veces
+  por día acumula un costo superior a un problema Alta en un flujo excepcional;
+- **irreversibilidad:** pérdida de datos o consecuencias no recuperables elevan la urgencia;
+- **alcance sistémico:** problemas compartidos que impactan múltiples flujos o arquetipos;
+- **acumulación de costo:** pasos redundantes que degradan el uso continuo en cada sesión;
+- **confianza de la evidencia:** hallazgos observados y comprobados frente a sospechas inferidas.
+
+**No inventes scores ni fórmulas.** Nada de 0–100, puntajes por pantalla ni "health score": un
+número inventado da precisión falsa a un juicio cualitativo. Y **no inventes métricas de impacto ni
+frecuencias**:
 
 ```text
-"Este paso agrega fricción antes de la acción principal."     ✓
-"Eliminarlo aumentará la conversión 18%."                     ✗
+"Este paso agrega fricción antes de la acción principal."       ✓
+"Eliminarlo aumentará la conversión 18%."                       ✗
+"Los usuarios hacen esto todo el día." (sin respaldo)          ✗
+"Si esta acción es frecuente, el costo acumulado sería alto."   ✓
 ```
 
-Sin medición no hay porcentaje, lift, benchmark ni resultado comercial.
+Sin medición comprobable no hay porcentaje, lift, benchmark ni resultado comercial.
 
 ---
 
 ## Sistemas operacionales y sitios comerciales no se juzgan igual
 
-**CRM, intranets y herramientas de uso frecuente.** El costo relevante es el trabajo acumulado
-por sesión: velocidad, densidad útil, escaneabilidad, acciones frecuentes visibles, continuidad
-entre registros, filtros persistentes, comparación, atajos, menos clics repetidos, contexto que
-no se pierde. **No recomiendes "más aire", "menos información" ni "una acción por pantalla" por
-estética**: la simplicidad de una landing no es la simplicidad de una herramienta.
+**CRM, intranets y herramientas de uso frecuente.**
+> **Operational simplicity means less work, not necessarily less information.**
+El costo relevante es el trabajo acumulado por sesión: velocidad, densidad útil, escaneabilidad,
+acciones frecuentes visibles, continuidad entre registros, filtros persistentes, comparación,
+atajos, operaciones en lote y contexto que no se pierde al navegar. **No recomiendes "más aire",
+"menos información" ni "una acción por pantalla" por estética**: la simplicidad de una herramienta
+es reducir trabajo repetido y fatiga, no vaciar la pantalla de datos necesarios.
 
-**Sitios comerciales y e-commerce.** Claridad de la oferta, confianza, objeciones, información
-suficiente para decidir, costo de encontrar precio y disponibilidad, prueba real, fricción de
-conversión y coherencia entre la promesa y el paso siguiente — sin inventar datos de conversión.
+**Sitios comerciales y e-commerce.**
+> **A business outcome does not replace user-task evidence.**
+Claridad de la oferta, objeciones previsibles, información suficiente para decidir, costo de
+encontrar precio, disponibilidad y condiciones, prueba real y coherencia entre la promesa y el paso
+siguiente. **No asumas que mayor conversión equivale automáticamente a mejor UX**: una interfaz puede
+forzar conversiones ocultando costos o apurando decisiones. La auditoría debe proteger que la persona
+pueda evaluar la oferta y decidir de forma informada. No inventes datos de conversión ni benchmarks.
+
+**Manipulación y presión observable.**
+Si observas opciones de rechazo camufladas, costos revelados a última hora, opciones negativas
+visualmente ocultas, urgencia falsa observable, consentimiento ambiguo o suscripciones difíciles de
+cancelar, registra el costo concreto para la autonomía y la decisión informada de la persona. **No
+atribuyas intención maliciosa**: describe con exactitud el comportamiento observable y su efecto
+sobre la tarea.
 
 ---
 
@@ -304,8 +539,15 @@ persona, no se disputa una referencia visual porque sí.
 ## Lo que funciona también importa
 
 No busques problemas por obligación. Cuando una decisión importante claramente funciona para la
-tarea, señálala como `Mantener` — **solo si hay una razón observable**. Nada de secciones
-enormes de cumplimientos ni de aprobar cada componente que no tuvo hallazgos.
+tarea, señálala como `Mantener` — **solo si hay una razón observable ligada a la tarea**.
+
+```text
+"Mantener el resumen persistente del pedido: conserva precio y productos visibles
+ durante la decisión de pago y evita reconstruir contexto."                ✓
+"Mantener el diseño limpio y moderno."                                     ✗
+```
+
+Nada de secciones enormes de cumplimientos ni de aprobar cada componente que no tuvo hallazgos.
 
 ---
 
@@ -357,12 +599,20 @@ líneas por defecto.
 
 ## Anti-patrones de esta skill
 
+- Tratar un patrón o componente (modal, tabla densa, dropdown, scroll, pasos) como defecto sin costo demostrado.
+- Tratar toda fricción como defecto y eliminar fricción protectora o requerimientos necesarios del dominio.
+- Optimizar ciegamente por cantidad de clics o esconder opciones necesarias para limpiar la pantalla.
+- Diagnosticar estados mentales o atribuir intenciones subjetivas en vez de describir costos observables.
+- Usar "las best practices dicen" como prueba de un hallazgo.
+- Asumir la intención de la persona exclusivamente por el tipo de dispositivo o tamaño de viewport.
+- Presentar causas técnicas o explicativas inferidas como observaciones directas.
+- Inventar frecuencias de uso, métricas de conversión o scores para dramatizar un hallazgo.
+- Citar nombres de leyes, autores o listas doctrinarias de heurísticas.
 - Recitar heurísticas sin conectarlas con la tarea concreta.
 - Aprobar un estado que no abriste.
 - Convertir deriva visual sin costo UX en hallazgos de usabilidad para llenar el informe.
 - Afirmar lo que se ve habiendo leído solo el código.
 - Recomendar "más aire" en una herramienta operacional.
-- Inventar un número de impacto para que la recomendación suene fuerte.
 - Auditar en desktop y declarar el móvil por deducción.
 - Entregar cuarenta hallazgos de detalle y ninguno del recorrido.
 - Confundir exhaustividad con calidad.

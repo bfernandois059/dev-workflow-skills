@@ -25,8 +25,9 @@ comprender las tareas principales
 Empieza por lo que la gente viene a hacer, no por el mapa del sitio. Tres o cuatro tareas
 principales suelen explicar la mayor parte del uso, y una tarea atraviesa varias pantallas.
 
-Una auditoría a escala que enumera secciones en vez de tareas termina describiendo el producto,
-no evaluándolo.
+Prioriza los flujos donde confluyen alta frecuencia real, consecuencias críticas (pérdida de datos,
+pagos, cambios de permisos) y puntos de mayor fricción operativa. Una auditoría a escala que enumera
+secciones en vez de tareas termina describiendo el producto, no evaluándolo.
 
 Si las tareas principales no están claras y nadie puede nombrarlas, eso ya es un hallazgo — y
 puede ser el más importante.
@@ -60,7 +61,9 @@ propios —un configurador, un calendario, un editor— y puede no tener varios 
 ## Representantes
 
 Se elige un representante por arquetipo relevante para las tareas principales, prefiriendo el
-que más se usa o el que más variación de contenido soporta.
+que concentra mayor frecuencia de uso, consecuencias más críticas o mayor variación de contenido.
+No selecciones pantallas solo porque son las primeras del menú, las más vistosas o las más fáciles
+de auditar.
 
 **No hay una cantidad obligatoria.** Ni cinco, ni ocho, ni una por sección. La cantidad la fija
 la variedad real de arquetipos y el alcance acordado. Si dos arquetipos resultan ser el mismo en
@@ -77,15 +80,22 @@ Cada hallazgo se clasifica al emitirlo:
 
 ```text
 Local     → ocurre en esta pantalla por una decisión propia de esta pantalla
-Sistémico → se repite porque una decisión compartida lo produce
+Sistémico → se repite en varias pantallas o flujos
 ```
 
 La señal de que algo es sistémico es haberlo visto en más de un representante, o poder anticipar
 dónde más aparecerá. Un hallazgo sistémico es **una** recomendación con su lista de lugares
 donde verificarla, no una recomendación por pantalla.
 
-Cuando el patrón no viene de un componente sino de una decisión repetida a mano, decirlo también
-es útil: puede ser la señal de que falta un patrón compartido.
+**Sistémico no significa automáticamente componente compartido.** La repetición observada
+(`Verificado`) puede originarse en:
+- un componente compartido de UI (`component-architecture`);
+- una regla funcional o persistencia de estado compartida (`engineering-workflow`);
+- un patrón copiado a mano entre archivos;
+- una política o decisión de producto transversal.
+
+Identifica el síntoma observado como verificado y trata la causa técnica compartida como hipótesis
+(`Inferido`) hasta verificar el código o la regla que lo produce.
 
 ---
 
@@ -141,7 +151,9 @@ Pero:
 - **no define el método**: un barrido automatizado no ve estructura, recorrido ni comprensión;
 - **no se introduce infraestructura nueva** —dependencias, browser automation, scripts propios—
   para poder auditar;
-- lo automatizado se reporta como lo que es: medición, no juicio.
+- lo automatizado se reporta como lo que es: medición, no juicio:
+
+> **Measurement is evidence; it is not the UX judgment itself.**
 
 Si el resultado son solo señales que una herramienta produce sola —contraste, tamaños táctiles,
 saltos de encabezado— y ningún hallazgo de recorrido, no hubo auditoría: hubo barrido. Se rotula
