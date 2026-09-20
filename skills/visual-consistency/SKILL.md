@@ -209,9 +209,9 @@ Utiliza únicamente principios perceptuales que ayuden a evaluar relaciones conc
 - **Énfasis perceptual:** el tratamiento distintivo (color, escala, contraste) guía el orden de atención.
 
 **Límites estrictos de la skill:**
-- **No importar Laws of UX como checklist o doctrina:** No evaluar aquí leyes de interacción o arquitectura cognitiva como Hick, Fitts, Tesler, memoria de trabajo, journeys, funnels ni modelos mentales (pertenecen a `interface-craft` o `ux-audit`).
-- **Describir el defecto observado, nunca recitar teoría:** Los nombres conceptuales pueden apoyar el criterio interno, pero la salida al usuario describe el hecho visual concreto.
-  - *Evitar:* `Ley de proximidad: incumplida. Von Restorff: fallido.`
+- **No convertir principios perceptuales en marcos teóricos que deban recitarse o recorrerse como checklist:** No evaluar aquí heurísticas de interacción o arquitectura de decisiones (como facilidad motriz de puntero, carga de alternativas, memoria de trabajo, journeys, funnels o modelos mentales; pertenecen a `interface-craft` o `ux-audit`).
+- **Describir el defecto observado, nunca recitar teoría:** La salida al usuario describe el hecho visual concreto y la relación que se rompe, sin justificar hallazgos citando nombres de doctrinas, leyes o autores.
+  - *Evitar:* Declarar incumplimientos teóricos abstractos (ej. `etiqueta teórica X: incumplida`).
   - *Correcto:* `El label está más cerca del bloque siguiente que de su propio valor, por lo que la agrupación se lee cruzada.`
 
 ---
