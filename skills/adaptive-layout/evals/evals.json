@@ -34,7 +34,7 @@
     {
       "id": 6,
       "prompt": "Para que cupiera en mobile escondí tres botones secundarios con display:none.",
-      "expected_output": "Detecta que eso es pérdida funcional, no adaptación: ocultar visualmente no puede significar eliminar una capacidad. Distingue entre esconder por espacio y esconder por permisos o por regla del producto. Preserva las tres acciones mediante una presentación apropiada —menú de desbordamiento, sheet, acciones contextuales, vista de detalle— y verifica que la primaria siga visible. No cambia permisos ni reglas de visibilidad funcional.",
+      "expected_output": "Detecta que eso es pérdida funcional, no adaptación: ocultar visualmente no puede significar eliminar una capacidad sin vía equivalente. Aclara que display:none no es un defecto por sí mismo (puede ser legítimo para elementos puramente decorativos, redundantes o con otra vía de acceso), pero aquí las tres acciones perdieron su vía de acceso. Preserva las capacidades mediante una presentación apropiada —menú de desbordamiento, sheet, acciones contextuales o vista de detalle— manteniendo la jerarquía y descubribilidad de la acción principal. No cambia permisos ni reglas de visibilidad funcional.",
       "files": []
     },
     {
@@ -46,7 +46,7 @@
     {
       "id": 8,
       "prompt": "El hero aprobado funciona muy bien en desktop pero en mobile la imagen ocupa casi toda la pantalla y el CTA queda abajo.",
-      "expected_output": "Conserva la intención y la personalidad visual del hero aprobado. Puede cambiar crop, aspect ratio, punto focal, orden y escala para que el mensaje y el CTA queden en la primera pantalla. No interpreta mobile como permiso para eliminar la imagen ni para convertir el hero en un bloque genérico de título y botón. La referencia aprobada sigue mandando sobre la implementación.",
+      "expected_output": "Conserva la intención y la personalidad visual del hero aprobado sin convertirlo en un bloque genérico de título y botón. Evalúa la imagen según su rol: al ser estructural para la dirección visual aprobada, preserva ese rol adaptando crop, aspect ratio, punto focal, orden y escala para que el mensaje y el CTA queden alcanzables en la primera pantalla. No interpreta mobile como permiso para eliminar una imagen estructural ni trata la presencia literal como dogma cuando un asset es meramente decorativo.",
       "files": []
     },
     {
@@ -71,6 +71,18 @@
       "id": 12,
       "prompt": "En desktop mostramos una tabla de propiedades. En mobile cada usuario normalmente abre una propiedad y lee sus datos; no compara filas.",
       "expected_output": "Reconoce que aquí resumen→detalle o cards son apropiados, porque la tarea real es leer entidades individuales. No trata 'nunca cards' como prohibición: la regla es decidir según la tarea, y esta tarea la justifica. Conserva en el resumen los datos que permiten identificar y elegir la propiedad, y mantiene accesibles las acciones relevantes. No elimina datos que el usuario necesita al abrir el detalle.",
+      "files": []
+    },
+    {
+      "id": 13,
+      "prompt": "En 600px asumamos que es un usuario de teléfono, ocultemos los datos avanzados y cambiemos todas las interacciones a touch.",
+      "expected_output": "Rechaza inferir intención, nivel del usuario, tipo de dispositivo o modalidad de interacción únicamente a partir del ancho del viewport (600px). Reconoce que un ancho reducido puede ser una ventana redimensionada en desktop, pantalla dividida o multitarea, y que pantallas grandes también usan touch. Adapta lo que realmente deja de caber según espacio disponible, tarea y jerarquía, conservando los datos avanzados y capacidades necesarias en lugar de eliminarlos bajo el supuesto de que mobile necesita menos información.",
+      "files": []
+    },
+    {
+      "id": 14,
+      "prompt": "En desktop tengo filtros visibles y una propiedad seleccionada en master/detail. Al pasar a mobile usamos drawer + detalle en otra vista; ahora se reinician los filtros y vuelve al listado.",
+      "expected_output": "Identifica la pérdida de continuidad de estado como un defecto adaptativo crítico: la adaptación responsive debe preservar el estado significativo cuando cambia la representación. Conserva los filtros activos y la entidad seleccionada a través de la transición (sidebar a drawer y panel simultáneo a navegación en dos pasos), manteniendo activa la vista de detalle en lugar de resetear arbitrariamente al listado inicial. Evita crear estados desktop y mobile independientes con lógica duplicada, respaldando ambas presentaciones con una única fuente de verdad.",
       "files": []
     }
   ]
