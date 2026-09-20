@@ -37,6 +37,9 @@ cada bloque pequeño convertido en componente
 > existe porque encapsula una responsabilidad real, una decisión compartida o un comportamiento
 > con contrato claro.
 
+> **Share the invariant, not every similarity.**
+> **A good abstraction reduces coordinated change without forcing unrelated consumers to evolve together.**
+
 ```text
 interface-craft         → decide y construye el patrón visual
 adaptive-layout         → decide cómo ese patrón cambia entre tamaños
@@ -161,6 +164,29 @@ responsabilidad?
 > apariciones juntas?** Si la respuesta es sí, hay evidencia fuerte de responsabilidad
 > compartida.
 
+> **La segunda prueba (inversa): si uno de estos consumidores necesita cambiar mañana por una
+> razón propia de su dominio, ¿los demás deberían permanecer intactos?** Si la respuesta es sí y
+> el componente compartido obligaría a modificar o validar a todos, la abstracción probablemente
+> está demasiado arriba o acopla dominios no relacionados.
+
+> **Reuse is valuable when consumers share a reason to change, not merely a shape.**
+> **Do not trade duplication for unrelated change coupling.**
+
+### Abstracción mínima suficiente
+
+Cuando varias implementaciones comparten solo una parte —surface, header, spacing, tratamiento de
+acciones o comportamiento de selección—, extrae **solo esa parte** y mantén los componentes de
+dominio separados:
+
+```text
+CustomerSummary
+InvoiceSummary
+  → comparten SummarySurface y SummaryHeader
+  ✗ no necesitan convertirse en <EntitySummary type="customer|invoice" ... />
+```
+
+> **Prefer the smallest shared responsibility that removes the real source of drift.**
+
 ---
 
 ## El tamaño no es criterio
@@ -217,6 +243,17 @@ justamente en `cinco implementaciones locales → wrapper compartido sobre el pr
 No reimplementes focus trap, portal, navegación por teclado, dismiss, sorting ni filtering para
 controlar el componente desde cero.
 
+> **A wrapper should add product decisions without unnecessarily amputating the underlying capability.**
+
+Un wrapper sobre un primitive debe aportar decisiones reales de producto (estructura, defaults,
+variantes semánticas, tratamiento visual o comportamiento repetido). No debe ser una capa vacía de
+indirection que solo reenvía props con cero decisión, ni una camisa de fuerza que amputa capacidades
+necesarias obligando a los consumidores a saltárselo.
+
+**Accesibilidad y semántica en el contrato.** Preserva roles y semántica accesible (como `<button>`
+en vez de `<div onClick>`), navegación por teclado, focus management, IDs y atributos `aria-*`. Si
+el primitive existente ya los resuelve, delega en él.
+
 ---
 
 ## Variantes semánticas, no flags de página
@@ -258,6 +295,33 @@ separados que comparten una capa inferior.
 > **La meta no es tener un solo componente. Es tener una sola definición por decisión
 > compartida.**
 
+### Variantes reales vs producto cartesiano
+
+Evita diseñar APIs donde múltiples props independientes generan combinaciones que el producto no soporta:
+
+```text
+<Card
+  density="compact|normal"
+  orientation="horizontal|vertical"
+  media="left|right|none"
+  footer="visible|hidden"
+  emphasis="high|low"
+  actions="inline|menu"
+/>
+```
+
+Antes de agregar una variante, evalúa si representa una dimensión independiente o un modo
+estructural completo (`variant="summary"`, `variant="compact-list"`, `variant="featured"`). Si las
+combinaciones están acopladas, modela modos reales o separa responsabilidades en componentes
+distintos.
+
+> **Do not expose combinations the product does not actually support.**
+> **The component API should make valid usage easy and contradictory usage difficult.**
+
+Modela las combinaciones legítimas de forma proporcional al stack del proyecto, evitando estados
+incompatibles (como `imagePosition` sin `image`, o `loading` y `error` simultáneos) sin caer en
+type-golf ni exigir tipos complejos para componentes triviales.
+
 ### Composición o configuración
 
 No resuelvas toda variación agregando props. Si lo compartido es el contenedor, el header, el
@@ -276,6 +340,25 @@ puede ser mejor que veinte flags:
 convenciones del proyecto. Elige composición cuando reduce excepciones y hace visible la
 responsabilidad; elige props cuando la variación es pequeña, controlada y semántica.
 
+### Escape hatches y composición con propósito
+
+No prohíbas `className`, `children`, slots o render props: son válidos para casos excepcionales
+legítimos. Pero detecta cuando una abstracción solo funciona porque cada consumidor termina haciendo:
+
+```text
+className="..." style={{...}} hideX showY overridePadding disableDefaultHeader
+```
+
+> **An escape hatch should handle exceptions, not become the primary API.**
+
+Si todos los consumidores deben sobrescribir la misma parte para deshacer el contrato, esa parte
+está mal ubicada en el componente.
+
+Tampoco escondas diferencias reales detrás de un `children` arbitrario: `<Card>{anything}</Card>`
+no debe ser solo un `div` con nombre elegante. La composición aporta valor cuando el componente
+sigue gobernando la estructura, spacing, jerarquía, semántica, interacción o tratamiento visual que
+realmente debe compartirse.
+
 ---
 
 ## Local, compartido o global
@@ -291,6 +374,12 @@ arquitectura real del proyecto:
 
 Sigue las convenciones existentes cuando sean coherentes. **No crees una taxonomía de carpetas
 nueva solo para esta consolidación.**
+
+> **Place the abstraction at the narrowest level that matches its real responsibility.**
+
+Un componente global compartido por decenas de pantallas tiene un coste de cambio y un blast
+radius de validación muy superior al de un componente local de feature. No promuevas abstracciones
+a niveles superiores por prestigio arquitectónico.
 
 ---
 
@@ -324,6 +413,43 @@ vigente.
 comodidad de componentización.** Si hay lógica duplicada y la tarea pide explícitamente
 consolidarla, aplica `engineering-workflow` según su riesgo.
 
+### Ownership del estado y fuentes de verdad
+
+Antes de mover estado a una abstracción compartida, identifica **quién necesita conocerlo**:
+
+- **Estado local al componente:** solo afecta su comportamiento interno, ningún consumidor
+  necesita coordinarlo y no persiste fuera de su ciclo de vida.
+- **Estado del consumidor o de la aplicación:** pertenece fuera cuando participa en URL, filtros,
+  formularios, selección global, navegación, servidor o store.
+
+> **Put state at the lowest level that owns the decision, not automatically inside the reusable
+> component.**
+
+No subas estado por defecto ("lift state") ni muevas todo el estado dentro del componente
+reutilizable automáticamente.
+
+**No crear dos fuentes de verdad.** Evita abstracciones que terminan mezclando estado interno, prop
+de valor y sincronizaciones con `useEffect` sin contrato claro. Si se admite controlled y
+uncontrolled porque el proyecto lo necesita, hazlo con semántica limpia del stack y sin duplicar
+ownership; no lo agregues por completitud artificial si ningún consumidor lo requiere.
+
+### Dirección de dependencias y límites técnicos
+
+- **Dirección de dependencias:** Un componente compartido de nivel inferior no debe adquirir
+  conocimiento de features superiores para aumentar reutilización:
+  > **Shared lower-level components should not acquire feature knowledge merely to increase reuse.**
+  Si `Card` o un primitive compartido necesita una excepción para `PropertyCard`, mantén la
+  especificidad en la feature o pásale datos ya resueltos; no importes tipos, hooks ni reglas de la
+  feature en el componente genérico.
+
+- **Preservar límites técnicos y de runtime:**
+  > **Do not widen the runtime or dependency boundary for every consumer because one variant needs more capability.**
+  Si una variante necesita interactividad compleja, librerías pesadas (charts, editores, mapas, date
+  pickers complejos) o APIs de navegador, no fuerces a todos los consumidores a cargar esa capacidad
+  ni alteres el runtime boundary (por ejemplo, convertir componentes de servidor en componentes de
+  cliente). Aísla la capacidad en la capa específica o mediante composición, manteniendo la abstracción
+  base liviana.
+
 ---
 
 ## Responsive ya decidido
@@ -355,6 +481,28 @@ OldCard   NewCard   SharedCard   SharedCard2      ← no dejes esto
 
 **Comprueba usos reales antes de borrar. No elimines por intuición.** La eliminación general de
 código muerto no relacionado sigue perteneciendo a `tech-cleanup`.
+
+### Migración consumidor por consumidor
+
+No asumas que validar el primer consumidor garantiza que todos funcionan:
+
+```text
+consumidor → comparar render y comportamiento → corregir contrato si corresponde → siguiente consumidor
+```
+
+Cada consumidor puede contener diferencias funcionales, accesibilidad específica, estados,
+responsive, analytics o datos extremos propios. Si un consumidor exige una excepción que
+contradice la abstracción, detente y reevalúa el límite antes de agregar otro flag.
+
+**No preservar accidentalidades como variantes.** Si un consumidor histórico tiene márgenes,
+borders o paddings accidentales que la fuente de verdad (`ui-system.md` o referencia aprobada)
+demuestra que eran deriva, no crees una variante para replicarlos: elimina la deriva sin
+rediseñar.
+
+**Duplicación temporal controlada.** Que `OldComponent` y `NewSharedComponent` convivan durante una
+migración incremental es normal. El error es cerrar la tarea dejando ambos sin razón ni plan. Antes
+de eliminar el antiguo: comprueba reexports, referencias dinámicas, stories, tests y rutas. **Sin
+import no equivale a sin uso.**
 
 ### Cambio incremental
 
@@ -391,14 +539,20 @@ comprobaste.
 
 Cuando estés creando o ampliando una abstracción compartida, revísala:
 
-- ¿el nombre expresa una responsabilidad?
-- ¿sus consumidores comparten realmente esa responsabilidad?
-- ¿el componente conoce detalles de páginas concretas que no debería?
-- ¿las variantes representan estados o formas semánticas?
-- ¿la API es menor y más clara que la duplicación que reemplazó?
-- ¿un cambio futuro del patrón puede hacerse ahora en un solo lugar?
-- ¿los consumidores conservan la capacidad de expresar diferencias legítimas?
-- ¿se redujo deriva sin crear una megaabstracción?
+- ¿el nombre expresa una responsabilidad clara?
+- ¿sus consumidores comparten realmente esa responsabilidad y evolucionan juntos?
+- ¿pueden cambiar por separado cuando sus dominios lo exijan sin acoplamiento no relacionado?
+- ¿se extrajo la abstracción mínima suficiente por debajo del dominio si correspondía?
+- ¿la abstracción está en el nivel más estrecho posible (local, feature o global)?
+- ¿las variantes representan formas semánticas reales sin exponer combinaciones inválidas?
+- ¿la API hace fácil el uso válido y difícil el contradictorio?
+- ¿el estado vive en el nivel más bajo que es dueño de la decisión sin duplicar fuentes de verdad?
+- ¿los escape hatches atienden excepciones y no son la vía principal para deshacer el contrato?
+- ¿se respeta la dirección de dependencias sin importar conocimiento de features en capas inferiores?
+- ¿se preservaron los límites técnicos y de runtime sin arrastrar dependencias pesadas a todos?
+- ¿los wrappers agregan decisiones de producto sin amputar capacidades de primitives?
+- ¿se preservó la semántica y accesibilidad existente?
+- ¿un cambio futuro del patrón puede hacerse ahora en un solo lugar sin ampliar el blast radius?
 
 **No es un checklist ceremonial para cada componente trivial.** Se usa proporcionalmente.
 
