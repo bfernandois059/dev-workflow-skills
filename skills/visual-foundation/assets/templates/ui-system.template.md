@@ -4,6 +4,8 @@
 
 > **Principio rector:** Documentar el conjunto mínimo de reglas visuales suficiente para que las decisiones futuras sean consistentes. No convertir detalles locales de implementación en leyes globales.
 
+> **Estructura, no preset visual:** Esta plantilla define la estructura documental y el tipo de evidencia a registrar. No contiene valores visuales por defecto, temas ni decisiones predeterminadas. No copies clases, colores, breakpoints, spacing o radios como si fueran reglas del proyecto si no están respaldados por evidencia real.
+
 > **Ninguna sección es obligatoria. Borra las que el proyecto no tenga decididas.** Una sección rellenada por completitud enseña reglas que nadie aprobó y debilita la autoridad del documento.
 
 Cada regla lleva uno de estos tres estados:
@@ -45,112 +47,107 @@ Cada regla lleva uno de estos tres estados:
 
 <Dos o tres frases sobre el carácter o tesis que gobierna la interfaz, respaldadas por una referencia aprobada o por el handoff de `design-directions`. Borra esta sección si no hay referencia formal: no inventes adjetivos genéricos.>
 
-- **Tesis rectora:** <ej. Evidencia y datos mandan sobre discurso comercial>
-- **Invariantes aprobadas:** <ej. Jerarquía de acciones estricta; tratamiento sobrio de superficies; densidad operativa conservada>
-- **Fuente de aprobación:** <ej. Dirección B aprobada en PR #XX / Brand Master>
-- **Estado:** Confirmado — <fuente>
+- **Tesis rectora:** <tesis funcional o de producto respaldada por referencia>
+- **Invariantes aprobadas:** <invariantes transferibles confirmadas en referencia o dirección>
+- **Fuente de aprobación:** <referencia formal, PR o acuerdo>
+- **Estado:** <Confirmado / Derivado>
 
 ---
 
 ## 3. Tipografía
 
-Roles semánticos antes que escala cruda de píxeles. Incluye solo los niveles con función confirmada o derivada.
+Roles semánticos antes que escala cruda de píxeles. Incluye solo los niveles con función confirmada o derivada en el proyecto.
 
-> **Regla de jerarquía:** `PageTitle > SectionHeading > Body > Meta`. La jerarquía se sostiene por escala, peso, posición y contraste relativo.
+> **Principio de jerarquía:** Roles como PageTitle, SectionHeading, Body o Meta expresan niveles claros de lectura. La jerarquía se sostiene por escala, peso, posición y contraste relativo según la evidencia del proyecto.
 
-| Rol semántico | Intención y uso | Mapeo técnico actual | Relación / Jerarquía | Estado |
+| Rol semántico | Intención y uso | Mapeo técnico existente | Relación / Jerarquía | Estado |
 |---|---|---|---|---|
-| PageTitle | Título principal de la pantalla o vista | text-3xl / font-bold / leading-tight | Dominante en la página | |
-| SectionHeading | Cabecera de bloque o tarjeta principal | text-xl / font-semibold | Claramente subordinado a PageTitle | |
-| SubsectionHeading | Subtítulo interno o grupo de campos | text-base / font-semibold | Subordinado a SectionHeading | |
-| Body | Texto de lectura, descripciones, contenido | text-sm / font-normal / leading-normal | Nivel base de legibilidad | |
-| Meta / Caption | Metadatos, etiquetas auxiliares, marcas temporales | text-xs / text-muted / font-medium | Subordinado al Body | |
+| <rol (ej. PageTitle)> | <intención funcional y contexto de uso> | <expresión en código o tokens existentes> | <nivel dominante en la pantalla> | <Confirmado / Derivado> |
+| <rol (ej. SectionHeading)> | <cabecera de sección, módulo o bloque> | <expresión en código o tokens existentes> | <subordinado al título principal> | <Confirmado / Derivado> |
+| <rol (ej. Body)> | <texto base de lectura, descripciones> | <expresión en código o tokens existentes> | <nivel base de legibilidad> | <Confirmado / Derivado> |
+| <rol (ej. Meta / Caption)> | <metadatos, etiquetas auxiliares, marcas> | <expresión en código o tokens existentes> | <subordinado al cuerpo de texto> | <Confirmado / Derivado> |
 
 ---
 
 ## 4. Spacing y relaciones de ritmo
 
-Roles semánticos antes que catálogo exhaustivo de utilidades.
+Roles semánticos y relaciones de distancia antes que catálogo de utilidades o números fijos.
 
-> **Relación fundamental:** `distancia interna de control < separación entre bloques relacionados < separación entre secciones`.
+> **Relación fundamental:** `distancia dentro de grupo < separación entre bloques relacionados < separación entre secciones`.
 
-| Rol semántico | Uso funcional | Mapeo técnico / Valor | Relación | Estado |
+| Rol semántico | Uso funcional | Mapeo técnico existente | Relación | Estado |
 |---|---|---|---|---|
-| ControlGap | Espacio interno de botones, inputs, badges | gap-2 (8px) / px-3 py-1.5 | Unidad mínima de interacción | |
-| ItemGap | Separación entre elementos de un mismo grupo | gap-3 (12px) | Proximidad perceptiva fuerte | |
-| BlockGap | Separación entre grupos de datos o tarjetas | gap-6 (24px) | Delimita bloques temáticos | |
-| SectionGap | Separación entre secciones principales de la vista | gap-12 (48px) | Separación estructural evidente | |
+| <espaciado interno de control> | <botones, inputs, badges respaldados> | <evidencia o tokens del proyecto> | <distancia mínima de interacción> | <Confirmado / Derivado> |
+| <separación entre elementos> | <elementos de un mismo grupo o lista> | <evidencia o tokens del proyecto> | <proximidad perceptiva fuerte> | <Confirmado / Derivado> |
+| <separación entre bloques> | <grupos de datos o módulos relacionados> | <evidencia o tokens del proyecto> | <delimita bloques temáticos> | <Confirmado / Derivado> |
+| <separación entre secciones> | <secciones estructurales de la vista> | <evidencia o tokens del proyecto> | <separación estructural evidente> | <Confirmado / Derivado> |
 
 ---
 
 ## 5. Layout, container y estructura
 
-Principios estructurales globales. No define el layout particular de cada pantalla individual.
+Principios estructurales globales respaldados por fuentes. No define el layout particular de cada pantalla individual.
 
-| Decisión | Valor / Regla | Intención | Estado |
+| Decisión | Regla / Mapeo respaldado | Intención funcional | Estado |
 |---|---|---|---|
-| Container principal | max-w-7xl / mx-auto | Ancho máximo de contenido central | |
-| Gutters globales | px-4 (mobile) / px-8 (desktop) | Margen de seguridad respecto al viewport | |
-| Grid base | 12 columnas / gap-6 | Estructura para vistas de contenido | |
-| Densidad general | <Cómoda / Estándar / Compacta> | Adecuada a la tarea (editorial vs operativa) | |
+| Container principal | <ancho máximo o container respaldado en fuentes> | <intención y centrado según evidencia> | <Confirmado / Derivado> |
+| Gutters globales | <margen lateral respecto al viewport según fuentes> | <margen de seguridad y respiración lateral> | <Confirmado / Derivado> |
+| Grid global | <solo si existe una regla de columnas global documentada> | <alineación estructural del proyecto> | <Confirmado / Derivado> |
+| Densidad general | <principio de densidad derivado de la tarea o fuentes> | <adecuación al contexto de uso del producto> | <Confirmado / Derivado> |
 
 ---
 
 ## 6. Color por función
 
-Roles semánticos de interfaz, no muestrario de marca. Distingue colores de marca de los roles de UI.
+Roles semánticos de interfaz respaldados por el proyecto. Distingue colores de marca de los roles de UI y no asumas que primary es color de marca.
 
-| Rol semántico | Uso en interfaz | Mapeo técnico (Token / Hex) | ¿Color de marca? | Estado |
+| Rol semántico | Uso en interfaz | Mapeo técnico (Token / Hex / Clase) | ¿Color de marca? | Estado |
 |---|---|---|---|---|
-| background | Fondo general de la aplicación | bg-slate-50 / --bg-app | No | |
-| surface | Superficie de tarjetas, paneles y modales | bg-white / --surface | No | |
-| surface-subtle | Fondo alterno o filas cebradas | bg-slate-100 / --surface-subtle | No | |
-| text | Texto principal de lectura y títulos | text-slate-900 / --text-main | No | |
-| text-muted | Texto secundario, ayuda, metadata | text-slate-500 / --text-muted | No | |
-| primary | Acción principal o estado seleccionado | bg-indigo-600 / --primary | Sí | |
-| primary-contrast | Texto o icono sobre color primary | text-white | No | |
-| border | Bordes estructurales y divisiones | border-slate-200 / --border | No | |
-| focus-ring | Anillo de accesibilidad y foco | ring-indigo-500 / ring-2 | No | |
+| background | <fondo general según evidencia del proyecto> | <mapeo respaldado en fuentes> | <Sí / No> | <Confirmado / Derivado> |
+| surface | <superficie de contenedores, paneles, modales> | <mapeo respaldado en fuentes> | <Sí / No> | <Confirmado / Derivado> |
+| text | <texto principal de lectura y títulos> | <mapeo respaldado en fuentes> | <Sí / No> | <Confirmado / Derivado> |
+| text-muted | <texto secundario, metadatos, ayuda> | <mapeo respaldado en fuentes> | <Sí / No> | <Confirmado / Derivado> |
+| primary | <acción principal o estado interactivo destacado> | <mapeo respaldado en fuentes> | <Sí / No> | <Confirmado / Derivado> |
+| border | <bordes estructurales y divisiones> | <mapeo respaldado en fuentes> | <Sí / No> | <Confirmado / Derivado> |
+| <rol adicional (ej. focus, feedback)> | <uso funcional específico justificado> | <mapeo respaldado en fuentes> | <Sí / No> | <Confirmado / Derivado> |
 
 ---
 
 ## 7. Superficies, radio y profundidad
 
-Valores respaldados por función. No crees variantes adicionales (`sm/md/lg/xl`) si el proyecto solo usa dos.
+Valores respaldados por función real en el proyecto. No inventes escalas artificiales si el proyecto usa un solo radio o ninguno, ni introduzcas sombras no respaldadas.
 
-| Rol | Uso | Mapeo técnico / Valor | Estado |
+| Rol funcional | Uso en interfaz | Mapeo respaldado (Radio / Sombra / Borde) | Estado |
 |---|---|---|---|
-| Radius de control | Botones, inputs, badges | rounded-md (6px) | |
-| Radius de contenedor | Tarjetas, modales, paneles | rounded-xl (12px) | |
-| Elevación plana | Superficies sin superposición | shadow-none / border | |
-| Elevación flotante | Menús desplegables, modales, tooltips | shadow-lg / border | |
+| <radio / superficie de control> | <botones, inputs, chips según evidencia> | <valor o token respaldado> | <Confirmado / Derivado> |
+| <radio / superficie de contenedor> | <tarjetas, paneles, modales según evidencia> | <valor o token respaldado> | <Confirmado / Derivado> |
+| <delimitación plana> | <superficies delimitadas por borde o contraste> | <mapeo respaldado (ej. border, sin sombra)> | <Confirmado / Derivado> |
+| <elevación flotante> | <solo si existen overlays, modales o menús con elevación> | <mapeo respaldado si existe> | <Confirmado / Derivado> |
 
 ---
 
 ## 8. Contratos de componentes recurrentes
 
-Solo patrones recurrentes con contrato visual estable que otros agentes necesiten respetar. No es un inventario exhaustivo de componentes.
+Solo patrones recurrentes con contrato visual estable que otros agentes necesiten respetar. No es un inventario exhaustivo de componentes ni prescribe diseños prefabricados.
 
-### PrimaryAction
-- **Rol:** Acción más importante del contexto o vista actual.
-- **Tratamiento:** Superficie primary con alto contraste; prominente y visualmente diferenciada de acciones secundarias.
-- **Estado:** Confirmado / Derivado
-
-### PageHeader
-- **Rol:** Apertura de vistas operacionales o de contenido.
-- **Tratamiento:** Título y acciones primarias/secundarias alineadas en el mismo eje; acciones secundarias subordinadas en peso; sin cards envolventes innecesarias.
-- **Estado:** Confirmado / Derivado
+### <Nombre del patrón recurrente (ej. PrimaryAction o PageHeader)>
+- **Rol:** <función visual e interactiva recurrente>
+- **Contexto:** <dónde y cuándo aplica en el producto>
+- **Invariantes visuales:** <decisiones visuales estables respaldadas por evidencia o fuentes>
+- **Variantes autorizadas:** <solo las variantes justificadas formalmente>
+- **Estado:** <Confirmado / Derivado>
+- **Fuente:** <referencia, pantalla o archivo de origen>
 
 ---
 
 ## 9. Responsive global
 
-Principios y reglas del sistema que se repiten. La adaptación de cada pantalla o tabla particular corresponde a `adaptive-layout`.
+Principios y reglas del sistema que se repiten. La adaptación de cada pantalla, flujo o tabla particular corresponde a `adaptive-layout`.
 
-- **Breakpoints globales:** sm (640px), md (768px), lg (1024px), xl (1280px).
-- **Gutters por viewport:** 16px en pantallas estrechas; 32px en escritorio.
-- **Regla de prioridad general:** En anchos reducidos, el contenido primario y la acción principal conservan visibilidad; los paneles auxiliares colapsan bajo o tras acción de apertura.
-- **Estado:** Confirmado / Derivado
+- **Breakpoints globales:** <solo si el proyecto tiene breakpoints formales establecidos en config o tema>
+- **Gutters por viewport:** <regla de márgenes laterales existente según evidencia>
+- **Principios repetibles:** <solo reglas estructurales confirmadas o derivadas que se repitan en el producto>
+- **Estado:** <Confirmado / Derivado>
 
 ---
 
@@ -158,19 +155,19 @@ Principios y reglas del sistema que se repiten. La adaptación de cada pantalla 
 
 Soluciones que sirven de referencia por la decisión que demuestran, no por sus píxeles incidentales.
 
-| Patrón / Pantalla de referencia | Decisión transferible que demuestra | Contexto de aplicación | Estado |
+| Patrón o pantalla de referencia | Decisión transferible que demuestra | Contexto de aplicación | Estado |
 |---|---|---|---|
-| <ej. PageHeader de /clientes> | Título y acciones comparten eje; secundarios subordinados; densidad operativa | Vistas principales de gestión | Confirmado |
+| <referencia de pantalla o patrón aprobado> | <decisión visual transferible que sirve de guía> | <contexto de uso donde debe replicarse> | <Confirmado> |
 
 ---
 
 ## 11. Patrones a evitar (con evidencia)
 
-Desviaciones que explícitamente no deben repetirse. Solo con evidencia documentada (instrucción, contradicción formal, deriva reiterada o decisión descartada).
+Desviaciones que explícitamente no deben repetirse. Solo con evidencia documentada (instrucción explícita, contradicción formal, deriva reiterada observada o decisión descartada).
 
 | Práctica a evitar | Razón y evidencia | Qué hacer en su lugar |
 |---|---|---|
-| <ej. Cards anidadas para datos simples> | Rompe la jerarquía y satura con bordes redundantes; el patrón aprobado agrupa por espaciado | Agrupar por proximidad (gap-3) sobre la superficie base |
+| <desviación o anti-patrón documentado> | <evidencia concreta: instrucción explícita, deriva observada o decisión descartada> | <alternativa conforme a las reglas activas del sistema> |
 
 ---
 
@@ -180,7 +177,7 @@ Desviaciones funcionales justificadas que no constituyen una regla global.
 
 | Ámbito delimitado | Regla que modifica | Razón funcional | Estado |
 |---|---|---|---|
-| <ej. Tablas operacionales densas> | Spacing vertical de fila (py-1.5 en vez de py-3.5) | Permitir comparación de 50+ filas sin scroll excesivo | Confirmado |
+| <ámbito acotado (ej. vista de tabla densa)> | <regla de spacing o superficie afectada> | <necesidad funcional justificada (ej. comparación de alta densidad)> | <Confirmado / Derivado> |
 
 ---
 
@@ -190,9 +187,8 @@ Cómo se expresan las decisiones en el código actual (Tailwind, variables CSS o
 
 | Decisión semántica | Expresión técnica existente | Archivo / Ubicación |
 |---|---|---|
-| PageTitle | text-3xl font-bold tracking-tight | Clases de utilidad Tailwind |
-| PrimaryAction | bg-primary text-primary-foreground | CSS variables / tailwind theme |
-| ControlGap | gap-2 (0.5rem) | Tailwind default spacing |
+| <rol semántico confirmado o derivado> | <token, variable CSS o clase existente en el proyecto> | <archivo de configuración, CSS o componente> |
+| <rol semántico confirmado o derivado> | <token, variable CSS o clase existente en el proyecto> | <archivo de configuración, CSS o componente> |
 
 ---
 
@@ -202,4 +198,4 @@ Trazabilidad de decisiones. La regla activa es única y vigente; las decisiones 
 
 | Fecha | Decisión actualizada | Valor anterior (superseded) | Regla nueva activa | Fuente que justifica el cambio |
 |---|---|---|---|---|
-| AAAA-MM-DD | Documento creado | N/A | Versión inicial | Inspección de fuentes iniciales |
+| <AAAA-MM-DD> | <decisión actualizada> | <valor o regla anterior> | <regla nueva activa> | <fuente aprobada o justificación> |
