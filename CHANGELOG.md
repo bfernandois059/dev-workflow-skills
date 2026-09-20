@@ -4,28 +4,6 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
-## [visual-foundation-v0.2.0] - 2026-09-19
-
-### Producto
-
-* **Foundation mínima suficiente, no exhaustiva.** Document the smallest set of visual rules that is sufficient to make future decisions consistent. Se establece la pregunta filtro antes de registrar una regla: *¿Una persona o agente necesitará esta decisión para construir correctamente otra interfaz?* Do not turn local implementation detail into global visual law.
-* **Regla semántica vs mapeo técnico.** Separación estricta entre intención semántica / rol (foundation) y mapeo técnico actual (implementación). Semantic intent should survive implementation changes, permitiendo que el proyecto evolucione en tooling o sintaxis sin perder la decisión visual.
-* **Roles y relaciones antes que catálogo de valores.** Preferencia por roles funcionales (`PageTitle`, `SectionHeading`, `Body`, `Meta`, `PrimaryAction`, `Surface`, `ControlGap`, `SectionGap`) y relaciones de ritmo (`distancia interna < distancia bloques < distancia secciones`) sobre listas de números crudos. Foundation should preserve the relationship that matters, not only the value that happened to implement it.
-* **Derivado por consistencia funcional, no mayoría estadística.** Frecuencia es evidencia, no autoridad: repeated value + repeated role + coherent visual function is stronger evidence than frequency alone. No promover valores a regla solo por repetición sin coherencia de rol y contexto.
-* **Reducción de variantes accidentales.** A design system should reduce accidental variation, not give every accident a name. Se rechaza legitimar deriva de valores cercanos (ej. radius 6/8/10/12/16) inventando escalas artificiales; se documentan solo las justificadas por rol.
-* **Excepciones acotadas y explícitas.** Admisión de excepciones locales deliberadas (ej. tablas operacionales densas) con ámbito, regla modificada y razón funcional, sin convertirlas en reglas globales ni catalogar particularidades aisladas.
-* **Regla activa vs historial.** History preserves decisions; it must not compete with the active rule. La regla vigente es única y no compite con decisiones anteriores (superseded), las cuales se trasladan al historial de cambios.
-* **Incertidumbre localizada.** Uncertainty should remain local to the decision it affects. Un pendiente de validación bloquea exclusivamente la decisión afectada y no suspende áreas resueltas del sistema.
-* **Handoff desde `design-directions`.** Promote approved intent into reusable rules, not prototype details into global constraints. Traspaso acotado a invariantes aprobadas transferibles, rechazando layouts o detalles de prototipos.
-* **Patrones aprobados y patrones a evitar con evidencia.** Reference the transferable decision, not the incidental pixels of one screen. Los patrones a evitar requieren evidencia concreta y no preferencias estéticas del agente.
-
-### Técnico
-
-* `SKILL.md`: Integración de principios rectores de foundation mínima, roles semánticos, relaciones de ritmo, derivación funcional, excepciones acotadas, handoff desde design-directions, reglas activas vs historial y límites estrictos (sin Laws of UX ni rediseño).
-* `assets/templates/ui-system.template.md`: Plantilla convertida en estructura documental sin presets visuales ni valores por defecto prefabricados (eliminando incentivos de completitud artificial y escalas/temas engañosos), estructurando roles antes que valores, mapeo técnico dependiente de evidencia del proyecto, excepciones acotadas y tabla de historial sin ambigüedades.
-* `evals/evals.json`: Suite ampliada de 6 a 10 evals, añadiendo eval 7 (frecuencia sin rol común), eval 8 (demasiadas variantes históricas), eval 9 (dirección aprobada transferible) y eval 10 (excepción local acotada).
-* `VERSION`: bump `0.1.0` → `0.2.0` (MINOR).
-
 ### Integración del sistema de skills
 
 Primera pasada de integración del repositorio **como un solo sistema**, no como doce carpetas
@@ -91,6 +69,32 @@ referencias.
   útil para quien vuelve al repositorio.
 - La familia visual sigue siendo **7/7** y `ux-audit` sigue siendo transversal, no una octava
   skill visual.
+
+## [visual-foundation-v0.2.0] - 2026-09-19
+
+### Producto
+* **Foundation mínima suficiente, no exhaustiva**: Document the smallest set of visual rules that is sufficient to make future decisions consistent. Se establece la pregunta filtro antes de registrar una regla: *¿Una persona o agente necesitará esta decisión para construir correctamente otra interfaz?* Do not turn local implementation detail into global visual law.
+* **Regla semántica vs mapeo técnico**: Separación estricta entre intención semántica / rol (foundation) y mapeo técnico actual (implementación). Semantic intent should survive implementation changes, permitiendo que el proyecto evolucione en tooling o sintaxis sin perder la decisión visual.
+* **Roles y relaciones antes que catálogo de valores**: Preferencia por roles funcionales (`PageTitle`, `SectionHeading`, `Body`, `Meta`, `PrimaryAction`, `Surface`, `ControlGap`, `SectionGap`) y relaciones de ritmo (`distancia interna < distancia bloques < distancia secciones`) sobre listas de números crudos. Foundation should preserve the relationship that matters, not only the value that happened to implement it.
+* **Derivado por consistencia funcional, no mayoría estadística**: Frecuencia es evidencia, no autoridad: repeated value + repeated role + coherent visual function is stronger evidence than frequency alone. No promover valores a regla solo por repetición sin coherencia de rol y contexto.
+* **Reducción de variantes accidentales**: A design system should reduce accidental variation, not give every accident a name. Se rechaza legitimar deriva de valores cercanos (ej. radius 6/8/10/12/16) inventando escalas artificiales; se documentan solo las justificadas por rol.
+* **Excepciones acotadas y explícitas**: Admisión de excepciones locales deliberadas (ej. tablas operacionales densas) con ámbito, regla modificada y razón funcional, sin convertirlas en reglas globales ni catalogar particularidades aisladas.
+* **Regla activa vs historial**: History preserves decisions; it must not compete with the active rule. La regla vigente es única y no compite con decisiones anteriores (superseded), las cuales se trasladan al historial de cambios.
+* **Incertidumbre localizada**: Uncertainty should remain local to the decision it affects. Un pendiente de validación bloquea exclusivamente la decisión afectada y no suspende áreas resueltas del sistema.
+* **Handoff desde `design-directions`**: Promote approved intent into reusable rules, not prototype details into global constraints. Traspaso acotado a invariantes aprobadas transferibles, rechazando layouts o detalles de prototipos.
+* **Patrones aprobados y patrones a evitar con evidencia**: Reference the transferable decision, not the incidental pixels of one screen. Los patrones a evitar requieren evidencia concreta y no preferencias estéticas del agente.
+
+### Operación
+* **Plantilla como estructura pura sin presets**: `ui-system.template.md` convertida en estructura documental neutral con placeholders (`<...>`), erradicando clases Tailwind prefabricadas, temas ficticios, breakpoints universales y escalas numéricas por defecto.
+* **Filtros contra alucinación de defaults**: La plantilla enseña qué tipo de evidencia registrar y qué relación semántica modelar sin sembrar decisiones visuales inventadas que puedan copiarse como reglas del proyecto.
+* **Trazabilidad operativa de incertidumbres**: Preguntas respondibles con delimitación de qué decisión bloquean bajo `Pendiente de validar`.
+* **Suite de evaluación ampliada y verificada**: 10 escenarios de decisión en `evals/evals.json`, integrando validación contra presets y adopción acrítica en eval 2, y nuevos evals 7 a 10.
+
+### Técnico
+* `SKILL.md`: Integración de principios rectores de foundation mínima, roles semánticos, relaciones de ritmo, derivación funcional, excepciones acotadas, handoff desde design-directions, reglas activas vs historial y límites estrictos (sin Laws of UX ni rediseño).
+* `assets/templates/ui-system.template.md`: Plantilla convertida en estructura documental sin presets visuales ni valores por defecto prefabricados (eliminando incentivos de completitud artificial y escalas/temas engañosos), estructurando roles antes que valores, mapeo técnico dependiente de evidencia del proyecto, excepciones acotadas y tabla de historial sin ambigüedades.
+* `evals/evals.json`: Suite ampliada de 6 a 10 evals, añadiendo eval 7 (frecuencia sin rol común), eval 8 (demasiadas variantes históricas), eval 9 (dirección aprobada transferible), eval 10 (excepción local acotada) y cobertura en eval 2 contra presets de plantilla.
+* Versión de la skill incrementada a `0.2.0` (MINOR).
 
 ## [design-directions-v0.2.0] - 2026-09-19
 
