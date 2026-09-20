@@ -85,7 +85,7 @@ referencias.
 * **Consecuencias visibles vs flujos cortos artificiales**: *A shorter flow is not better if it makes the decision less informed*. Prohibición de ocultar precios, renovaciones, alcance o irreversibilidad para aparentar simplicidad en el flujo.
 * **Familiaridad sin dogmas ni citas teóricas**: Respeto a convenciones del producto y dominio sin declarar problemas solo por diferir de terceros ni invocar nombres de leyes o autores.
 * **Feedback proporcional a la incertidumbre**: *Add feedback when uncertainty has a cost; do not add feedback as decoration*. Añadir indicadores cuando la incertidumbre genere riesgo o bloqueo; no agregar toasts o spinners como adorno ni imponer umbrales temporales universales.
-* **Prevención, costo y recuperación ante errores**: Secuencia: evitar error razonable → detectar → explicar con claridad → preservar trabajo → ofrecer recuperación. Prioridad de `undo` en acciones reversibles vs confirmación protectora en irreversibles.
+* **Prevención, costo y recuperación ante errores**: Secuencia: evitar error razonable → detectar → explicar con claridad → preservar trabajo → ofrecer recuperación. En acciones reversibles, un mecanismo de deshacer visible y confiable puede reducir o reemplazar confirmaciones previas cuando el costo lo permite; en acciones irreversibles o de alto impacto, se evalúa qué resguardo protector proporcional requiere la decisión, siendo una confirmación explícita una estrategia posible y no una receta universal.
 * **Sistemas operacionales vs sitios comerciales**:
   - Operacionales: *Operational simplicity means less work, not necessarily less information*. Optimización del trabajo acumulado por sesión, densidad útil, escaneo, comparación y continuidad sin exigir «más aire» por estética.
   - Comerciales: *A business outcome does not replace user-task evidence*. Protección de decisiones informadas sin asumir que mayor conversión equivale a mejor UX ni inventar métricas comerciales.
@@ -103,7 +103,7 @@ referencias.
 * **Suite de evaluación ampliada a 14 evals**:
   - Ajuste en eval 1 (CRM operacional: trabajo acumulado, respeto a la frecuencia provista, simplicidad operacional no es menos información).
   - Ajuste en eval 3 (Checkout: preservación de pasos protectores y legales, distinción entre fricción accidental y necesaria, un flujo más corto no es mejor si desinforma).
-  - Nuevo eval 13 (Fricción protectora: rechazo a eliminar confirmación de eliminación definitiva solo por reducir pasos, deliberación informada ante irreversibilidad).
+  - Nuevo eval 13 (Fricción protectora: rechazo a eliminar resguardos ante eliminación destructiva solo por reducir pasos, evaluando consecuencia y deliberación informada sin prescribir confirmación como regla universal).
   - Nuevo eval 14 (Opciones múltiples: rechazo a la regla de «menos opciones = mejor», jerarquía y disclosure en panel operacional sin ocultar capacidades necesarias).
 
 ### Técnico

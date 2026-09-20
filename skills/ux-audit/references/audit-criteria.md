@@ -124,13 +124,14 @@ falta de fricción protectora induce errores graves, pérdidas de datos irrepara
 involuntarias. El exceso de confirmaciones inocuas entrena el clic reflejo ignorando los avisos.
 
 **Qué lo confirma.** Pasos redundantes sin valor para la tarea; eliminación de resguardos en acciones
-irreversibles bajo el pretexto de simplificar; interrupciones modales en operaciones reversibles que
-admiten un simple deshacer (`undo`).
+irreversibles bajo el pretexto de simplificar; interrupciones modales innecesarias en operaciones reversibles
+de bajo impacto donde un mecanismo de deshacer (`undo`) visible y confiable ya ofrece recuperación suficiente.
 
 **Falsos positivos.** Un flujo con más pasos o clics no es automáticamente peor (*Interaction count is
-evidence of effort, not a quality score*). Un paso de verificación antes de borrar o pagar no es un
-defecto: es fricción protectora deseable (*Friction is a cost to evaluate, not automatically a defect to
-remove*). No evalúes con reglas ciegas de "menos pasos siempre es mejor".
+evidence of effort, not a quality score*). Un paso de verificación o confirmación antes de una acción de alto
+impacto no es un defecto: es fricción protectora deseable (*Friction is a cost to evaluate, not automatically a
+defect to remove*). Tampoco asumas que toda acción reversible prescinde de resguardos ni que toda acción
+irreversible exige dogmáticamente un diálogo modal. No evalúes con reglas ciegas de "menos pasos siempre es mejor".
 
 **Corrección a.** `interface-craft` para rediseño del diálogo o secuencia; `engineering-workflow` si exige
 implementar reversibilidad (`undo`) o modificar validaciones del dominio.
@@ -232,23 +233,28 @@ persistencia, validación y manejo real del error.
 ## Confirmaciones
 
 **Qué observar.** Qué se confirma y qué no. Si la confirmación dice **qué** se va a hacer, sobre qué
-objeto concreto y qué consecuencias tendrá. Si se usa fricción protectora ante acciones de alto
-impacto o irreversibles, o si hay confirmaciones redundantes en acciones inocuas.
+objeto concreto y qué consecuencias tendrá. Si se evalúa qué resguardo o fricción protectora proporcional
+necesita la decisión ante acciones irreversibles o de alto impacto, o si hay confirmaciones redundantes en
+acciones inocuas.
 
 **Qué cuesta.** Confirmar por reflejo anula la protección; confirmar todo entrena a ignorar los
-diálogos; no confirmar lo irreversible produce pérdidas reales de datos o dinero.
+diálogos; no resguardar acciones irreversibles o de alto impacto produce pérdidas reales de datos o dinero.
 
 **Qué lo confirma.** Un diálogo genérico (*"¿Estás seguro?"*) sin nombrar el objeto ni sus efectos;
-acciones reversibles que interrumpen con un modal innecesario; acciones destructivas irreversibles
-que se ejecutan al primer clic sin fricción protectora.
+acciones reversibles de bajo impacto que interrumpen con modales innecesarios cuando un deshacer confiable
+alcanza; acciones destructivas o irreversibles que se ejecutan al primer clic sin ningún resguardo proporcional.
 
-**Falsos positivos.** Una acción reversible con mecanismo de deshacer visible (`undo`) **no necesita**
-confirmación — proponerla es agregar fricción accidental. Pero para acciones destructivas irreversibles,
-la confirmación clara es fricción protectora indispensable. Confirmar no es siempre mejor que poder
-deshacer, pero poder deshacer no siempre es posible.
+**Falsos positivos.** En acciones reversibles, un mecanismo de deshacer visible y confiable puede reducir
+o reemplazar la necesidad de confirmación previa cuando el costo del error y la recuperación lo permiten;
+pero si el error produce consecuencias operacionales graves o la recuperación es costosa, la protección previa
+puede seguir justificada. En acciones irreversibles o de alto impacto, evalúa qué fricción protectora
+proporcional necesita la decisión: una confirmación explícita es una estrategia posible, no una solución
+universal (pudiendo existir pasos deliberados, separación física de acciones, ventanas de recuperación, papelera
+o selección explícita del objeto). La pregunta clave sigue siendo: **¿qué cuesta equivocarse y qué tan fácil es
+recuperarse?**
 
-**Corrección a.** `interface-craft` para diseño del diálogo o notificación; `engineering-workflow` si
-hay que implementar deshacer o cambiar el comportamiento.
+**Corrección a.** `interface-craft` para diseño del diálogo, resguardo o notificación; `engineering-workflow`
+si hay que implementar deshacer, ventanas de recuperación o cambiar el comportamiento.
 
 ---
 

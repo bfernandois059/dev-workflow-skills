@@ -395,8 +395,11 @@ Sigue un orden riguroso:
 ```text
 evitar el error cuando sea razonable → detectar → explicar con claridad → preservar trabajo → ofrecer recuperación
 ```
-Para acciones reversibles, ofrecer `undo` suele ser superior a interrumpir con diálogos de
-confirmación. Para acciones irreversibles o de alto impacto, la fricción protectora está justificada.
+En acciones reversibles, un mecanismo de deshacer visible y confiable puede reducir o reemplazar la
+necesidad de confirmación previa cuando el costo del error y la recuperación lo permiten. En acciones
+irreversibles o de alto impacto, evalúa qué fricción protectora proporcional necesita la decisión: una
+confirmación explícita es una estrategia posible, no una solución universal (pudiendo existir pasos
+deliberados, separación física de acciones, ventanas de recuperación o selección explícita del objeto).
 La pregunta clave es: **¿qué cuesta equivocarse y qué tan fácil es recuperarse?**
 
 ---
