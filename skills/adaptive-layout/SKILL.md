@@ -27,7 +27,11 @@ desktop → hacer todo más angosto → apilar columnas → ocultar lo que moles
 
 Eso no es adaptación. Es la misma pantalla con menos aire y menos capacidades.
 
-> **Responsive no es reducir desktop.** Lo primero en una pantalla pequeña puede no ser lo
+> **Preserve the task and capability, not the original arrangement.**
+>
+> **A viewport change is a space constraint, not evidence that the user’s intent changed.**
+>
+> Responsive no es reducir desktop. Lo primero en una pantalla pequeña puede no ser lo
 > primero en una grande, y decidir esa prioridad es parte del trabajo, no una consecuencia
 > automática del breakpoint.
 
@@ -128,9 +132,11 @@ referencia, se **declara la discrepancia** y se **deriva la sincronización a
 
 ---
 
-## Preservar capacidad, no posición
+## Preservar intención y capacidad, no presencia literal
 
-Una capacidad importante **puede cambiar de forma** entre tamaños. Eso es adaptación:
+Una capacidad importante **puede cambiar de forma** entre tamaños. Preservar una capacidad no
+exige conservar su posición literal, su representación gráfica idéntica ni su visibilidad
+permanente:
 
 ```text
 Desktop: filtros visibles en sidebar        Mobile: botón Filtros → sheet/drawer
@@ -138,20 +144,93 @@ Desktop: secundarias visibles en toolbar    Mobile: primaria visible, secundaria
 Desktop: detalle y listado simultáneos      Mobile: listado → detalle
 ```
 
-Lo que no es adaptación:
+En ambos casos la tarea sobrevive, aunque la simultaneidad o la disposición cambien.
+
+> **Preserve what the user must still be able to understand or do; adapt how and when it is
+> presented.**
+
+### Ocultamiento legítimo vs pérdida funcional
+
+`display:none` no es intrínsecamente un defecto. Es perfectamente legítimo para:
+
+- Contenido puramente decorativo que no aporta a la comprensión.
+- Duplicados de presentación en la misma vista.
+- Elementos redundantes cuya información ya está expresada en el contexto.
+- Información secundaria o acciones que permanecen plenamente accesibles por otra vía (drawer, menú,
+  disclosure, vista de detalle).
+- Variantes de interfaz que no aplican bajo la composición activa.
+
+El error adaptativo no es la propiedad CSS, sino la pérdida de capacidades:
 
 ```text
-no cabe → display:none
+no cabe → display:none → ya no existe vía equivalente para ejecutar la acción o ver el dato
 ```
 
-> **Ocultar visualmente no puede significar eliminar una capacidad.**
+> **Hiding presentation is acceptable; hiding required capability without an equivalent path is
+> not.**
 
-Si una acción, un filtro o un dato deja de estar **permanentemente** disponible, hace falta
-evidencia de que es prescindible en ese contexto. Sin esa evidencia, sigue siendo alcanzable
-mediante una presentación adecuada — menú, sheet, disclosure, vista secundaria.
+**No cambies permisos ni reglas de visibilidad funcional.** Un elemento que el producto oculta por
+rol sigue oculto; un elemento que el layout no alcanza a mostrar es un problema de adaptación de
+espacio, no de autorización.
 
-**No cambies permisos ni reglas de visibilidad funcional.** Un elemento que el producto oculta
-por rol sigue oculto; un elemento que el layout no alcanza a mostrar es un problema de layout.
+### Clasificar qué debe sobrevivir
+
+Ante cualquier elemento en disputa por espacio, evalúa contextualmente su naturaleza:
+
+- **Capacidad funcional** (filtrar, guardar, exportar, navegar, ordenar, abrir detalle): debe seguir
+  disponible si pertenece al alcance de la pantalla.
+- **Información necesaria** (datos para identificar registros, comparar opciones, decidir o
+  completar la tarea): debe seguir siendo recuperable.
+- **Contexto** (datos para entender sobre qué se opera: entidad activa, filtros aplicados, paso
+  actual, periodo): puede reubicarse o requerir disclosure, pero no desaparecer si su ausencia vuelve
+  ambigua la tarea.
+- **Apoyo visual** (refuerzo de marca, evidencia visual, diagramas explicativos): su permanencia
+  depende de su rol real en la experiencia aprobada (ver sección de Media).
+- **Decoración** (fondos ornamentales, texturas, ilustraciones accesorias): puede reducirse u omitirse
+  legítimamente si no aporta capacidad ni comprensión.
+
+Esta clasificación es una herramienta interna de decisión para guiar la adaptación, no un checklist
+burocrático que deba transcribirse en cada entrega.
+
+### Continuidad de estado entre representaciones
+
+Cuando una misma tarea o capacidad cambia de presentación entre tamaños:
+
+```text
+sidebar → drawer
+tabla → resumen/detalle
+tabs → selector desplegable
+toolbar → menú overflow
+filtros fijos → sheet modal
+master/detail → navegación en dos pasos
+```
+
+El estado significativo **debe conservarse íntegramente a través de la transición**:
+
+- Filtros activos y términos de búsqueda.
+- Selección de registros o entidad activa.
+- Pestaña seleccionada, ordenamiento y paginación.
+- Campos editados y borradores en progreso.
+- Estado de acordeones o secciones expandidas.
+
+> **Responsive adaptation must preserve meaningful state when the representation changes.**
+
+Si en desktop el usuario tenía seleccionado el cliente `#123` o el filtro `Región = Metropolitana`,
+reducir la ventana o pasar a mobile debe mostrar al cliente `#123` en la vista de detalle y el filtro
+activo en el sheet. Perder el contexto de trabajo y resetear la vista al listado inicial vacío es un
+fallo adaptativo grave.
+
+### Una sola fuente de estado
+
+Si para resolver un espacio se requieren dos representaciones visuales distintas (por ejemplo, una
+barra lateral en pantallas anchas y un drawer en pantallas estrechas, o una tabla y una vista de
+tarjetas):
+
+- Ambas deben compartir la **misma fuente de estado**, dominio y despachadores de acciones.
+- Evita componentes paralelos e independientes (como `<DesktopFilters />` y `<MobileFilters />`)
+  que dupliquen estado interno o bifurquen reglas de negocio.
+
+> **Different presentations may exist; duplicated product logic should not.**
 
 ---
 
@@ -171,6 +250,52 @@ Mobile:  listado → seleccionar → detalle → acciones contextuales
 Dos errores simétricos: **preservar la simultaneidad** cuando el espacio ya no permite hacerlo
 bien, y **añadir pasos** cuando la tarea sí requiere comparar de un vistazo.
 
+### Viewport ≠ dispositivo ≠ contexto ≠ intención
+
+> **A viewport width does not tell you why the user is there.**
+
+Un ancho reducido es una restricción de espacio físico disponible para renderizar, no evidencia
+de qué busca el usuario ni de su nivel de experiencia. No asumas automáticamente:
+
+```text
+mobile  → usuario apurado, necesita menos información, solo touch
+desktop → usuario avanzado, sesión larga, solo teclado y ratón
+```
+
+Un viewport estrecho puede ser:
+
+- Un teléfono móvil.
+- Una ventana redimensionada o reducida en un monitor de escritorio.
+- Una sesión de pantalla dividida (split screen) en desktop.
+- Una tablet en multitarea horizontal.
+- Una vista embebida (webview) dentro de otra aplicación.
+
+Y un dispositivo grande puede operarse mediante pantalla táctil o stylus, del mismo modo que un
+dispositivo pequeño puede conectarse a teclado o puntero externo.
+
+> **Layout constraints and input modality are related in practice, but one does not prove the
+> other.**
+
+No elimines datos avanzados ni recortes capacidades operacionales asumiendo que "en mobile se
+necesita menos". Y no transformes automáticamente `hover → tap` o `tooltip → bottom sheet` solo
+porque bajó el breakpoint: toma decisiones según espacio disponible, tarea conocida, jerarquía y
+contenido real.
+
+### Disclosure como trade-off deliberado
+
+> **Adaptive disclosure trades space for access cost; make that trade deliberately.**
+
+Ocultar contenido o controles detrás de un menú, drawer o acordeón gana espacio visual en la vista
+principal, pero transfiere un costo directo al usuario: añade pasos de interacción y reduce el
+descubrimiento inmediato.
+
+Haz ese trade-off conscientemente:
+
+- Una acción repetida decenas de veces por hora no tolera quedar enterrada en un segundo nivel.
+- Una acción infrecuente, de configuración o destructiva se beneficia de un acceso deliberado.
+- Un conjunto de filtros secundarios gana claridad dentro de un sheet si los filtros activos
+  permanecen visibles a nivel superior.
+
 ---
 
 ## Breakpoints guiados por contenido
@@ -189,6 +314,33 @@ Cinco breakpoints cercanos sosteniendo la misma estructura no son responsive fin
 sucesivos. **Si hacen falta muchos breakpoints cercanos para sostener la misma estructura,
 trátalo como una señal de que la composición puede estar mal resuelta. Revísala antes de agregar
 otro breakpoint.** Cuando ese es el problema, resolverlo hace desaparecer la mayoría.
+
+### Viewport breakpoint vs container constraint
+
+> **Respond to the constraint that actually changes.**
+
+Antes de vincular una transformación a una media query de ventana, hazte esta pregunta:
+
+*¿Este componente necesita adaptarse porque cambió el viewport general o porque cambió el espacio que su contenedor inmediato le entrega?*
+
+- **Viewport breakpoint**: adecuado para el shell global, la navegación principal, el layout de la
+  página, encabezados y pies.
+- **Container constraint** (container queries o layouts elásticos locales): adecuado para
+  componentes modulares que pueden colocarse en distintos contextos (sidebar, modal, columna de
+  dashboard, widgets de retícula) y cuyo comportamiento depende de su propio ancho disponible.
+
+No inventes dependencias ni fuerces una tecnología si el proyecto no la usa; respeta el tooling
+existente y responde a la restricción que realmente cambia.
+
+### Variabilidad real de contenido
+
+No elijas una transición o un breakpoint basándote en que "con el texto de ejemplo cabe":
+
+- Comprueba nombres reales largos, cifras grandes, textos localizados/traducidos y estados dinámicos.
+- La composición adaptativa debe tolerar variación razonable sin desbordar ni cortar información
+  crítica.
+- No crees un breakpoint específico para cada string extremo: resuelve el envoltorio, el espaciado y
+  el truncamiento accesible dentro de la composición general.
 
 ---
 
@@ -246,14 +398,48 @@ menú: son opciones, **ninguna es receta universal**.
 **No inventes una arquitectura de información nueva y no reduzcas diez destinos a cuatro porque
 no caben.** La estructura funcional permanece; cambia cómo se accede a ella.
 
-**Acciones.** Preserva la primaria visible. Agrupa las secundarias cuando convenga, evita
-toolbars imposibles de escanear y no sustituyas etiquetas importantes por iconos sin contexto
-solo para ahorrar ancho. Dos comprobaciones concretas:
+**Acciones.** Preserva la prioridad y la accesibilidad de las acciones, no una visibilidad
+permanente dogmática:
 
-- **Una acción destructiva no gana protagonismo** por haber quedado sola en una fila.
-- Si una acción **frecuente** pasa a un menú, verifica que la fricción añadida se justifique.
+> **Preserve action priority and reachability, not a universal physical position.**
 
-El objetivo es adaptar prioridad, no esconder decisiones difíciles.
+Una acción primaria frecuente o dominante debe conservar su jerarquía, descubribilidad y acceso
+predecible desde el punto de decisión de la tarea. Sin embargo, no todo flujo exige un botón fijo
+en pantalla todo el tiempo:
+- Acciones contextuales que aparecen tras seleccionar un registro o elemento son legítimas.
+- Acciones al final de un formulario donde se completa la decisión se colocan donde corresponde leerlas.
+- Barras fijas inferiores pueden ser útiles en mobile cuando hay scroll largo, pero innecesarias en desktop.
+- **Evalúa la fricción añadida:** si una acción **frecuente** pasa a un menú o submenú, evalúa el
+  costo de acceso; si el usuario la ejecuta constantemente, no debe quedar enterrada.
+- **Acciones destructivas:** comprueba que una acción destructiva no gane protagonismo indebido por
+  quedar aislada en una fila tras apilarse.
+- **Iconos vs etiquetas:** agrupa las secundarias cuando convenga, evita toolbars saturadas y no
+  sustituyas etiquetas esenciales por iconos mudos solo para ganar ancho.
+
+---
+
+## Media e imágenes: evaluar el rol
+
+> **Preserve the visual role when the role matters; do not preserve an asset merely because it
+> existed on desktop.**
+
+En lugar de asumir dogmas como *"una imagen nunca se elimina en mobile"* o su opuesto *"en mobile
+las imágenes estorban"*, pregúntate:
+
+*¿Qué rol cumple esta imagen en la experiencia aprobada?*
+
+- **Rol estructural o esencial:**
+  - Evidencia de producto o catálogo (e-commerce, inventario).
+  - Fotografía principal de identificación (inmobiliario, fichas, proyectos).
+  - Diagrama, gráfico o explicación visual necesaria para la tarea.
+  - Hero cuya dirección visual aprobada depende intrínsecamente de esa imagen.
+  *Preserva su rol:* adapta crop, proporción (`aspect-ratio`), punto focal, reordenamiento con el
+  texto o escala. No la elimines simplemente porque incomoda el layout.
+- **Rol decorativo, redundante o atmosférico:**
+  - Fondos ornamentales, texturas o ilustraciones accesorias.
+  - Imágenes duplicadas de apoyo que no aportan evidencia ni capacidad.
+  *Tratamiento legítimo:* puede reducirse, diferirse u omitirse si la dirección aprobada y la tarea
+  sobreviven íntegramente sin ella.
 
 ---
 
@@ -292,6 +478,16 @@ produce focus duplicado, IDs repetidos, estados divergentes y problemas de acces
 Usa primero lo que el proyecto ya tiene: CSS, Tailwind, grid, flex, container queries, primitives
 y librerías de componentes existentes.
 
+> **Responsive adaptation does not justify rebuilding capabilities the project already has.**
+
+Si el proyecto ya cuenta con drawers, sheets, dialogs, popovers, responsive tables o librerías de
+gráficos, apóyate en sus capacidades antes de construir otra implementación paralela solo para
+mobile:
+
+- **No reconstruyas gráficos a mano** con SVGs artesanales si el proyecto ya integra una librería de
+  visualización; la mayoría ya incluye opciones responsivas.
+- **No inventes overlays caseros** si existe un primitive de sheet, drawer o dialog competente y
+  accesible en el codebase.
 - **No introduzcas JavaScript** para algo que CSS resuelve bien.
 - **No fuerces una solución CSS extremadamente compleja** cuando el comportamiento pedido
   necesita estado real de interfaz.
@@ -338,6 +534,12 @@ Una tarea responsive es visual. **No se declara terminada con evidencia técnica
 build ✓   lint ✓   typecheck ✓        ← no es validación responsive
 ```
 
+> **Validate transitions, not device labels.**
+
+Los puntos de prueba no son etiquetas de dispositivos ni resoluciones fijas de catálogo: son las
+transiciones reales donde cambia la composición, comienza el wrapping o se conmuta la
+representación.
+
 Qué inspeccionar, según el alcance:
 
 - **"Corrige mobile"** → el viewport mobile objetivo **y** el de origen, para confirmar que no
@@ -348,8 +550,14 @@ Qué inspeccionar, según el alcance:
 **No construyas una matriz artificial de veinte resoluciones.** Valida los puntos donde
 realmente cambia la composición.
 
-En cada uno comprueba: prioridad · jerarquía · navegación · acciones · overflow · legibilidad ·
-densidad · comportamiento de tablas y formularios · **capacidades preservadas**.
+En cada uno comprueba:
+- **Prioridad y jerarquía:** qué se ve primero y qué relación guardan los bloques.
+- **Capacidades preservadas:** todas las acciones, datos y accesos necesarios siguen disponibles.
+- **Continuidad de estado:** filtros aplicados, selección activa, borradores en campos y entidad
+  abierta no se resetean al alternar entre representaciones o redimensionar la ventana.
+- **Comportamiento de tablas y formularios:** lectura secuencial coherente, sin overflow en la
+  página.
+- **Densidad y legibilidad:** textos sin cortes indeseados, espaciados consistentes.
 
 **Con los estados que ya existan**, no solo con el ejemplo perfecto que cabe justo: loading,
 empty, error, listas largas, nombres largos, valores grandes, ausencia de imagen y acciones

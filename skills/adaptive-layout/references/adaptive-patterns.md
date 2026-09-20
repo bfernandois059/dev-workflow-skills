@@ -115,16 +115,17 @@ reconoce sin texto.
 **Qué se rompe.** Un grupo de botones que en desktop se lee de un vistazo pasa a apilarse,
 igualando el peso de todos o dejando una acción destructiva sola y protagonista.
 
-**Qué se preserva.** La acción primaria visible y distinguible; la jerarquía entre primaria,
-secundarias y destructiva.
+**Qué se preserva.** La prioridad y la accesibilidad de la acción primaria respecto al punto de
+decisión; la distinción clara entre primaria, secundarias y destructiva. No impone una visibilidad
+permanente ni una posición física universal.
 
-**Estrategias.** Primaria visible y secundarias en menú · barra de acción fija al pie para la
-primaria de la pantalla · acciones por fila movidas a un menú contextual o a la vista de detalle
-· acciones masivas que aparecen solo al haber selección.
+**Estrategias.** Primaria destacada y secundarias agrupadas en menú de desbordamiento · barra de
+acción contextual al pie donde la lectura concluye · acciones por fila movidas a un menú contextual
+o al detalle · acciones masivas que aparecen solo al existir selección.
 
-**Cuándo destruye la tarea.** Cuando una acción destructiva queda con el mismo peso —o más— que
-la primaria por accidente de apilamiento. Y cuando una acción que se ejecuta decenas de veces al
-día se manda al menú por ahorrar ancho.
+**Cuándo destruye la tarea.** Cuando una acción destructiva adquiere protagonismo involuntario por
+aislamiento en una fila. Y cuando una acción de alta frecuencia —que se ejecuta decenas de veces al
+día— se oculta tras menús multinivel sin considerar el costo de interacción añadido.
 
 ---
 
@@ -137,8 +138,9 @@ comparable, mucho antes de que el layout "se rompa" técnicamente.
 comparación; si existía para navegar, el escaneo.
 
 **Estrategias.** Reducción escalonada de columnas guiada por el ancho mínimo útil de la celda ·
-promoción de un elemento a ancho completo cuando domina · scroll horizontal contenido para
-series homogéneas · agrupación de secundarios en un bloque compacto · reordenamiento por
+adaptación basada en la restricción del contenedor cuando la grilla vive en paneles o widgets
+modulares · promoción de un elemento a ancho completo cuando domina · scroll horizontal contenido
+para series homogéneas · agrupación de secundarios en un bloque compacto · reordenamiento por
 prioridad.
 
 **Cuándo destruye la tarea.** Cuando pasar a una columna convierte una comparación en una
@@ -234,16 +236,20 @@ para hacerlo responsive: eso es reimplementar peor algo ya resuelto.
 **Qué se rompe.** Listado y detalle simultáneos dejan de caber; cada panel queda demasiado
 angosto para servir.
 
-**Qué se preserva.** La capacidad de recorrer el listado y de volver a él sin perder posición ni
-filtros.
+**Qué se preserva.** La continuidad de la tarea y del contexto: si el usuario ya tenía seleccionada
+una entidad en desktop y la ventana cambia de tamaño, esa entidad debe permanecer activa en la
+vista de detalle. La capacidad de recorrer el listado y volver a él sin perder filtros aplicados,
+búsqueda ni posición.
 
 **Estrategias.** Navegación en dos pasos —listado → detalle— con retorno explícito · detalle en
-sheet sobre el listado cuando la consulta es breve · navegación entre registros desde el propio
-detalle, para no obligar a volver · conservación del scroll y del estado del listado al regresar.
+sheet o drawer sobre el listado cuando la consulta es breve · navegación entre registros desde el propio
+detalle, para no obligar a volver · conservación del scroll y del estado del listado al regresar ·
+fuente de estado compartida entre el panel y la vista individual.
 
-**Cuándo destruye la tarea.** Cuando el trabajo consistía en revisar muchos registros seguidos y
-cada uno ahora cuesta ir y volver perdiendo la posición. Ahí lo que falta no es el layout de dos
-paneles: es la navegación entre registros dentro del detalle.
+**Cuándo destruye la tarea.** Cuando al alternar entre vista amplia y reducida se resetea la entidad
+seleccionada o se pierden los filtros, obligando al usuario a reiniciar la búsqueda desde cero. Y
+cuando el trabajo consistía en revisar muchos registros seguidos y cada uno ahora cuesta ir y volver
+perdiendo la posición.
 
 ---
 
@@ -252,15 +258,19 @@ paneles: es la navegación entre registros dentro del detalle.
 **Qué se rompe.** Un panel de filtros lateral o una fila de controles no caben, y los filtros
 activos dejan de ser visibles.
 
-**Qué se preserva.** Saber **qué filtros están aplicados** y poder quitarlos. Eso es tan
-importante como poder aplicarlos.
+**Qué se preserva.** Saber **qué filtros están aplicados** y poder modificarlos o quitarlos sin
+pérdida de estado. Mantener una única fuente de verdad compartida entre la vista desktop y mobile.
 
-**Estrategias.** Botón Filtros que abre un sheet, con contador de filtros activos · chips de
-filtros aplicados visibles sobre los resultados · los uno o dos filtros más usados en línea y el
-resto en el sheet · aplicación diferida con un botón de confirmar cuando cada cambio recarga.
+**Estrategias.** Botón Filtros que abre un sheet (reutilizando el primitive de overlay del proyecto),
+con contador de filtros activos · chips de filtros aplicados visibles sobre los resultados · fuente
+de estado unificada que alimenta tanto el panel expandido como el drawer · los uno o dos filtros más
+usados en línea y el resto en el sheet · aplicación diferida con un botón de confirmar cuando cada
+cambio recarga.
 
 **Cuándo destruye la tarea.** Cuando los filtros aplicados quedan invisibles dentro del overlay y
-el usuario ve un conjunto de resultados sin entender por qué está incompleto.
+el usuario ve un conjunto de resultados sin entender por qué está incompleto. O cuando se duplica la
+lógica en componentes independientes (`DesktopFilters` vs `MobileFilters`) y los filtros seleccionados
+en una presentación desaparecen al pasar a la otra.
 
 ---
 
@@ -287,36 +297,45 @@ búsqueda pasa a costar un toque adicional para ganar el ancho de un botón que 
 las acciones quedan fuera de alcance o el fondo desplaza en lugar del overlay.
 
 **Qué se preserva.** Que las acciones de confirmar y cancelar siempre sean alcanzables, y que se
-entienda sobre qué se está actuando.
+entienda sobre qué se está actuando. Reutilizar los primitives existentes del proyecto.
 
-**Estrategias.** Sheet a ancho completo desde el borde inferior · pantalla completa para
+**Estrategias.** Reutilizar primitives existentes de sheet, drawer o dialog antes de fabricar
+overlays ad-hoc · sheet a ancho completo desde el borde inferior · pantalla completa para
 contenido extenso o formularios · cabecera y acciones fijas con el cuerpo desplazable ·
 conversión a página propia cuando el contenido justifica una URL.
 
 **Cuándo destruye la tarea.** Cuando el overlay tapa el contexto que hacía falta para decidir, y
-el usuario tiene que cerrarlo para recordar sobre qué estaba confirmando.
+el usuario tiene que cerrarlo para recordar sobre qué estaba confirmando. O cuando se inventa un
+drawer casero sin soporte de focus ni accesibilidad en lugar de usar el componente ya resuelto del
+proyecto.
 
 ---
 
 ## Imágenes y media
 
 **Qué se rompe.** Una imagen dimensionada para desktop ocupa casi todo el viewport, empuja el
-mensaje y el CTA fuera de la primera pantalla, o se recorta perdiendo su punto focal.
+mensaje y las acciones principales fuera de la primera pantalla, o se recorta perdiendo su punto
+focal.
 
-**Qué se preserva.** La intención visual y el carácter de marca. La proporción puede cambiar; la
-presencia de la imagen no es negociable solo porque estorba.
+**Qué se preserva.** El rol que la imagen cumple en la experiencia aprobada. Si es estructural para
+la comprensión, la evidencia del producto o la identidad aprobada del diseño, se preserva ese rol
+adaptando crop, proporción o disposición. Si es meramente decorativa, su presencia física no es un
+dogma.
 
-**Estrategias.** Cambio de aspect ratio por viewport · punto focal declarado para que el crop
-conserve lo importante · reordenamiento de imagen y texto · texto superpuesto que pasa a bloque
-adyacente cuando el contraste ya no aguanta · escala reducida conservando el gesto.
+**Estrategias.**
+- **Evaluar el rol antes de decidir:** determinar si la imagen aporta evidencia de producto,
+  identificación, explicación o solo ambientación decorativa.
+- Cambio de `aspect-ratio` por viewport para liberar altura útil en pantallas bajas.
+- Punto focal declarado para que el recorte conserve la parte relevante.
+- Reordenamiento de imagen y texto para no relegar la llamada a la acción.
+- Texto superpuesto que pasa a bloque adyacente si el contraste o la legibilidad se degradan.
+- Reducción de escala preservando el gesto visual.
+- Reducción o supresión deliberada de elementos puramente decorativos si la intención y la tarea
+  sobreviven.
 
-**Cuándo destruye la tarea.** Reducir toda imagen grande a una miniatura decorativa, o conservar
-un hero enorme en mobile solo porque así funciona en desktop.
-
-En un hero, **conserva la prioridad aprobada**. Si mensaje y acción son el objetivo dominante,
-deben seguir siendo alcanzables y visibles sin que la imagen los desplace; si la referencia hace
-de la imagen el elemento principal —editorial, inmobiliario, producto, lujo—, adapta crop y
-proporción sin quitarle ese rol. En ningún caso **eliminarla es adaptarla**.
+**Cuándo destruye la tarea.** Reducir una imagen estructural (catálogo, arquitectura, diagrama clave)
+a una miniatura inútil o eliminarla por pereza de layout. Y en el extremo opuesto, mantener un asset
+enorme o forzar su presencia decorativa solo porque existía en desktop, empujando la tarea principal.
 
 ---
 
