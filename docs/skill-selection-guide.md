@@ -1,8 +1,10 @@
 # Guía de selección de skills
 
-Fuente principal para decidir **qué skill usar para el problema actual**, cuándo no usarla y
-quién toma el relevo después. No reemplaza a los `SKILL.md`: cada skill documenta su propio
-método. Este documento solo resuelve el enrutamiento.
+Fuente principal para decidir **qué skill usar para el problema actual**, cuándo no usarla,
+cómo se combinan y quién toma el relevo después. El repositorio opera en tres niveles documentales:
+* **`README.md`**: orienta rápidamente y ofrece un mapa general de entrada.
+* **Esta guía (`docs/skill-selection-guide.md`)**: resuelve dudas de selección, fronteras finas, handoffs y composición detallada.
+* **`SKILL.md` (en cada carpeta de skill)**: documenta y ejecuta el método operativo concreto.
 
 Para el contrato interno de la familia visual —qué reglas comparten las siete skills de
 interfaz y por qué están separadas así— ver
@@ -184,57 +186,111 @@ priorizado es un resultado completo.
 
 ## Flujos recomendados
 
-Son ejemplos de composición, **no pipelines obligatorios**. Cada flecha es una decisión que
-alguien toma, no un paso automático.
+Son ejemplos de composición en situaciones reales, **no pipelines obligatorios**. Cada flecha representa una decisión contextual que el equipo toma, no un paso automático e inevitable. Si una tarea queda resuelta en la primera skill, el trabajo concluye ahí.
 
-### Proyecto nuevo
+### 1. Proyecto nuevo
 
 ```text
 project-blueprint
-→ visual-foundation        cuando existe trabajo visual real
-→ design-directions        solo si la dirección sigue abierta
+→ visual-foundation          si existe trabajo visual
+→ design-directions          solo si la dirección sigue abierta
 → interface-craft
+→ adaptive-layout            cuando haya adaptación entre tamaños
+→ visual-consistency         antes de entrega visual
 ```
 
-`engineering-workflow` gobierna la implementación cuando corresponda.
+* **Cuándo usar esta ruta**: Al construir un producto o sitio web desde cero.
+* **Gobierno técnico**: `engineering-workflow` no es una etapa visual posterior; gobierna la disciplina técnica transversal (ramas, commits, PRs y validaciones de código) cada vez que se ejecuten cambios en el repositorio.
+* **Excepciones**: Si el proyecto parte con un mockup aprobado o diseño cerrado, se salta `design-directions` directamente a `interface-craft`. Si es un servicio puramente backend o CLI sin interfaz, solo aplican `project-blueprint` y `engineering-workflow`.
 
-### Feature funcional nueva
-
-```text
-engineering-workflow
-```
-
-Y se suma `interface-craft`, `adaptive-layout` o `component-architecture` **solo si el problema
-realmente los requiere**.
-
-### Rediseño con dirección abierta
+### 2. Sitio existente que necesita rediseño
 
 ```text
-visual-foundation
-→ design-directions
-→ dirección aprobada
-→ interface-craft
-→ adaptive-layout          si corresponde
-→ visual-consistency
-```
-
-### Implementación desde mockup aprobado
-
-```text
+ux-audit                     si primero hay que entender fricción de la tarea
++
+visual-consistency           si existe deriva visual
+↓
+visual-foundation            si las reglas no están claras o están desactualizadas
+↓
+design-directions            solo si la dirección está abierta
+↓
 interface-craft
-→ adaptive-layout          si hace falta
-→ visual-consistency
+↓
+adaptive-layout              si corresponde
 ```
 
-No pasa por `design-directions`: la dirección ya está decidida.
+* **Diagnóstico previo no conjunto**: `ux-audit` y `visual-consistency` **no son una obligación conjunta**. Si el dolor reportado es funcional (usuarios que dudan, abandonan o cometen errores en un flujo), se dispara `ux-audit`. Si el problema es estético (pantallas rotas, gaps dispares, estilos desalineados), se dispara `visual-consistency`. Si existen ambos, cada una entrega su diagnóstico de solo lectura antes de tocar código.
+* **Reglas**: Antes de rehacer pantallas, `visual-foundation` consolida o actualiza `docs/ui-system.md` para evitar repetir el caos previo.
 
-### Auditoría UX
+### 3. CRM / intranet / sistema interno
 
 ```text
 ux-audit
-→ hallazgo
-→ skill de corrección correspondiente
+→ interface-craft
+→ adaptive-layout
+→ component-architecture     si aparecen responsabilidades realmente compartidas
 ```
+
+* **Prioridades en herramientas operacionales**: En sistemas internos la densidad de información no es un defecto si reduce clics, scroll y tiempo de trabajo al operador.
+* **Foco**: Reducir fricción operativa, proteger contra errores destructivos y acelerar la carga de datos.
+* **Cuándo consolidar**: `component-architecture` interviene **solo si** un patrón ya resuelto (ej. tabla con filtros avanzados, selector modal) aparece en múltiples vistas y debe evolucionar de forma idéntica. Si el patrón solo vive en una vista, no se componentiza preventivamente.
+
+### 4. Feature nueva dentro de un producto existente
+
+```text
+project-blueprint            Decision Patch, solo si aparecen decisiones nuevas
+→ engineering-workflow
+→ interface-craft            si tiene UI
+→ adaptive-layout            si corresponde
+```
+
+* **Alcance proporcional**: No exige regenerar el blueprint completo; el modo **Decision Patch** de `project-blueprint` resuelve únicamente los deltas de arquitectura, datos o permisos necesarios.
+* **Flujo puramente técnico**: Para una funcionalidad de backend, lógica o refactor sin interfaz, `engineering-workflow` opera por sí sola de principio a fin, sin invocar skills visuales.
+
+### 5. Implementar un mockup ya aprobado
+
+```text
+interface-craft
+→ adaptive-layout            si falta resolver tamaños
+→ visual-consistency
+```
+
+* **Dirección ya fijada**: `design-directions` **no corresponde** porque la decisión estructural y visual ya fue resuelta y aprobada previamente. Fabricar opciones en este escenario es desperdicio de recursos.
+* **Verificación**: `visual-consistency` interviene al final únicamente para comprobar que lo renderizado en el navegador respeta fielmente las decisiones aprobadas.
+
+### 6. Proyecto heredado / repo desordenado
+
+Se aborda como una **ramificación según el hallazgo**, no como una secuencia lineal fija:
+
+```text
+marcozen
+   ↓ según hallazgo
+   ├─ tech-cleanup            (código, assets o dependencias sin uso)
+   ├─ component-architecture  (patrones duplicados que deberían unificarse)
+   ├─ tailwind-hygiene        (clases redundantes o inconsistentes)
+   └─ engineering-workflow    (refactors o saneamiento técnico)
+```
+
+* **`marcozen` no es un prerrequisito obligatorio**: `tech-cleanup` cuenta con su propia metodología de evidencia de desuso. Si ya se sabe de antemano que el repositorio acumula código muerto o dependencias huérfanas, `tech-cleanup` puede ejecutarse directamente sin pasar por `marcozen`.
+* **Criterio**: Activar las skills según el problema real detectado en vez de correr todas por rutina.
+
+### 7. Antes de entregar o publicar (Pre-entrega)
+
+No es un checklist obligatorio ni una cadena secuencial (`todo proyecto → visual-consistency → ux-audit → marcozen`). Cada auditoría responde a una pregunta distinta y se activa según el riesgo o la necesidad del hito:
+
+```text
+visual-consistency     → calidad y coherencia visual del render frente al sistema
+ux-audit               → tareas y recorridos críticos del usuario
+marcozen               → readiness técnico, seguridad, SEO/AEO y gobernanza
+```
+
+* Si la entrega es un ajuste o rediseño visual: `visual-consistency`.
+* Si se lanza un flujo de checkout o registro sensible: `ux-audit`.
+* Si el proyecto sale por primera vez a producción: `marcozen` (modo pre-producción).
+
+### Relevo tras una auditoría UX
+
+Cuando `ux-audit` detecta fricción, entrega hallazgos y deriva a la skill adecuada:
 
 | Hallazgo | Recibe |
 |---|---|
@@ -243,19 +299,6 @@ ux-audit
 | Fallo entre tamaños | `adaptive-layout` |
 | Patrón compartido | `component-architecture` |
 | Cambio de comportamiento o datos | `engineering-workflow` |
-
-### Limpieza de un proyecto maduro
-
-No hay secuencia fija. Cada una resuelve un problema distinto y pueden coexistir:
-
-```text
-responsabilidades compartidas mal resueltas → component-architecture
-clases Tailwind equivalentes e inconsistentes → tailwind-hygiene
-elementos confirmados sin uso                → tech-cleanup
-```
-
-Correr las tres por costumbre sobre un repo que solo tiene uno de los tres problemas es
-trabajo inventado.
 
 ---
 
@@ -298,11 +341,10 @@ cualquiera             → el cambio requiere rama, validaciones y PR
 
 ## Versionado
 
-**Una modificación del repositorio no implica que todas las skills deban cambiar de versión.**
-Cada skill se versiona según su propio contrato, con su `VERSION` y su tag independiente.
+**Las versiones son independientes por skill.** Un número mayor no significa que una skill sea “mejor” o más madura que otra: refleja la evolución histórica de su propio contrato.
 
-Cambiar el README, esta guía o la documentación compartida no cambia la versión de ninguna
-skill. Solo se sube la versión de una skill cuando cambia **su** contrato: su método, sus
-fronteras, sus salidas o sus reglas.
+* **Historiales SemVer independientes**: las skills pioneras del repositorio (`project-blueprint`, `engineering-workflow`, `marcozen`, `tech-cleanup`) atravesaron evoluciones de contrato mayores y se encuentran en `v2.0.0`. Por su parte, la familia visual completa y `ux-audit` nacieron de forma más reciente y se encuentran actualmente en `v0.2.0`.
+* **Evolución real sin sincronización forzada**: la serie `0.x` indica que su especificación de contrato todavía se considera en evolución activa. Cuando una skill `0.x` consolide su interfaz y reglas de forma definitiva pasará a `1.0.0`. No se sincronizan versiones artificialmente.
+* **Documentación compartida**: modificar el README, esta guía o cualquier documento transversal del repositorio **no cambia la versión de ninguna skill**. Solo se incrementa la versión de una skill cuando cambia **su** propio contrato operativo (fases, reglas, fronteras o formato de salida).
 
-Detalle de archivos y tags en el [README](../README.md#versionado).
+Detalle de versiones actuales, archivos y tags en el [README](../README.md#versionado).
