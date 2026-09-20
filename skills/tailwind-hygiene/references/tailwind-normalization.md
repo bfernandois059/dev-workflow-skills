@@ -15,24 +15,26 @@ qué significa preservar exactamente, validación antes/después y formato de en
 
 | Sección | Cuándo abrirla |
 |---|---|
+| [Equivalencia semántica](#equivalencia-semántica) | Distinguir coincidencia de valor vs rol, theming y runtime |
 | [Arbitrary values](#arbitrary-values) | Hay corchetes y hay que decidir si se tocan |
-| [Spacing](#spacing) | `p-`, `m-`, `gap-`, `space-` arbitrarios o mezclados |
+| [Spacing](#spacing) | `p-`, `m-`, `gap-`, `space-` arbitrarios, mezclados o ejes independientes |
 | [Tipografía](#tipografía) | Tamaños, line-height, tracking y peso dispersos |
 | [Color](#color) | Hex, `rgb()`, tokens y variables conviviendo |
-| [Radius y sombras](#radius-y-sombras) | `rounded-*` y `shadow-*` fuera de escala |
-| [Duplicados y conflictos](#duplicados-y-conflictos) | Dos utilidades sobre la misma propiedad |
+| [Radius y sombras](#radius-y-sombras) | `rounded-*` y `shadow-*` fuera de escala o por frecuencia |
+| [Duplicados y conflictos](#duplicados-y-conflictos) | Dos utilidades sobre la misma propiedad o fallbacks |
 | [Variantes responsive](#variantes-responsive) | Prefijos `sm:`, `md:`, `lg:` en el alcance |
-| [Variantes de estado](#variantes-de-estado) | `hover:`, `data-*`, `group-*`, `peer-*` |
+| [Variantes de estado](#variantes-de-estado) | `hover:`, `data-*`, `group-*`, `peer-*` y contexto activo |
 | [CSS variables](#css-variables) | `var(--…)` dentro o fuera de corchetes |
 | [`cn` y `clsx`](#cn-y-clsx) | El `className` se arma con un helper |
 | [`cva`](#cva) | El componente define variantes con `cva` |
-| [`tailwind-merge`](#tailwind-merge) | Hay merge de clases en runtime |
+| [`tailwind-merge`](#tailwind-merge) | Hay merge de clases en runtime y grupos de conflicto |
+| [Contrato de overrides](#contrato-de-overrides) | Componentes públicos con `className`, precedencia y ejes |
 | [Clases condicionales](#clases-condicionales) | Estilos que dependen de props o estado |
-| [Generación dinámica](#generación-dinámica) | Clases construidas con interpolación |
+| [Generación dinámica](#generación-dinámica) | Clases construidas con interpolación y safelists |
 | [`!important`](#important) | Aparece el prefijo `!` |
 | [Interop con CSS](#interop-con-css) | Conviven utilities con CSS Modules o global |
 | [Tailwind v3](#tailwind-v3) | El proyecto usa `tailwind.config.*` |
-| [Tailwind v4 y `@theme`](#tailwind-v4-y-theme) | El proyecto define el theme en CSS |
+| [Tailwind v4 y `@theme`](#tailwind-v4-y-theme) | El proyecto define el theme en CSS y API de tokens |
 | [Utilities custom](#utilities-custom) | Hay utilidades propias del proyecto |
 | [Plugins](#plugins) | El theme llega desde un plugin o preset |
 | [Dark mode](#dark-mode) | Hay `dark:` o theming por clase o atributo |
@@ -41,12 +43,46 @@ qué significa preservar exactamente, validación antes/después y formato de en
 
 ---
 
+## Equivalencia semántica
+
+**Qué parece sucio.** Valores literales (`#ffffff`, `rgba(0,0,0,0.4)`, `16px`) que hoy coinciden con
+un token del sistema (`bg-surface`, `text-muted`, `p-4`) pero se escribieron directamente.
+
+**Qué puede normalizarse.** El valor cuyo **rol en el diseño** coincide demostrablemente con la
+intención del token, y cuyo comportamiento ante dark mode, temas o runtime es exactamente idéntico.
+
+**Qué evidencia confirma equivalencia.** Las tres condiciones concurrentes:
+1. *Equivalencia de valor:* el token resuelve numéricamente al mismo valor en el estado actual.
+2. *Equivalencia de rol:* el elemento cumple la función que el token semántico nombra (ej. un fondo
+   de contenedor que efectivamente es una superficie de tarjeta frente a un fondo blanco de un logo).
+3. *Equivalencia de comportamiento:* al cambiar de tema, tenant o variante en runtime, ambos deben
+   seguir respondiendo idénticamente.
+
+**Qué dejar quieto.** Cualquier coincidencia puramente numérica donde el rol sea distinto:
+`#ffffff` en un logo, un canvas de exportación, un color de marca externa o un texto sobre imagen no
+se sustituye por `bg-surface`. Si el token cambia en dark mode y el elemento debe permanecer blanco,
+sustituirlo rompe el contrato.
+
+**Cuándo es de otra skill.** Decidir qué rol semántico corresponde a un elemento o formalizar un rol
+nuevo que el sistema no tiene: `visual-foundation`.
+
+---
+
 ## Arbitrary values
 
 **Qué parece sucio.** Cualquier `[...]`, tratado como deuda por el solo hecho de llevar corchetes.
 
 **Qué puede normalizarse.** El valor arbitrario que **duplica una decisión que el sistema ya
-expone** con un token exactamente igual: `mt-[24px] → mt-6` cuando el theme resuelve `6` a 24px.
+expone** con un token exactamente igual: `mt-[24px] → mt-6` cuando el theme resuelve `6` a 24px y
+cumple el mismo rol.
+
+Distingue tres casos:
+1. *Relación específica legítima:* `grid-cols-[minmax(0,1fr)_auto]` o
+   `w-[calc(100%-var(--sidebar-width))]` → **conservar**.
+2. *Exactamente equivalente a utility existente con el mismo rol:* `gap-[24px] → gap-6` con theme
+   confirmado → **normalizar**.
+3. *Valor repetido fuera del sistema:* `gap-[22px]` en múltiples componentes → **no inventar token**;
+   derivar a `visual-foundation`.
 
 **Qué evidencia confirma equivalencia.** El valor resuelto en el theme real del proyecto
 —`tailwind.config.*`, `@theme`, preset o plugin—, no una escala recordada de memoria. Ese valor
@@ -57,7 +93,7 @@ dinámica existente —ver [Tailwind v4 y `@theme`](#tailwind-v4-y-theme)—.
 
 **Qué dejar quieto.** `calc()`, variables CSS, grid templates, geometría del layout, valores
 derivados de otro elemento, `env()`, integraciones con primitives y todo valor que exprese una
-relación que no pertenece a una escala.
+relación que no pertenece a una escala. No inventes tokens artificiales solo para suprimir corchetes.
 
 **Cuándo es de otra skill.** Si el valor arbitrario es correcto pero nadie lo formalizó y
 conviene que exista como token, la decisión es de `visual-foundation` — pero solo después de
@@ -70,17 +106,20 @@ simplemente el equivocado, es un cambio visual: `interface-craft`.
 ## Spacing
 
 **Qué parece sucio.** `p-[24px]` junto a `p-6`; `px-[24px] py-[24px]` donde bastaría `p-6`;
-`mt-*` y `space-y-*` resolviendo lo mismo en el mismo contenedor.
+`px-4 py-3` en un componente reutilizable; `mt-*` y `space-y-*` resolviendo en el mismo contenedor.
 
-**Qué puede normalizarse.** La escritura equivalente: `px-4 py-4 → p-4`, `px-[24px] → px-6` con
-equivalencia confirmada, y la utilidad redundante cuando está demostrado cuál aplica.
+**Qué puede normalizarse.** La escritura equivalente: `px-4 py-4 → p-4` cuando ambos ejes no tienen
+razón para permanecer independientes, y `px-[24px] → px-6` con equivalencia confirmada.
 
-**Qué evidencia confirma equivalencia.** El valor del step en el theme y el cálculo completo de
-la caja: `p-4` no equivale a `px-4 py-4` si algo más define `padding-top` después.
+**Qué evidencia confirma equivalencia.** El valor del step en el theme, el cálculo completo de
+la caja y el contrato de overrides del componente. `p-4` no equivale a `px-4 py-4` si algo más define
+`padding-top` después o si los consumidores necesitan sobrescribir `px` o `py` de forma aislada.
 
-**Qué dejar quieto.** La diferencia entre `gap`, `space-*` y márgenes cuando afecta a hijos
-distintos —`space-y-*` no aplica al primer hijo, `gap` sí cambia el comportamiento con `flex-wrap`—.
-Valores fuera de escala que no tienen token equivalente.
+**Qué dejar quieto.** La independencia deliberada de ejes: `px-4 py-3` no se colapsa a ciegas si forma
+parte del contrato para permitir overrides de consumers (`px-6` o `py-2`) con `tailwind-merge`.
+La diferencia entre `gap`, `space-*` y márgenes cuando afecta a hijos distintos (`space-y-*` no
+aplica al primer hijo, `gap` sí cambia el comportamiento con `flex-wrap`). Valores fuera de escala
+que no tienen token equivalente.
 
 **Cuándo es de otra skill.** Si el spacing está mal elegido, no mal escrito: `interface-craft`.
 Si el mismo valor fuera de escala se repite y merecería un step propio: `visual-foundation`.
@@ -113,14 +152,20 @@ visual: `interface-craft`. Si falta el role en el sistema: `visual-foundation`.
 opacidades expresadas de dos formas.
 
 **Qué puede normalizarse.** El hex que corresponde **exactamente** al valor de un token del
-proyecto, y solo si ese token representa el mismo rol.
+proyecto, y **únicamente si ese token representa el mismo rol semántico** en todos los temas y
+contextos relevantes.
 
-**Qué evidencia confirma equivalencia.** El valor exacto del token, incluida la forma en que la
-versión de Tailwind aplica la opacidad —`bg-black/50` y `bg-[rgba(0,0,0,.5)]` pueden diferir
-cuando el color pasa por `color-mix()` o por un canal alfa de variable—.
+**Qué evidencia confirma equivalencia.** Las tres condiciones concurrentes:
+1. *Valor exacto:* el token resuelve al mismo valor (incluyendo cómo Tailwind aplica opacidad o
+   `color-mix()`).
+2. *Rol semántico:* el elemento cumple la función que el token define.
+3. *Comportamiento dinámico:* en dark mode o temas alternativos, el token y el elemento deben seguir
+   el mismo comportamiento previsto.
 
-**Qué dejar quieto.** Colores cercanos pero distintos: `#1e1e1f` no es `neutral-900`. Colores que
-vienen de una variable con semántica o theming. Colores de un primitive o de una marca externa.
+**Qué dejar quieto.** Colores cercanos pero distintos: `#1e1e1f` no es `neutral-900`. Colores
+que coinciden hoy numéricamente pero cumplen roles distintos: `#ffffff` en logos, canvas de exportación,
+colores de marca de terceros o texto sobre imagen no se convierten en `bg-surface`. Colores que vienen
+de variables dinámicas con semántica o theming en runtime (no congelar `var(--surface)` en `#fff`).
 
 **Cuándo es de otra skill.** Unificar colores parecidos cambia el render: `interface-craft`, o
 `visual-foundation` si lo que falta es la regla que diga cuál es el correcto.
@@ -130,7 +175,8 @@ vienen de una variable con semántica o theming. Colores de un primitive o de un
 ## Radius y sombras
 
 **Qué parece sucio.** `rounded-[8px]` junto a `rounded-lg`; sombras arbitrarias largas repetidas
-en varios componentes; `shadow` y `ring` combinados sin criterio aparente.
+en varios componentes; `shadow` y `ring` combinados sin criterio aparente; discrepancias de
+frecuencia (80% usa un radio y 20% otro).
 
 **Qué puede normalizarse.** El arbitrario idéntico al token, y la sombra arbitraria que coincide
 carácter por carácter con la definida en el theme.
@@ -139,12 +185,13 @@ carácter por carácter con la definida en el theme.
 los mismos números pero distinto orden de capas no renderizan igual, y `ring` participa del mismo
 apilado que `shadow`.
 
-**Qué dejar quieto.** Radios que dependen de la geometría —`rounded-full` sobre un elemento no
-cuadrado, radios anidados calculados respecto del contenedor— y sombras que expresan una
-elevación que el sistema no tokenizó.
+**Qué dejar quieto.** No decidir estándares por frecuencia estadística: que el 80% use `rounded-lg`
+no autoriza a migrar el 20% que usa `rounded-md` si cumplen roles diferentes o no hay decisión de diseño.
+Radios que dependen de la geometría (`rounded-full` sobre elementos no cuadrados) y sombras que expresan
+una elevación que el sistema no tokenizó.
 
 **Cuándo es de otra skill.** Homogeneizar radios o elevaciones «para que combinen» es diseño:
-`interface-craft`.
+`interface-craft`. Formalizar la escala de radios aprobada: `visual-foundation`.
 
 ---
 
@@ -162,8 +209,10 @@ string: el orden lo decide el CSS generado, no el atributo. Cuando hay `tailwind
 resolución; cuando hay variantes, `!`, CSS externo o composición en runtime, hay que mirar el
 resultado real.
 
-**Qué dejar quieto.** La utilidad que parece redundante pero actúa como fallback, o que aplica en
-un breakpoint, un estado o un tema en el que la otra no está activa.
+**Qué dejar quieto.** La utilidad que parece redundante pero actúa como fallback intencional
+(`grid block md:grid`, `bg-surface dark:bg-surface-dark`), o que aplica en un breakpoint, un estado
+o un tema en el que la otra no está activa (*Redundant in one resolved state is not necessarily
+redundant in the styling contract*).
 
 **Cuándo es de otra skill.** Si la contradicción viene de que dos componentes se pisan por
 arquitectura, la corrección estructural es `component-architecture`.
@@ -180,7 +229,8 @@ equivalencia confirmada. Y la utilidad base que un breakpoint ya sobrescribe **e
 anchos posibles.
 
 **Qué evidencia confirma equivalencia.** Que el breakpoint arbitrario coincida exactamente con
-uno del theme antes de sustituirlo, y el render en los viewports afectados.
+uno del theme antes de sustituirlo, y el render en los viewports afectados. No normalizar el orden
+de variantes desde memoria: respetar el comportamiento generado y las herramientas instaladas.
 
 **Qué dejar quieto.** Qué breakpoint usa cada regla, el orden de las variantes, la visibilidad
 por tamaño y la composición. Tailwind aplica `min-width` acumulativo: mover una regla de `md:` a
@@ -199,12 +249,14 @@ por tamaño y la composición. Tailwind aplica `min-width` acumulativo: mover un
 **Qué puede normalizarse.** El valor dentro de la variante, los duplicados exactos y el
 agrupamiento cuando el proyecto ya usa esa sintaxis y el resultado se conserva.
 
-**Qué evidencia confirma equivalencia.** El render de cada estado afectado: hover, foco de
-teclado, deshabilitado, y los estados `data`/`aria` que el componente realmente emite.
+**Qué evidencia confirma equivalencia.** El render de cada estado afectado (*Prove equivalence where
+the rule actually participates*): hover, foco de teclado, deshabilitado, y los estados `data`/`aria`
+que el componente realmente emite. No asumir equivalencia examinando solo el estado en reposo.
 
 **Qué dejar quieto.** `focus-visible:` no es `focus:`. `group-hover:` depende de un ancestro con
-`group` y `peer-*` del orden de hermanos: quitar o mover esas marcas rompe la relación. Y una
-variante que no se ve en una captura estática sigue existiendo.
+`group` y `peer-*` del orden de hermanos: quitar o mover esas marcas rompe la relación. Una variante
+que no se ve en una captura estática sigue existiendo. No reordenar variantes de memoria ni por gusto
+alfabético (*Do not normalize variant order from memory*).
 
 **Cuándo es de otra skill.** Si falta un estado —no hay foco visible, no hay estado
 deshabilitado—, eso es un defecto de interfaz: `interface-craft` o `ux-audit`.
@@ -218,14 +270,15 @@ equivalentes y `style={{ '--x': … }}` mezclado con utilities.
 
 **Qué puede normalizarse.** La sustitución por la utility semántica **basada en esa misma
 variable** —`bg-[var(--surface)] → bg-surface`— cuando el theme la expone y la equivalencia está
-confirmada.
+confirmada en todos sus contextos.
 
 **Qué evidencia confirma equivalencia.** Que la utility resuelva a la misma variable, no a una
-copia de su valor: si la utility congela el valor actual, el theming en runtime deja de
-funcionar.
+copia de su valor: si la utility congela el valor actual, el theming en runtime deja de funcionar
+(principio rector: *Do not replace a live semantic reference with a snapshot of its current value*).
 
 **Qué dejar quieto.** La variable que expresa semántica, theming, valor calculado en runtime o
-contrato con un primitive. **Nunca se sustituye por un color hardcodeado** aunque hoy coincidan.
+contrato con un primitive. **Nunca se sustituye por un color hardcodeado** aunque hoy coincidan en
+un snapshot.
 
 **Cuándo es de otra skill.** Crear la variable o el rol que falta: `visual-foundation`.
 
@@ -240,7 +293,8 @@ con saltos de línea dentro del string y espacios dobles.
 preservando el orden de los argumentos y la precedencia resultante.
 
 **Qué evidencia confirma equivalencia.** Las combinaciones relevantes de props y estado, no solo
-el caso por defecto — y que `props.className` siga llegando en la misma posición.
+el caso por defecto — y que `props.className` siga llegando en la misma posición relativa para
+ganar sobre las clases base correspondientes.
 
 **Qué dejar quieto.** El helper vigente: no cambies `clsx` por `cn` ni al revés en toda la
 aplicación. Si no hay helper, una concatenación simple y legible es una respuesta válida.
@@ -256,13 +310,13 @@ aplicación. Si no hay helper, una concatenación simple y legible es una respue
 define variantes con `cva`, o `cva` con `compoundVariants` difíciles de seguir.
 
 **Qué puede normalizarse.** Mover al `cva` existente un estilo que **ya** corresponde a una
-variante declarada, y limpiar duplicados dentro de sus listas.
+variante declarada, y limpiar duplicados dentro de sus listas sin modificar la estructura del API.
 
 **Qué evidencia confirma equivalencia.** Cada combinación declarada, incluidas las
 `compoundVariants` y los `defaultVariants`: cambiar el orden de las claves puede cambiar qué gana.
 
 **Qué dejar quieto.** `cva` no se introduce para una limpieza puntual si el proyecto no lo usa, y
-no se inventan variantes nuevas para acomodar estilos sueltos.
+no se inventan variantes nuevas (como `compact`, `dense` o `admin`) para acomodar estilos sueltos.
 
 **Cuándo es de otra skill.** Definir qué variantes **debería** tener el componente:
 `component-architecture`, o `visual-foundation` si falta el vocabulario del sistema.
@@ -275,17 +329,45 @@ no se inventan variantes nuevas para acomodar estilos sueltos.
 `twMerge` envolviendo cadenas que no lo necesitan.
 
 **Qué puede normalizarse.** Los duplicados que el merge ya resuelve igual, con el mismo resultado
-observable.
+observable y sin alterar qué clase gana en tiempo de ejecución.
 
-**Qué evidencia confirma equivalencia.** La semántica real del merge: agrupa por propiedad y gana
-el último de cada grupo, salvo configuración propia. Con utilities custom o prefijos, la
-configuración del proyecto puede alterar esa agrupación.
+**Qué evidencia confirma equivalencia.** La semántica real del merge según su versión y configuración:
+agrupa por propiedad y gana el último de cada grupo. `tailwind-merge` **no es Tailwind**: no asumas
+que comprende automáticamente prefijos personalizados, plugins o utilities custom del proyecto sin
+configuración específica en `extendTailwindMerge`.
 
-**Qué dejar quieto.** No lo introduzcas para evitar razonar una colisión local, y no elimines el
-merge de un componente que expone `className` al consumidor: eso cambia quién gana.
+**Qué dejar quieto.** No lo introduzcas para evitar razonar una colisión local. No alteres la
+configuración global del merge para resolver un conflicto aislado. Y no elimines el merge de un
+componente que expone `className` al consumidor: eso cambia quién gana ante los overrides.
 
 **Cuándo es de otra skill.** Si la colisión existe porque dos capas de componentes se disputan el
 mismo estilo, el arreglo estructural es `component-architecture`.
+
+---
+
+## Contrato de overrides
+
+**Qué parece sucio.** Un componente que expone `className` y mezcla en la base utilidades por eje
+(`px-4 py-3`), o utilidades base que un override común del consumidor suele pisar.
+
+**Qué puede normalizarse.** La simplificación interna de clases base siempre que se demuestre que
+los overrides admitidos del consumidor siguen ganando exactamente sobre las propiedades esperadas.
+
+**Qué evidencia confirma equivalencia.** Probar las cuatro dimensiones del contrato:
+1. *Estilo por defecto:* render base sin props adicionales.
+2. *Consumer override relevante:* comprobar que pasar `className="px-6"` o `className="bg-accent"`
+   efectivamente sobrescribe la propiedad deseada sin anular propiedades no relacionadas.
+3. *Variantes + override:* verificar que el override funcione en combinación con las distintas
+   variantes (`variant="outline"`, `size="lg"`).
+4. *Estados relevantes:* verificar que los overrides no rompan selectores de estado (`hover:`,
+   `focus-visible:`).
+
+**Qué dejar quieto.** No colapsar utilidades de ejes independientes (`px-4 py-3 → p-*`) si los
+consumidores necesitan sobrescribir solo un eje de manera aislada sin que `tailwind-merge` elimine el
+otro. No alterar el orden de argumentos que determine la precedencia de `props.className`.
+
+**Cuándo es de otra skill.** Si el componente no admite personalización donde debería o necesita
+reestructurar su interfaz de props: `component-architecture`.
 
 ---
 
@@ -315,18 +397,20 @@ rama que restablecía el estilo por defecto.
 runtime.
 
 **Qué puede normalizarse.** Sustituirlos por el patrón que el proyecto ya emplea —mapa explícito,
-variantes, la safelist existente— **cuando las clases resultantes sean las mismas que hoy se
-generan**.
+variantes o safelist existente— **cuando las clases resultantes sean las mismas que hoy se generan**.
 
 **Qué evidencia confirma equivalencia.** Qué clases produce hoy el build: si la interpolación
-nunca llegó al CSS, el elemento no tiene ese estilo, y «arreglarlo» lo agrega.
+nunca llegó al CSS generado y el estilo no se aplicaba, reemplazarlo por un mapa que sí genera clases
+hace visible un estilo nuevo. Principio: *Fixing missing generated CSS is a functional/visual repair,
+not invisible hygiene.*
 
-**Qué dejar quieto.** No crees una safelist grande para sostener una abstracción deficiente, y no
-introduzcas interpolación nueva en un proyecto que necesita clases estáticamente descubribles.
+**Qué dejar quieto.** No crees una safelist grande para sostener una abstracción deficiente. Pero
+**tampoco elimines safelists legítimas** de CMS, contenido externo, plantillas o integraciones sin
+evidencia exhaustiva.
 
 **Cuándo es de otra skill.** Si al corregirlo aparece un estilo que antes no se aplicaba, hay un
-defecto visual real: decláralo y deriva a `interface-craft`. **No lo presentes como higiene
-invisible.**
+defecto visual o funcional real: repórtalo y deriva a `interface-craft` o al flujo correspondiente.
+**No lo presentes como higiene invisible.**
 
 ---
 
@@ -335,14 +419,14 @@ invisible.**
 **Qué parece sucio.** `!mt-0`, `!hidden` y cadenas con varios `!` en el mismo componente.
 
 **Qué puede normalizarse.** Nada por defecto. Solo puede quitarse cuando esté demostrado que la
-regla gana igual sin él.
+regla gana igual sin él en todos los contextos activos.
 
 **Qué evidencia confirma equivalencia.** El estilo computado con y sin el prefijo, en los estados
 y breakpoints donde esa clase participa.
 
 **Qué dejar quieto.** El `!` que actúa como override legítimo sobre un primitive o sobre CSS
-externo. Tampoco lo sustituyas por más specificity ni por una cadena más compleja solo para
-eliminarlo.
+externo. Preservar la causa antes de eliminar el síntoma: no sustituyas `!mt-0` por más specificity,
+selectores anidados o una cadena más compleja solo para poder decir que no hay signos de exclamación.
 
 **Cuándo es de otra skill.** Si la única forma de quitarlo es cambiar cómo el primitive o el
 componente reciben estilos, eso es `component-architecture`; si cambia el resultado,
@@ -362,8 +446,10 @@ de Tailwind que no participan de ninguna cascada externa.
 cargado. Una utility que parece redundante puede ser el fallback cuando la regla externa no
 aplica.
 
-**Qué dejar quieto.** El CSS existente: esta skill **no migra estilos** en ninguna dirección. Y
-los inline styles, que ganan a las utilities salvo `!`.
+**Qué dejar quieto.** El CSS existente: esta skill **no migra estilos** en ninguna dirección.
+Principio: *Hygiene follows the project's styling architecture; it does not replace it.* Tailwind
+no tiene supremacía conceptual sobre CSS Modules, CSS global o inline styles. Y los inline styles
+ganan a las utilities salvo `!`.
 
 **Cuándo es de otra skill.** Convertir CSS Modules a Tailwind o al revés es una tarea de
 migración aparte, no higiene.
@@ -412,9 +498,11 @@ fábrica: un proyecto puede redefinir `--spacing` y mover todas las utilities a 
 casos, el valor resuelto tras todos los `@import`.
 
 **Qué dejar quieto.** La diferencia entre una variable de theme y una variable de aplicación: no
-todas las variables deben generar utilities, y moverlas cambia la superficie del sistema. Y el
-valor numérico que **no** cae exactamente en un múltiplo de `--spacing`: ahí la utility dinámica
-no existe y el arbitrario sigue siendo correcto.
+todas las variables deben generar utilities. Principio rector: *Exposing a value through the theme
+changes the styling API of the project; do not do it merely to remove brackets.* No promuevas variables
+de `:root` a `@theme` solo para tener utilities sin corchetes. Y el valor numérico que **no** cae
+exactamente en un múltiplo de `--spacing`: ahí la utility dinámica no existe y el arbitrario sigue
+siendo correcto.
 
 **Cuándo es de otra skill.** Decidir qué roles existen en `@theme` o cambiar `--spacing`:
 `visual-foundation`. Que una utility dinámica ya exprese el valor **no** es crear un token, así
@@ -510,7 +598,9 @@ sin cambiar el valor ni la semántica.
 que ningún otro uso del token cambie de resultado.
 
 **Qué dejar quieto.** Escalas, breakpoints, colores, radios y spacing existentes. Redefinirlos
-—aunque «mejore» el sistema— no es sincronizar: es decidir de nuevo.
+—aunque «mejore» el sistema— no es sincronizar: es decidir de nuevo (*Theme synchronization
+exposes an existing decision; it does not create one*). Y no unificar valores por frecuencia
+estadística (80% vs 20%).
 
 **Cuándo es de otra skill.** Si la decisión no está tomada, formalizarla es `visual-foundation`;
 si el cambio altera el render de algún consumidor, es `interface-craft`.
