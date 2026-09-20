@@ -4,35 +4,6 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
-## [adaptive-layout-v0.2.0] - 2026-09-20
-
-### Producto
-
-* **Preservación de tarea y capacidad vs presencia literal.** *Preserve the task and capability, not the original arrangement.* Preservar una capacidad no exige conservar su posición literal, su representación gráfica idéntica ni su visibilidad permanente. *Preserve what the user must still be able to understand or do; adapt how and when it is presented.*
-* **Ocultamiento legítimo vs pérdida funcional.** `display:none` no es intrínsecamente un defecto: es legítimo para elementos puramente decorativos, redundancias o elementos secundarios accesibles por otra vía. El fallo adaptativo ocurre cuando se oculta una capacidad necesaria sin ofrecer una vía de acceso equivalente. *Hiding presentation is acceptable; hiding required capability without an equivalent path is not.*
-* **Clasificación contextual de qué debe sobrevivir.** Herramienta interna de decisión para distinguir capacidad funcional (debe seguir disponible), información necesaria (debe seguir recuperable), contexto (no debe volver ambigua la tarea), apoyo visual (según su rol) y decoración (legítimamente reducible u omitible).
-* **Evaluación de media e imágenes según rol.** *Preserve the visual role when the role matters; do not preserve an asset merely because it existed on desktop.* Sustitución del dogma de presencia obligatoria por evaluación de rol: si es estructural/evidencia, se preserva el rol mediante crop, aspect ratio, punto focal, escala o reordenamiento; si es meramente decorativa, puede reducirse o suprimirse.
-* **Acción primaria por prioridad y accesibilidad vs visibilidad permanente.** *Preserve action priority and reachability, not a universal physical position.* Descubribilidad y relación clara con el punto de decisión sin imponer una posición física fija universal en todo momento.
-* **Viewport como restricción de espacio, no inferencia de intención.** *A viewport width does not tell you why the user is there.* Se rechaza inferir contexto, nivel de usuario o que "mobile necesita menos información" únicamente por el ancho disponible.
-* **Separación entre restricción de layout y modalidad de entrada.** *Layout constraints and input modality are related in practice, but one does not prove the other.* No transformar automáticamente hover a tap ni tooltips a modales solo por ancho.
-* **Continuidad de estado entre representaciones.** *Responsive adaptation must preserve meaningful state when the representation changes.* Al alternar entre panel y drawer, tabla y resumen/detalle, o master/detail y dos pasos, se preservan filtros activos, búsqueda, selección, pestaña activa, borradores en edición y entidad abierta.
-* **Fuente única de estado.** *Different presentations may exist; duplicated product logic should not.* Se descarta duplicar componentes con estados independientes desincronizados (`<DesktopFilters />` vs `<MobileFilters />`).
-* **Viewport breakpoint vs container constraint.** *Respond to the constraint that actually changes.* Viewport para shell y navegación global; restricciones de contenedor para componentes modulares en contextos variables.
-* **Disclosure adaptativo deliberado.** *Adaptive disclosure trades space for access cost; make that trade deliberately.* Evaluación del costo de interacción al mover controles a menús, protegiendo las acciones de alta frecuencia.
-* **Reutilización de primitives existentes.** *Responsive adaptation does not justify rebuilding capabilities the project already has.* Prioridad al uso de primitives de drawer, sheet, dialog, tabla responsiva y librerías de gráficos del proyecto antes de soluciones ad-hoc.
-
-### Operación
-
-* **Validación de transiciones sobre etiquetas de catálogo.** *Validate transitions, not device labels.* Comprobación de puntos reales de wrapping y cambio de representación, verificando continuidad de estado y comportamiento con variabilidad real de contenido (textos largos, cifras grandes, estados dinámicos).
-* **Suite de evaluación ampliada a 14 evals.** Ajuste en eval 6 (distinción de display:none vs pérdida de acceso) y eval 8 (evaluación de imagen por rol); adición de eval 13 (rechazo de inferencias de intención/modalidad por viewport de 600px) y eval 14 (continuidad de estado en master/detail y filtros).
-
-### Técnico
-
-* `SKILL.md`: Incorporación de principios rectores de preservación de tarea/capacidad, viewport como restricción de espacio, clasificación contextual, estado continuo, fuente única de verdad, criterio viewport vs container, trade-off de disclosure y validación de transiciones.
-* `references/adaptive-patterns.md`: Ajuste en secciones de Acciones, Grids, Master/Detail, Filtros, Modales e Imágenes y media con enfoque en rol, accesibilidad y continuidad de estado.
-* `evals/evals.json`: Suite ampliada de 12 a 14 evals (IDs 1-14).
-* `VERSION`: bump `0.1.0` → `0.2.0` (MINOR).
-
 ### Integración del sistema de skills
 
 Primera pasada de integración del repositorio **como un solo sistema**, no como doce carpetas
@@ -98,6 +69,32 @@ referencias.
   útil para quien vuelve al repositorio.
 - La familia visual sigue siendo **7/7** y `ux-audit` sigue siendo transversal, no una octava
   skill visual.
+
+## [adaptive-layout-v0.2.0] - 2026-09-20
+
+### Producto
+* **Preservación de tarea y capacidad vs presencia literal**: *Preserve the task and capability, not the original arrangement*. Preservar una capacidad no exige conservar su posición literal, su representación gráfica idéntica ni su visibilidad permanente. *Preserve what the user must still be able to understand or do; adapt how and when it is presented*.
+* **Ocultamiento legítimo vs pérdida funcional**: `display:none` no es intrínsecamente un defecto: es legítimo para elementos puramente decorativos, redundancias o elementos secundarios accesibles por otra vía. El fallo adaptativo ocurre cuando se oculta una capacidad necesaria sin ofrecer una vía de acceso equivalente. *Hiding presentation is acceptable; hiding required capability without an equivalent path is not*.
+* **Clasificación contextual de qué debe sobrevivir**: Herramienta interna de decisión para distinguir capacidad funcional (debe seguir disponible), información necesaria (debe seguir recuperable), contexto (no debe volver ambigua la tarea), apoyo visual (según su rol) y decoración (legítimamente reducible u omitible).
+* **Evaluación de media e imágenes según rol**: *Preserve the visual role when the role matters; do not preserve an asset merely because it existed on desktop*. Sustitución del dogma de presencia obligatoria por evaluación de rol: si es estructural/evidencia, se preserva el rol mediante crop, aspect ratio, punto focal, escala o reordenamiento; si es meramente decorativa, puede reducirse o suprimirse.
+* **Acción primaria por prioridad y accesibilidad vs visibilidad permanente**: *Preserve action priority and reachability, not a universal physical position*. Descubribilidad y relación clara con el punto de decisión sin imponer una posición física fija universal en todo momento.
+* **Viewport como restricción de espacio, no inferencia de intención**: *A viewport width does not tell you why the user is there*. Se rechaza inferir contexto, nivel de usuario o que "mobile necesita menos información" únicamente por el ancho disponible.
+* **Separación entre restricción de layout y modalidad de entrada**: *Layout constraints and input modality are related in practice, but one does not prove the other*. No transformar automáticamente hover a tap ni tooltips a modales solo por ancho.
+* **Continuidad de estado entre representaciones**: *Responsive adaptation must preserve meaningful state when the representation changes*. Al alternar entre panel y drawer, tabla y resumen/detalle, o master/detail y dos pasos, se preservan filtros activos, búsqueda, selección, pestaña activa, borradores en edición y entidad abierta.
+* **Fuente única de estado**: *Different presentations may exist; duplicated product logic should not*. Se descarta duplicar componentes con estados independientes desincronizados (`<DesktopFilters />` vs `<MobileFilters />`).
+* **Viewport breakpoint vs container constraint**: *Respond to the constraint that actually changes*. Viewport para shell y navegación global; restricciones de contenedor para componentes modulares en contextos variables.
+* **Disclosure adaptativo deliberado**: *Adaptive disclosure trades space for access cost; make that trade deliberately*. Evaluación del costo de interacción al mover controles a menús, protegiendo las acciones de alta frecuencia.
+* **Reutilización de primitives existentes**: *Responsive adaptation does not justify rebuilding capabilities the project already has*. Prioridad al uso de primitives de drawer, sheet, dialog, tabla responsiva y librerías de gráficos del proyecto antes de soluciones ad-hoc.
+
+### Operación
+* **Validación de transiciones sobre etiquetas de catálogo**: *Validate transitions, not device labels*. Comprobación de puntos reales de wrapping y cambio de representación, verificando continuidad de estado y comportamiento con variabilidad real de contenido (textos largos, cifras grandes, estados dinámicos).
+* **Suite de evaluación ampliada a 14 evals**: Ajuste en eval 6 (distinción de display:none vs pérdida de acceso) y eval 8 (evaluación de imagen por rol); adición de eval 13 (rechazo de inferencias de intención/modalidad por viewport de 600px) y eval 14 (continuidad de estado en master/detail y filtros).
+
+### Técnico
+* `SKILL.md`: Incorporación de principios rectores de preservación de tarea/capacidad, viewport como restricción de espacio, clasificación contextual, estado continuo, fuente única de verdad, criterio viewport vs container, trade-off de disclosure y validación de transiciones.
+* `references/adaptive-patterns.md`: Ajuste en secciones de Acciones, Grids, Master/Detail, Filtros, Modales e Imágenes y media con enfoque en rol, accesibilidad y continuidad de estado.
+* `evals/evals.json`: Suite ampliada de 12 a 14 evals (IDs 1-14).
+* `VERSION`: bump `0.1.0` → `0.2.0` (MINOR).
 
 ## [0.2.1] - 2026-09-20
 
