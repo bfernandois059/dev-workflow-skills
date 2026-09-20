@@ -70,6 +70,49 @@ referencias.
 - La familia visual sigue siendo **7/7** y `ux-audit` sigue siendo transversal, no una octava
   skill visual.
 
+## [ux-audit-v0.2.0] - 2026-09-20
+
+### Producto
+* **Auditoría de costo a la tarea, no de patrones**: *Audit the cost to the task, not the presence of a pattern*. Una interfaz no se evalúa por los componentes o patrones que contiene (modales, tablas densas, formularios largos, dropdowns, scroll, menús secundarios o confirmaciones), sino por el costo concreto y demostrable que introducen para una persona realizando una tarea. Si no hay costo demostrado, no se fabrica un hallazgo.
+* **Fricción como costo a evaluar, no automáticamente un defecto a eliminar**: *Friction is a cost to evaluate, not automatically a defect to remove*. Distinción estricta entre fricción accidental (pedir datos dos veces, filtros que se pierden, menús redundantes — a reducir), fricción protectora (confirmar acciones destructivas, revisar montos/destinatarios antes de pagar, advertencias de permisos — deseable y necesaria) y fricción del dominio (requisitos legales y seguridad operativa). Regla: *Reduce accidental friction; preserve or redesign protective friction according to consequence and reversibility*.
+* **La cantidad de interacciones no es un puntaje de calidad**: *Interaction count is evidence of effort, not a quality score*. Rechazo a la regla ciega de «menos clics/pasos siempre es mejor». Acciones irreversibles o destructivas requieren deliberación e información antes que atajos apresurados.
+* **Ambigüedad de decisión vs cantidad de opciones**: *Reduce decision ambiguity, not necessarily the number of choices*. Múltiples opciones son legítimas si la tarea las necesita, permiten comparar o pertenecen a herramientas operacionales con categorías claras. Se prioriza jerarquía, agrupación semántica y disclosure progresivo antes de ocultar capacidades.
+* **Decisión en el momento oportuno**: *Ask for a decision when the person has enough information to make it*. Detección de decisiones prematuras (planes antes de precios, términos sin alcance) o información crítica tardía (costos y restricciones al final).
+* **Contexto en el punto de decisión**: *Keep decision-relevant context available where the decision is made*. Mantener datos decisorios visibles (resúmenes, entidad activa, filtros) sin obligar a memorizar información de pantallas anteriores.
+* **Reconocimiento antes que memoria**: *Do not make the user remember information the interface already knows when that memory is required to continue the task*. No exigir que el usuario recuerde lo que el sistema ya sabe cuando esa información condiciona la tarea.
+* **Continuidad de estado**: Preservación de filtros, búsquedas, selecciones, borradores y posición entre pasos y sesiones para evitar retrabajo innecesario.
+* **Automatización y control consciente**: *Automation is helpful when it removes work without hiding consequential decisions*. Las automatizaciones y defaults deben evaluarse por visibilidad, reversibilidad y capacidad de corrección, sin ocultar decisiones con impacto.
+* **Consecuencias visibles vs flujos cortos artificiales**: *A shorter flow is not better if it makes the decision less informed*. Prohibición de ocultar precios, renovaciones, alcance o irreversibilidad para aparentar simplicidad en el flujo.
+* **Familiaridad sin dogmas ni citas teóricas**: Respeto a convenciones del producto y dominio sin declarar problemas solo por diferir de terceros ni invocar nombres de leyes o autores.
+* **Feedback proporcional a la incertidumbre**: *Add feedback when uncertainty has a cost; do not add feedback as decoration*. Añadir indicadores cuando la incertidumbre genere riesgo o bloqueo; no agregar toasts o spinners como adorno ni imponer umbrales temporales universales.
+* **Prevención, costo y recuperación ante errores**: Secuencia: evitar error razonable → detectar → explicar con claridad → preservar trabajo → ofrecer recuperación. Prioridad de `undo` en acciones reversibles vs confirmación protectora en irreversibles.
+* **Sistemas operacionales vs sitios comerciales**:
+  - Operacionales: *Operational simplicity means less work, not necessarily less information*. Optimización del trabajo acumulado por sesión, densidad útil, escaneo, comparación y continuidad sin exigir «más aire» por estética.
+  - Comerciales: *A business outcome does not replace user-task evidence*. Protección de decisiones informadas sin asumir que mayor conversión equivale a mejor UX ni inventar métricas comerciales.
+  - Manipulación y presión: Detección de opciones de rechazo camufladas, costos tardíos forzados o falsa urgencia observable, reportando el costo sobre la autonomía sin atribuir intención maliciosa.
+* **Móvil e intención**: *Device or viewport does not prove user intent*. El dispositivo o viewport no demuestra usuario apurado ni tarea recortada; coherencia con `adaptive-layout`.
+
+### Operación
+* **Separación estricta entre severidad y prioridad**: *Severity describes impact; priority also considers exposure, reversibility, scope and evidence*. Severidad (Alta/Media/Baja) describe el impacto intrínseco sobre la tarea; la prioridad incorpora además frecuencia real respaldada, irreversibilidad, alcance sistémico y confianza de evidencia.
+* **Frecuencia respaldada**: Prohibición de afirmar frecuencia sin evidencia; en ausencia de datos se formula como hipótesis explícita (*«Si esta acción es frecuente, el costo acumulado…»*).
+* **Síntoma observado vs causa inferida**: *Observe the failure; label the hypothesized cause as inference until verified*. Distinción clara entre el fallo visto (`Verificado`) y la causa técnica o psicológica (`Inferido`).
+* **Sin especulación de estados mentales ni best practices como prueba**: Prohibición de diagnosticar sensaciones subjetivas (*«está confundido»*, *«ansiedad»*) sin evidencia, reemplazándolas por costos funcionales observables. Las convenciones son contexto de apoyo (*A convention is supporting context, not proof of a problem*), no prueba de defecto.
+* **Rastreo sistémico**: Reconocimiento de que un problema repetido puede deberse a componentes compartidos, reglas funcionales, patrones copiados o políticas de producto, derivando a la skill adecuada según el origen real.
+* **Medición automatizada**: *Measurement is evidence; it is not the UX judgment itself*. Las herramientas de escaneo apoyan la recolección de datos pero no sustituyen el juicio del recorrido.
+* **Recomendaciones con dirección suficiente**: Problema → costo → dirección de corrección → skill propietaria, sin diseñar componentes, layouts ni clases de Tailwind, y sin presentar tres alternativas salvo decisión abierta.
+* **Suite de evaluación ampliada a 14 evals**:
+  - Ajuste en eval 1 (CRM operacional: trabajo acumulado, respeto a la frecuencia provista, simplicidad operacional no es menos información).
+  - Ajuste en eval 3 (Checkout: preservación de pasos protectores y legales, distinción entre fricción accidental y necesaria, un flujo más corto no es mejor si desinforma).
+  - Nuevo eval 13 (Fricción protectora: rechazo a eliminar confirmación de eliminación definitiva solo por reducir pasos, deliberación informada ante irreversibilidad).
+  - Nuevo eval 14 (Opciones múltiples: rechazo a la regla de «menos opciones = mejor», jerarquía y disclosure en panel operacional sin ocultar capacidades necesarias).
+
+### Técnico
+* `SKILL.md`: Incorporación de principios rectores (*Audit the cost to the task, not the presence of a pattern*, *Friction is a cost to evaluate, not automatically a defect to remove*, *Interaction count is evidence of effort, not a quality score*, *Reduce decision ambiguity, not necessarily the number of choices*, *Ask for a decision when the person has enough information to make it*, *Keep decision-relevant context available where the decision is made*, *Do not make the user remember information the interface already knows when that memory is required to continue the task*, *Automation is helpful when it removes work without hiding consequential decisions*, *A shorter flow is not better if it makes the decision less informed*, *Add feedback when uncertainty has a cost; do not add feedback as decoration*, *Severity describes impact; priority also considers exposure, reversibility, scope and evidence*, *Operational simplicity means less work, not necessarily less information*, *A business outcome does not replace user-task evidence*, *Device or viewport does not prove user intent*, *Observe the failure; label the hypothesized cause as inference until verified*, *A convention is supporting context, not proof of a problem*), sección `Evaluar costo a la tarea`, y nuevos anti-patrones.
+* `references/audit-criteria.md`: Tres nuevas secciones especializadas (`Fricción y protección`, `Contexto y memoria`, `Automatización y control`), y fortalecimiento de Acciones y decisiones, Feedback, Errores y recuperación, Confirmaciones, Acciones destructivas, Formularios, Eficiencia, CRM operacional, E-commerce, Sitios comerciales y Móvil.
+* `references/site-scale.md`: Criterio de selección de representantes por tareas y riesgo, distinción de causas sistémicas (UI, lógica, reglas) y principio de medición (*Measurement is evidence; it is not the UX judgment itself*).
+* `evals/evals.json`: Ampliación de 12 a 14 evals validados (IDs 1-14).
+* `VERSION`: bump `0.1.0` → `0.2.0` (MINOR).
+
 ## [tailwind-hygiene-v0.2.0] - 2026-09-20
 
 ### Producto
