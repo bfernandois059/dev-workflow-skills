@@ -4,6 +4,10 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+### Eliminación de etiquetas teóricas de UX en skills visuales
+
+* **Enfoque operativo sin etiquetas teóricas (*Teach the behavior, not the theory label*)**: Se sustituye el vocabulario explícito de leyes de UX y nombres de autores en `interface-craft`, `visual-consistency`, `visual-foundation` y sus referencias/evals por principios observables y decisiones propias del sistema de skills (facilidad de alcanzar y activar acciones, competencia entre opciones simultáneas, énfasis como recurso escaso, relación por proximidad), evitando que los agentes reciten marcos teóricos abstractos al interactuar.
+
 ### Integración del sistema de skills
 
 Primera pasada de integración del repositorio **como un solo sistema**, no como doce carpetas
@@ -91,7 +95,7 @@ referencias.
 * **Suite de evaluación ampliada y verificada**: 10 escenarios de decisión en `evals/evals.json`, integrando validación contra presets y adopción acrítica en eval 2, y nuevos evals 7 a 10.
 
 ### Técnico
-* `SKILL.md`: Integración de principios rectores de foundation mínima, roles semánticos, relaciones de ritmo, derivación funcional, excepciones acotadas, handoff desde design-directions, reglas activas vs historial y límites estrictos (sin Laws of UX ni rediseño).
+* `SKILL.md`: Integración de principios rectores de foundation mínima, roles semánticos, relaciones de ritmo, derivación funcional, excepciones acotadas, handoff desde design-directions, reglas activas vs historial y límites estrictos (sin doctrinas teóricas ni rediseño).
 * `assets/templates/ui-system.template.md`: Plantilla convertida en estructura documental sin presets visuales ni valores por defecto prefabricados (eliminando incentivos de completitud artificial y escalas/temas engañosos), estructurando roles antes que valores, mapeo técnico dependiente de evidencia del proyecto, excepciones acotadas y tabla de historial sin ambigüedades.
 * `evals/evals.json`: Suite ampliada de 6 a 10 evals, añadiendo eval 7 (frecuencia sin rol común), eval 8 (demasiadas variantes históricas), eval 9 (dirección aprobada transferible), eval 10 (excepción local acotada) y cobertura en eval 2 contra presets de plantilla.
 * Versión de la skill incrementada a `0.2.0` (MINOR).
@@ -131,7 +135,7 @@ referencias.
 * Paridad visual sobre pixel equality: preservación de la intención visual rectora frente a mockups sobre la igualdad exacta de píxeles, evaluando si la decisión de diseño que hacía funcionar la referencia sobrevivió al implementarse.
 
 ### Operación
-* Lentes perceptuales acotados y sin recitar teoría: integración de proximidad, semejanza, región común y distinción de énfasis como herramientas analíticas de relaciones, excluyendo heurísticas de interacción (Hick, Fitts, etc.) y prohibiendo nombres de leyes en la salida para describir defectos perceptuales concretos.
+* Lentes perceptuales acotados y sin recitar teoría: integración de proximidad, semejanza, región común y distinción de énfasis como herramientas analíticas de relaciones, excluyendo heurísticas de interacción ajenas y prohibiendo nombres de doctrinas o leyes en la salida para describir defectos perceptuales concretos.
 * Normalización previa de condiciones de comparación: regla *Normalize what can materially change the visual result before attributing the difference to inconsistency* para contrastar viewports (ej. 1440px vs 1280px), DPR, zoom, estado y datos antes de declarar discrepancias de layout o container, marcando aspectos inciertos como `No verificado`.
 * Frecuencia como evidencia, no autoridad (*Frequency is evidence, not authority*): la mayoría numérica no prevalece sobre la referencia aprobada ni sobre `ui-system.md`.
 * Clasificación de desviaciones: orientación ágil en *Local* (`interface-craft`), *Repetida* (`component-architecture`) y *Sistémica* (`visual-foundation`).
@@ -150,15 +154,15 @@ referencias.
 * Calidad y diversidad en decisiones de interfaz: erradicación de interfaces genéricas, simetría forzada y layouts tipo plantilla sin justificación funcional.
 * Principio rector explícito: las decisiones visuales se justifican por el contenido, la tarea y el producto, nunca por ser el patrón más fácil o predecible de generar.
 * Agrupación perceptual sobre contenedores (*Grouping does not imply containers*): prioridad a proximidad, alineación, jerarquía, ritmo y tipografía antes de encapsular elementos en cards, bordes o paneles redundantes.
-* Énfasis reservado (*Von Restorff*): el tratamiento visual distintivo se gestiona como recurso escaso para dirigir la atención intencionalmente sin sobrecargar la pantalla ni forzar artificialmente un único destacado.
+* Énfasis como recurso escaso: el tratamiento visual distintivo se gestiona intencionalmente para dirigir la atención sin sobrecargar la pantalla ni forzar artificialmente un único destacado.
 * Semejanza funcional: equivalencia visual restringida a elementos con la misma función, evitando que controles primarios, secundarios, destructivos o informativos compartan estilos confusos.
 * Validación visual orientada a la intención: comprobación de la experiencia renderizada centrada en verificar que la intención de diseño (dominancia, agrupaciones naturales, densidad adecuada y facilidad de adquisición) sea inmediatamente comprensible.
 
 ### Operación
 * Principios de percepción e interacción integrados como herramientas de decisión contextuales y no como checklists dogmáticos o prescripciones rígidas (*Use perception and interaction principles as decision tools, never as a checklist*).
 * Genericity test contextual antes de implementar: comprobación reflexiva (*«Si reemplazo el contenido por el de otro producto distinto, ¿esta composición seguiría funcionando prácticamente igual?»*) para diagnosticar composiciones genéricas sin descalificar patrones familiares cuando resuelven la tarea.
-* Prominencia y facilidad de adquisición de acciones (*Fitts*): evaluación del target interactivo completo, clearance y proximidad al contexto de decisión sin requerir precisión innecesaria de puntero ni imponer ubicaciones físicas universales.
-* Reducción de competencia de decisiones (*Hick*): priorización por frecuencia, consecuencia e intención del usuario sin preasignar destinos rígidos ni ocultar operaciones habituales.
+* Prominencia y facilidad de alcanzar y activar acciones: evaluación del target interactivo completo, clearance y proximidad al contexto de decisión sin requerir precisión innecesaria de puntero ni imponer ubicaciones físicas universales.
+* Reducción de competencia de decisiones simultáneas: priorización por frecuencia, consecuencia e intención del usuario sin preasignar destinos rígidos ni ocultar operaciones habituales.
 * Suite de evaluación ampliada y verificada: 14 escenarios de decisión en `evals/evals.json` que validan descarte de cards innecesarias, mitigación de toolbars sobrecargadas, resolución de acciones difíciles de adquirir y jerarquización de dashboards con KPIs competitivos.
 
 ### Técnico

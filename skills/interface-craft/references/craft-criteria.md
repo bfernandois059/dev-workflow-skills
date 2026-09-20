@@ -59,7 +59,7 @@ cuál es la acción principal, qué es contexto, qué es metadata y qué puede e
    buena parte de los bloques compite como primario, no hay jerarquía: hay una lista.
 4. **Quitar el color.** En escala de grises, ¿sigue habiendo orden? Si la jerarquía desaparece,
    estaba sostenida solo por color.
-5. **Énfasis reservado (Von Restorff).** Antes de usar color de acento, tamaño excepcional, badge,
+5. **Énfasis como recurso escaso.** Antes de usar color de acento, tamaño excepcional, badge,
    borde destacado, sombra o icono llamativo, pregunta: *¿qué elementos merecen realmente romper el
    patrón?* Si múltiples KPI o cards compiten sin justificación, reduce los secundarios a un tratamiento más silencioso.
 6. **Prueba de semejanza.** Si intercambio dos elementos visualmente iguales, ¿seguiría entendiendo cuál
@@ -200,7 +200,7 @@ entre elementos relacionados · padding interno · entre controles · densidad d
 1. **Relación conceptual de proximidad.** ¿Se cumple que la distancia dentro de un grupo es menor que
    entre grupos distintos, y esta menor que entre secciones? Si la distancia entre elementos inconexos es
    menor que entre elementos relacionados, la pantalla se leerá invertida.
-2. **Ley de proximidad.** ¿La distancia entre un label y su valor es menor que la distancia al
+2. **Relación por proximidad.** ¿La distancia entre un label y su valor es menor que la distancia al
    siguiente par? Si es igual o mayor, los pares se leen cruzados.
 3. **Revisa la escala existente** antes de agregar un valor. Un `gap-[22px]` nuevo junto a un
    `gap-6` existente casi siempre es el mismo rol con otro número.
@@ -297,10 +297,10 @@ listado; imagen que carga después y desplaza el contenido.
 
 1. **Una acción principal por vista.** Nómbrala. Si hay tres candidatas con el mismo peso, no hay
    ninguna. Reserva el énfasis principal para el objetivo central del flujo.
-2. **Facilidad de adquisición (Fitts).** ¿La acción principal y las frecuentes tienen un target generoso,
+2. **Facilidad de alcanzar y activar la acción.** ¿La acción principal y las frecuentes tienen un target generoso,
    con área clickeable en todo el elemento y no solo en el texto? ¿Están ubicadas cerca del punto donde se
    completa o confirma la tarea, según el layout, acciones sticky o contexto del producto?
-3. **Competencia entre opciones (Hick).** Si una barra o bloque acumula muchas opciones, ¿las acciones
+3. **Competencia entre opciones simultáneas.** Si una barra o bloque acumula muchas opciones, ¿las acciones
    frecuentes están accesibles de inmediato mientras las excepcionales se agrupan en un menú secundario?
    ¿Las destructivas están separadas en apariencia y espacio de las seguras?
 4. **Peso proporcional a la frecuencia y a la consecuencia.** Lo que se hace siempre es visible y

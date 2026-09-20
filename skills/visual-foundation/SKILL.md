@@ -83,7 +83,7 @@ Si la respuesta es no:
 - Para **adaptar una pantalla concreta entre mobile, tablet y desktop**. Eso es `adaptive-layout`.
 - Para **consolidar componentes duplicados** o normalizar clases Tailwind. Eso es `component-architecture` o `tailwind-hygiene`.
 - Para **inventar una marca desde cero**. Si no hay ninguna decisión visual aprobada, eso es una conversación de producto: registra lo que falta como `Pendiente de validar`.
-- Para **introducir checklists de Laws of UX o heurísticas teóricas**. `visual-foundation` opera sobre reglas aprobadas y evidencia real, no sobre teoría perceptual abstracta.
+- Para **introducir checklists de doctrinas teóricas o heurísticas abstractas**. `visual-foundation` opera sobre reglas aprobadas y evidencia real, no sobre teoría perceptual abstracta.
 - Para **corregir la implementación del producto**. Ver [Límites de modificación](#límites-de-modificación).
 
 ---

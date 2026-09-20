@@ -13,7 +13,7 @@ una desviación real de una diferencia justificada** y **qué señales delatan d
 > Un desvío numérico o de token (ej. 23px vs 24px) importa únicamente si genera, oculta o contradice una relación visible. Si la relación perceptual se mantiene intacta, una variación microscópica casi nunca es un defecto por sí misma.
 
 > **Lentes perceptuales acotados y sin recitar teoría.**
-> Utiliza como apoyo interno únicamente: **proximidad**, **semejanza**, **región común** y **énfasis perceptual**. No importes leyes de interacción o modelos mentales ajenos (Hick, Fitts, Tesler, memoria de trabajo, journeys). Al redactar la salida al usuario, describe siempre el defecto visible y la relación que se rompe, sin recitar nombres de leyes ni marcos teóricos.
+> Utiliza como apoyo interno únicamente: **proximidad**, **semejanza**, **región común** y **énfasis perceptual**. No importes heurísticas de interacción o modelos mentales ajenos (facilidad motriz de puntero, carga de alternativas, memoria de trabajo, journeys). Al redactar la salida al usuario, describe siempre el defecto visible y la relación que se rompe, sin recitar nombres de doctrinas, leyes ni marcos teóricos.
 
 Lo que ya está en [`SKILL.md`](../SKILL.md) no se repite: precedencia de fuentes, obligación de
 mirar el render, orden macro→micro, priorización, formato de entrega y fronteras entre skills.
