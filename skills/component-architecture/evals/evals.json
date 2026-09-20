@@ -34,7 +34,7 @@
     {
       "id": 6,
       "prompt": "Nuestro `Card` ahora tiene `isDashboard`, `isCompact`, `isAdmin`, `showExtraBorder`, `hideFooter` y `smallOnMobile`.",
-      "expected_output": "Detecta que el componente está absorbiendo excepciones de consumidores que quizá no pertenecen juntos. Separa los estados binarios legítimos de los flags que nombran páginas o roles, y evalúa variantes semánticas —densidad, tono, tamaño—, composición con subcomponentes o responsabilidades separadas que compartan una capa inferior. No agrega otro boolean para resolver el próximo caso ni prohíbe los boolean props como categoría.",
+      "expected_output": "Detecta que el componente está absorbiendo excepciones de consumidores que quizá no pertenecen juntos. Separa los estados binarios legítimos de los flags que nombran páginas o roles. No reemplaza los booleanos por seis variantes combinables que sigan permitiendo estados absurdos ni expone combinaciones que el producto no soporta. Identifica cuáles diferencias son independientes y cuáles representan modos estructurales completos (como densidad o layout semántico), evaluando composición con subcomponentes o responsabilidades separadas que compartan una capa inferior cuando las variaciones ya no pertenecen a un mismo componente. No agrega otro boolean para resolver el próximo caso ni prohíbe los boolean props como categoría.",
       "files": []
     },
     {
@@ -71,6 +71,18 @@
       "id": 12,
       "prompt": "Ya consolidé cuatro cards en un componente común. Build y tests pasan, pero ahora algunas tienen menos padding y el título cambió de tamaño.",
       "expected_output": "Considera que la consolidación no está terminada: build y tests no sustituyen la equivalencia visual, y una componentización que cambia spacing y tipografía sin decisión previa introdujo una regresión. Compara los consumidores contra la referencia aprobada o el sistema visual y contra su estado anterior, y corrige únicamente lo que la componentización rompió. No aprovecha para rediseñar las cards: si algún cambio visual es deseable pero no estaba decidido, lo señala y lo deriva a interface-craft.",
+      "files": []
+    },
+    {
+      "id": 13,
+      "prompt": "CustomerSummary, InvoiceSummary y ProjectSummary tienen casi el mismo contenedor, header y spacing. Hagamos un EntitySummary global para que todo quede centralizado.",
+      "expected_output": "No consolida automáticamente el bloque completo por similitud visual. Aplica la prueba inversa de cambio independiente y analiza si los tres dominios deberían evolucionar juntos. Detecta que compartir similitud de marco no justifica crear un único componente de dominio que acople facturación, clientes y proyectos. Extrae la abstracción mínima suficiente por debajo del dominio —como SummarySurface, SummaryHeader o equivalente con contrato claro—, manteniendo los componentes de dominio separados para que evolucionen sin blast radius cruzado. Evita un EntitySummary type=\"customer|invoice|project\" lleno de excepciones condicionales y coloca la abstracción en el nivel más estrecho que corresponda.",
+      "files": []
+    },
+    {
+      "id": 14,
+      "prompt": "Tenemos dos resúmenes iguales. Uno es puramente renderizado con datos y el otro necesita estado interactivo y una librería pesada para editar. Hagamos un único componente compartido que cargue todo para ambos.",
+      "expected_output": "No amplía automáticamente el runtime o dependency boundary del consumidor simple. Evita que un resumen estático o liviano cargue estado interactivo, APIs de cliente o dependencias pesadas solo porque otra variante las necesita. Comparte únicamente la parte estructural y visual verdaderamente común, manteniendo la capacidad interactiva o pesada en una capa específica, subcomponente o mediante composición. Conserva la responsabilidad compartida sin duplicar lógica y sin forzar un acoplamiento técnico o de runtime innecesario en todos los consumidores.",
       "files": []
     }
   ]
