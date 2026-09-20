@@ -10,7 +10,7 @@
     {
       "id": 2,
       "prompt": "No tenemos manual de marca ni Figma ni nada, solo el código. ¿Puedes armar el sistema de diseño a partir de lo que hay?",
-      "expected_output": "Declara desde el principio que sin referencias aprobadas el resultado será mayoritariamente Derivado. No inventa identidad ni dirección visual: si nada la respalda, borra esa sección en vez de rellenarla con adjetivos genéricos. Deriva únicamente los patrones con evidencia consistente y contrasta frecuencia contra función y contexto antes de elevar un valor a regla. Donde conviven escalas incompatibles lo registra como Pendiente de validar con una pregunta respondible, en vez de elegir la más repetida.",
+      "expected_output": "Declara desde el principio que sin referencias aprobadas el resultado será mayoritariamente Derivado. No inventa identidad ni dirección visual: si nada la respalda, borra esa sección en vez de rellenarla con adjetivos genéricos. Deriva únicamente los patrones con evidencia consistente del proyecto y contrasta frecuencia contra función y contexto antes de elevar un valor a regla. Donde conviven escalas incompatibles lo registra como Pendiente de validar con una pregunta respondible, en vez de elegir la más repetida. No adopta clases, colores, breakpoints, spacing o radios prefabricados de la plantilla ni usa sus ejemplos como presets o evidencia: la plantilla define estructura documental, no decisiones visuales del proyecto.",
       "files": []
     },
     {

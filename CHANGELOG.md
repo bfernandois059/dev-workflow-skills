@@ -22,7 +22,7 @@ Los cambios relevantes de las skills se registran en este archivo.
 ### Técnico
 
 * `SKILL.md`: Integración de principios rectores de foundation mínima, roles semánticos, relaciones de ritmo, derivación funcional, excepciones acotadas, handoff desde design-directions, reglas activas vs historial y límites estrictos (sin Laws of UX ni rediseño).
-* `assets/templates/ui-system.template.md`: Plantilla actualizada para eliminar incentivos de completitud artificial, incorporar roles antes que valores, mapeo técnico separado de la intención, excepciones acotadas y tabla de historial sin ambigüedades.
+* `assets/templates/ui-system.template.md`: Plantilla convertida en estructura documental sin presets visuales ni valores por defecto prefabricados (eliminando incentivos de completitud artificial y escalas/temas engañosos), estructurando roles antes que valores, mapeo técnico dependiente de evidencia del proyecto, excepciones acotadas y tabla de historial sin ambigüedades.
 * `evals/evals.json`: Suite ampliada de 6 a 10 evals, añadiendo eval 7 (frecuencia sin rol común), eval 8 (demasiadas variantes históricas), eval 9 (dirección aprobada transferible) y eval 10 (excepción local acotada).
 * `VERSION`: bump `0.1.0` → `0.2.0` (MINOR).
 

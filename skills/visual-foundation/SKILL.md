@@ -311,6 +311,7 @@ Si la tarea no incluye explícitamente sincronizar código de tokens, limítate 
    - Contrastar frecuencia contra función, contexto y jerarquía.
    - Asignar `Confirmado`, `Derivado` o `Pendiente de validar`.
 6. **Escribir o actualizar el delta** en `docs/ui-system.md` a partir de la plantilla [`assets/templates/ui-system.template.md`](assets/templates/ui-system.template.md).
+   - Usar la plantilla exclusivamente como estructura documental y guía de evidencia; no adoptar clases, colores, breakpoints, spacing o radios como si fueran presets del proyecto.
    - Conservar intactas las decisiones previas no afectadas.
    - Si una regla cambia, actualizar la activa y mover la anterior al historial con su justificación.
 7. **Entregar** con el formato establecido, reportando fuentes, decisiones, contradicciones, pendientes localizados y deriva fuera de alcance.
