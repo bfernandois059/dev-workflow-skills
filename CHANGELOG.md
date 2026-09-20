@@ -2,6 +2,17 @@
 
 Los cambios relevantes de las skills se registran en este archivo.
 
+## [0.2.6] - 2026-09-20
+
+### Operación
+* Optimización de la experiencia de onboarding: mapa funcional de las 12 skills agrupadas por responsabilidad (Planificar y ejecutar, Diseñar y mantener interfaces, Auditar y mantener).
+* Documentación de 7 rutas habituales de composición no obligatorias para proyectos reales (proyecto nuevo, rediseño existente, CRM/intranet, feature nueva, mockup aprobado, repo heredado y pre-entrega).
+* Reorganización de README.md como puerta de entrada escaneable con resumen en 4 puntos de cada skill y comandos de instalación accesibles.
+
+### Técnico
+* Desacople conceptual de `engineering-workflow` como disciplina transversal de desarrollo y validación, evitando su representación como fase visual obligatoria.
+* Clarificación del modelo SemVer independiente por skill (`v0.2.0` vs `v2.0.0`), explicando el paso de `0.x` a `1.0.0` como adopción de contrato público suficientemente estable sin fin de evolución.
+
 ## Unreleased
 
 ### Integración del sistema de skills
