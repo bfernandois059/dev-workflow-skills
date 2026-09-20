@@ -70,6 +70,41 @@ referencias.
 - La familia visual sigue siendo **7/7** y `ux-audit` sigue siendo transversal, no una octava
   skill visual.
 
+## [tailwind-hygiene-v0.2.0] - 2026-09-20
+
+### Producto
+* **Preservación del contrato de estilos más allá del snapshot estático**: *Equivalent CSS in one snapshot is not enough; preserve the styling contract*. Normalizar Tailwind significa expresar la misma decisión de forma más clara y coherente sin cambiar su resultado visual, semántica, theming, estados, extensibilidad ni contrato de overrides. *Normalize expression, not meaning*.
+* **Equivalencia multidimensional**: *Same pixels in one state do not automatically mean equivalent styling*. La equivalencia no es únicamente numérica o de render estático en reposo: deben preservarse valor computado, propiedad afectada, breakpoint, estado, theme, selector/variante, variable semántica, comportamiento en runtime, precedencia, capacidad de override y contrato con primitives y consumidores.
+* **Equivalencia de rol vs equivalencia de valor**: *Value equivalence does not prove role equivalence*. Que un color `#ffffff` coincida con `bg-surface` en light mode no autoriza una sustitución indiscriminada si `surface` muta en dark mode/tenant, o si el hex representa logos, marcas de terceros, canvas de exportación o excepciones deliberadas. La normalización exige tres condiciones concurrentes: valor equivalente, rol equivalente y comportamiento dinámico equivalente.
+* **Preservación de referencias dinámicas y contratos vivos**: *Do not replace a live semantic reference with a snapshot of its current value*. Prohibición de congelar referencias dinámicas como `bg-[var(--surface)]` en valores hardcodeados (`bg-white`); solo se admite normalizar a utilidades semánticas (`bg-surface`) cuando referencien efectivamente el mismo contrato y rol en runtime.
+* **Límites de la API de estilos y `@theme`**: *Exposing a value through the theme changes the styling API of the project; do not do it merely to remove brackets*. `@theme` no es simplemente una sintaxis decorativa de `:root`. Se prohíbe promover variables de aplicación a tokens de theme únicamente para evitar corchetes arbitrarios sin una decisión de diseño previa.
+* **Canonicalización legible vs la expresión más corta**: *Prefer the clearest equivalent expression, not mechanically the shortest one*. Menos caracteres o menos clases no implican mayor claridad ni corrección. Se preserva la expresión que comunique explícitamente la intención del diseño (como responsabilidades independientes).
+* **Independencia de ejes y contrato de overrides**: *A cleanup must preserve not only the default style, but also the component's supported override behavior*. En componentes reutilizables, preservar declaraciones por eje (como `px-4 py-3`) cuando los consumidores dependan de sobrescribir `px` o `py` de forma aislada sin que `tailwind-merge` suprima el eje complementario.
+* **Semántica de overrides con `className` público**: *Preserve override semantics, not only base render*. En componentes que combinan clases base con `props.className` vía `cn`, `clsx` o `tailwind-merge`, la normalización debe verificar estilo por defecto, consumer override relevante, variantes + override y estados activos, garantizando que `props.className` conserve su precedencia.
+* **Clases aparentemente redundantes y fallbacks**: *Redundant in one resolved state is not necessarily redundant in the styling contract*. Respeto a fallbacks deliberados (`grid block md:grid`, `bg-surface dark:bg-surface-dark`) y composiciones condicionales que no participan en una captura estática pero protegen la resiliencia del layout.
+* **Normalización contextual**: *Prove equivalence where the rule actually participates*. La equivalencia debe comprobarse en el contexto donde la regla realmente participa (`hover:`, `focus-visible:`, `disabled:`, `dark:`, `group:`, `peer:`, `data:`, `aria:`, contenedor y breakpoints), no en el estado en reposo.
+* **Preservación del orden de variantes**: *Do not normalize variant order from memory. Use the installed version and generated behavior*. Prohibición de reordenar cadenas de variantes por memoria, gusto personal o alfabetización; respeto estricto al CSS generado y a las herramientas oficiales de formateo instaladas.
+* **Rechazo de DRY artificial en cadenas de clases**: *Tailwind hygiene is not DRY-by-string* y *Reducing repeated text is not enough reason to introduce a styling abstraction*. Se prohíbe crear constantes de clases, directivas `@apply`, `cva` o microcomponentes solo para evitar repetición textual. La coincidencia accidental entre componentes independientes debe permanecer duplicada.
+* **Arbitrary values según tipo**: Distinción estricta entre relaciones específicas legítimas (conservar), utilidades del sistema exactamente equivalentes con el mismo rol (normalizar) y valores repetidos fuera de escala (derivar a `visual-foundation` sin inventar tokens).
+* **Diferenciación entre limpieza y reparación funcional**: *Fixing missing generated CSS is a functional/visual repair, not invisible hygiene*. Corregir clases interpoladas dinámicas que antes no generaban CSS en el build altera el render y constituye un arreglo funcional o visual que debe separarse y derivarse.
+* **Tratamiento real de `tailwind-merge`**: Consideración de `tailwind-merge` como capa técnica independiente con versión, configuración y grupos de conflicto propios, sin asumir resolución automática sobre utilidades personalizadas.
+* **Interop sin supremacía de Tailwind**: *Hygiene follows the project's styling architecture; it does not replace it*. Coexistencia respetuosa con CSS Modules, CSS global e inline styles sin intentar migrar hojas externas a Tailwind.
+* **No gobernanza por frecuencia estadística**: Rechazo a declarar estándares visuales por simple mayoría numérica (80% vs 20%).
+
+### Operación
+* **Criterios de validación multidimensional**: Protocolo para verificar render base, overrides de consumidores, variantes activas, temas y estados sin generar matrices exhaustivas innecesarias, limitándose al alcance afectado.
+* **Suite de evaluación ampliada a 14 evals**:
+  - Ajuste en eval 1 (confirmación en proyecto real sin sospecha infinita ante equivalencias claras).
+  - Ajuste en eval 9 (preservación de variables dinámicas vivas frente a snapshots congelados).
+  - Nuevo eval 13 (rechazo a sustitución global de `#ffffff` por `bg-surface` sin equivalencia de rol semántico).
+  - Nuevo eval 14 (preservación del contrato de overrides, precedencia de `props.className` e independencia de ejes en componentes públicos con `cn`/`tailwind-merge`).
+
+### Técnico
+* `SKILL.md`: Incorporación de principios rectores (*Equivalent CSS in one snapshot is not enough; preserve the styling contract*, *Normalize expression, not meaning*, *Value equivalence does not prove role equivalence*, *Prefer the clearest equivalent expression, not mechanically the shortest one*, *Preserve override semantics, not only base render*, *Tailwind hygiene is not DRY-by-string*), fronteras operativas y dimensiones de equivalencia.
+* `references/tailwind-normalization.md`: Nuevas secciones especializadas de `Equivalencia semántica` y `Contrato de overrides`; fortalecimiento de Spacing (ejes), Color (rol y dinámicas), Duplicados (fallbacks), Variantes de estado (contexto activo y no reordenar de memoria), CSS variables (no congelar), Helpers y `tailwind-merge` (config real), Generación dinámica (reparación vs higiene), `@theme` (API de estilos), Interop y Sincronización.
+* `evals/evals.json`: Suite de evaluación ampliada de 12 a 14 escenarios (IDs 1-14).
+* `VERSION`: bump `0.1.0` → `0.2.0` (MINOR).
+
 ## [component-architecture-v0.2.0] - 2026-09-20
 
 ### Producto
