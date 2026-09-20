@@ -4,10 +4,6 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
-### Eliminación de etiquetas teóricas de UX en skills visuales
-
-* **Enfoque operativo sin etiquetas teóricas (*Teach the behavior, not the theory label*)**: Se sustituye el vocabulario explícito de leyes de UX y nombres de autores en `interface-craft`, `visual-consistency`, `visual-foundation` y sus referencias/evals por principios observables y decisiones propias del sistema de skills (facilidad de alcanzar y activar acciones, competencia entre opciones simultáneas, énfasis como recurso escaso, relación por proximidad), evitando que los agentes reciten marcos teóricos abstractos al interactuar.
-
 ### Integración del sistema de skills
 
 Primera pasada de integración del repositorio **como un solo sistema**, no como doce carpetas
@@ -73,6 +69,15 @@ referencias.
   útil para quien vuelve al repositorio.
 - La familia visual sigue siendo **7/7** y `ux-audit` sigue siendo transversal, no una octava
   skill visual.
+
+## [0.2.1] - 2026-09-20
+
+### Operación
+* **Eliminación de etiquetas teóricas de UX en skills visuales (*Teach the behavior, not the theory label*)**: Sustitución del vocabulario explícito de leyes de UX y nombres de autores (Fitts, Hick, Von Restorff, etc.) en `interface-craft`, `visual-consistency`, `visual-foundation`, sus referencias y criterios de evaluación por principios observables y decisiones propias del sistema de skills (facilidad de alcanzar y activar acciones, competencia entre opciones simultáneas, énfasis como recurso escaso, relación por proximidad), evitando que los agentes reciten citas o marcos teóricos abstractos en sus respuestas.
+* **Preservación íntegra de criterios de evaluación**: Mantenimiento exacto de los escenarios, decisiones esperadas y cobertura de evals (14 en `interface-craft`, 14 en `visual-consistency` y 10 en `visual-foundation`) sin sesgo teórico.
+
+### Técnico
+* Refactor editorial de directrices y límites en `SKILL.md`, `references/craft-criteria.md` y `references/visual-review-criteria.md` para describir relaciones visuales concretas y defectos perceptibles en lugar de incumplimientos de leyes teóricas.
 
 ## [visual-foundation-v0.2.0] - 2026-09-19
 
