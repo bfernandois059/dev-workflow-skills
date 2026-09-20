@@ -17,12 +17,14 @@ variantes contra flags de página, preservación visual y funcional, y formato d
 |---|---|
 | [Responsabilidad y cohesión](#responsabilidad-y-cohesión) | No está claro qué comparten realmente dos bloques |
 | [Repetición o coincidencia](#repetición-o-coincidencia) | Se repite algo y hay que decidir si importa |
+| [Acoplamiento entre consumidores](#acoplamiento-entre-consumidores) | Dos patrones se parecen pero pertenecen a dominios distintos |
 | [Extracción](#extracción) | Un archivo grande o un bloque candidato a salir |
 | [Composición](#composición) | La variación empieza a resolverse con props |
 | [Variantes](#variantes) | Diferencias legítimas que hay que modelar |
 | [Slots y children](#slots-y-children) | El contenido central varía y el marco no |
 | [Controlled y uncontrolled](#controlled-y-uncontrolled) | El componente compartido tiene estado |
 | [Presentación y comportamiento](#presentación-y-comportamiento) | Se ven iguales pero no hacen lo mismo |
+| [Límites técnicos y dependencias](#límites-técnicos-y-dependencias) | Un caso necesita más capacidades o dependencias pesadas |
 | [Local, feature o global](#local-feature-o-global) | Hay que decidir dónde vive el componente |
 | [Wrappers sobre primitives](#wrappers-sobre-primitives) | El proyecto ya tiene una base adecuada |
 | [Tablas](#tablas) | Varias tablas resueltas por separado |
@@ -41,19 +43,24 @@ variantes contra flags de página, preservación visual y funcional, y formato d
 
 **Qué evidencia justifica abstraer.** Las implementaciones representan el mismo concepto del
 producto y responden a la misma pregunta —"así se presenta un cliente", "así se encabeza una
-página"—. La prueba práctica: si esa decisión cambia, todas deben cambiar juntas.
+página"—. La prueba práctica tiene dos direcciones:
+1. *Prueba directa:* si esa decisión compartida cambia, todas las apariciones deben cambiar juntas.
+2. *Prueba inversa:* si un consumidor necesita cambiar mañana por una razón propia de su dominio,
+   ¿los demás deberían permanecer intactos? Si la respuesta es sí y el componente compartido obligaría
+   a coordinar cambios y validar a todos, la abstracción acopla dominios que deberían ser independientes.
 
-**Qué debe compartir el componente.** Exactamente la decisión común: la estructura, el
-tratamiento y el contrato que define el concepto. Un componente cohesivo suele poder describirse
-con una responsabilidad breve y reconocible; si la descripción empieza a acumular funciones no
+**Qué debe compartir el componente.** El invariante común: la estructura, el tratamiento y el contrato
+que define el concepto (*Share the invariant, not every similarity*). Un componente cohesivo suele poder
+describirse con una responsabilidad breve y reconocible; si la descripción empieza a acumular funciones no
 relacionadas, revisa el límite.
 
 **Qué debe permanecer en el consumidor.** El contenido, los datos, la conexión con el dominio y
-las diferencias que pertenecen a esa pantalla y no al concepto.
+las diferencias que pertenecen a esa pantalla o feature y no al concepto compartido.
 
 **Señales de que empeoró.** El nombre necesita "y" para explicarse (`CardAndFilters`). Dos
 consumidores piden cambios que se contradicen. Cada nueva pantalla obliga a tocar el componente
-compartido en vez de usarlo.
+compartido en vez de usarlo. Consumidores independientes quedan forzados a coordinar versiones y pruebas
+solo porque hoy comparten una forma visual similar.
 
 ---
 
@@ -61,16 +68,43 @@ compartido en vez de usarlo.
 
 **Qué evidencia justifica abstraer.** Que la estructura coincida **porque cumple la misma
 función**. Dos bloques con el mismo `flex` y el mismo `gap` no comparten nada si uno muestra un
-resumen de facturación y el otro una lista de adjuntos.
+resumen de facturación y el otro una lista de adjuntos. La reutilización es valiosa cuando los
+consumidores comparten un motivo de cambio, no únicamente una silueta (*Reuse is valuable when
+consumers share a reason to change, not merely a shape*).
 
-**Qué debe compartir el componente.** Solo la parte que evoluciona junta. A veces es un primitive
-inferior —`Surface`, `Stack`, `Field`— y no el bloque entero.
+**Qué debe compartir el componente.** Solo la parte que evoluciona junta. Aplica el principio de
+abstracción mínima suficiente (*Prefer the smallest shared responsibility that removes the real source
+of drift*): si lo compartido es un primitive inferior —`SummarySurface`, `SummaryHeader`, `StatusBadge`—,
+extrae esa pieza con contrato claro y mantén los componentes de dominio separados.
 
-**Qué debe permanecer en el consumidor.** Todo lo que coincide hoy por casualidad. Congelar una
-coincidencia crea un acoplamiento que después obliga a añadir flags para deshacerlo.
+**Qué debe permanecer en el consumidor.** Todo lo que coincide hoy por casualidad y la lógica propia de
+cada entidad. Congelar una coincidencia crea un acoplamiento que después obliga a añadir flags para
+deshacerlo.
 
-**Señales de que empeoró.** El primer cambio posterior necesita una prop nueva para separar
-consumidores que "eran iguales". Aparecen `if` sobre el tipo de página dentro del componente.
+**Señales de que empeoró.** Se sustituyó duplicación por acoplamiento de cambios no relacionados (*Do not
+trade duplication for unrelated change coupling*). El primer cambio posterior necesita una prop nueva
+para separar consumidores que "eran iguales". Aparecen `if` sobre el tipo de página o entidad dentro del
+componente.
+
+---
+
+## Acoplamiento entre consumidores
+
+**Qué evidencia justifica abstraer.** Los consumidores comparten un motivo real de cambio y una
+responsabilidad conjunta demostrada, no solo una coincidencia visual o estructural.
+
+**Qué debe compartir el componente.** La abstracción mínima suficiente que elimina la fuente real de deriva
+sin vincular los ciclos de entrega de dominios ajenos. Si `CustomerSummary`, `InvoiceSummary` y
+`ProjectSummary` tienen el mismo contenedor, header y spacing, la abstracción compartida correcta vive por
+debajo del dominio (`SummarySurface`, `SummaryHeader`).
+
+**Qué debe permanecer en el consumidor.** La identidad de dominio, las reglas comerciales y la libertad
+de evolucionar por separado. Un cambio en la facturación no debe obligar a modificar el componente
+compartido ni a revalidar clientes o proyectos.
+
+**Señales de que empeoró.** Se creó un componente universal (`<EntitySummary type="customer|invoice|project" />`)
+lleno de excepciones condicionales. Un cambio en un módulo obliga a probar pantallas sin relación funcional.
+La consolidación aumentó el blast radius de cada cambio futuro.
 
 ---
 
@@ -98,16 +132,24 @@ partido por la mitad para bajar el tamaño del archivo.
 **Qué evidencia justifica abstraer.** Lo compartido es el **marco** —contenedor, header, spacing,
 tratamiento, zona de acciones— y el contenido central varía entre consumidores.
 
-**Qué debe compartir el componente.** El marco y sus reglas. Los subcomponentes exponen las zonas
-donde el consumidor pone lo suyo.
+**Qué debe compartir el componente.** El marco, sus reglas y el orden semántico. Los subcomponentes
+exponen las zonas donde el consumidor aporta su contenido sin perder la coherencia del bloque.
 
 **Qué debe permanecer en el consumidor.** El contenido de cada zona y las decisiones que dependen
 de su dominio.
 
+**Escape hatches y composición con propósito.** `className`, `children`, slots o render props son válidos
+para casos excepcionales legítimos, pero no deben convertirse en la API principal (*An escape hatch should
+handle exceptions, not become the primary API*). Si todos los consumidores deben sobrescribir paddings,
+bordes o apagar elementos internos (`overridePadding`, `disableDefaultHeader`), la abstracción está mal
+delimitada. Tampoco escondas diferencias reales detrás de un `children` arbitrario: `<Card>{anything}</Card>`
+sin decisión de estructura, jerarquía o semántica es solo un `div` con nombre elegante.
+
 **Señales de que empeoró.** La composición exige memorizar un orden implícito de subcomponentes
 que nada verifica. Cada zona termina aceptando props de configuración y se pierde la ventaja de
-componer. Una variación pequeña y controlada —dos tamaños, un tono— se convirtió en cinco
-subcomponentes donde una prop bastaba.
+componer. Los consumidores usan escape hatches de forma rutinaria para deshacer las decisiones del marco.
+Una variación pequeña y controlada —dos tamaños, un tono— se convirtió en cinco subcomponentes donde una
+prop bastaba.
 
 ---
 
@@ -119,18 +161,24 @@ nombra, o pueden nombrarse sin mencionar una página.
 
 **Qué debe compartir el componente.** El vocabulario acotado y semántico de variantes y su
 traducción a estilo. Una variante es un valor con significado —`tone="critical"`—, no una lista
-de utilidades. El vocabulario puede crecer cuando el sistema realmente incorpora una forma nueva;
-lo que no puede es crecer una variante por pantalla.
+de utilidades. Modela modos estructurales reales (`variant="summary"`, `variant="compact-list"`,
+`variant="featured"`) en lugar de multiplicar combinaciones independientes que generen un producto cartesiano
+inválido (*Do not expose combinations the product does not actually support*). Diseña la API para que el uso
+válido sea evidente y el contradictorio sea difícil (*The component API should make valid usage easy and
+contradictory usage difficult*), evitando props dependientes huérfanas (como `imagePosition` sin `image`) o
+estados incompatibles simultáneos (`loading`, `error`, `data`), sin caer en type-golf ni exigir tipos
+complejos para componentes triviales.
 
 **Qué debe permanecer en el consumidor.** La elección de la variante, no su definición.
 
-**Señales de que empeoró.** La variante se llama como el consumidor (`variant="dashboard"`). Las
-combinaciones válidas ya no caben en la cabeza y algunas producen resultados absurdos. Se agrega
-una variante por cada pantalla nueva: eso ya no es un vocabulario, es una lista de excepciones.
+**Señales de que empeoró.** La variante se llama como el consumidor (`variant="dashboard"`). Múltiples
+props independientes permiten decenas de combinaciones de las que solo unas pocas tienen sentido físico o
+visual. La API acepta combinaciones absurdas o contradictorias. Se agrega una variante por cada pantalla
+nueva: eso ya no es un vocabulario, es una lista de excepciones.
 
 > Los boolean props siguen siendo correctos para estados genuinamente binarios: `disabled`,
 > `required`, `loading`, `selected`. El problema no es el tipo, es codificar excepciones
-> estructurales con ellos.
+> estructurales o modos incompatibles con ellos.
 
 ---
 
@@ -155,16 +203,24 @@ opcional cambia el layout de formas que nadie previó.
 **Qué evidencia justifica abstraer.** El patrón tiene estado propio —abierto/cerrado,
 seleccionado, expandido, pestaña activa— y varios consumidores lo repiten igual.
 
-**Qué debe compartir el componente.** El comportamiento y sus transiciones, con un contrato
-explícito: o gestiona su estado internamente, o lo recibe con su `onChange`, o soporta ambos con
-la misma semántica que ya use el proyecto.
+**Qué debe compartir el componente.** El comportamiento y sus transiciones, con ownership claro del
+estado:
+- Coloca el estado en el nivel más bajo que sea dueño de la decisión (*Put state at the lowest level that
+  owns the decision, not automatically inside the reusable component*).
+- Si el estado solo afecta el comportamiento interno y nadie necesita coordinarlo fuera de su ciclo de vida,
+  vive dentro del componente.
+- Si participa en URL, filtros, formulario, selección global, navegación o store, pertenece al consumidor.
+- No crees dos fuentes de verdad: evita combinar estado interno, props de valor y `useEffect` de
+  sincronización sin un contrato formal. Si se admite controlled y uncontrolled, hazlo con la semántica
+  limpia que use el proyecto y solo si hay consumidores reales que lo requieran (no por completitud teórica).
 
 **Qué debe permanecer en el consumidor.** La sincronización con URL, store, formulario o servidor
 cuando ese estado pertenece a la aplicación y no al componente.
 
-**Señales de que empeoró.** El componente tiene estado interno **y** una prop de valor que no se
-sincronizan. Los consumidores duplican el estado para poder leerlo. Un `useEffect` copia una prop
-a estado interno en cada render.
+**Señales de que empeoró.** El componente tiene estado interno **y** una prop de valor que se
+desincronizan o requieren `useEffect` en cada render para copiarse. Los consumidores duplican el estado
+para poder leerlo. Se forzó soporte controlled/uncontrolled complejo en un componente donde ningún caso lo
+usaba.
 
 ---
 
@@ -176,15 +232,41 @@ verse igual.
 
 **Qué debe compartir el componente.** Solo la capa demostrada. Cuando coinciden en presentación
 pero no en lógica, lo compartido es un componente de presentación que recibe lo que necesita
-resuelto desde fuera.
+resuelto desde fuera (`canEdit`, `status`, `actions`).
+- **Dirección de dependencias:** Un componente compartido inferior no debe adquirir conocimiento de
+  features superiores para aumentar reutilización (*Shared lower-level components should not acquire
+  feature knowledge merely to increase reuse*). Si un componente base necesita acomodar un caso de negocio,
+  la lógica permanece en la feature o se pasa como dato resuelto; no se importan tipos ni hooks de la feature
+  dentro de la capa genérica.
 
 **Qué debe permanecer en el consumidor.** Permisos, reglas comerciales, consultas, mutaciones y
-cualquier decisión que pertenezca a otra capa. El componente recibe `canEdit`, `status` o
-`actions`; no los calcula.
+cualquier decisión que pertenezca a otra capa. El componente recibe lo resuelto; no lo calcula.
 
 **Señales de que empeoró.** El componente genérico importa hooks de dominio o consulta datos
 propios. Aparece lógica de rol dentro de un componente presentacional. Un cambio de regla
-comercial obliga a tocar un componente que se usa en pantallas que esa regla no afecta.
+comercial obliga a tocar un componente que se usa en pantallas que esa regla no afecta. La capa inferior
+depende de abstracciones superiores.
+
+---
+
+## Límites técnicos y dependencias
+
+**Qué evidencia justifica abstraer.** Todos los consumidores comparten el mismo entorno de ejecución y
+presupuesto técnico, o la abstracción base se mantiene lo bastante desacoplada para no imponer costos sobre los
+casos simples.
+
+**Qué debe compartir el componente.** La estructura, diseño o lógica verdaderamente común sin arrastrar
+capacidades técnicas o dependencias que solo necesita un caso (*Do not widen the runtime or dependency
+boundary for every consumer because one variant needs more capability*).
+
+**Qué debe permanecer en el consumidor.** Las dependencias pesadas (editores de texto rico, librerías de
+gráficos, mapas, calendarios complejos, drag & drop), las APIs exclusivas de navegador o la interactividad
+pesada cuando otros consumidores son estáticos o renderizados en servidor. Aísla la capacidad en la capa
+específica o compón el componente interactivo sobre la base estática.
+
+**Señales de que empeoró.** Un componente base pasa a requerir directivas de cliente, imports de navegador o
+librerías pesadas en todas las pantallas solo porque una variante las usa. Consumidores con render liviano
+sufren sobrecarga de bundle o complejidad de runtime por culpa de una consolidación indiscriminada.
 
 ---
 
@@ -192,6 +274,8 @@ comercial obliga a tocar un componente que se usa en pantallas que esa regla no 
 
 **Qué evidencia justifica abstraer.** El concepto cruza realmente la frontera donde vas a
 ponerlo. Un patrón usado por tres pantallas de la misma feature es un componente de esa feature.
+Coloca la abstracción en el nivel más estrecho que coincida con su responsabilidad real (*Place the
+abstraction at the narrowest level that matches its real responsibility*).
 
 **Qué debe compartir el componente.** Lo que corresponde a su nivel: un primitive global no sabe
 de entidades del producto; un componente de feature sí puede saberlas.
@@ -200,8 +284,9 @@ de entidades del producto; un componente de feature sí puede saberlas.
 elegido.
 
 **Señales de que empeoró.** `components/shared/` contiene piezas que usa una sola feature. Un
-primitive global importa tipos de una feature. La consolidación creó una taxonomía de carpetas
-nueva que convive con la anterior sin reemplazarla.
+primitive global importa tipos de una feature. Se promovió un componente a global por prestigio
+arquitectónico, ampliando su blast radius de cambio y obligando a validar decenas de pantallas ante cualquier
+modificación local.
 
 ---
 
@@ -212,14 +297,20 @@ Headless UI, una librería de tablas o formularios, primitives internos— y var
 usan de formas distintas, o la esquivaron reimplementándola.
 
 **Qué debe compartir el componente.** La **decisión de producto** sobre el primitive: qué tamaño,
-qué tono, qué estructura de acciones, qué copy por defecto, qué comportamiento estándar.
+qué tono, qué estructura de acciones, qué copy por defecto, qué comportamiento estándar (*A wrapper
+should add product decisions without unnecessarily amputating the underlying capability*).
+
+**Accesibilidad y semántica en el contrato.** Preserva la semántica accesible existente (no degradar
+`<button>` a `<div onClick>`), los atributos `aria-*`, los IDs asociados, el foco y la navegación por
+teclado. Si el primitive ya lo resuelve, delega en él.
 
 **Qué debe permanecer en el consumidor.** El contenido, las acciones específicas y los casos que
 el wrapper no debe conocer.
 
 **Señales de que empeoró.** El wrapper reimplementa focus trap, portal, navegación por teclado,
-dismiss, sorting o filtering en vez de delegarlos. Bloquea capacidades del primitive que algún
-consumidor necesita. Añade una capa que no decide nada y solo reenvía props.
+dismiss, sorting o filtering en vez de delegarlos. Amputa la mayoría de las capacidades del primitive,
+obligando a los consumidores a saltárselo o duplicar código para casos legítimos. Añade una capa de
+indirection que no decide nada y solo reenvía props.
 
 ---
 
@@ -316,17 +407,18 @@ cambió el tratamiento aprobado de un hero "de paso".
 **Qué evidencia justifica abstraer.** Ninguna: aquí la abstracción **ya existe** y hay que
 decidir si se divide, se convierte en composición o se separa en responsabilidades distintas.
 
-**Qué observar.** Booleanos que se combinan entre sí sin combinaciones válidas definidas · props
-que nombran páginas o roles · ramas `if` sobre el tipo de consumidor · props que solo usa un
-consumidor · una API más larga que cualquiera de las implementaciones que reemplazó · cambios que
-obligan a probar pantallas sin relación entre sí.
+**Qué observar.** Booleanos que se combinan entre sí generando un producto cartesiano con decenas de
+estados imposibles o absurdos · props que nombran páginas o roles · ramas `if` sobre el tipo de consumidor
+· props que solo usa un consumidor · una API más larga y confusa que cualquiera de las implementaciones
+que reemplazó · cambios que obligan a probar pantallas sin relación funcional entre sí.
 
-**Cómo salir.** Separa por responsabilidad, no por tamaño: extrae la capa realmente común
-—primitive o marco—, modela como variantes lo que es semántico, pasa a composición lo que es
-estructural, y devuelve a componentes separados lo que nunca perteneció junto.
+**Cómo salir.** Separa por responsabilidad, no por tamaño: extrae la capa realmente común —primitive o
+marco—, modela como variantes semánticas lo que describe modos reales del sistema, pasa a composición lo
+que es estructural, y devuelve a componentes separados de dominio lo que nunca debió unificarse.
 
 **Señales de que empeoró.** La división produjo dos mega-componentes en vez de uno. Se agregó una
-prop más para resolver el caso nuevo mientras se discutía cómo dividirlo.
+prop más para resolver el caso nuevo mientras se discutía cómo dividirlo. Se reemplazaron seis booleanos
+por seis variantes combinables que siguen permitiendo las mismas combinaciones inválidas.
 
 ---
 
@@ -359,14 +451,27 @@ representa la misma responsabilidad que la copia local.
 **Qué debe permanecer en el consumidor.** Las diferencias legítimas, expresadas como variante,
 composición o contenido — **nunca borradas por parecerse**.
 
-**Cómo migrar.** Un consumidor a la vez, comparando su render antes y después. Antes de cerrar,
-compara diferencias funcionales reales: acciones, eventos, navegación, estados, accesibilidad y
-comportamiento responsive. Si una diferencia no cabe como variante y no es deriva, es evidencia
-de que ese consumidor no pertenece al mismo componente.
+**Cómo migrar.** Un consumidor a la vez, comparando su render y comportamiento antes y después:
+1. Migra el consumidor dentro del alcance acordado.
+2. Compara diferencias funcionales reales: acciones, eventos, navegación, estados, accesibilidad,
+   comportamiento responsive, tracking o datos extremos.
+3. Si un consumidor exige una excepción que contradice la abstracción, detente y reevalúa el límite antes
+   de agregar otro flag.
+4. Corrige el contrato de la abstracción si el caso revela una omisión legítima, y solo entonces avanza al
+   siguiente consumidor.
+
+**No preservar accidentalidades.** Si un consumidor histórico tiene inconsistencias accidentales (márgenes,
+borders o paddings fuera de escala) que la referencia aprobada o `docs/ui-system.md` demuestran que eran deriva,
+no inventes variantes para replicarlas: elimina la deriva sin rediseñar el componente.
+
+**Duplicación temporal controlada.** Que `OldComponent` y `NewSharedComponent` convivan durante una
+migración incremental en curso es normal; el problema es cerrar la tarea dejando ambos sin razón ni plan.
+Comprueba usos reales antes de eliminar el antiguo: **sin import no equivale a sin uso**.
 
 **Señales de que empeoró.** Una pantalla perdió una acción, un estado o un dato en la migración.
-El consumidor necesitó una prop inventada para volver a verse igual. La migración quedó a medias
-y ahora conviven dos patrones sin plan.
+El consumidor necesitó una prop inventada para volver a verse igual. Se asumió que porque el primer
+consumidor compiló, todos los demás eran equivalentes sin probarlos en su contexto funcional y visual. La
+migración quedó a medias y ahora conviven dos patrones sin plan.
 
 ---
 
