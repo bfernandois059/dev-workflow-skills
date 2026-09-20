@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Tenemos `p-[24px]` en este componente y el theme del proyecto define `p-6` como 24px. Límpialo.",
-      "expected_output": "Confirma la equivalencia contra el theme real del proyecto —config, @theme o preset— en lugar de asumir la escala por defecto de memoria. Aplica `p-6`, comprueba el render del consumidor antes y después y verifica que no cambió nada observable. No crea un token nuevo ni toca la configuración. Corre los checks técnicos existentes y distingue esa validación de la visual.",
+      "expected_output": "Confirma la equivalencia contra el theme real del proyecto —config, @theme o preset— en lugar de asumir la escala por defecto de memoria. En un caso simple donde ambos expresan exactamente la misma decisión y rol, sí normaliza a `p-6` sin convertir el principio de equivalencia en sospecha infinita ni bloquear una sustitución clara. Comprueba el render del consumidor antes y después y verifica que no cambió nada observable. No crea un token nuevo ni toca la configuración. Corre los checks técnicos existentes y distingue esa validación de la visual.",
       "files": []
     },
     {
@@ -52,7 +52,7 @@
     {
       "id": 9,
       "prompt": "`bg-[var(--surface-muted)]` se ve feo en el código. Cámbialo por `bg-gray-100`.",
-      "expected_output": "No sustituye una variable semántica por un color hardcodeado aunque hoy resuelvan al mismo valor: la variable puede expresar rol, theming o comportamiento en runtime, y fijar el color rompería el tema oscuro o el cambio de marca. Conserva la variable salvo que exista una utility semántica basada en esa misma variable y la equivalencia esté confirmada; en ese caso puede usarla. Explica el criterio en una línea en vez de limitarse a rechazar.",
+      "expected_output": "No sustituye una variable semántica por un color hardcodeado aunque hoy resuelvan exactamente al mismo valor en un snapshot: una referencia dinámica no equivale a una copia fija de su valor actual, ya que expresa rol, theming y comportamiento en runtime (pudiendo variar por dark mode, tenant o cambios en CSS). Conserva la variable y su contrato vivo; solo admite normalizar a una utility semántica si esta apunta efectivamente a la misma variable y contrato (`bg-surface-muted`) en el proyecto. Explica el criterio en vez de limitarse a rechazar.",
       "files": []
     },
     {
@@ -71,6 +71,18 @@
       "id": 12,
       "prompt": "Normalicé todos estos arbitrary values y build, lint y typecheck pasan, pero no puedo abrir la aplicación.",
       "expected_output": "No afirma equivalencia visual verificada. Distingue la validación técnica de la visual y dice explícitamente que ningún consumidor fue inspeccionado. Separa las transformaciones cuya equivalencia es demostrable técnicamente con alta confianza —un arbitrario idéntico a un token confirmado en el theme— de las que requieren render: contradicciones resueltas, cambios dentro de variantes de estado o responsive, y todo lo que dependa de CSS externo o de un helper de merge. Declara lo no verificado y puede proponer revertir o dejar pendientes las transformaciones sin comprobar.",
+      "files": []
+    },
+    {
+      "id": 13,
+      "prompt": "El color `#ffffff` coincide exactamente hoy con `bg-surface` en light mode. Reemplaza todos los blancos del proyecto por `bg-surface` para que quede estandarizado.",
+      "expected_output": "Rechaza la sustitución global basada únicamente en la coincidencia numérica o de snapshot: valor equivalente no demuestra equivalencia de rol (*Value equivalence does not prove role equivalence*). Identifica que diferentes blancos cumplen roles distintos en el producto (superficies de componentes, canvas de exportación, marcas o logos externos, foreground invertido o excepciones deliberadas). Exige equivalencia semántica además de numérica y, dentro de un alcance acotado, normaliza únicamente aquellos consumidores donde la evidencia demuestre que el rol es efectivamente `surface`. Conserva intactos los demás usos (logos, marcas, canvas), no inventa tokens nuevos y no ejecuta un barrido masivo sin validación de roles; si algún rol no está formalizado, lo deriva a `visual-foundation`.",
+      "files": []
+    },
+    {
+      "id": 14,
+      "prompt": "Este componente base combina sus estilos con `props.className` usando `cn(baseClasses, props.className)` y `tailwind-merge`. Reordena y colapsa las clases base a una sola expresión compacta para que quede más corto.",
+      "expected_output": "No optimiza mecánicamente en busca del string más corto (*Prefer the clearest equivalent expression, not mechanically the shortest one*). Preserva estrictamente el contrato de override del componente: respeta la posición y precedencia de `props.className` asegurando que los consumidores sigan ganando donde antes lo hacían. Mantiene la independencia de ejes (como `px-4 py-3`) si los consumidores dependen de sobrescribir `px` o `py` de forma aislada sin que `tailwind-merge` anule el otro eje. Comprueba las combinaciones relevantes: estilo por defecto, overrides habituales del consumidor, variantes declaradas y estados (`hover:`, `focus-visible:`). Solo simplifica clases internas cuando la semántica del helper y las pruebas demuestran equivalencia exacta; no altera la API del componente ni inventa variantes (si hiciera falta reestructurar el API, deriva a `component-architecture`).",
       "files": []
     }
   ]
