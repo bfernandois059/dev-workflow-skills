@@ -4,6 +4,37 @@ Los cambios relevantes de las skills se registran en este archivo.
 
 ## Unreleased
 
+## [component-architecture-v0.2.0] - 2026-09-20
+
+### Producto
+
+* **Compartir el invariante, no toda semejanza.** *Share the invariant, not every similarity.* Dos implementaciones pueden compartir superficie, encabezado, tratamiento de acciones o selección sin tener que convertirse en un único componente de dominio (`CustomerSummary` e `InvoiceSummary` comparten `SummarySurface` y `SummaryHeader` sin forzar `<EntitySummary type="customer|invoice" />`). La abstracción correcta vive con frecuencia por debajo de la similitud visual.
+* **Prueba inversa de evolución independiente.** *Reuse is valuable when consumers share a reason to change, not merely a shape.* A la pregunta directa de si deben cambiar juntos se añade la prueba inversa: si un consumidor necesita cambiar mañana por una razón propia de su dominio, ¿los demás deberían permanecer intactos? Si la respuesta es sí y el componente compartido obligaría a modificarlos a todos, la abstracción acopla dominios independientes.
+* **Evaluación del acoplamiento creado por la abstracción.** *Do not trade duplication for unrelated change coupling.* Evitar sustituir líneas repetidas por acoplamiento de cambios no relacionados (donde un cambio en facturación obligue a tocar un componente compartido y revalidar clientes, órdenes o administración).
+* **Abstracción mínima suficiente.** *Prefer the smallest shared responsibility that removes the real source of drift.* Extraer únicamente la parte común que realmente elimina la fuente de inconsistencia, manteniendo los componentes de dominio separados con contrato propio.
+* **Variantes reales vs producto cartesiano.** *Do not expose combinations the product does not actually support.* Sustitución de combinaciones independientes de booleanos y props que generan decenas de estados imposibles por variantes semánticas y modos estructurales reales (`variant="summary"`, `variant="featured"`), o separación en componentes distintos.
+* **APIs que expresan contratos válidos.** *The component API should make valid usage easy and contradictory usage difficult.* Diseño de APIs que prevengan combinaciones contradictorias (como `imagePosition` sin `image`, o `loading`, `error` y `data` simultáneos desalineados) sin caer en type-golf.
+* **Ownership del estado y fuentes de verdad.** *Put state at the lowest level that owns the decision, not automatically inside the reusable component.* Estado local al componente solo cuando no requiere coordinación externa; estado en el consumidor cuando participa en URL, filtros, formulario, store o coordinación global. Se evita duplicar fuentes de verdad (`internalState` + prop de valor + `useEffect` de sincronización).
+* **Escape hatches controlados.** *An escape hatch should handle exceptions, not become the primary API.* `className`, `children`, slots y render props como mecanismos legítimos para excepciones, no como vía rutinaria para anular el contrato del componente compartido. La composición no debe ocultar diferencias reales detrás de un `children` arbitrario sin decisión de diseño.
+* **Dirección de dependencias entre capas.** *Shared lower-level components should not acquire feature knowledge merely to increase reuse.* Los componentes compartidos de nivel inferior no deben importar tipos, hooks ni reglas de features superiores para acomodar excepciones.
+* **Preservación de límites técnicos y de runtime.** *Do not widen the runtime or dependency boundary for every consumer because one variant needs more capability.* No forzar a todos los consumidores a pagar el coste de dependencias pesadas (charts, editores, mapas, date pickers complejos) ni alterar fronteras de runtime (como server a client components) porque una sola variante lo requiera.
+* **Wrappers sobre primitives con decisión real.** *A wrapper should add product decisions without unnecessarily amputating the underlying capability.* Aportar decisiones de producto (estructura, defaults, variantes, tratamiento) sin indirection vacía y sin amputar capacidades del primitive existente que los consumidores legítimos necesitan.
+* **Accesibilidad y semántica en el contrato.** Preservación de semántica nativa (`<button>` vs `<div>`), navegación por teclado, focus management y atributos `aria-*`, delegando en los primitives accesibles del proyecto.
+* **Nivel más estrecho de abstracción y blast radius.** *Place the abstraction at the narrowest level that matches its real responsibility.* Evitar promover componentes a globales por prestigio arquitectónico cuando su alcance real es local o de feature, protegiendo el blast radius de validación.
+* **Migración incremental consumidor por consumidor.** Validación contextual de cada consumidor (a11y, estados, responsive, datos extremos) antes de avanzar al siguiente. No legitimar accidentalidades históricas como variantes cuando la fuente de verdad demuestra deriva.
+
+### Operación
+
+* **Validación contextual de migración.** Procedimiento paso a paso para migrar consumidores del alcance, comparando render y comportamiento funcional antes y después, deteniendo la migración ante excepciones que contradigan la abstracción.
+* **Suite de evaluación ampliada a 14 evals.** Fortalecimiento de eval 6 (evitar productos cartesianos y modos estructurales vs booleanos acumulados); adición de eval 13 (similitud visual que no justifica componente de dominio acoplado) y eval 14 (preservación de límites técnicos y runtime sin cargar dependencias pesadas a consumidores simples).
+
+### Técnico
+
+* `SKILL.md`: Incorporación de principios rectores de compartir el invariante, prueba inversa de cambio independiente, abstracción mínima suficiente, variantes vs producto cartesiano, ownership de estado, escape hatches, dirección de dependencias, límites técnicos/runtime y wrappers sobre primitives.
+* `references/component-boundaries.md`: Nuevas secciones especializadas de `Acoplamiento entre consumidores` y `Límites técnicos y dependencias`; fortalecimiento de Responsabilidad y cohesión, Repetición o coincidencia, Composición, Variantes, Controlled/uncontrolled, Presentación y comportamiento, Local/feature/global, Wrappers sobre primitives, Señales de mega-componente y Migración de consumidores.
+* `evals/evals.json`: Suite de evaluación ampliada de 12 a 14 escenarios (IDs 1-14).
+* `VERSION`: bump `0.1.0` → `0.2.0` (MINOR).
+
 ### Integración del sistema de skills
 
 Primera pasada de integración del repositorio **como un solo sistema**, no como doce carpetas
