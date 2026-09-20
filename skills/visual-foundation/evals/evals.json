@@ -36,6 +36,30 @@
       "prompt": "El proyecto usa una librería de componentes y de motion que vinieron con el template. Necesito el sistema visual documentado.",
       "expected_output": "Documenta la herramienta existente cuando es relevante para las reglas —motion, componentes, tokens que la librería ya define— y la registra en el mapeo técnico. No recomienda reemplazarla ni reconstruir a mano lo que ya resuelve, ni introduce otra dependencia para lo mismo. Distingue qué reglas vienen impuestas por la librería y cuáles son decisiones propias del proyecto.",
       "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Encontré gap-6 70 veces en el repo. Úsalo como spacing estándar para todo.",
+      "expected_output": "Rechaza elevar el valor automáticamente por frecuencia bruta: frecuencia no es intención. Inspecciona los contextos y funciones reales donde aparece, distinguiendo gaps de layout/grid, separación entre bloques, formularios y componentes internos. Solo deriva reglas donde valor, rol y relación perceptual sean coherentes (ej. separación entre bloques o cards). No convierte gap-6 en un espaciado universal que aplaste la jerarquía interna de controles o secciones, y registra como Pendiente de validar o desviación las inconsistencias funcionales detectadas.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "El código tiene radius 6, 8, 10, 12 y 16. Documentémoslos todos como escala oficial del sistema.",
+      "expected_output": "Rechaza legitimar la deriva accidental del código y no inventa nombres de escala (xs/sm/md/lg/xl) para cada valor observado. Identifica los roles funcionales que realmente existen en el producto (ej. radius de controles interactivos vs radius de contenedores o modales), contrasta con fuentes aprobadas si existen, y documenta únicamente las variantes justificadas por rol y propósito. Reporta los radios sobrantes o accidentales como desviaciones fuera de alcance a normalizar por interface-craft o tailwind-hygiene.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "En design-directions aprobamos una dirección evidence-first para las páginas comerciales. Incorpórala al sistema.",
+      "expected_output": "Registra la aprobación como fuente confirmada, pero incorpora únicamente las invariantes transferibles y reutilizables de la dirección (el rol dominante de la evidencia/datos sobre el discurso comercial, jerarquía y tratamiento prioritario de medios, densidad o sobriedad de superficies). No convierte el layout exacto, anchos particulares, paddings concretos ni decisiones de componentes locales del prototipo en restricciones globales del sistema. Conserva la frontera: promueve la intención aprobada, no los píxeles incidentales de una maqueta.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Esta única tabla necesita filas mucho más compactas para comparar 80 registros. Agrégalo como nueva densidad global.",
+      "expected_output": "No convierte un detalle o necesidad local de una sola pantalla en ley visual global. Mantiene la regla general de densidad del sistema y documenta el caso como una excepción acotada explícita (Ámbito: tablas operacionales densas; Regla modificada: spacing vertical interno; Razón: comparación de alta densidad sin scroll excesivo). Si la tabla requiere adaptación concreta de layout o responsive, señala que corresponde resolverla en interface-craft o adaptive-layout sin desestabilizar la foundation global.",
+      "files": []
     }
   ]
 }
