@@ -293,7 +293,7 @@ El formato Agent Skills es markdown portable. Si tu agente no auto-carga skills,
 **Las versiones son independientes por skill.** Un número mayor no significa que una skill sea “mejor” o más madura que otra: refleja la evolución histórica de su propio contrato.
 
 * **Historiales SemVer independientes**: skills creadas en las primeras etapas del repositorio (`project-blueprint`, `engineering-workflow`, `marcozen`, `tech-cleanup`) atravesaron cambios de contrato mayores y se encuentran en `v2.0.0`. La familia visual completa y `ux-audit` nacieron más recientemente y se encuentran en `v0.2.0`.
-* **Evolución real sin números artificiales**: la serie `0.x` indica que su contrato se considera todavía en evolución activa. Cuando una skill `0.x` consolide su especificación de forma definitiva pasará a `1.0.0`. No se igualan versiones artificialmente.
+* **Evolución real sin números artificiales**: la serie `0.x` indica que el contrato todavía se considera en evolución. Cuando una skill se considere suficientemente estable para asumir un contrato público `1.x`, puede pasar a `1.0.0`. Después puede seguir evolucionando mediante versiones `1.x` y futuros cambios mayores cuando corresponda. No se igualan versiones artificialmente.
 * **Cambios en el repositorio**: editar el `README.md`, la guía de selección o la documentación compartida **no cambia la versión de ninguna skill**. Solo se sube la versión de una skill cuando cambia **su** contrato operativo: su método, sus fronteras, sus salidas o sus reglas.
 
 | Skill | Versión actual | Archivo | Tag de Git |

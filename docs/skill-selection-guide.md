@@ -344,7 +344,7 @@ cualquiera             → el cambio requiere rama, validaciones y PR
 **Las versiones son independientes por skill.** Un número mayor no significa que una skill sea “mejor” o más madura que otra: refleja la evolución histórica de su propio contrato.
 
 * **Historiales SemVer independientes**: las skills pioneras del repositorio (`project-blueprint`, `engineering-workflow`, `marcozen`, `tech-cleanup`) atravesaron evoluciones de contrato mayores y se encuentran en `v2.0.0`. Por su parte, la familia visual completa y `ux-audit` nacieron de forma más reciente y se encuentran actualmente en `v0.2.0`.
-* **Evolución real sin sincronización forzada**: la serie `0.x` indica que su especificación de contrato todavía se considera en evolución activa. Cuando una skill `0.x` consolide su interfaz y reglas de forma definitiva pasará a `1.0.0`. No se sincronizan versiones artificialmente.
+* **Evolución real sin sincronización forzada**: la serie `0.x` indica que el contrato todavía se considera en evolución. Cuando una skill se considere suficientemente estable para asumir un contrato público `1.x`, puede pasar a `1.0.0`. Después puede seguir evolucionando mediante versiones `1.x` y futuros cambios mayores cuando corresponda. No se sincronizan versiones artificialmente.
 * **Documentación compartida**: modificar el README, esta guía o cualquier documento transversal del repositorio **no cambia la versión de ninguna skill**. Solo se incrementa la versión de una skill cuando cambia **su** propio contrato operativo (fases, reglas, fronteras o formato de salida).
 
 Detalle de versiones actuales, archivos y tags en el [README](../README.md#versionado).
