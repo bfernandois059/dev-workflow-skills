@@ -78,6 +78,24 @@
       "prompt": "Este proyecto corporativo L1 ya pasó por project-blueprint 1.x y contiene docs/00-project-blueprint.md, docs/01 a docs/07, un ADR inicial, AGENTS.md, CLAUDE.md y .env.example. Actualmente usa Astro, un CMS sencillo y una única variable de entorno. Queremos actualizar el blueprint al contrato actual de project-blueprint.",
       "expected_output": "Reconoce que el caso corresponde a Retrofit (normalización de blueprint heredado de v1.x), no a Greenfield ni a un Decision Patch puntual. Detecta la presencia de un footprint documental sobredimensionado heredado de v1.x pero no ejecuta una eliminación indiscriminada por patrón. Inspecciona el contenido de cada archivo para rescatar decisiones únicas, requisitos y contexto histórico relevante (preservando decisiones previas del ADR y del modelo de contenido). Consolida en docs/00-project-blueprint.md las decisiones que ya no justifican archivos desacoplados (como arquitectura simple o pruebas básicas en L1). Conserva .env.example porque existe una variable de entorno real documentada. Evalúa la necesidad de AGENTS.md y CLAUDE.md según si esos agentes continúan utilizándose en el flujo de desarrollo. Concluye con un footprint documental proporcional al nivel L1 sin haber provocado pérdida de decisiones ni de trazabilidad.",
       "files": []
+    },
+    {
+      "id": 14,
+      "prompt": "Blueprint para una plataforma donde los corredores de nuestra red suben propiedades y gestionan sus clientes. Son unos 40 corredores de la empresa. Usaremos Supabase y Next.js.",
+      "expected_output": "Clasifica el proyecto como portal/plataforma interna de nivel L3 y resuelve el modelo de acceso y registro como decisión explícita, no solo la elección del proveedor de identidad: con 40 corredores identificados de la empresa, el modelo es registro restringido por invitación o provisión por administrador, y nombra el mecanismo exigible (quién invita, con qué alcance, cómo se revoca al salir una persona). Declara explícitamente que el default de Supabase Auth permite el registro abierto y que cerrarlo o restringirlo en la consola es parte de la decisión, igual que decidir uno por uno los proveedores sociales. Deja el modelo declarado en docs/00-project-blueprint.md o docs/permissions-matrix.md como premisa auditable.",
+      "files": []
+    },
+    {
+      "id": 15,
+      "prompt": "Revisa el readiness del blueprint. Es una app de gestión de fichas clínicas para tres consultorios; ya están decididos el stack, el hosting, el modelo de datos y los roles. No hablamos del registro de usuarios.",
+      "expected_output": "No declara READY. Identifica la ausencia de modelo de acceso y registro declarado como bloqueador explícito en un producto con usuarios y datos de terceros, argumentando que es la única premisa contra la cual se puede verificar después si el acceso es correcto, y no una formalidad documental. Formula la decisión pendiente de forma concreta (quién puede llegar a tener cuenta y con qué mecanismo exigible) en lugar de listarla como riesgo genérico, y mantiene el resto de las decisiones ya cerradas sin reabrirlas.",
+      "files": []
+    },
+    {
+      "id": 16,
+      "prompt": "Blueprint para un sitio corporativo de cinco páginas con formulario de contacto. Sin área privada.",
+      "expected_output": "Clasifica el proyecto como L0/L1 y marca el dominio de autenticación y el modelo de acceso como N/A con justificación: no hay cuentas ni sesiones. No introduce un modelo de acceso, un proveedor de identidad ni una matriz de permisos donde no hay usuarios, y no crea documentos por formalismo. Resuelve lo que realmente aplica —hosting, formulario, antispam y correo del formulario— en un blueprint autocontenido.",
+      "files": []
     }
   ]
 }

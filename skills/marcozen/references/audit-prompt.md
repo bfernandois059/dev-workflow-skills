@@ -12,6 +12,7 @@ Reglas indispensables:
 - **Solo lectura estricta:** No modificar archivos, ramas ni configuraciones.
 - **Evidencia observable:** Distinguir entre `Verificado OK`, `Hallazgo`, `No verificado` y `N/A`.
 - **Máxima prudencia con secretos:** Nunca mostrar el valor de un secreto. Reportar solo tipo y ubicación (`archivo:línea`).
+- **El repositorio no es el sistema:** un control aplicable que no se puede verificar leyendo archivos se reporta `No verificado — verificación externa requerida` con el lugar donde se comprueba. Omitirlo es un fallo de auditoría, no un `N/A`. Ver [`external-surface.md`](external-surface.md).
 
 ### 1. Git y ramas
 Comandos útiles (solo lectura):
@@ -76,6 +77,24 @@ grep -rInE '(api[_-]?key|secret|token|password|passwd|bearer|private[_-]?key)' \
 
 > **P0 Real:** Un valor auténtico de un secreto sensible o credencial de producción comprometido en el repositorio o en el historial.
 
+### 4.b Superficie alcanzable y controles del proveedor
+Aplica en los modos de seguridad y pre-producción, y solo si el producto tiene usuarios o datos de terceros.
+
+1. **Establece el modelo de acceso declarado** (`Público sin cuentas`, `Registro abierto`, `Registro restringido`, `Provisión por administrador`, `Interno`). Si ninguna fuente lo declara, pregúntalo: gobierna la severidad de todo el dominio, y su ausencia es un hallazgo en sí misma.
+2. **Enumera la superficie** desde el código —rutas, endpoints, tablas, buckets, webhooks, jobs— y marca cada punto con el control que lo protege.
+3. **Evalúa cada punto frente a tres visitantes:** anónimo, autenticado ajeno al recurso (IDOR/BOLA y fugas entre inquilinos) y autenticado con rol menor.
+4. **Verifica los controles del proveedor** que no dejan rastro en el código: registro de cuentas y proveedores OAuth activos, estado efectivo de las políticas de base de datos, visibilidad de buckets, protección de entornos de preview, alcance de las claves emitidas. Usa la sonda de solo lectura cuando exista:
+
+```bash
+# Configuración pública de autenticación (Supabase/GoTrue). Clave anónima, pública por diseño.
+curl -s "$SUPABASE_URL/auth/v1/settings" -H "apikey: $SUPABASE_ANON_KEY"
+```
+
+5. **Si hay URL desplegada confirmada por el usuario, ejecuta el pase de sondas de solo lectura** sobre ella: rutas privadas sin sesión, redirecciones con destino parametrizado, cabeceras realmente servidas, métodos aceptados, mensajes de login y recuperación, páginas de error, sourcemaps, DNS y subdominios colgantes. Una petición por control, nada destructivo, nada que cree estado sin autorización. Ver [`deployed-surface.md`](deployed-surface.md).
+6. **Lo no verificable se entrega como lista corta de verificación externa**, con el lugar exacto y la respuesta correcta para este producto. Nunca como una advertencia genérica de «revisar la configuración del proveedor»: eso no se puede cerrar.
+
+El catálogo por proveedor, las severidades contra el modelo declarado y los falsos positivos a descartar están en [`external-surface.md`](external-surface.md).
+
 ### 5. Calidad técnica y verificación
 Adaptar al stack real del proyecto:
 - Proyectos con linter/formatter/typecheck: verificar si las herramientas están configuradas y corren limpias.
@@ -114,6 +133,17 @@ Inspecciona con evidencia verificable:
 1. Contexto y stack tecnológico real.
 2. Git y ramas: ramas activas, fusionadas y estado de sincronización.
 3. Seguridad: detección de secretos reales (sin exponer valores), inspección prioritaria de .env versionados y dependencias críticas evaluadas por explotabilidad real.
+3.b Superficie alcanzable (si hay usuarios o datos de terceros): establece el modelo de acceso
+    declarado —pregúntalo si nadie lo declaró—, enumera rutas, endpoints, tablas y buckets, y
+    evalúa cada punto frente a un visitante anónimo, a uno autenticado ajeno al recurso y a uno
+    con rol menor. Verifica los controles que viven en el proveedor (registro de cuentas,
+    políticas efectivas, visibilidad de buckets, protección de entornos, alcance de claves).
+    Si hay URL desplegada confirmada por el usuario, comprueba contra ella los controles
+    observables (cabeceras servidas, métodos aceptados, redirecciones con destino
+    parametrizado, mensajes de login y recuperación, páginas de error, sourcemaps, DNS y
+    subdominios colgantes) con peticiones individuales de solo lectura. Lo que no se pueda
+    verificar se reporta No verificado con el lugar donde se comprueba; omitirlo no es una
+    opción.
 4. Arquitectura y dependencias: estructura modular, scripts y estado de dependencias.
 5. Calidad y verificación: validaciones reales adaptadas al stack (evaluando tests y CVEs según criticidad e impacto real).
 6. Operación y deploy: proceso de build y despliegue funcional y reproducible (automatizado o documentado según riesgo).
@@ -130,7 +160,9 @@ Entrega un informe con la siguiente estructura:
    - P3: Optimizaciones.
    (Para cada hallazgo: qué se observó, evidencia concreta, impacto y acción recomendada).
 4. Estado de preparación y veredicto (Listo / Listo con observaciones / No listo).
-5. Próximos pasos recomendados.
+5. Verificación externa pendiente: tabla corta de controles No verificados, dónde se comprueba
+   cada uno y qué respuesta sería correcta para este producto (se omite si no quedó ninguno).
+6. Próximos pasos recomendados.
 
 (El puntaje /100 es opcional y solo debe incluirse si se solicita expresamente).
 ```

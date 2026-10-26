@@ -79,7 +79,7 @@ añadir proceso a cada interacción.
 | Consolidar responsabilidades y patrones compartidos en componentes | `component-architecture` | Todavía no está decidido cómo debe verse el patrón, o el problema es solo cómo están escritas las clases |
 | Normalizar Tailwind sin cambiar la interfaz | `tailwind-hygiene` | El cambio alteraría el render, el responsive o un estado — deja de ser higiene |
 | Auditar si una persona puede entender y completar una tarea | `ux-audit` | Solo hay deriva visual sin costo sobre la tarea, o lo que se busca es salud técnica del repo |
-| Auditar salud general del repositorio: seguridad, SEO técnico y deuda amplia | `marcozen` | Lo que se audita es la experiencia de una persona (`ux-audit`), o el objetivo exclusivo es investigar y podar desuso específico de código/assets (`tech-cleanup`) |
+| Auditar salud general del repositorio: seguridad, superficie expuesta, SEO técnico y deuda amplia | `marcozen` | Lo que se audita es la experiencia de una persona (`ux-audit`), o el objetivo exclusivo es investigar y podar desuso específico de código/assets (`tech-cleanup`) |
 | Eliminar código, dependencias, assets y archivos realmente sin uso | `tech-cleanup` | El objetivo es evaluar la salud transversal, seguridad o gobernanza global del repositorio: eso es `marcozen` |
 
 ---
@@ -150,6 +150,44 @@ salud transversal del repositorio o del producto → marcozen
 ```
 
 `marcozen` no es una auditoría de UX, y `ux-audit` no es una auditoría técnica general.
+
+### Seguridad: `engineering-workflow` vs `marcozen`
+
+Las dos tocan seguridad y no compiten: se diferencian por **el alcance de lo que miran**.
+
+```text
+el control que le corresponde a la superficie que
+este cambio agrega                                 → engineering-workflow
+la superficie completa del producto, incluido lo
+que vive fuera del repositorio                     → marcozen
+```
+
+`engineering-workflow` protege lo que la Pull Request introduce: una tabla, un endpoint, una
+ruta, un bucket o un webhook nuevo llegan con su control puesto y con la prueba del caso
+denegado. Es específico y pequeño por diseño; auditar la superficie que el cambio no tocó
+convertiría cada PR en una auditoría.
+
+`marcozen`, en sus modos de seguridad y pre-producción, enumera la superficie completa en los
+tres lugares donde vive: el repositorio, la consola del proveedor —registro de cuentas,
+políticas efectivas en la base de datos, visibilidad de buckets, protección de entornos,
+alcance de las claves emitidas— y el despliegue respondiendo, donde comprueba con sondas de
+solo lectura lo que ninguna de las otras dos revela: cabeceras realmente servidas, métodos
+aceptados, destinos de redirección, mensajes de login y recuperación, páginas de error,
+sourcemaps y subdominios colgantes. Un control declarado en la configuración no es un control
+servido. Lo que no puede verificar lo entrega como lista corta de verificación externa, nunca
+como silencio.
+
+El puente entre las dos es el **modelo de acceso declarado** (`Público sin cuentas`, `Registro
+abierto`, `Registro restringido`, `Provisión por administrador`, `Interno`), que decide
+`project-blueprint`. Sin esa premisa escrita, *«cualquiera puede registrarse»* no es
+distinguible del comportamiento correcto de un producto de autoservicio: `marcozen` no tiene
+contra qué comparar y `engineering-workflow` no tiene qué preservar.
+
+```text
+project-blueprint       declara el modelo de acceso
+engineering-workflow    lo preserva en cada cambio que toca la superficie
+marcozen                lo verifica contra el sistema real: repo, proveedor y despliegue
+```
 
 ### `marcozen` vs `tech-cleanup`
 
@@ -343,7 +381,7 @@ cualquiera             → el cambio requiere rama, validaciones y PR
 
 **Las versiones son independientes por skill.** Un número mayor no significa que una skill sea “mejor” o más madura que otra: refleja la evolución histórica de su propio contrato.
 
-* **Historiales SemVer independientes**: las skills pioneras del repositorio (`project-blueprint`, `engineering-workflow`, `marcozen`, `tech-cleanup`) atravesaron evoluciones de contrato mayores y se encuentran en `v2.0.0`. Por su parte, la familia visual completa y `ux-audit` nacieron de forma más reciente y se encuentran actualmente en `v0.2.0`.
+* **Historiales SemVer independientes**: las skills pioneras del repositorio (`project-blueprint`, `engineering-workflow`, `marcozen`, `tech-cleanup`) atravesaron evoluciones de contrato mayores y se encuentran en la serie `v2.x`. Por su parte, la familia visual completa y `ux-audit` nacieron de forma más reciente y se encuentran actualmente en `v0.2.0`.
 * **Evolución real sin sincronización forzada**: la serie `0.x` indica que el contrato todavía se considera en evolución. Cuando una skill se considere suficientemente estable para asumir un contrato público `1.x`, puede pasar a `1.0.0`. Después puede seguir evolucionando mediante versiones `1.x` y futuros cambios mayores cuando corresponda. No se sincronizan versiones artificialmente.
 * **Documentación compartida**: modificar el README, esta guía o cualquier documento transversal del repositorio **no cambia la versión de ninguna skill**. Solo se incrementa la versión de una skill cuando cambia **su** propio contrato operativo (fases, reglas, fronteras o formato de salida).
 

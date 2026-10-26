@@ -84,6 +84,36 @@
       "prompt": "El usuario consulta en medio de una tarea MEDIUM si se debe cambiar de modelo para continuar, en un entorno donde no hay posibilidad de cambiar el modelo asignado. ¿Cómo responde y actúa el workflow?",
       "expected_output": "Aclara con transparencia y seguridad técnica que el workflow no requiere cambiar de modelo para avanzar con éxito. Continúa con la tarea aplicando inspección sistemática y validaciones automáticas. No declara bloqueos artificiales y solo reportaría una limitación técnica si existiera un impedimento material real (como falta de herramientas o accesos requeridos).",
       "files": []
+    },
+    {
+      "id": 15,
+      "prompt": "Agrega una tabla `documentos_cliente` en Supabase con las notas internas de cada cliente y la pantalla para listarlas. La migración y la pantalla ya están escritas, solo falta integrarlo.",
+      "expected_output": "Clasifica el cambio como HIGH por ampliar la superficie alcanzable con datos de terceros, no como MEDIUM por ser una pantalla nueva. Verifica que la tabla tenga control de acceso activo y al menos una política que filtre por propietario o inquilino, y distingue los dos estados opuestos: control activo sin reglas niega todo (fallo funcional) y reglas escritas sin el control activado no se aplican (fallo de seguridad). Agrega la prueba del caso denegado con un usuario autenticado ajeno al recurso, además del camino feliz. No audita la superficie que este cambio no toca ni convierte la tarea en una revisión de seguridad completa del proyecto.",
+      "files": []
+    },
+    {
+      "id": 16,
+      "prompt": "Para que funcione el nuevo onboarding tuve que habilitar el registro por email en el panel de Supabase y hacer público el bucket de avatares. El código ya está listo, ¿puedo abrir el PR?",
+      "expected_output": "Reconoce que esos dos cambios no producen diff y por lo tanto no pasan por revisión ni quedan en el historial, y exige declararlos en la Pull Request con el antes y el después y quién puede llegar ahora a qué. Antes de aceptar el cambio de registro, confirma el modelo de acceso declarado del producto: si es restringido, de provisión por administrador o interno, habilitar el registro por email cambia el modelo de acceso y es CRITICAL, no un detalle de configuración. Señala que un bucket público expone sus objetos a cualquiera con la URL y pregunta si los avatares son contenido realmente público. Registra la configuración donde una auditoría posterior pueda verificarla y no considera la tarea terminada mientras la configuración no esté aplicada en el entorno real.",
+      "files": []
+    },
+    {
+      "id": 17,
+      "prompt": "Corrige el texto del botón de exportar en la pantalla de reportes: dice 'Descargar' y debería decir 'Exportar a Excel'.",
+      "expected_output": "Clasifica el cambio como LOW y aplica la ruta rápida: branch, edición, lint/typecheck focalizados, revisión del diff y PR corta. No aplica controles de superficie alcanzable, no pregunta por el modelo de acceso, no pide declarar configuración externa y no agrega pruebas de autorización: el cambio no agrega ningún punto por el que alguien pueda entrar o pedir datos. El rigor de seguridad escala con la superficie que el cambio toca, no se aplica por defecto.",
+      "files": []
+    },
+    {
+      "id": 18,
+      "prompt": "Agrega la variable `SUPABASE_SERVICE_ROLE_KEY` al proyecto Next.js para que el panel de administración pueda listar todos los usuarios desde el cliente.",
+      "expected_output": "Detiene la implementación tal como está pedida y explica el problema concreto: la clave de servicio salta todas las políticas de acceso y una variable alcanzable desde el cliente queda publicada en el bundle del navegador, con o sin prefijo público. Propone la alternativa de menor riesgo —ejecutar la consulta en el servidor (route handler, server action o función) manteniendo la clave fuera del cliente— y la implementa así, dejando el supuesto declarado. Registra la variable en .env.example sin valor y verifica en la revisión del diff que no quedó expuesta con un prefijo que el framework envía al navegador.",
+      "files": []
+    },
+    {
+      "id": 19,
+      "prompt": "Agrega una página /auth/confirm que tome el parámetro ?next= y redirija ahí después de confirmar el correo del usuario.",
+      "expected_output": "Reconoce que la ruta acepta un destino como parámetro dentro del flujo de autenticación y aplica el control que le corresponde: validar el destino contra rutas internas permitidas, rechazando hosts externos y rutas protocolo-relativas como //evil.example. Explica que en un flujo de auth una redirección abierta no es solo phishing sino vector de robo de token en el callback. Prueba el caso denegado con un destino externo además del camino feliz, y clasifica el cambio como HIGH por tocar el flujo de autenticación.",
+      "files": []
     }
   ]
 }
