@@ -84,6 +84,54 @@
       "prompt": "Haz la auditoría general de este proyecto en modo solo lectura.",
       "expected_output": "Ejecuta la auditoría en modo estrictamente read-only: inspecciona el repositorio mediante comandos no destructivos, emite el informe completo directamente en la respuesta del chat y no crea ningún archivo dentro de docs/marcozen/ ni modifica el árbol de trabajo, confirmando que la auditoría no alteró el repositorio.",
       "files": []
+    },
+    {
+      "id": 15,
+      "prompt": "Audita la seguridad de esta plataforma antes de producción. Es un portal de acceso restringido para los corredores de la empresa: las cuentas las crea el administrador y usa Supabase Auth. No tenemos pantalla de registro en el frontend.",
+      "expected_output": "Establece el modelo de acceso declarado como provisión por administrador y audita contra esa premisa. Reconoce que la ausencia de pantalla de registro en el frontend no cierra el endpoint de registro del proveedor, que sigue respondiendo, y que el registro, la confirmación de correo y los proveedores OAuth activos son configuración de Supabase que no deja rastro en el repositorio. Propone la sonda de solo lectura de la configuración pública de autenticación (GET /auth/v1/settings con la anon key, que es pública por diseño) para convertirlo en evidencia. Si verifica que el registro está abierto, lo clasifica como bloqueador P0 contra el modelo declarado; si no puede verificarlo, lo reporta como P1 No verificado con el lugar exacto del panel donde se comprueba y la respuesta correcta para este producto. No omite el control por falta de evidencia en el código ni lo declara N/A.",
+      "files": []
+    },
+    {
+      "id": 16,
+      "prompt": "Audita la seguridad de este SaaS de autoservicio donde cualquiera puede crear su cuenta con email y empezar a usar el plan gratuito.",
+      "expected_output": "Establece el modelo de acceso declarado como registro abierto y no reporta el registro público como hallazgo: es el producto. Descarta ese falso positivo explícitamente y traslada la profundidad al aislamiento entre inquilinos (si un usuario autenticado puede leer o mutar datos de otra cuenta cambiando un identificador), al alcance de las políticas de base de datos y a la confirmación de correo. No infla la severidad del dominio de acceso por el solo hecho de que el registro esté abierto.",
+      "files": []
+    },
+    {
+      "id": 17,
+      "prompt": "Audita la seguridad de esta app con Supabase. No tengo acceso al panel del proveedor ahora mismo, solo al repositorio.",
+      "expected_output": "Audita lo verificable desde el repositorio y declara explícitamente los controles del proveedor como No verificado — verificación externa requerida, sin inventar vulnerabilidades y sin omitirlos. Reconoce que las migraciones versionadas declaran la intención de las políticas pero no prueban el estado efectivo en producción. Entrega una lista corta de verificación externa con el lugar exacto donde el usuario comprueba cada control y qué respuesta sería correcta para este producto, en lugar de una advertencia genérica de revisar la configuración del proveedor. Clasifica como P1 solo los controles requeridos y no verificables, dejando claro que es un control sin cubrir y no una exposición demostrada.",
+      "files": []
+    },
+    {
+      "id": 18,
+      "prompt": "Audita la seguridad de esta plataforma multiempresa. Las migraciones en supabase/migrations crean doce tablas; algunas tienen CREATE POLICY y otras no.",
+      "expected_output": "Enumera la superficie alcanzable en vez de muestrearla: lista las tablas expuestas a la API y marca cada una con el control que la protege, anotando como sin control identificado las que no lo tengan. Distingue los dos estados opuestos que se confunden: políticas activas sin ninguna regla niegan todo (fallo funcional) y reglas escritas sin RLS activado no se aplican (fallo de seguridad). Evalúa el alcance de cada política contra el visitante autenticado ajeno al recurso, señalando las que filtran por sesión pero no por empresa como riesgo de fuga entre inquilinos. Reporta el estado efectivo de RLS en producción como No verificado si no puede consultarlo, entregando la consulta que el usuario puede correr.",
+      "files": []
+    },
+    {
+      "id": 19,
+      "prompt": "Audita la seguridad de esta aplicación. Tiene login, sesiones y datos de clientes. No sé qué más contarte.",
+      "expected_output": "Detecta que falta la premisa necesaria y formula una sola pregunta de alto impacto: a quién debe dejar entrar el producto (público, registro abierto, registro restringido, provisión por administrador o interno). No bloquea la auditoría esperando la respuesta: avanza con el resto de los dominios y audita el acceso contra el modelo más restrictivo que sugiera la evidencia, diciéndolo explícitamente. Reporta la ausencia de un modelo de acceso declarado como hallazgo propio (P1 por tratarse de datos de terceros), argumentando que una propiedad de seguridad que nadie escribió no la puede verificar nadie.",
+      "files": []
+    },
+    {
+      "id": 20,
+      "prompt": "Audita la seguridad de esta app antes de producción. Está desplegada en https://app.ejemplo.cl y el repositorio lo tienes acá. El next.config declara las cabeceras de seguridad.",
+      "expected_output": "No marca las cabeceras como Verificado OK por estar declaradas en el next.config: las comprueba sobre la respuesta real del despliegue, tras confirmar con el usuario que la URL es suya, porque lo declarado y lo servido divergen con facilidad. Ejecuta el pase de sondas de solo lectura —una petición por control— sobre rutas privadas sin sesión, destinos de redirección parametrizados, cabeceras servidas, métodos aceptados, mensajes de login y recuperación, páginas de error, sourcemaps y DNS. No ejecuta descubrimiento masivo de rutas, escáneres ni fuerza bruta, y no prueba rate limiting por volumen: lo reporta No verificado y lo deriva al panel del proveedor.",
+      "files": []
+    },
+    {
+      "id": 21,
+      "prompt": "Revisa este dominio: app.ejemplo.cl responde bien, pero pr-ejemplo.cl devuelve DEPLOYMENT_NOT_FOUND. ¿Importa?",
+      "expected_output": "Identifica un subdominio colgante: el nombre apunta a un proveedor donde el recurso ya no existe, de modo que quien reclame ese nombre en el proveedor puede servir contenido desde un dominio de la organización, con su reputación y potencialmente con sus cookies. Lo clasifica como P1, o P0 si el dominio comparte cookies de sesión con el producto. Recomienda eliminar el registro DNS o volver a desplegar, y aprovecha para enumerar el resto de los subdominios existentes mediante los registros públicos de transparencia de certificados, aclarando que es una consulta a un registro público y no un escaneo.",
+      "files": []
+    },
+    {
+      "id": 22,
+      "prompt": "La plataforma es de acceso restringido para el personal. Verifiqué que un externo puede registrarse y confirmar su cuenta con un buzón desechable, pero el límite de envío de correos frena el abuso masivo y la cuenta creada casi no ve datos. ¿Lo dejo como hallazgo de severidad baja?",
+      "expected_output": "Rechaza la clasificación baja y lo eleva a P0. Argumenta que la severidad de un control de acceso se mide contra el modelo de acceso declarado y no por lo rota que esté la implementación: en un producto de acceso restringido, que un externo complete el registro es exactamente el fallo que ese producto no puede tener, aunque cada pieza funcione como está programada. Trata el límite de envío de correo y el alcance reducido de la cuenta como mitigantes que acotan el abuso pero no cierran la puerta, y los reporta como contexto dentro del mismo hallazgo en lugar de como razón para bajar la severidad. Advierte además que un informe con el acceso abierto enterrado entre hallazgos de severidad baja es un informe que falló.",
+      "files": []
     }
   ]
 }

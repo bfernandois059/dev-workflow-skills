@@ -1,6 +1,6 @@
 ---
 name: project-blueprint
-description: Diseña el blueprint técnico, funcional y de decisiones de un proyecto digital antes de implementar, o resuelve decisiones arquitectónicas específicas. Opera en modo Greenfield, Retrofit o Decision Patch. Clasifica el proyecto, recomienda el stack mínimo suficiente, resuelve arquitectura, datos, seguridad, operación y entrega bajo el principio de que la completitud de decisiones manda sobre la cantidad de documentos. No construye el producto ni inventa requisitos.
+description: Diseña el blueprint técnico, funcional y de decisiones de un proyecto digital antes de implementar, o resuelve decisiones arquitectónicas específicas. Opera en modo Greenfield, Retrofit o Decision Patch. Clasifica el proyecto, recomienda el stack mínimo suficiente, resuelve arquitectura, datos, seguridad, operación y entrega bajo el principio de que la completitud de decisiones manda sobre la cantidad de documentos. Cuando el producto tiene usuarios, declara el modelo de acceso y registro como decisión explícita y auditable. No construye el producto ni inventa requisitos.
 ---
 
 # Project Blueprint
@@ -168,7 +168,7 @@ Para cada área relevante del proyecto, formula la decisión respondiendo:
 - Framework y estrategia de renderizado (SSG, SSR, SPA, híbrido).
 - Hosting, ambientes y despliegue continuo.
 - Persistencia y base de datos (relacional, clave-valor, sin persistencia).
-- Autenticación, sesiones y autorización (público, RBAC, SSO/OIDC).
+- Autenticación, sesiones y autorización (público, RBAC, SSO/OIDC), incluido el **modelo de acceso y registro** cuando el producto tiene usuarios.
 - CMS y gestión editorial (código, headless, tradicional, N/A).
 - Almacenamiento y procesamiento de archivos (CDN público, buckets privados, URLs firmadas).
 - Emails, notificaciones y comunicaciones transaccionales.
@@ -187,6 +187,31 @@ Para cada área relevante del proyecto, formula la decisión respondiendo:
 - **Microservicios descartados por defecto:** Monolito modular como base indiscutible salvo múltiples equipos independientes o requerimientos extremos de escalabilidad desacoplada.
 - **IA con utilidad demostrada:** Solo si resuelve un problema concreto con costos, latencia, fallback y evaluación de calidad definidos.
 - **Testing adaptado al contexto:** Detectar las verificaciones reales del stack (lint, typecheck, tests unitarios, tests de integración, E2E, smoke tests) y justificar las críticas según el riesgo funcional y de datos. No imponer listas rígidas de tooling en entornos donde no aplican.
+
+#### Modelo de acceso y registro (obligatorio cuando el producto tiene usuarios):
+
+Elegir el proveedor de identidad no es decidir el acceso. Falta la decisión que gobierna todo
+lo demás: **quién puede llegar a tener una cuenta.** Si nadie la toma, la toma el default del
+proveedor, que es casi siempre el más abierto.
+
+Declara explícitamente uno de estos modelos: `Público sin cuentas`, `Registro abierto`,
+`Registro restringido` (invitación o dominio de correo autorizado), `Provisión por
+administrador` o `Interno / red privada`.
+
+- **Un modelo restringido obliga a nombrar su mecanismo exigible.** *«Acceso solo para
+  corredores»* no es una decisión implementable; *«solo por invitación del administrador de la
+  oficina»* sí.
+- **Nombra el default del proveedor que hay que cambiar.** Si el modelo exige cerrar o
+  restringir el registro en la consola, eso es parte de la decisión; si no se escribe, queda
+  implícito y nadie lo aplica. Cerrar el registro por correo no cierra los proveedores
+  sociales: cada proveedor habilitado es una puerta paralela.
+- **El modelo declarado vive en `docs/00-project-blueprint.md`** (o en
+  `docs/permissions-matrix.md` cuando ese documento exista) y es la premisa de toda auditoría
+  de acceso posterior. Sin él, *«cualquiera puede registrarse»* no es distinguible del
+  comportamiento correcto de un producto de autoservicio: `marcozen` no tiene contra qué
+  comparar y `engineering-workflow` no tiene qué preservar.
+
+Señales y trade-offs por modelo en `references/architecture-decision-matrix.md`.
 
 #### Páginas de sistema e identidad visible:
 - **Páginas de sistema (404, 500, estados vacíos, acceso denegado):** Son parte de la experiencia de producto. Definir quién redacta el copy y a qué 2-3 destinos útiles redirigen.
@@ -259,6 +284,11 @@ Dimensiones de evaluación:
 - **Riesgos aceptables:** ¿Los riesgos identificados son asumibles y reversibles?
 - **Bloqueadores reales:** ¿Falta alguna definición que haga temerario o técnicamente imposible comenzar?
 
+**Bloqueador explícito:** un producto con usuarios y datos de terceros sin **modelo de acceso y
+registro declarado** no puede salir de esta fase como `READY`. No es una formalidad documental:
+es la única premisa contra la cual alguien —persona o agente— puede después verificar si el
+acceso es correcto.
+
 #### Estados de salida:
 - **`READY`**: Todas las decisiones críticas están resueltas y justificadas. Se puede proceder al diseño técnico de detalle e implementación.
 - **`READY WITH RISKS`**: Existen riesgos conocidos o decisiones menores pendientes con supuestos reversibles identificados. Se puede avanzar vigilando los riesgos explícitos.
@@ -270,7 +300,7 @@ Dimensiones de evaluación:
 
 - **`project-blueprint`**: Decide **qué** se construye, **por qué** y **con qué arquitectura/decisiones** debe sostenerse. Prepara el terreno antes de la implementación.
 - **`engineering-workflow`**: Gobierna la **implementación** de los cambios mediante ramas, commits convencionales, validaciones, PRs y merges controlados.
-- **`marcozen`**: Realiza **auditoría integral de salud** del repositorio (seguridad, SEO técnico, dependencias, deuda). Provee insumos técnicos para `project-blueprint` en Retrofit, pero nunca lo reemplaza.
+- **`marcozen`**: Realiza **auditoría integral de salud** del repositorio (seguridad, superficie alcanzable, SEO técnico, dependencias, deuda). Provee insumos técnicos para `project-blueprint` en Retrofit, pero nunca lo reemplaza. Audita el acceso **contra el modelo declarado aquí**: esta skill lo decide, `marcozen` lo verifica y `engineering-workflow` lo preserva en cada cambio.
 - **Skills visuales (`visual-foundation`, `design-directions`, `interface-craft`, `adaptive-layout`, `component-architecture`)**: Resuelven la definición de tokens visuales, exploración de caminos de diseño, construcción o adaptación de componentes e interfaces concretas.
 - **`tech-cleanup`**: Identifica, audita y retira código muerto, dependencias y assets en desuso confirmados.
 

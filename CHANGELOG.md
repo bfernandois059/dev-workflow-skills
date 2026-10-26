@@ -2,6 +2,159 @@
 
 Los cambios relevantes de las skills se registran en este archivo.
 
+## [0.3.0] - 2026-10-26
+
+### Seguridad del sistema de skills
+
+Cierre del punto ciego que dejó pasar hallazgos de acceso y configuración en auditorías
+previas: el sistema trataba **el repositorio como si fuera el sistema**. Un control que vive en
+la consola de un proveedor no deja rastro en el código, así que una auditoría *evidence-first*
+no lo reportaba como ausente: no lo reportaba en absoluto. No se creó ninguna skill nueva.
+
+#### Added
+
+- `skills/marcozen/references/external-surface.md`: referencia nueva para los **controles de
+  seguridad que no viven en el código**. Define el **modelo de acceso declarado** (`Público sin
+  cuentas`, `Registro abierto`, `Registro restringido`, `Provisión por administrador`,
+  `Interno`) como premisa sin la cual ningún hallazgo de autorización es formulable; cataloga
+  por proveedor los controles externos (registro y proveedores de identidad, políticas
+  efectivas de base de datos, visibilidad de buckets, protección de entornos, alcance de claves
+  emitidas, correo, CORS, pagos); incluye una **sonda de solo lectura** para la configuración
+  pública de autenticación, que convierte un `No verificado` en evidencia sin crear usuarios; y
+  fija severidades contra el modelo declarado con la lista de falsos positivos a descartar.
+- `marcozen`: dominio de auditoría **Superficie alcanzable y configuración externa** en los
+  modos de seguridad y pre-producción, con el pase de autorización que evalúa cada ruta,
+  endpoint, tabla y bucket frente a tres visitantes —anónimo, autenticado ajeno al recurso
+  (IDOR/BOLA y fuga entre inquilinos) y autenticado con rol menor—. La superficie se enumera
+  desde el código; no se muestrea.
+- `marcozen`: sección **Verificación externa pendiente** en el formato de salida — tabla corta
+  de controles `No verificado` con dónde se comprueba cada uno y qué respuesta sería correcta
+  para este producto. Sustituye la advertencia genérica de «revisar la configuración del
+  proveedor», que no se puede cerrar.
+- `engineering-workflow`: sección **Controles que acompañan un cambio de superficie** en
+  `references/change-risk-matrix.md` — tabla de controles concretos por tipo de superficie
+  agregada (tabla, endpoint, ruta, bucket, webhook, proveedor habilitado, variable de entorno),
+  con default-deny y un caso denegado por superficie nueva como criterio suficiente.
+- `engineering-workflow`: sección **El cambio sin diff** — la configuración aplicada en la
+  consola de un proveedor es parte del cambio: se declara en la Pull Request con el antes, el
+  después y quién puede llegar ahora a qué, se registra donde una auditoría pueda verificarla y
+  la tarea no está terminada mientras no esté aplicada en el entorno real.
+- `project-blueprint`: decisión obligatoria **Modelo de acceso y registro** cuando el producto
+  tiene usuarios, con señales y trade-offs por modelo en
+  `references/architecture-decision-matrix.md`. Un modelo restringido obliga a nombrar su
+  mecanismo exigible y el default del proveedor que hay que cambiar.
+- Doce evals nuevos: cinco en `marcozen` (plataforma restringida con registro gestionado,
+  autoservicio donde el registro abierto **no** es hallazgo, auditoría sin acceso al proveedor,
+  enumeración de tablas con políticas parciales, modelo de acceso no declarado), cuatro en
+  `engineering-workflow` (tabla nueva con datos de terceros, cambios aplicados en consola,
+  cambio LOW que **no** activa ningún control de superficie, clave de servicio hacia el
+  cliente) y tres en `project-blueprint` (plataforma de red cerrada, readiness sin modelo de
+  acceso, sitio sin usuarios donde el dominio es `N/A`).
+- `docs/skill-selection-guide.md`: frontera **Seguridad: `engineering-workflow` vs `marcozen`**
+  — el control de la superficie que el cambio agrega frente a la verificación de la superficie
+  completa, con el modelo de acceso declarado como puente entre las tres skills.
+
+#### Changed
+
+- `marcozen`: regla dura **el repositorio no es el sistema**. Un control aplicable que no se
+  puede verificar leyendo archivos se reporta `No verificado — verificación externa requerida`
+  con el lugar exacto donde se comprueba. Omitirlo es un fallo de auditoría, no un `N/A`.
+- `marcozen`: severidades ampliadas. `P0` para registro abierto verificado contra un modelo
+  restringido, datos alcanzables sin sesión o por un autenticado ajeno al recurso, clave de
+  servicio alcanzable desde el cliente y documentos privados en almacenamiento público. `P1`
+  para el control requerido, aplicable y **no verificable**: no es una vulnerabilidad supuesta,
+  es un control crítico sin cubrir con el lugar donde se cierra la brecha.
+- `marcozen`: Fase 0 detecta los servicios externos que sostienen el producto y establece el
+  modelo de acceso antes de auditar autorización; si nadie lo declaró, lo pregunta —una sola
+  pregunta— y avanza con el resto de los dominios contra el modelo más restrictivo que sugiera
+  la evidencia.
+- `engineering-workflow`: `HIGH` incluye ahora la **ampliación de la superficie alcanzable**;
+  `CRITICAL` incluye el cambio del modelo de acceso o del registro de cuentas. Nuevo principio
+  obligatorio: lo que amplía la superficie lleva su control puesto.
+- `engineering-workflow`: la revisión del diff (Fase 7) busca superficie nueva sin control,
+  configuración externa no declarada y variables secretas con un prefijo que el framework
+  expone al navegador. La Fase 10 bloquea el merge por superficie nueva sin control o sin caso
+  denegado, y por configuración externa requerida y todavía sin aplicar.
+- `engineering-workflow`: `references/definition-of-done.md` y
+  `references/documentation-impact-matrix.md` incorporan los puntos de superficie y de
+  configuración externa, **condicionados** a que el cambio los toque.
+- `project-blueprint`: el Architecture Readiness Check no puede devolver `READY` en un producto
+  con usuarios y datos de terceros sin modelo de acceso declarado.
+
+#### Proporcionalidad
+
+El rigor sigue escalando con el riesgo, no con la ocasión. Lo nuevo se activa por condición, no
+por rutina: la auditoría de superficie externa corre en los modos de seguridad y
+pre-producción, no en una revisión general de orden del repo; los controles de superficie
+acompañan solo a los cambios que **agregan** un punto de entrada, y un cambio `LOW` no activa
+ninguno; auditar la superficie que un cambio no tocó sigue siendo trabajo de `marcozen` y no de
+cada Pull Request. Un control no verificable se entrega como una línea accionable, nunca como
+una vulnerabilidad inventada ni como un default de proveedor supuesto de memoria.
+
+#### Versiones
+
+- `marcozen`: `2.0.0` → `2.2.0`
+- `engineering-workflow`: `2.0.0` → `2.2.0`
+- `project-blueprint`: `2.0.0` → `2.1.0`
+
+### La tercera superficie: el despliegue respondiendo
+
+Segunda pasada, tras contrastar la implementación contra dos informes de auditoría externa
+reales. La primera pasada cerró los controles que viven en la consola del proveedor; faltaba
+una categoría entera: **los controles que solo se ven pidiéndole una respuesta al sistema
+desplegado**. Estaban declarados en el checklist —cabeceras, páginas de error, métodos
+aceptados— pero nada indicaba cómo comprobarlos, así que se verificaban leyendo la
+configuración que pretende producirlos. Un control declarado no es un control servido.
+
+#### Added
+
+- `skills/marcozen/references/deployed-surface.md`: referencia nueva con el **pase de sondas al
+  despliegue**. Lista cerrada, una petición por control: rutas privadas sin sesión, open
+  redirect en destinos parametrizados (`?next=`, `?redirect=`), enumeración de usuarios en login
+  y en recuperación de contraseña, manejo de credenciales inválidas, cabeceras realmente
+  servidas, CORS, métodos HTTP aceptados, sourcemaps publicados, páginas de error, indexación de
+  una app privada, DNS, subdominios colgantes y transparencia de certificados.
+- `deployed-surface.md`: sección de **límites** —confirmar que la URL es del usuario, una
+  petición por control, nada de fuerza bruta, descubrimiento masivo, escáneres ni peticiones
+  destructivas, nada que cree estado sin autorización explícita y limpieza— y sección de
+  **severidad** que evita el inflado: las cabeceras faltantes son `P2` y suben a `P1` solo con
+  un vector nombrable (clickjacking sobre el formulario de login); `Permissions-Policy` es `P3`
+  salvo que la app use cámara, micrófono o ubicación.
+- `external-surface.md`: **permisos de tabla (`GRANT`) como capa distinta de las políticas**. Un
+  `GRANT` de `UPDATE`/`DELETE` al rol autenticado con una política mal acotada permite modificar
+  o borrar filas ajenas; las tablas de bitácora y auditoría deben ser de solo inserción, porque
+  si se pueden borrar el registro deja de ser evidencia y el borrado destruye el rastro del
+  propio abuso.
+- `external-surface.md`: **inventario de subdominios y subdominios colgantes** —un nombre que
+  apunta a un proveedor donde el recurso ya no existe permite que quien lo reclame sirva
+  contenido desde un dominio de la organización— y **protección anti-abuso** (CAPTCHA, límites
+  de intento) como control del proveedor.
+- `engineering-workflow`: fila nueva en los controles de superficie para una **ruta que acepta
+  un destino como parámetro**: validar contra rutas internas permitidas, rechazar hosts externos
+  y rutas protocolo-relativas (`//evil.example`).
+- Cuatro evals más: tres en `marcozen` (cabeceras declaradas vs servidas con el pase de sondas y
+  sus límites, subdominio colgante, y la corrección del criterio de severidad del registro
+  abierto) y uno en `engineering-workflow` (ruta de confirmación con `?next=`).
+
+#### Changed
+
+- `marcozen`: el principio pasa de dos superficies a **tres** —repositorio, consola del
+  proveedor y despliegue respondiendo—. Fase 0 pide la URL desplegada y confirma que es del
+  usuario; el dominio de superficie alcanzable incluye el pase de sondas; `Solo lectura
+  estricta` se extiende explícitamente a las peticiones HTTP.
+- `marcozen`: `P1` incluye la redirección abierta en el flujo de autenticación y el subdominio
+  colgante que comparte cookies con el dominio del producto.
+- `marcozen`: **los mitigantes no bajan la severidad**. Un límite de envío de correo, un CAPTCHA
+  disponible o el alcance reducido de la cuenta creada se reportan como contexto dentro del
+  hallazgo. La severidad de un control de acceso se mide contra el modelo declarado, no por lo
+  rota que esté la implementación: si un externo completa el registro en un producto de acceso
+  restringido, es `P0` aunque cada pieza funcione como está programada. Regla asociada: un
+  informe con el acceso abierto enterrado entre hallazgos de severidad baja es un informe que
+  falló.
+- `preprod-security.md`: las cabeceras de seguridad incorporan `Content-Security-Policy` y
+  `Permissions-Policy`, y se declara explícitamente que se verifican sobre la respuesta real.
+  El pase de autorización suma el paso de las dos capas de permisos (`GRANT` + política).
+
 ## [0.2.6] - 2026-09-20
 
 ### Operación

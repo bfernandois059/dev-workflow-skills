@@ -33,6 +33,21 @@ Marca solo lo aplicable, pero no omitas silenciosamente los puntos de riesgo.
 - [ ] No se exponen datos o archivos privados.
 - [ ] Entradas y archivos están validados.
 
+**Si el cambio agrega superficie alcanzable** (tabla, vista, endpoint, ruta pública, bucket,
+webhook o job nuevo):
+
+- [ ] Cada superficie nueva tiene identificado el control que la protege.
+- [ ] El estado por defecto niega: control de acceso activo **y** con al menos una regla que filtre por propietario o inquilino.
+- [ ] Existe la prueba del caso denegado con un usuario autenticado ajeno al recurso, no solo el camino feliz con la cuenta propia.
+
+**Si el cambio depende de configuración fuera del repositorio** (registro de cuentas,
+visibilidad de un bucket, proveedor de identidad, variables de producción, protección de
+entornos):
+
+- [ ] Está declarada en la Pull Request: qué se cambió, en qué servicio y quién puede llegar ahora a qué.
+- [ ] Está aplicada en el entorno real, no solo prevista.
+- [ ] Quedó registrada donde una auditoría posterior pueda verificarla (`.env.example`, documento de seguridad y operación).
+
 ## UX y accesibilidad
 
 - [ ] Loading, error, vacío y éxito están considerados.

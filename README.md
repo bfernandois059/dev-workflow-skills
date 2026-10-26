@@ -266,12 +266,12 @@ Después de regenerar, volver a copiar el catálogo a la carpeta del chat: esa c
 #### [project-blueprint](skills/project-blueprint/SKILL.md) — planificar arquitectura y decisiones clave
 * **Problema que resuelve**: Diseña la arquitectura técnica, funcional y operativa antes de programar, o resuelve decisiones de arquitectura cuando surge un cambio importante.
 * **Cuándo usarla**: En proyectos nuevos (**Greenfield**), al diagnosticar y migrar sistemas existentes (**Retrofit**) o ante decisiones técnicas puntuales con trade-offs a evaluar (**Decision Patch**).
-* **Frontera principal**: *Decision completeness > document completeness*. No construye código ni inventa requerimientos: prepara y decide. Separa estrictamente lo `Confirmado`, `Recomendado` y `Supuesto`.
+* **Frontera principal**: *Decision completeness > document completeness*. No construye código ni inventa requerimientos: prepara y decide. Separa estrictamente lo `Confirmado`, `Recomendado` y `Supuesto`. Cuando el producto tiene usuarios, declara el modelo de acceso y registro como decisión explícita: es la premisa que después hace auditable el acceso.
 
 #### [engineering-workflow](skills/engineering-workflow/SKILL.md) — ejecutar cambios de desarrollo
 * **Problema que resuelve**: Ejecuta cada tarea de desarrollo de forma controlada, segura y trazable a través de Git: rama → cambios → validaciones → PR → merge.
 * **Cuándo usarla**: Al implementar cambios de comportamiento, abrir PRs, validar con compilación/tests o realizar merges seguros.
-* **Frontera principal**: Nunca trabaja directamente sobre la rama principal (`main`/`master`); una branch por propósito. Valida con los comandos reales (lint, typecheck, tests, build) antes de dar por terminado. Código y documentación viajan juntos.
+* **Frontera principal**: Nunca trabaja directamente sobre la rama principal (`main`/`master`); una branch por propósito. Valida con los comandos reales (lint, typecheck, tests, build) antes de dar por terminado. Código y documentación viajan juntos. Si el cambio agrega superficie alcanzable (tabla, endpoint, ruta, bucket, webhook), el control y la prueba del caso denegado viajan con el cambio; la configuración aplicada en la consola de un proveedor no produce diff y se declara en el PR.
 
 ### Familia visual
 
@@ -320,7 +320,7 @@ Después de regenerar, volver a copiar el catálogo a la carpeta del chat: esa c
 #### [marcozen](skills/marcozen/SKILL.md) — auditoría técnica, seguridad y gobernanza
 * **Problema que resuelve**: Audita de forma transversal la salud general, seguridad, SEO técnico, gobernanza y preparación para producción de un repositorio.
 * **Cuándo usarla**: Al recibir un repositorio heredado, antes de salir a producción, al integrar pagos/autenticación o en mantenimientos periódicos.
-* **Frontera principal**: Enfoque *evidence-first* y proporcional. Evalúa orden, dependencias, secretos y preparación técnica global. No es una auditoría de experiencia de usuario (eso es `ux-audit`) ni sustituye la investigación específica de código muerto (`tech-cleanup`).
+* **Frontera principal**: Enfoque *evidence-first* y proporcional. Evalúa orden, dependencias, secretos y preparación técnica global. En sus modos de seguridad y pre-producción audita la superficie alcanzable en los tres lugares donde vive —el repositorio, la consola del proveedor (registro de cuentas, políticas efectivas, buckets, entornos, claves) y el despliegue respondiendo, con sondas de solo lectura de cabeceras, métodos, redirecciones, mensajes de autenticación y DNS— contra el modelo de acceso declarado. Lo que no puede verificar lo entrega como lista corta de verificación externa, nunca como silencio. No es una auditoría de experiencia de usuario (eso es `ux-audit`) ni sustituye la investigación específica de código muerto (`tech-cleanup`).
 
 #### [tech-cleanup](skills/tech-cleanup/SKILL.md) — podar código y archivos sin uso
 * **Problema que resuelve**: Investiga con evidencia y retira de forma segura código muerto, componentes huérfanos, rutas obsoletas, assets duplicados y dependencias innecesarias.
@@ -333,14 +333,14 @@ Después de regenerar, volver a copiar el catálogo a la carpeta del chat: esa c
 
 **Las versiones son independientes por skill.** Un número mayor no significa que una skill sea “mejor” o más madura que otra: refleja la evolución histórica de su propio contrato.
 
-* **Historiales SemVer independientes**: skills creadas en las primeras etapas del repositorio (`project-blueprint`, `engineering-workflow`, `marcozen`, `tech-cleanup`) atravesaron cambios de contrato mayores y se encuentran en `v2.0.0`. La familia visual completa y `ux-audit` nacieron más recientemente y se encuentran en `v0.2.0`.
+* **Historiales SemVer independientes**: skills creadas en las primeras etapas del repositorio (`project-blueprint`, `engineering-workflow`, `marcozen`, `tech-cleanup`) atravesaron cambios de contrato mayores y se encuentran en la serie `v2.x`. La familia visual completa y `ux-audit` nacieron más recientemente y se encuentran en `v0.2.0`.
 * **Evolución real sin números artificiales**: la serie `0.x` indica que el contrato todavía se considera en evolución. Cuando una skill se considere suficientemente estable para asumir un contrato público `1.x`, puede pasar a `1.0.0`. Después puede seguir evolucionando mediante versiones `1.x` y futuros cambios mayores cuando corresponda. No se igualan versiones artificialmente.
 * **Cambios en el repositorio**: editar el `README.md`, la guía de selección o la documentación compartida **no cambia la versión de ninguna skill**. Solo se sube la versión de una skill cuando cambia **su** contrato operativo: su método, sus fronteras, sus salidas o sus reglas.
 
 | Skill | Versión actual | Archivo | Tag de Git |
 |---|---|---|---|
-| `project-blueprint` | `2.0.0` | `skills/project-blueprint/VERSION` | `project-blueprint-v2.0.0` |
-| `engineering-workflow` | `2.0.0` | `skills/engineering-workflow/VERSION` | `engineering-workflow-v2.0.0` |
+| `project-blueprint` | `2.1.0` | `skills/project-blueprint/VERSION` | `project-blueprint-v2.1.0` |
+| `engineering-workflow` | `2.2.0` | `skills/engineering-workflow/VERSION` | `engineering-workflow-v2.2.0` |
 | `visual-foundation` | `0.2.0` | `skills/visual-foundation/VERSION` | `visual-foundation-v0.2.0` |
 | `design-directions` | `0.2.0` | `skills/design-directions/VERSION` | `design-directions-v0.2.0` |
 | `interface-craft` | `0.2.0` | `skills/interface-craft/VERSION` | `interface-craft-v0.2.0` |
@@ -349,7 +349,7 @@ Después de regenerar, volver a copiar el catálogo a la carpeta del chat: esa c
 | `component-architecture` | `0.2.0` | `skills/component-architecture/VERSION` | `component-architecture-v0.2.0` |
 | `tailwind-hygiene` | `0.2.0` | `skills/tailwind-hygiene/VERSION` | `tailwind-hygiene-v0.2.0` |
 | `ux-audit` | `0.2.0` | `skills/ux-audit/VERSION` | `ux-audit-v0.2.0` |
-| `marcozen` | `2.0.0` | `skills/marcozen/VERSION` | `marcozen-v2.0.0` |
+| `marcozen` | `2.2.0` | `skills/marcozen/VERSION` | `marcozen-v2.2.0` |
 | `tech-cleanup` | `2.0.0` | `skills/tech-cleanup/VERSION` | `tech-cleanup-v2.0.0` |
 
 Consultar una versión instalada y compararla con el repositorio canónico:

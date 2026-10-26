@@ -90,6 +90,31 @@ Esta matriz proporciona **señales de decisión y criterios analíticos**, no re
   - *Recomendación:* RBAC (Role-Based Access Control) por defecto. Mantener roles planos y mapear acciones.
   - *Alternativa:* ABAC (Attribute-Based Access Control) solo si existen reglas contextuales complejas (ej. "acceso solo en horario laboral y desde sucursal asignada").
 
+### Modelo de acceso y registro — decisión obligatoria cuando hay usuarios
+
+No basta con elegir el proveedor de identidad: hay que decidir **quién puede llegar a tener una
+cuenta**. Es la decisión que un proveedor administrado resuelve por defecto si nadie la toma, y
+el default de un proveedor es casi siempre el más abierto.
+
+| Señal | Modelo | Lo que hay que decidir además |
+|---|---|---|
+| Producto sin cuentas ni sesiones | `Público sin cuentas` | Nada; el dominio es N/A |
+| Autoservicio, el registro es parte del embudo | `Registro abierto` | Confirmación de correo, límites de abuso en el formulario, aislamiento entre cuentas |
+| Plataforma para clientes, socios o personal identificado | `Registro restringido` | Mecanismo exigible: invitación o dominio de correo autorizado. Quién invita y con qué alcance |
+| Nadie se registra; las cuentas las crea alguien | `Provisión por administrador` | Quién provisiona, cómo se entrega el acceso inicial, cómo se revoca |
+| Solo miembros de la organización | `Interno / red privada` | SSO/OIDC, qué pasa con una cuenta al salir la persona |
+
+- **Un modelo restringido obliga a nombrar su mecanismo.** "Acceso solo para corredores" no es
+  una decisión implementable; "solo por invitación del administrador de la oficina" sí.
+- **Nombra el default del proveedor que hay que cambiar.** Si el modelo elegido exige cerrar o
+  restringir el registro en la consola, esa acción se declara aquí como parte de la decisión; de
+  lo contrario queda implícita y nadie la aplica.
+- **Cerrar el registro por correo no cierra los proveedores sociales.** Cada proveedor de
+  identidad habilitado es una puerta de registro paralela y se decide una por una.
+- **El modelo declarado es la premisa de toda auditoría de acceso posterior.** `marcozen`
+  audita contra él; sin él, "cualquiera puede registrarse" no es distinguible del
+  comportamiento correcto de un producto de autoservicio.
+
 ---
 
 ## 5. Almacenamiento y procesamiento de archivos

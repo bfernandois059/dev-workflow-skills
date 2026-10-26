@@ -1,6 +1,6 @@
 ---
 name: engineering-workflow
-description: Ejecuta cambios de desarrollo de forma controlada y trazable en repositorios Git. Úsala obligatoriamente cuando el usuario la nombre, el repositorio la exija o la tarea implemente comportamiento, requiera Pull Request o merge, afecte varios archivos, datos, permisos, autenticación, pagos, documentos formales, dependencias, infraestructura o flujos operacionales. Permite una ruta rápida para cambios LOW. Déjala a criterio de la IA para documentación, copy o ajustes locales triviales y reversibles. No la uses por defecto para consultas conceptuales, explicaciones, comandos aislados ni investigación o diagnóstico sin modificaciones.
+description: Ejecuta cambios de desarrollo de forma controlada y trazable en repositorios Git. Úsala obligatoriamente cuando el usuario la nombre, el repositorio la exija o la tarea implemente comportamiento, requiera Pull Request o merge, afecte varios archivos, datos, permisos, autenticación, pagos, documentos formales, dependencias, infraestructura o flujos operacionales. También cuando el cambio amplía la superficie alcanzable del producto —una tabla, un endpoint, una ruta pública, un bucket o un webhook nuevo— o depende de configuración aplicada en la consola de un servicio externo, que no aparece en el diff. Permite una ruta rápida para cambios LOW. Déjala a criterio de la IA para documentación, copy o ajustes locales triviales y reversibles. No la uses por defecto para consultas conceptuales, explicaciones, comandos aislados ni investigación o diagnóstico sin modificaciones.
 ---
 
 # Engineering Workflow
@@ -35,8 +35,9 @@ Ante duda razonable entre dos categorías, escala una categoría. Una mención e
 7. **Código y documentación viajan juntos.** La documentación afectada debe actualizarse dentro de la misma Pull Request como norma de trabajo. Los pendientes documentales de estado que cumplan la excepción de la Fase 10 se anotan para un PR posterior y no bloquean por sí solos la integración.
 8. **Validar antes de declarar terminado.** Ejecutar los comandos reales de lint, typecheck, tests y build que correspondan.
 9. **Cambios sensibles requieren mayor rigor.** Datos, permisos, autenticación, pagos, archivos, emails, PDFs, migraciones e infraestructura exigen revisión específica.
-10. **No integrar automáticamente.** Preparar la integración, pero realizar merge o squash merge solo con autorización explícita.
-11. **Estrategia de ejecución adaptada a capacidades (Capability-Aware).** El riesgo de la tarea gobierna la profundidad de validación; la capacidad del runtime influye en la estrategia de ejecución, pero nunca se convierte en ceremonia o bloqueo artificial. Desconocer el modelo no es un estado de fallo ni impide avanzar. Ver `references/engine-routing.md`.
+10. **Lo que amplía la superficie alcanzable lleva su control puesto.** Si el cambio agrega un punto por el que alguien puede entrar o pedir datos —tabla, endpoint, ruta, bucket, webhook, proveedor habilitado—, el control que lo protege y la prueba del caso denegado son parte del cambio, no de una revisión posterior. La configuración aplicada en la consola de un proveedor es parte del cambio aunque no aparezca en el diff: se declara en la Pull Request. Ver `references/change-risk-matrix.md`.
+11. **No integrar automáticamente.** Preparar la integración, pero realizar merge o squash merge solo con autorización explícita.
+12. **Estrategia de ejecución adaptada a capacidades (Capability-Aware).** El riesgo de la tarea gobierna la profundidad de validación; la capacidad del runtime influye en la estrategia de ejecución, pero nunca se convierte en ceremonia o bloqueo artificial. Desconocer el modelo no es un estado de fallo ni impide avanzar. Ver `references/engine-routing.md`.
 
 ## Orden de autoridad
 
@@ -259,7 +260,36 @@ Si se modifican roles o acceso:
 - valida autorización en servidor, no solo en UI;
 - prueba casos permitidos y denegados;
 - revisa exposición de datos;
-- registra el cambio en seguridad y changelog.
+- registra el cambio en seguridad y changelog;
+- si el cambio afecta quién puede crear una cuenta o entrar al producto, confirma el **modelo de acceso declarado** del proyecto (público, registro abierto, registro restringido, provisión por administrador o interno) antes de implementar. Está en el blueprint o en `docs/permissions-matrix.md`; si no está declarado en ninguna parte, no lo supongas: pregúntalo. Un cambio de acceso implementado contra un modelo no declarado no se puede revisar.
+
+#### Superficie alcanzable
+
+Cuando el cambio agrega un punto por el que alguien puede entrar o pedir datos —una tabla,
+vista, endpoint, server action, ruta pública, bucket, webhook o job nuevo—, el control que lo
+protege viaja con el cambio. `references/change-risk-matrix.md` lista, por tipo de superficie,
+los pocos controles concretos que corresponden y el caso denegado que hay que probar.
+
+Dos límites que mantienen esto proporcional:
+
+- **Solo la superficie que este cambio agrega.** Auditar la que ya existía es trabajo de
+  `marcozen` en sus modos de seguridad y pre-producción, no de esta Pull Request.
+- **El caso denegado es el control.** Una prueba del camino feliz con la cuenta propia no
+  prueba autorización. Basta un caso denegado por superficie nueva: el usuario autenticado
+  ajeno al recurso, que es el que detecta las fugas entre inquilinos y nunca aparece en una
+  prueba manual hecha con los datos propios.
+
+#### Configuración que vive fuera del repositorio
+
+Habilitar un registro, cambiar la visibilidad de un bucket, activar un proveedor de identidad,
+editar una variable de producción o desactivar la protección de un entorno **no produce diff**:
+no pasa por revisión y no queda en el historial. Si el cambio depende de esa configuración:
+
+- se declara en la Pull Request, con el antes y el después y quién puede llegar ahora a qué;
+- se registra dónde vive (`.env.example` para variables; documento de seguridad y operación
+  para políticas, entornos y proveedores);
+- **la tarea no está terminada mientras la configuración no esté aplicada en el entorno real.**
+  Código correcto con el control pendiente en la consola no protege nada.
 
 #### Emails y notificaciones
 
@@ -377,6 +407,9 @@ Revisa:
 - migraciones destructivas;
 - texto provisional;
 - accesos o permisos incompletos;
+- superficie nueva sin control: ¿este diff agrega alguna tabla, endpoint, ruta, bucket o webhook alcanzable sin autenticación o sin filtro por propietario?;
+- configuración externa de la que depende el cambio y que no está declarada en la Pull Request;
+- variables de entorno secretas con un prefijo que el framework expone al navegador;
 - documentación faltante;
 - alcance accidental.
 
@@ -412,6 +445,7 @@ La Pull Request debe incluir:
 - documentación actualizada;
 - riesgos y limitaciones;
 - capturas o evidencia cuando aporten valor;
+- configuración aplicada fuera del repositorio, si el cambio depende de ella: qué se cambió, en qué servicio y quién puede llegar ahora a qué;
 - pasos de migración y rollback si aplica.
 
 No afirmes que algo fue probado si no se ejecutó.
@@ -427,6 +461,8 @@ Antes de integrar, clasifica cualquier hallazgo así:
 - CI en rojo o pruebas que fallan realmente;
 - defecto funcional reproducible;
 - riesgo de seguridad, permisos o integridad de datos;
+- superficie nueva alcanzable sin el control que le corresponde, o sin la prueba del caso denegado;
+- configuración externa requerida por el cambio todavía sin aplicar en el entorno real;
 - migración destructiva sin rollback definido;
 - incumplimiento de una instrucción explícita y puntual del usuario;
 - ausencia de autorización explícita para integrar.

@@ -15,6 +15,9 @@
 | Analytics | plan de medición, nombre y propiedades de eventos |
 | Infraestructura | arquitectura, runbook, variables, despliegue y rollback |
 | Seguridad | `docs/05-security-and-operations.md`, changelog y posible ADR |
+| Superficie alcanzable nueva | control identificado por superficie y prueba del caso denegado; `docs/permissions-matrix.md` si cambia quién alcanza qué |
+| Configuración externa (registro, buckets, entornos, proveedores) | declararla en la Pull Request y registrarla en `docs/05-security-and-operations.md`; `.env.example` si son variables |
+| Modelo de acceso o registro de cuentas | blueprint o `docs/permissions-matrix.md`, seguridad, changelog y ADR |
 | UI pattern nuevo | diseño/componentes, accesibilidad y estados |
 
 ## Regla
