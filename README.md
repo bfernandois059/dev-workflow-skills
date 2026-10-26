@@ -21,6 +21,8 @@ Este repositorio opera en tres niveles documentales:
 2. **[Guía de selección](docs/skill-selection-guide.md)**: resuelve dudas de enrutamiento, fronteras entre skills parecidas y handoffs detallados.
 3. **`SKILL.md` (en cada skill)**: contiene el método de ejecución, fases y reglas operativas de cada una.
 
+Hay además un cuarto nivel **opcional**, para quien trabaje con un chat que redacta los encargos y un agente que los ejecuta: ver [Flujo con un chat que genera los encargos](#flujo-con-un-chat-que-genera-los-encargos).
+
 > ### Regla fundamental: No hay pipeline obligatorio
 >
 > **Las skills son herramientas especializadas, no etapas de un proceso lineal que debas recorrer de punta a punta.**
@@ -218,6 +220,45 @@ El formato Agent Skills es markdown portable. Si tu agente no auto-carga skills,
 
 ---
 
+## Flujo con un chat que genera los encargos
+
+**Opcional.** Si trabajas directo con el agente ejecutor no necesitas nada de esto: las skills se activan por su propia `description`.
+
+Sirve cuando reparten el trabajo dos agentes distintos: un chat (ChatGPT, Claude) que define el encargo a partir del contexto del cliente, y un agente ejecutor (Claude Code, Codex, Antigravity) que lo implementa con las skills instaladas.
+
+```text
+chat        define el resultado esperado, el riesgo y qué skill corresponde
+ejecutor    inspecciona el repositorio, elige la implementación y la ejecuta
+```
+
+Dos documentos sostienen ese reparto:
+
+| Documento | Para qué |
+|---|---|
+| [docs/prompt-maestro.md](docs/prompt-maestro.md) | Cómo redactar un encargo —resultado utilizable, tope de siete criterios, riesgo, alcance— y cómo revisarlo después hasta un `MERGE` / `NO MERGE`. |
+| [docs/agent-skills-catalog.md](docs/agent-skills-catalog.md) | Qué skills existen, de qué responde cada una y las fronteras entre las parecidas. |
+
+**Cómo se usan:** copiar los dos a la carpeta o proyecto del chat. El chat no tiene las skills instaladas; necesita el catálogo para saber que existen y cuál nombrar. El agente ejecutor no los necesita.
+
+La regla que ordena el reparto: el chat describe **qué resultado** se busca, nunca **cómo** implementarlo. Si el ejecutor puede resolverlo inspeccionando el repositorio, el encargo no lo fija.
+
+### Mantener el catálogo sincronizado
+
+El catálogo cita literal el `description` del frontmatter de cada skill, que es el mismo texto con el que el agente ejecutor decide si la activa. Esa sección es generada:
+
+```bash
+python3 scripts/build_skill_catalog.py           # regenera el catálogo
+python3 scripts/build_skill_catalog.py --check   # falla si quedó desincronizado
+```
+
+Se corre **solo cuando cambia el `description` o la `VERSION` de una skill**. No es parte de redactar un encargo ni del trabajo diario.
+
+Reescribe únicamente la región entre `<!-- BEGIN GENERATED: skills -->` y `<!-- END GENERATED: skills -->`. La prosa de reglas y fronteras está escrita a mano y el generador no la toca.
+
+Después de regenerar, volver a copiar el catálogo a la carpeta del chat: esa copia es manual y no se sincroniza sola.
+
+---
+
 ## Detalle de las doce skills
 
 ### Producto y desarrollo
@@ -325,7 +366,11 @@ python3 skills/<nombre>/scripts/check_version.py --check-remote
 ```
 docs/
 ├── skill-selection-guide.md              # qué skill usar, fronteras, flujos y handoffs
-└── visual-skills-architecture.md         # contrato de la familia de skills visuales
+├── visual-skills-architecture.md         # contrato de la familia de skills visuales
+├── prompt-maestro.md                     # opcional · cómo redactar y revisar un encargo
+└── agent-skills-catalog.md               # opcional · catálogo de routing (sección generada)
+scripts/
+└── build_skill_catalog.py                # regenera el catálogo desde los SKILL.md
 skills/
 ├── project-blueprint/                    # SKILL.md · VERSION · references/ · assets/ · scripts/
 ├── engineering-workflow/                 # SKILL.md · VERSION · references/ · assets/ · scripts/ · evals/
