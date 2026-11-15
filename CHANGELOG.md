@@ -2,6 +2,71 @@
 
 Los cambios relevantes de las skills se registran en este archivo.
 
+## [0.5.0] - 2026-11-15
+
+### `marcozen`: que el diagnóstico de seguridad no dependa de recordar mirar
+
+La 2.2.0 dejó escrito qué controles viven fuera del repositorio. Seguía dejando pasar hallazgos
+por razones de estructura, no de contenido: la seguridad dependía del modo elegido, un control
+crítico sin verificar no impedía un veredicto favorable, la skill no usaba las herramientas del
+proveedor que la sesión ya tenía, exigía enumerar la superficie sin mostrar la enumeración, y
+todo lo determinista quedaba a criterio del modelo. Además faltaban clases enteras de fallo. No
+se creó ninguna skill nueva.
+
+#### Added
+
+- `marcozen`: **piso de seguridad en cualquier modo**. Si el producto tiene usuarios, datos de
+  terceros o pagos, seis controles se comprueban también en la auditoría general y en el
+  mantenimiento periódico; si no se ejecutan, el informe abre con «Seguridad no auditada en
+  este informe». En un producto sin usuarios, datos ni pagos se reduce a secretos.
+- `marcozen`: **escalera de evidencia** — repositorio enumerado, conector o CLI autenticado del
+  proveedor, sondas de solo lectura y, recién entonces, el usuario. Con sus límites: solo
+  lectura, estructura y no contenido, confirmar qué proyecto es, ninguna credencial nueva y
+  ninguna corrección desde el conector.
+- `marcozen`: veredicto **«No se puede afirmar — verificación pendiente»**. Un control Required
+  aplicable sin verificar impide «Listo» y «Listo con observaciones».
+- `marcozen`: sección **Cobertura de seguridad** en el formato de salida — cada control
+  aplicable con su estado, el método con que se comprobó y la evidencia, más el recuento de la
+  superficie enumerada. Un control que no aparece en la tabla no fue auditado.
+- `skills/marcozen/scripts/surface_inventory.py`: inventario determinista y de solo lectura,
+  sin red ni dependencias. Enumera tablas con su RLS declarado, políticas (incluidas las
+  permisivas), funciones `SECURITY DEFINER`, vistas, `GRANT` a roles de API, buckets, endpoints,
+  server actions, middleware, configuración local de auth y señales de riesgo en el código.
+  Nunca imprime valores de variables.
+- `skills/marcozen/references/application-risks.md`: referencia nueva, condicionada al stack,
+  con las clases de fallo que no estaban cubiertas — escalada de privilegios (rol editable por
+  su dueño, autorización sobre `user_metadata`, asignación masiva), funciones, vistas y código
+  que salta las políticas, identidad y sesión, entrada no confiable (XSS, inyección, SSRF,
+  subida de archivos, CSRF, abuso con costo), personas con acceso al proveedor y al
+  repositorio, pipeline y cadena de suministro, y datos en registros.
+- `skills/marcozen/references/external-surface.md`: **consultas de catálogo de solo lectura**
+  (RLS por tabla, políticas efectivas, permisos por rol, funciones privilegiadas, buckets) y
+  cómo leerlas; control de **personas con acceso al proveedor**; inicio de sesión anónimo.
+- Diez evals nuevos en `marcozen`: piso de seguridad en una auditoría general, veredicto con
+  controles sin verificar, uso de conectores en solo lectura, negativa a corregir en caliente
+  desde el conector, rol editable por su dueño, autorización sobre `user_metadata`, cuentas
+  creadas por alguien con acceso privilegiado, función `SECURITY DEFINER` invocable, informe
+  sin hallazgos que aún debe mostrar cobertura, y una landing estática donde el piso **no**
+  infla el informe.
+
+#### Changed
+
+- `marcozen`: severidad `P0` incluye la escalada de privilegios verificada; `P1` incluye el
+  acceso de administración no enumerable en un producto con datos de terceros.
+- `marcozen`: controles Required de pre-producción incluyen la ausencia de camino de escalada
+  de privilegios y el acceso de administración enumerable.
+- `skills/marcozen/references/audit-prompt.md`: el prompt maestro incorpora el piso, la
+  escalera, la cobertura y el veredicto nuevo.
+
+#### Fixed
+
+- Las referencias `external-surface.md`, `deployed-surface.md` y `preprod-security.md` llamaban
+  «Modo 4» al modo de seguridad, que en `SKILL.md` es el 3.
+
+#### Versiones
+
+- `marcozen`: `2.2.0` → `2.3.0`
+
 ## [0.4.0] - 2026-11-15
 
 ### Preservación entre experiencia, calidad visual y estructura del código

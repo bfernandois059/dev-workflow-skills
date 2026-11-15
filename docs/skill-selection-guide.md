@@ -180,7 +180,9 @@ ruta, un bucket o un webhook nuevo llegan con su control puesto y con la prueba 
 denegado. Es específico y pequeño por diseño; auditar la superficie que el cambio no tocó
 convertiría cada PR en una auditoría.
 
-`marcozen`, en sus modos de seguridad y pre-producción, enumera la superficie completa en los
+`marcozen` aplica un **piso de seguridad en cualquier modo** cuando el producto tiene usuarios,
+datos de terceros o pagos: pedir "audita el repo" no deja la seguridad fuera. En sus modos de
+seguridad y pre-producción va más lejos y enumera la superficie completa en los
 tres lugares donde vive: el repositorio, la consola del proveedor —registro de cuentas,
 políticas efectivas en la base de datos, visibilidad de buckets, protección de entornos,
 alcance de las claves emitidas— y el despliegue respondiendo, donde comprueba con sondas de

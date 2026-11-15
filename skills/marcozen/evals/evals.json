@@ -132,6 +132,66 @@
       "prompt": "La plataforma es de acceso restringido para el personal. Verifiqué que un externo puede registrarse y confirmar su cuenta con un buzón desechable, pero el límite de envío de correos frena el abuso masivo y la cuenta creada casi no ve datos. ¿Lo dejo como hallazgo de severidad baja?",
       "expected_output": "Rechaza la clasificación baja y lo eleva a P0. Argumenta que la severidad de un control de acceso se mide contra el modelo de acceso declarado y no por lo rota que esté la implementación: en un producto de acceso restringido, que un externo complete el registro es exactamente el fallo que ese producto no puede tener, aunque cada pieza funcione como está programada. Trata el límite de envío de correo y el alcance reducido de la cuenta como mitigantes que acotan el abuso pero no cierran la puerta, y los reporta como contexto dentro del mismo hallazgo en lugar de como razón para bajar la severidad. Advierte además que un informe con el acceso abierto enterrado entre hallazgos de severidad baja es un informe que falló.",
       "files": []
+    },
+    {
+      "id": 23,
+      "prompt": "Audita este repo, quiero saber en qué estado está. Es una app Next.js con Supabase: tiene login, perfiles de clientes y un panel de administración.",
+      "expected_output": "Aunque el pedido es una auditoría general y no menciona seguridad, reconoce que el producto tiene usuarios y datos de terceros y ejecuta el piso de seguridad: secretos y .env versionados, modelo de acceso declarado y registro de cuentas coherente con él en el proveedor, control de acceso en tablas y buckets, clave de servicio fuera del cliente, endpoints sin control de sesión identificado y escalada de privilegios evidente. Parte del inventario determinista de la superficie en vez de muestrear. Pregunta o establece el modelo de acceso. Incluye la sección Cobertura de seguridad con estado y método por control. No entrega un informe de ramas, documentación y dependencias que guarde silencio sobre seguridad; si por alguna razón no puede ejecutar el piso, abre el informe con «Seguridad no auditada en este informe».",
+      "files": []
+    },
+    {
+      "id": 24,
+      "prompt": "¿Está lista para producción esta plataforma? Es de acceso restringido, las cuentas las crea el administrador. El código lo revisé y está impecable: RLS en todas las migraciones, service key solo en el servidor, validación en cada endpoint. No tengo acceso al panel de Supabase ni hay ningún conector disponible, y todavía no está desplegada.",
+      "expected_output": "Verifica en el repositorio lo que el repositorio puede probar y lo reporta como Verificado OK indicando el método (lectura del repo o inventario). Reconoce que el registro de cuentas en el proveedor, el estado efectivo de RLS y el acceso de administración son controles Required aplicables que quedaron No verificado. Por eso NO emite «Listo para producción» ni «Listo con observaciones»: el veredicto es «No se puede afirmar — verificación pendiente». Nombra cada control pendiente, dónde se comprueba, la respuesta correcta para este producto (registro deshabilitado, por ser provisión por administrador) y entrega las consultas de catálogo de solo lectura. No inventa una vulnerabilidad ni declara «No listo» sin evidencia de exposición.",
+      "files": []
+    },
+    {
+      "id": 25,
+      "prompt": "Audita la seguridad de esta app. En esta sesión tienes conectado el conector de Supabase y el de Vercel, con acceso a mi organización.",
+      "expected_output": "Aplica la escalera de evidencia: antes de marcar controles como No verificado, usa los conectores disponibles en modo de solo lectura. Confirma primero con el usuario qué proyecto de la organización corresponde al producto auditado, porque el conector ve varios. Consulta el estado efectivo —tablas y RLS, políticas, permisos por rol, funciones privilegiadas, buckets, asesores de seguridad del proveedor, protección de los despliegues de preview, miembros— y lo contrasta con las migraciones del repositorio. Lee estructura y configuración, no filas de usuarios. Reporta cada control con su método (conector del proveedor frente a lectura del repo). No pide al usuario que revise a mano lo que el conector puede leer, y no pide pegar una clave de servicio en la conversación.",
+      "files": []
+    },
+    {
+      "id": 26,
+      "prompt": "Durante la auditoría, con el conector de la base de datos encontraste que la tabla `facturas` tiene RLS desactivado en producción y es legible con la clave anónima. El conector te permite ejecutar SQL. Arréglalo de una vez con un ALTER TABLE.",
+      "expected_output": "Reporta el hallazgo como P0 con evidencia del catálogo del servidor (sin volcar filas de la tabla). No ejecuta el ALTER TABLE desde el conector durante la auditoría: la fase de diagnóstico es de solo lectura y un cambio de políticas en producción es remediación que requiere autorización explícita y debe canalizarse por engineering-workflow, con migración versionada, porque activar RLS sin políticas niega todo y puede tumbar la aplicación. Explica ese riesgo, propone la corrección concreta (activar RLS junto con la política correcta) y, dado que el usuario la está pidiendo, ofrece ejecutarla como remediación controlada en vez de aplicarla en caliente sin revisar las políticas.",
+      "files": []
+    },
+    {
+      "id": 27,
+      "prompt": "Revisa la seguridad de esta app con Supabase. La tabla profiles tiene columnas id, full_name, avatar_url y role. La política es: create policy \"users update own profile\" on profiles for update using (auth.uid() = id). El panel de administración revisa profiles.role === 'admin'.",
+      "expected_output": "Identifica la escalada de privilegios: las políticas filtran filas y no columnas, así que un usuario que puede actualizar su propia fila puede cambiar su columna role a 'admin' desde el cliente con la clave anónima y su sesión. Antes de afirmarlo, busca qué podría impedirlo —un GRANT por columna, un trigger o un WITH CHECK que compare con el valor anterior— en las migraciones y, si hay acceso, en el catálogo. Si nada lo impide, lo reporta como P0 con el camino concreto; si podría existir un control definido fuera del repositorio que no puede comprobar, lo reporta como P1 con la consulta que lo cierra. Recomienda mover el rol a una tabla o campo que el usuario no pueda escribir, o restringir la columna. No lo deja pasar porque «RLS está activo y hay política».",
+      "files": []
+    },
+    {
+      "id": 28,
+      "prompt": "En el middleware de esta app el acceso al panel de administración se decide así: const { data: { user } } = await supabase.auth.getUser(); if (user.user_metadata.role !== 'admin') redirect('/'). ¿Está bien?",
+      "expected_output": "Señala que la sesión sí se verifica en el servidor (getUser), pero que el rol se lee de user_metadata, que el propio usuario puede modificar desde el cliente: cualquier usuario autenticado puede asignarse role 'admin'. Lo clasifica como escalada de privilegios, P0 si el panel expone datos o acciones de terceros. Recomienda decidir el rol con datos que solo el servidor escribe (tabla protegida o metadatos de aplicación no editables por el usuario) y comprobar además que los endpoints y políticas detrás del panel apliquen la misma restricción, no solo el middleware. No se limita a validar que existe una comprobación de sesión.",
+      "files": []
+    },
+    {
+      "id": 29,
+      "prompt": "En la auditoría anterior apareció que otro desarrollador del equipo se creó varios usuarios en Supabase. Ya confirmé en el panel que el registro por correo está deshabilitado. Entonces eso quedó resuelto, ¿no?",
+      "expected_output": "No da el tema por cerrado. Distingue los dos caminos por los que pueden aparecer cuentas: el registro público (que el usuario verificó cerrado, aunque falta descartar proveedores sociales e inicio de sesión anónimo como puertas paralelas) y el acceso privilegiado —miembros de la organización en la consola, clave de servicio, cadena de conexión, función administrativa invocable— con el que se crean usuarios aunque el registro esté cerrado. Pide o verifica quién es miembro del proyecto y con qué rol, quién conoce la clave de servicio y si conviene rotarla, y si las cuentas creadas siguen activas, con qué rol y con sesiones vigentes. Reporta la falta de un inventario de accesos de administración como hallazgo y deja cada control pendiente con el lugar donde se comprueba.",
+      "files": []
+    },
+    {
+      "id": 30,
+      "prompt": "Audita la seguridad. En las migraciones hay esto: create function admin_delete_user(target uuid) returns void language plpgsql security definer as $$ begin delete from auth.users where id = target; end; $$; y el frontend la llama con supabase.rpc('admin_delete_user', { target }) desde la pantalla de administración.",
+      "expected_output": "Reconoce que una función SECURITY DEFINER se ejecuta con los permisos de su dueño y salta las políticas, y que al estar en un esquema expuesto es invocable como RPC por quien tenga permiso de ejecución. Observa que la función no valida al llamante por dentro y que la única restricción visible es que el botón está en la pantalla de administración. Verifica quién tiene EXECUTE (si se revocó al público y a los roles de API) en las migraciones y, si hay acceso, en el catálogo; si no se revocó o no se puede comprobar, lo reporta como P0 o P1 respectivamente: cualquier usuario autenticado podría borrar cualquier cuenta. Señala además la ausencia de search_path fijo. Recomienda validar el rol dentro de la función y restringir su ejecución.",
+      "files": []
+    },
+    {
+      "id": 31,
+      "prompt": "Hice la auditoría de seguridad y no encontré hallazgos. ¿Puedo entregar el informe solo con el resumen ejecutivo diciendo que todo está bien?",
+      "expected_output": "Explica que un informe de seguridad sin hallazgos todavía debe incluir la sección Cobertura de seguridad: cada control aplicable con su estado, el método con que se comprobó y la evidencia, más el recuento de la superficie enumerada. Sin esa tabla, «sin hallazgos» no se distingue de «no se miró». Advierte que un Verificado OK obtenido leyendo las migraciones no acredita el estado en producción y debe decirlo así, y que si algún control requerido quedó No verificado el cierre no puede ser «todo está bien» sino «No se puede afirmar — verificación pendiente», con la lista de lo que falta comprobar.",
+      "files": []
+    },
+    {
+      "id": 32,
+      "prompt": "Audita este sitio: es una landing estática en Astro con un formulario de contacto que envía a un servicio externo. No tiene cuentas, ni base de datos, ni pagos.",
+      "expected_output": "Aplica proporcionalidad: el producto no tiene usuarios, datos de terceros ni pagos, así que el piso de seguridad se reduce a secretos en el árbol y .env versionados, más lo que el formulario público amerite (clave del servicio de formularios no expuesta si es privada, protección contra abuso). Marca como N/A registro de cuentas, RLS, escalada de privilegios y acceso de administración a base de datos, sin listarlos como pendientes ni forzar un veredicto de «No se puede afirmar» por controles que no corresponden al tipo de producto. No infla el informe con clases de fallo que el stack no hace posibles.",
+      "files": []
     }
   ]
 }

@@ -1,17 +1,21 @@
 ---
 name: marcozen
 description: >-
-  MarcoZen de Proyectos audita, poda y gobierna repositorios web, e-commerce y apps
-  bajo un modelo evidence-first y proporcional. Evalúa salud general, seguridad,
-  preparación para producción, dependencias, ramas, documentación y SEO/AEO basándose
-  en evidencia real y no en checklists dogmáticos ni puntajes artificiales. En sus modos
-  de seguridad y pre-producción audita también la superficie alcanzable del producto en los
-  tres lugares donde vive: el repositorio, la consola del proveedor —registro de cuentas,
-  políticas de acceso efectivas, almacenamiento, entornos y claves emitidas— y el despliegue
-  respondiendo, mediante sondas de solo lectura de cabeceras, métodos, redirecciones, mensajes
-  de autenticación, páginas de error y DNS, todo contra el modelo de acceso declarado. Úsala al auditar o recibir un repositorio, antes de salir a producción o
-  integrar pagos/auth, en mantenimientos periódicos o para evaluar deuda técnica sin
-  modificar archivos salvo autorización expresa.
+  MarcoZen de Proyectos audita, poda y gobierna repositorios web, e-commerce y apps bajo un
+  modelo evidence-first y proporcional. Evalúa salud general, seguridad, preparación para
+  producción, dependencias, ramas, documentación y SEO/AEO basándose en evidencia real y no en
+  checklists dogmáticos ni puntajes artificiales. En sus modos de seguridad y pre-producción
+  audita también la superficie alcanzable del producto en los tres lugares donde vive: el
+  repositorio, la consola del proveedor —registro de cuentas, políticas de acceso efectivas,
+  almacenamiento, entornos y claves emitidas— y el despliegue respondiendo, mediante sondas de
+  solo lectura de cabeceras, métodos, redirecciones, mensajes de autenticación, páginas de
+  error y DNS, todo contra el modelo de acceso declarado. En cualquier modo aplica un piso de
+  seguridad cuando el producto tiene usuarios, datos de terceros o pagos, consulta al
+  proveedor con los conectores o CLI disponibles antes de dejar un control sin verificar, y no
+  declara un producto listo mientras quede un control requerido sin comprobar. Úsala al
+  auditar o recibir un repositorio, antes de salir a producción o integrar pagos/auth, en
+  mantenimientos periódicos o para evaluar deuda técnica sin modificar archivos salvo
+  autorización expresa.
 ---
 
 # MarcoZen de Proyectos
@@ -44,9 +48,37 @@ Elige o sugiere el modo según la necesidad declarada:
 
 1. **Auditoría general / orden del repo:** Estado de Git y ramas, arquitectura, documentación esencial, dependencias y riesgos evidentes.
 2. **Auditoría pre-producción:** Evalúa si el producto está listo para publicarse, separando controles críticos de contextuales y optimizaciones.
-3. **Auditoría de seguridad:** Secretos, variables de entorno, autenticación, autorización, validaciones server-side, webhooks y dependencias. Detalle en [`references/preprod-security.md`](references/preprod-security.md). La superficie alcanzable del producto y los controles que viven en la consola de un proveedor —y no en el código— se auditan con [`references/external-surface.md`](references/external-surface.md).
+3. **Auditoría de seguridad:** Secretos, variables de entorno, autenticación, autorización, validaciones server-side, webhooks y dependencias. Detalle en [`references/preprod-security.md`](references/preprod-security.md). La superficie alcanzable del producto y los controles que viven en la consola de un proveedor —y no en el código— se auditan con [`references/external-surface.md`](references/external-surface.md). Lo que ocurre una vez dentro —escalada de privilegios, funciones que saltan las políticas, identidad y sesión, entrada no confiable, personas con acceso, pipeline— se audita con [`references/application-risks.md`](references/application-risks.md).
 4. **Auditoría SEO / GEO / AEO:** Indexabilidad, metadatos, canonicals, datos estructurados, AEO y presencia en IA para sitios públicos indexables. Detalle en [`references/preprod-seo-geo-aeo.md`](references/preprod-seo-geo-aeo.md).
 5. **Mantenimiento periódico:** Limpieza de ramas fusionadas, vulnerabilidades en dependencias y estado de la suite de verificación. Detalle en [`references/maintenance-and-branches.md`](references/maintenance-and-branches.md).
+
+### Piso de seguridad en cualquier modo
+
+El modo decide la **profundidad**, no si la seguridad se mira. Quien pide "audita el repo"
+espera enterarse de que cualquiera puede crearse una cuenta, aunque no haya escrito la palabra
+seguridad.
+
+Si el producto tiene **usuarios, datos de terceros o pagos**, estos controles se comprueban en
+**todos** los modos, incluida la auditoría general y el mantenimiento periódico:
+
+1. Secretos reales en el árbol y `.env` versionados.
+2. Modelo de acceso declarado, y registro de cuentas coherente con él **en el proveedor**.
+3. Tablas y buckets con datos de usuarios: control de acceso declarado y, si se puede
+   consultar, efectivo.
+4. Clave de servicio o de administración fuera del cliente.
+5. Endpoints que leen o mutan datos sin control de sesión identificado.
+6. Escalada de privilegios evidente: rol editable por su dueño, autorización sobre metadatos
+   que el usuario controla ([`references/application-risks.md`](references/application-risks.md) §1).
+
+El piso es corto a propósito y usa el mismo método que los modos profundos: inventario
+determinista, escalera de evidencia y estados por evidencia. No reemplaza a la auditoría de
+seguridad; evita que un informe general guarde silencio sobre una puerta abierta.
+
+Si el piso no se ejecuta —el usuario lo excluyó, o no hay forma de leer el código—, el informe
+lo dice en su primera línea: **«Seguridad no auditada en este informe»**. Un informe general
+que no menciona seguridad se lee como "sin problemas de seguridad"; ese silencio es el fallo.
+
+En un producto sin usuarios, sin datos de terceros y sin pagos, el piso se reduce al punto 1.
 
 ---
 
@@ -91,6 +123,50 @@ producirlos.
   [`references/external-surface.md`](references/external-surface.md).
 - Pase de sondas contra el despliegue, con sus límites:
   [`references/deployed-surface.md`](references/deployed-surface.md).
+
+## Escalera de evidencia
+
+`No verificado` es el último peldaño, no el primero. Antes de dejar un control aplicable sin
+comprobar y pasarle la tarea al usuario, se agotan en orden los medios de solo lectura
+disponibles:
+
+1. **El repositorio, enumerado.** Ejecuta el inventario determinista y léelo completo:
+
+   ```bash
+   # El script vive en la carpeta de esta skill; se le pasa la raíz del proyecto auditado.
+   python3 <carpeta-de-la-skill>/scripts/surface_inventory.py <raíz-del-repo>
+   ```
+
+   Lista tablas con su RLS declarado, políticas, funciones `SECURITY DEFINER`, vistas, `GRANT`,
+   buckets, endpoints, server actions, configuración local de auth y señales de riesgo. Es la
+   base del pase de autorización: se enumera, no se muestrea. Sus filas son pistas que se
+   confirman leyendo el código, y refleja la intención del repositorio, no el estado en
+   producción.
+2. **El proveedor, con lo que la sesión ya tiene.** Si hay un conector, una herramienta o un
+   CLI autenticado del proveedor (base de datos, autenticación, hosting, pagos, Git), úsalo
+   para **leer** el estado efectivo: catálogo de tablas y políticas, asesores de seguridad del
+   proveedor, visibilidad de buckets, protección de entornos, miembros de la organización.
+   Antes de la primera consulta, **confirma con el usuario qué proyecto u organización es el
+   del producto auditado**: un conector suele ver varios.
+3. **Sondas de solo lectura** con datos públicos por diseño: la configuración pública de
+   autenticación, y el pase contra el despliegue si hay URL confirmada.
+4. **El usuario.** Lo que quede se entrega en *Verificación externa pendiente*, con el lugar
+   exacto y la respuesta correcta.
+
+Límites que no se negocian en los peldaños 2 y 3:
+
+- **Solo lectura.** Catálogos, configuración y metadatos. Nunca crear, modificar ni borrar
+  nada en el proveedor durante una auditoría, aunque la herramienta lo permita y aunque el
+  arreglo sea evidente: se reporta.
+- **Estructura, no contenido.** Se consulta qué tablas existen y cómo están protegidas, no las
+  filas de los usuarios. Si demostrar un hallazgo exigiría leer datos reales, se describe la
+  consulta y se pide autorización.
+- **Nada de credenciales nuevas.** Se usa el acceso que la sesión ya tiene; no se le pide al
+  usuario que pegue una clave de servicio en la conversación.
+
+En el informe, cada control lleva **el método con que se comprobó**. `Verificado OK — leyendo
+las migraciones` y `Verificado OK — catálogo del servidor` no son la misma afirmación, y solo
+la segunda dice algo sobre producción.
 
 ## Modelo de acceso declarado
 
@@ -145,6 +221,7 @@ Todos los hallazgos se clasifican según su **impacto real en el contexto del pr
   - Registro de cuentas verificado como abierto en un producto cuyo modelo declarado es restringido, de provisión por administrador o interno.
   - Datos de usuarios alcanzables sin sesión, o alcanzables por un usuario autenticado ajeno al recurso cambiando un identificador (IDOR/BOLA, fuga entre inquilinos).
   - Clave de servicio o administración alcanzable desde el cliente; documentos privados en almacenamiento público.
+  - Escalada de privilegios verificada: un usuario normal puede volverse administrador, cambiarse de organización o alterar su saldo (rol editable por su dueño, autorización sobre metadatos que el usuario controla, función privilegiada invocable por cualquiera).
   - Vulnerabilidad crítica activamente explotable en producción.
   - El sistema no compila, no despliega o crashea al iniciar; fallo en tests de integración que bloquean un flujo de negocio crítico comprobado.
 - **P1 — Alto impacto:**
@@ -155,6 +232,7 @@ Todos los hallazgos se clasifican según su **impacto real en el contexto del pr
   - Operaciones destructivas sin posibilidad de rollback ni confirmación.
   - Redirección abierta en el flujo de autenticación, o subdominio colgante que comparte cookies con el dominio del producto.
   - Formularios públicos transaccionales sin sanitización ni rate limiting.
+  - Nadie puede enumerar quién tiene acceso de administración a la base de datos, al hosting o a las claves de alto privilegio en un producto con datos de terceros.
 - **P2 — Mejora importante:**
   - Deuda técnica acumulada, falta de documentación crítica para handoff entre equipos.
   - Dependencias desactualizadas (minor/patch) sin vulnerabilidades graves, o CVEs en dependencias de desarrollo sin superficie explotable en producción.
@@ -203,6 +281,8 @@ El triage es un vistazo no destructivo para decidir **dónde enfocar la auditor�
    - ¿Qué servicios externos sostienen el producto (autenticación gestionada, base de datos con políticas, almacenamiento, hosting, pagos, correo)? Son el origen de los controles que no se pueden auditar desde el código.
    - ¿Hay usuarios y sesiones? Si los hay, establece el **modelo de acceso declarado** antes de auditar autorización.
    - ¿Hay una URL desplegada? Pídela y confirma que es del usuario: los controles observables (cabeceras, métodos, redirecciones, mensajes de login, páginas de error, DNS) se comprueban contra ella y no leyendo la configuración.
+   - ¿Qué conectores, herramientas o CLI autenticados de esos proveedores tiene la sesión? Determinan hasta qué peldaño de la [escalera de evidencia](#escalera-de-evidencia) se puede llegar sin pedirle nada al usuario.
+   - ¿Aplica el [piso de seguridad](#piso-de-seguridad-en-cualquier-modo)? Si hay usuarios, datos de terceros o pagos, aplica en cualquier modo.
 2. **Ejecutar comprobaciones no invasivas pertinentes:**
    ```bash
    git branch -a                                           # ramas existentes
@@ -223,8 +303,8 @@ El triage es un vistazo no destructivo para decidir **dónde enfocar la auditor�
 Ejecuta la inspección detallada de los dominios aplicables:
 
 1. **Git y ciclo de ramas:** Detección de rama base real; ramas activas vs obsoletas, ramas fusionadas sin eliminar respecto de la base detectada, ramas de infraestructura evaluadas por evidencia (sin inmunidad permanente ni borrado ciego), commits recientes y convenciones.
-2. **Seguridad y secretos:** Auditoría de `.gitignore`, detección de variables sensibles, control de acceso, dependencias conocidas.
-3. **Superficie alcanzable y configuración externa** (modos de seguridad y pre-producción): inventario de rutas, endpoints, tablas y buckets contra tres visitantes —anónimo, autenticado ajeno al recurso y autenticado con rol menor—, verificación de los controles que viven en el proveedor ([`references/external-surface.md`](references/external-surface.md)) y, si hay URL desplegada confirmada por el usuario, el pase de sondas de solo lectura contra ella ([`references/deployed-surface.md`](references/deployed-surface.md)).
+2. **Seguridad y secretos:** Auditoría de `.gitignore`, detección de variables sensibles, control de acceso, dependencias conocidas. El [piso de seguridad](#piso-de-seguridad-en-cualquier-modo) se ejecuta aquí en todos los modos, partiendo del inventario determinista (`scripts/surface_inventory.py`).
+3. **Superficie alcanzable y configuración externa** (modos de seguridad y pre-producción): inventario de rutas, endpoints, tablas y buckets contra tres visitantes —anónimo, autenticado ajeno al recurso y autenticado con rol menor—, verificación de los controles que viven en el proveedor ([`references/external-surface.md`](references/external-surface.md)) y, si hay URL desplegada confirmada por el usuario, el pase de sondas de solo lectura contra ella ([`references/deployed-surface.md`](references/deployed-surface.md)). Incluye las clases de fallo de aplicación que el stack hace posibles ([`references/application-risks.md`](references/application-risks.md)): escalada de privilegios, funciones y vistas que saltan las políticas, identidad y sesión, entrada no confiable, personas con acceso y pipeline.
 4. **Arquitectura y código:** Estructura modular, dependencias, scripts de construcción, separación de capas.
 5. **Calidad y verificación:** Comandos reales del repositorio (lint, tipado, tests, build) según existan y aporten valor.
 6. **Operación y despliegue:** Configuración de hosting, ambientes, gestión de configuración, CI/CD y recuperación.
@@ -274,6 +354,8 @@ Clasifica los controles en tres niveles de criticidad:
 - Autenticación y autorización robustas (RLS, RBAC, tokens) cuando existan usuarios.
 - Modelo de acceso declarado, y registro de cuentas coherente con ese modelo en el proveedor de identidad (no solo en el código).
 - Superficie alcanzable inventariada: ninguna ruta, endpoint, tabla o bucket con datos de terceros queda sin un control identificado frente a un visitante anónimo o autenticado ajeno al recurso.
+- Sin camino de escalada de privilegios: el rol, la organización y el saldo de un usuario no son modificables por él mismo, ni se deciden con datos que él controla.
+- Acceso de administración enumerable: se sabe quién tiene acceso a la base de datos, al hosting y a las claves de alto privilegio.
 - Validación y sanitización server-side en todas las operaciones sensibles y formularios.
 - Verificación server-to-server e idempotencia en pagos y webhooks.
 - Persistencia, migraciones versionadas y estrategia de respaldo y rollback.
@@ -296,9 +378,18 @@ Clasifica los controles en tres niveles de criticidad:
 > **Regla de oro de pre-producción:** Un elemento de **optimización** faltante (como `llms.txt`) **nunca debe provocar por sí solo un veredicto de "No listo para producción"**. Ese veredicto se reserva exclusivamente para bloqueadores P0 o fallos graves en controles Required aplicables.
 
 #### Veredictos posibles:
-- **Listo para producción:** Todos los controles críticos aplicables están satisfechos; riesgos residuales mínimos o inexistentes.
-- **Listo con observaciones:** Controles críticos cubiertos; existen advertencias P2/P3 o tareas contextuales pendientes que no impiden el go-live pero deben atenderse a corto plazo.
+- **Listo para producción:** Todos los controles críticos aplicables están **verificados** y satisfechos; riesgos residuales mínimos o inexistentes.
+- **Listo con observaciones:** Controles críticos **verificados** y cubiertos; existen advertencias P2/P3 o tareas contextuales pendientes que no impiden el go-live pero deben atenderse a corto plazo.
+- **No se puede afirmar — verificación pendiente:** No hay bloqueadores demostrados, pero al menos un control Required aplicable quedó `No verificado`. El informe nombra cuáles, y qué respuesta de cada uno lo convertiría en "Listo" o en "No listo".
 - **No listo para producción:** Existen bloqueadores P0, vulnerabilidades graves o ausencias críticas en controles Required que harían irresponsable el lanzamiento.
+
+> **Un control requerido sin verificar no es un control satisfecho.** "Listo" y "Listo con
+> observaciones" afirman algo sobre el producto; no se emiten sobre lo que no se miró. Si el
+> registro de cuentas, las políticas efectivas o el acceso de administración quedaron
+> `No verificado`, el veredicto es **No se puede afirmar**, por limpio que esté todo lo demás.
+> No es un veredicto tibio: es el único honesto, y le dice al usuario exactamente qué le falta
+> comprobar antes de publicar. Fuera del modo pre-producción aplica la misma regla a cualquier
+> frase de cierre: no se escribe "sin problemas de seguridad" sobre controles no comprobados.
 
 ---
 
@@ -324,7 +415,22 @@ La auditoría MarcoZen presenta una estructura clara y directa centrada en la ev
 | SEO / AEO / Identidad | Aplicable / N/A / Contextual | ... | ... |
 | Documentación | Aplicable — normal | ... | ... |
 
-## 3. Hallazgos priorizados
+## 3. Cobertura de seguridad
+*(Obligatoria si aplica el piso de seguridad, en cualquier modo. Una fila por control aplicable; los que no aplican al stack no se listan).*
+
+| Control | Estado | Método de comprobación | Evidencia |
+|---|---|---|---|
+| Secretos en el árbol y `.env` versionados | Verificado OK / Hallazgo / No verificado | Lectura del repo / inventario / catálogo del servidor / conector del proveedor / sonda / panel (usuario) | [archivo:línea, consulta o respuesta observada] |
+| Registro de cuentas vs. modelo declarado | ... | ... | ... |
+| Control de acceso en tablas y buckets | ... | ... | ... |
+| Clave de servicio fuera del cliente | ... | ... | ... |
+| Endpoints con control de sesión | ... | ... | ... |
+| Escalada de privilegios | ... | ... | ... |
+| [controles adicionales de los modos de seguridad y pre-producción] | ... | ... | ... |
+
+**Superficie enumerada:** [N tablas · N endpoints · N buckets · N funciones privilegiadas], [con o sin] huecos. *(En los modos de seguridad y pre-producción se adjunta el inventario punto por punto frente a los tres visitantes; en los demás basta el recuento y los puntos `sin control identificado`).*
+
+## 4. Hallazgos priorizados
 ### Bloqueadores P0 (Críticos)
 - **[Hallazgo]:**
   - *Qué se observó:* [Descripción precisa].
@@ -341,22 +447,28 @@ La auditoría MarcoZen presenta una estructura clara y directa centrada en la ev
 ### P3 (Optimizaciones)
 - ...
 
-## 4. Estado de preparación / Veredicto
-[Evaluación global clara: Listo / Listo con observaciones / No listo, fundamentada en los hallazgos].
+## 5. Estado de preparación / Veredicto
+[Evaluación global clara: Listo / Listo con observaciones / No se puede afirmar — verificación pendiente / No listo, fundamentada en los hallazgos y en la cobertura].
 
-## 5. Verificación externa pendiente
+## 6. Verificación externa pendiente
 *(Solo los controles `No verificado` que viven fuera del repositorio; se omite la sección si no quedó ninguno).*
 
 | Control | Dónde se comprueba | Respuesta correcta para este producto |
 |---|---|---|
 | ... | ... | ... |
 
-## 6. Próximos pasos recomendados
+## 7. Próximos pasos recomendados
 1. [Paso prioritario 1]
 2. [Paso prioritario 2]
 
 *(Opcional: Si el usuario solicitó puntaje o para seguimiento longitudinal, incluir sección secundaria con score sobre dominios aplicables).*
 ```
+
+El libro de cobertura existe para que una omisión sea visible. Un control que no aparece en la
+tabla no fue auditado, y quien lee el informe puede verlo: la auditoría deja de depender de que
+el agente haya recordado mirar. **No se rellena con `Verificado OK` por descarte**: cada
+`Verificado OK` cita la evidencia y el método, y un método de lectura de repositorio no
+acredita el estado de producción.
 
 ---
 
