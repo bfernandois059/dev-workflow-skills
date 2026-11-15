@@ -77,8 +77,19 @@ grep -rInE '(api[_-]?key|secret|token|password|passwd|bearer|private[_-]?key)' \
 
 > **P0 Real:** Un valor auténtico de un secreto sensible o credencial de producción comprometido en el repositorio o en el historial.
 
+### 4.a Piso de seguridad (todos los modos)
+Si el producto tiene usuarios, datos de terceros o pagos, se comprueba siempre, también en una auditoría general o de mantenimiento: secretos y `.env` versionados; registro de cuentas contra el modelo de acceso declarado; control de acceso en tablas y buckets; clave de servicio fuera del cliente; endpoints sin control de sesión identificado; escalada de privilegios evidente. Parte del inventario determinista:
+
+```bash
+python3 <carpeta-de-la-skill>/scripts/surface_inventory.py <raíz-del-repo>
+```
+
+Si el piso no se ejecuta, el informe abre con «Seguridad no auditada en este informe».
+
+**Escalera de evidencia.** Antes de marcar `No verificado`: (1) repositorio enumerado con el inventario; (2) conector, herramienta o CLI autenticado del proveedor que la sesión ya tenga, en solo lectura y tras confirmar qué proyecto es; (3) sondas de solo lectura; (4) el usuario. Cada control del informe lleva el método con que se comprobó.
+
 ### 4.b Superficie alcanzable y controles del proveedor
-Aplica en los modos de seguridad y pre-producción, y solo si el producto tiene usuarios o datos de terceros.
+Aplica completo en los modos de seguridad y pre-producción, y solo si el producto tiene usuarios o datos de terceros.
 
 1. **Establece el modelo de acceso declarado** (`Público sin cuentas`, `Registro abierto`, `Registro restringido`, `Provisión por administrador`, `Interno`). Si ninguna fuente lo declara, pregúntalo: gobierna la severidad de todo el dominio, y su ausencia es un hallazgo en sí misma.
 2. **Enumera la superficie** desde el código —rutas, endpoints, tablas, buckets, webhooks, jobs— y marca cada punto con el control que lo protege.
@@ -93,7 +104,9 @@ curl -s "$SUPABASE_URL/auth/v1/settings" -H "apikey: $SUPABASE_ANON_KEY"
 5. **Si hay URL desplegada confirmada por el usuario, ejecuta el pase de sondas de solo lectura** sobre ella: rutas privadas sin sesión, redirecciones con destino parametrizado, cabeceras realmente servidas, métodos aceptados, mensajes de login y recuperación, páginas de error, sourcemaps, DNS y subdominios colgantes. Una petición por control, nada destructivo, nada que cree estado sin autorización. Ver [`deployed-surface.md`](deployed-surface.md).
 6. **Lo no verificable se entrega como lista corta de verificación externa**, con el lugar exacto y la respuesta correcta para este producto. Nunca como una advertencia genérica de «revisar la configuración del proveedor»: eso no se puede cerrar.
 
-El catálogo por proveedor, las severidades contra el modelo declarado y los falsos positivos a descartar están en [`external-surface.md`](external-surface.md).
+7. **Revisa las clases de fallo de aplicación que el stack hace posibles:** escalada de privilegios, funciones y vistas que saltan las políticas, identidad y sesión, entrada no confiable, personas con acceso, pipeline. Ver [`application-risks.md`](application-risks.md).
+
+El catálogo por proveedor, las consultas de catálogo de solo lectura, las severidades contra el modelo declarado y los falsos positivos a descartar están en [`external-surface.md`](external-surface.md).
 
 ### 5. Calidad técnica y verificación
 Adaptar al stack real del proyecto:
@@ -133,6 +146,11 @@ Inspecciona con evidencia verificable:
 1. Contexto y stack tecnológico real.
 2. Git y ramas: ramas activas, fusionadas y estado de sincronización.
 3. Seguridad: detección de secretos reales (sin exponer valores), inspección prioritaria de .env versionados y dependencias críticas evaluadas por explotabilidad real.
+3.a Piso de seguridad (en cualquier modo, si hay usuarios, datos de terceros o pagos): registro
+    de cuentas contra el modelo de acceso declarado, control de acceso en tablas y buckets,
+    clave de servicio fuera del cliente, endpoints sin control de sesión, escalada de
+    privilegios. Enumera la superficie; no la muestrees. Antes de marcar No verificado, agota
+    los medios de solo lectura disponibles: conector o CLI del proveedor, luego sondas.
 3.b Superficie alcanzable (si hay usuarios o datos de terceros): establece el modelo de acceso
     declarado —pregúntalo si nadie lo declaró—, enumera rutas, endpoints, tablas y buckets, y
     evalúa cada punto frente a un visitante anónimo, a uno autenticado ajeno al recurso y a uno
@@ -143,7 +161,9 @@ Inspecciona con evidencia verificable:
     parametrizado, mensajes de login y recuperación, páginas de error, sourcemaps, DNS y
     subdominios colgantes) con peticiones individuales de solo lectura. Lo que no se pueda
     verificar se reporta No verificado con el lugar donde se comprueba; omitirlo no es una
-    opción.
+    opción. Revisa además las clases de fallo de aplicación que el stack hace posibles:
+    escalada de privilegios, funciones y vistas que saltan las políticas, identidad y sesión,
+    entrada no confiable, personas con acceso al proveedor y al repositorio, pipeline.
 4. Arquitectura y dependencias: estructura modular, scripts y estado de dependencias.
 5. Calidad y verificación: validaciones reales adaptadas al stack (evaluando tests y CVEs según criticidad e impacto real).
 6. Operación y deploy: proceso de build y despliegue funcional y reproducible (automatizado o documentado según riesgo).
@@ -153,16 +173,21 @@ Inspecciona con evidencia verificable:
 Entrega un informe con la siguiente estructura:
 1. Resumen ejecutivo y contexto del proyecto.
 2. Alcance y tabla de aplicabilidad modular (distinguiendo Aplicable, Contextual, N/A y No verificado).
-3. Hallazgos priorizados por severidad:
+3. Cobertura de seguridad: tabla con cada control aplicable, su estado, el método con que se
+   comprobó y la evidencia, más el recuento de la superficie enumerada. Un control que no
+   aparece en la tabla no fue auditado.
+4. Hallazgos priorizados por severidad:
    - P0: Críticos / Bloqueadores reales.
    - P1: Alto impacto.
    - P2: Mejoras importantes.
    - P3: Optimizaciones.
    (Para cada hallazgo: qué se observó, evidencia concreta, impacto y acción recomendada).
-4. Estado de preparación y veredicto (Listo / Listo con observaciones / No listo).
-5. Verificación externa pendiente: tabla corta de controles No verificados, dónde se comprueba
+5. Estado de preparación y veredicto (Listo / Listo con observaciones / No se puede afirmar —
+   verificación pendiente / No listo). Con un control requerido sin verificar, el veredicto no
+   puede ser Listo ni Listo con observaciones.
+6. Verificación externa pendiente: tabla corta de controles No verificados, dónde se comprueba
    cada uno y qué respuesta sería correcta para este producto (se omite si no quedó ninguno).
-6. Próximos pasos recomendados.
+7. Próximos pasos recomendados.
 
 (El puntaje /100 es opcional y solo debe incluirse si se solicita expresamente).
 ```

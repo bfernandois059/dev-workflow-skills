@@ -1,6 +1,6 @@
 # Auditoría de Seguridad Pre-Producción — MarcoZen
 
-Checklist de seguridad para el **Modo 2 (pre-producción)** y **Modo 4 (seguridad)**. Objetivo: identificar vulnerabilidades, filtraciones y riesgos que comprometan la integridad, dinero, datos de usuarios o disponibilidad del sistema **antes de publicar**.
+Checklist de seguridad para el **Modo 2 (pre-producción)** y **Modo 3 (seguridad)**. Objetivo: identificar vulnerabilidades, filtraciones y riesgos que comprometan la integridad, dinero, datos de usuarios o disponibilidad del sistema **antes de publicar**.
 
 > **Esta referencia cubre lo que se audita leyendo el repositorio.** Las otras dos superficies
 > tienen su propia referencia:
@@ -29,6 +29,8 @@ Checklist de seguridad para el **Modo 2 (pre-producción)** y **Modo 4 (segurida
 - **Integridad de webhooks:** Firmas criptográficas y secretos compartidos verificados server-side antes de procesar eventos externos (Stripe, MercadoPago, PayPal, etc.).
 - **Autorización efectiva:** En sistemas con autenticación y perfiles, las operaciones sensibles verifican permisos en el servidor (ej. políticas RLS en base de datos o middleware de autorización de sesión). Un usuario autenticado no debe poder leer ni mutar recursos ajenos.
 - **Registro de cuentas coherente con el modelo de acceso declarado:** En un producto de acceso restringido, de provisión por administrador o interno, la creación de cuentas debe estar cerrada o restringida **en el proveedor de identidad**, no solo ausente de la interfaz. Una pantalla de registro que no existe en el frontend no cierra el endpoint de registro del proveedor, que sigue respondiendo.
+- **Sin escalada de privilegios:** el rol, la organización, el plan o el saldo de un usuario no son modificables por él mismo ni se deciden con datos que él controla (columna de rol en una fila que su dueño puede actualizar, `user_metadata`, un campo del cuerpo de la petición). Patrones y verificación en [`application-risks.md`](application-risks.md#1-escalada-de-privilegios).
+- **Código que salta las políticas, revisado uno por uno:** funciones `SECURITY DEFINER`, vistas, funciones de borde y cada uso de un cliente con clave de servicio en el servidor. Ver [`application-risks.md`](application-risks.md#2-funciones-vistas-y-código-que-salta-las-políticas).
 - **Validación server-side de entradas:** Ninguna mutación crítica confía en la validación del navegador; validación estricta de esquemas, tipos y rangos en el backend.
 
 ---
@@ -41,6 +43,8 @@ se enumera; no se muestrea.
 
 1. **Lista la superficie desde el código:** rutas y páginas, endpoints y server actions,
    tablas y vistas expuestas a la API, buckets y rutas de archivos, webhooks entrantes, jobs.
+   Parte del inventario determinista (`scripts/surface_inventory.py <raíz>`), que no se salta
+   archivos, y complétalo a mano con lo que sus patrones no reconozcan.
 2. **Marca cada punto con el control que lo protege.** Un punto sin control identificado se
    anota como tal: `sin control identificado` es evidencia; *«las rutas protegidas usan
    middleware»* no lo es.
@@ -93,6 +97,13 @@ propia y con los datos propios. Un control que solo se probó así no está prob
 ### Si el proyecto utiliza autenticación gestionada (Supabase Auth, Clerk, Auth0, Cognito, Firebase):
 - **El registro, la confirmación de correo, los proveedores OAuth activos y las redirect URLs permitidas son configuración del proveedor**, no del repositorio. Verifícalos según [`external-surface.md`](external-surface.md) —incluida la sonda de solo lectura— o repórtalos `No verificado`.
 - Cerrar el registro por correo y dejar un proveedor social habilitado no cierra el registro: es una puerta paralela.
+
+### Clases de fallo de aplicación
+
+Identidad y sesión (inicio anónimo, segundo factor, vida de la sesión, vinculación de
+identidades), entrada no confiable (XSS, inyección, SSRF, subida de archivos, CSRF, consultas
+sin límite, abuso con costo), personas con acceso, pipeline y cadena de suministro, y datos en
+registros: [`application-risks.md`](application-risks.md), condicionado al stack.
 
 ### Si el proyecto utiliza autenticación propia / sesiones:
 - Cookies de sesión con flags `HttpOnly`, `Secure` y `SameSite=Lax/Strict`.

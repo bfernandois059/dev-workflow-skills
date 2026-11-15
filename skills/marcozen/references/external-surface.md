@@ -3,8 +3,10 @@
 Esta referencia cubre el punto ciego estructural de cualquier auditoría *evidence-first* que
 lea solo el repositorio: **los controles de seguridad que no viven en el código**.
 
-Aplica en **Modo 2 (pre-producción)** y **Modo 4 (seguridad)**. No se ejecuta en una auditoría
-general de orden del repo ni en mantenimiento periódico, salvo que el usuario lo pida.
+Aplica en **Modo 2 (pre-producción)** y **Modo 3 (seguridad)**. En una auditoría general o
+de mantenimiento no se recorre entera, pero su núcleo —registro de cuentas, control de acceso en
+tablas y buckets, ubicación de la clave de servicio— forma parte del **piso de seguridad** que
+`SKILL.md` exige en cualquier modo cuando el producto tiene usuarios, datos de terceros o pagos.
 
 ---
 
@@ -114,6 +116,25 @@ inventario con huecos explícitos (`sin control identificado`) es evidencia; una
 Catálogo **condicionado al stack detectado**: si el proyecto no usa el proveedor, la fila no
 existe. No preguntes por todos.
 
+### Cómo se comprueba: la escalera de evidencia
+
+Cada fila de este catálogo dice dónde vive el control. **Antes de entregársela al usuario como
+pendiente, agota lo que la sesión puede leer por sí misma**, en este orden:
+
+1. **Conector, herramienta o CLI autenticado del proveedor**, si la sesión lo tiene. Es el
+   camino preferente: devuelve el estado efectivo, no el declarado. Sirve para listar tablas y
+   su RLS, ejecutar las consultas de catálogo de abajo, leer los asesores de seguridad que
+   publique el proveedor, listar buckets, ver la protección de los despliegues y enumerar
+   miembros. Confirma primero con el usuario **qué proyecto es** el del producto auditado.
+2. **Sonda de solo lectura** con datos públicos por diseño (configuración pública de auth).
+3. **Panel, de la mano del usuario:** el control va a *Verificación externa pendiente*.
+
+Límites: solo lectura, estructura y configuración —no filas de usuarios—, y nunca corregir
+desde el conector lo que se encontró. Si el proveedor expone un asesor o linter de seguridad,
+su salida es evidencia de primera mano: se cita, y cada aviso se contrasta con el modelo de
+acceso declarado antes de asignarle severidad (un aviso del proveedor no es automáticamente un
+`P0`, y su silencio no es un `Verificado OK` de lo que el asesor no revisa).
+
 > **No afirmes el valor por defecto de un proveedor de memoria.** Los defaults cambian entre
 > versiones, planes y fechas de creación del proyecto. Verifica con la comprobación indicada,
 > o reporta `No verificado` nombrando dónde se mira. Si una respuesta no tiene la forma que
@@ -129,6 +150,7 @@ existe. No preguntes por todos.
 | **Proveedores OAuth habilitados** | Un proveedor social activo es una puerta de registro paralela: cerrar el registro por correo y dejar Google abierto no cierra nada | Sonda o panel |
 | **Redirect URLs permitidas** | Una lista laxa (comodines, `localhost` en producción) permite robo de tokens en el callback | Panel del proveedor |
 | **Quién puede invitar o crear usuarios** | En `Provisión por administrador`, define el perímetro completo | Panel + código del flujo de invitación |
+| **Inicio de sesión anónimo** | Un visitante sin cuenta obtiene una sesión que las políticas pueden tratar como autenticada | Sonda, panel o `supabase/config.toml` (solo intención local) |
 | **Protección anti-abuso (CAPTCHA, límites de intento)** | Acota el registro y el relleno de credenciales automatizados. **Acota el abuso; no cierra la puerta**: nunca sustituye a cerrar el registro | Sonda de solo lectura o panel de protección del proveedor |
 
 **Sonda de solo lectura (Supabase / GoTrue).** La configuración pública de autenticación es
@@ -160,8 +182,53 @@ ejecutes por iniciativa propia.
 | **Tablas de auditoría y bitácora** | Deben ser de solo inserción para el rol autenticado. Si se pueden editar o borrar, el registro deja de ser evidencia y el borrado destruye además el rastro | `GRANT` por tabla + políticas de `DELETE`/`UPDATE` |
 | **Vistas y funciones** | Una vista o una función con permisos elevados puede devolver lo que la tabla protege | Revisión de definiciones y de quién puede ejecutarlas |
 
-Cuando no haya acceso al servidor, el estado efectivo de RLS es `No verificado`: dilo, y
-entrega la consulta que el usuario puede correr.
+#### Consultas de catálogo de solo lectura
+
+Con acceso de lectura al servidor —por conector, CLI o porque el usuario las ejecuta— estas
+consultas convierten la intención de las migraciones en estado efectivo. Solo leen catálogos
+del sistema; ninguna toca filas de usuarios. Ajusta el esquema si el proyecto no usa `public`.
+
+```sql
+-- 1. RLS por tabla: toda tabla con datos de usuarios debe tener rowsecurity = true
+select schemaname, tablename, rowsecurity
+from pg_tables where schemaname = 'public' order by tablename;
+
+-- 2. Políticas efectivas: comparar con las migraciones y leer el alcance de cada una
+select tablename, policyname, cmd, roles, qual, with_check
+from pg_policies where schemaname = 'public' order by tablename, policyname;
+
+-- 3. Permisos de tabla para los roles alcanzables por la API
+select table_name, grantee, privilege_type
+from information_schema.role_table_grants
+where table_schema = 'public' and grantee in ('anon', 'authenticated', 'PUBLIC')
+order by table_name, grantee;
+
+-- 4. Funciones que se ejecutan con permisos de su dueño
+select n.nspname as schema, p.proname as function, p.proconfig as settings
+from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+where p.prosecdef and n.nspname = 'public';
+
+-- 5. Visibilidad de buckets (si el proyecto usa el almacenamiento de Supabase)
+select id, name, public from storage.buckets;
+```
+
+Cómo leerlas: una tabla con `rowsecurity = false` y un `GRANT` a `anon` o `authenticated` es
+alcanzable por la API con sus datos completos. Una tabla con `rowsecurity = true` y ninguna
+fila en `pg_policies` niega todo. Una política cuyo `qual` es `true` no filtra nada. Y una tabla
+que aparece en (1) pero no en las migraciones se creó por fuera del repositorio: es
+exactamente la que nadie revisó.
+
+Cuando no haya ningún acceso al servidor, el estado efectivo de RLS es `No verificado`: dilo, y
+entrega estas consultas en *Verificación externa pendiente* para que el usuario las corra.
+
+### Personas con acceso al proveedor
+
+Quién es miembro de la organización en cada proveedor, con qué rol, y quién conoce las claves
+de alto privilegio. Una persona con acceso a la consola o a la clave de servicio puede crear
+usuarios, leer tablas y cambiar políticas **con el registro cerrado y las políticas
+correctas**. Antes de atribuir una cuenta inesperada a un registro abierto, descarta este
+camino: son hallazgos distintos. Detalle en
+[`application-risks.md`](application-risks.md#5-personas-con-acceso).
 
 ### Almacenamiento de archivos (buckets, blobs, CDN)
 
@@ -240,10 +307,13 @@ control es imprescindible para el modelo declarado y nadie puede afirmar que est
 - Registro no verificable en un producto restringido.
 - Estado efectivo de RLS no verificable en un producto con datos de terceros.
 - Ausencia de modelo de acceso declarado en un producto que maneja datos de terceros.
+- Acceso de administración al proveedor no enumerable en un producto con datos de terceros.
 - Protección de deploys de preview no verificada cuando el preview usa datos reales.
 
 `P1` aquí no es una vulnerabilidad inventada: es el reconocimiento explícito de que la
-auditoría no cubrió un control crítico, con el lugar donde se cierra la brecha. No lo subas a
+auditoría no cubrió un control crítico, con el lugar donde se cierra la brecha. Y tiene
+consecuencia sobre el cierre del informe: mientras exista uno, el veredicto no puede ser
+"Listo" ni "Listo con observaciones" — es **No se puede afirmar — verificación pendiente**. No lo subas a
 P0 sin evidencia, y no lo bajes a P3 por incomodidad.
 
 > **Los mitigantes acotan el abuso; no cierran la puerta.** Un límite de envío de correo, un

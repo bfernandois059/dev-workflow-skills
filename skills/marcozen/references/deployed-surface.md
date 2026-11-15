@@ -3,7 +3,7 @@
 Tercera superficie de auditoría, junto al repositorio y a la consola del proveedor: **el
 sistema desplegado respondiendo**.
 
-Aplica en **Modo 2 (pre-producción)** y **Modo 4 (seguridad)**, y solo cuando existe una URL
+Aplica en **Modo 2 (pre-producción)** y **Modo 3 (seguridad)**, y solo cuando existe una URL
 desplegada que el usuario confirma como suya.
 
 ---

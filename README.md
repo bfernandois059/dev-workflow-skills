@@ -320,7 +320,7 @@ Después de regenerar, volver a copiar el catálogo a la carpeta del chat: esa c
 #### [marcozen](skills/marcozen/SKILL.md) — auditoría técnica, seguridad y gobernanza
 * **Problema que resuelve**: Audita de forma transversal la salud general, seguridad, SEO técnico, gobernanza y preparación para producción de un repositorio.
 * **Cuándo usarla**: Al recibir un repositorio heredado, antes de salir a producción, al integrar pagos/autenticación o en mantenimientos periódicos.
-* **Frontera principal**: Enfoque *evidence-first* y proporcional. Evalúa orden, dependencias, secretos y preparación técnica global. En sus modos de seguridad y pre-producción audita la superficie alcanzable en los tres lugares donde vive —el repositorio, la consola del proveedor (registro de cuentas, políticas efectivas, buckets, entornos, claves) y el despliegue respondiendo, con sondas de solo lectura de cabeceras, métodos, redirecciones, mensajes de autenticación y DNS— contra el modelo de acceso declarado. Lo que no puede verificar lo entrega como lista corta de verificación externa, nunca como silencio. No es una auditoría de experiencia de usuario (eso es `ux-audit`) ni sustituye la investigación específica de código muerto (`tech-cleanup`).
+* **Frontera principal**: Enfoque *evidence-first* y proporcional. Evalúa orden, dependencias, secretos y preparación técnica global. En sus modos de seguridad y pre-producción audita la superficie alcanzable en los tres lugares donde vive —el repositorio, la consola del proveedor (registro de cuentas, políticas efectivas, buckets, entornos, claves) y el despliegue respondiendo, con sondas de solo lectura de cabeceras, métodos, redirecciones, mensajes de autenticación y DNS— contra el modelo de acceso declarado. En cualquier modo aplica un piso de seguridad cuando el producto tiene usuarios, datos de terceros o pagos, consulta al proveedor con los conectores o CLI disponibles antes de dejar un control sin verificar, y entrega un libro de cobertura con el método de comprobación de cada control. Lo que no puede verificar lo entrega como lista corta de verificación externa, nunca como silencio, y mientras quede un control requerido sin comprobar el veredicto es «No se puede afirmar», no «Listo». No es una auditoría de experiencia de usuario (eso es `ux-audit`) ni sustituye la investigación específica de código muerto (`tech-cleanup`).
 
 #### [tech-cleanup](skills/tech-cleanup/SKILL.md) — podar código y archivos sin uso
 * **Problema que resuelve**: Investiga con evidencia y retira de forma segura código muerto, componentes huérfanos, rutas obsoletas, assets duplicados y dependencias innecesarias.
@@ -349,7 +349,7 @@ Después de regenerar, volver a copiar el catálogo a la carpeta del chat: esa c
 | `component-architecture` | `0.2.0` | `skills/component-architecture/VERSION` | `component-architecture-v0.2.0` |
 | `tailwind-hygiene` | `0.2.0` | `skills/tailwind-hygiene/VERSION` | `tailwind-hygiene-v0.2.0` |
 | `ux-audit` | `0.3.0` | `skills/ux-audit/VERSION` | `ux-audit-v0.3.0` |
-| `marcozen` | `2.2.0` | `skills/marcozen/VERSION` | `marcozen-v2.2.0` |
+| `marcozen` | `2.3.0` | `skills/marcozen/VERSION` | `marcozen-v2.3.0` |
 | `tech-cleanup` | `2.0.0` | `skills/tech-cleanup/VERSION` | `tech-cleanup-v2.0.0` |
 
 Consultar una versión instalada y compararla con el repositorio canónico:
