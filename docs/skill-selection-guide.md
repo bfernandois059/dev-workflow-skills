@@ -102,6 +102,19 @@ ux-audit           → ¿la persona puede entender, decidir y completar la tarea
 
 Un defecto visual pasa a `ux-audit` **solo cuando tiene costo demostrable sobre la tarea**.
 
+### "Mejora el UX": `ux-audit` vs `interface-craft`
+
+```text
+no se sabe dónde está la fricción, o hay que demostrarla   → ux-audit (solo lectura), luego interface-craft
+la fricción es evidente o ya está diagnosticada            → interface-craft, eje de experiencia
+la corrección cambia reglas, datos o persistencia          → engineering-workflow
+```
+
+"Mejorar el UX" es una **corrección de experiencia**, no un rediseño: `interface-craft` mueve
+flujo, orden, feedback y estados, y deja congeladas la calidad visual y la estructura del código.
+Es la regla 10 del [contrato común](visual-skills-architecture.md#contrato-común-de-las-skills-visuales):
+mejorar una dimensión no autoriza degradar las otras dos.
+
 ### `design-directions` vs `interface-craft`
 
 ```text
@@ -332,7 +345,7 @@ Cuando `ux-audit` detecta fricción, entrega hallazgos y deriva a la skill adecu
 
 | Hallazgo | Recibe |
 |---|---|
-| Corrección visual clara | `interface-craft` |
+| Corrección sobre la interfaz, visual o de experiencia | `interface-craft` |
 | Dirección estructural abierta | `design-directions` |
 | Fallo entre tamaños | `adaptive-layout` |
 | Patrón compartido | `component-architecture` |
@@ -381,7 +394,7 @@ cualquiera             → el cambio requiere rama, validaciones y PR
 
 **Las versiones son independientes por skill.** Un número mayor no significa que una skill sea “mejor” o más madura que otra: refleja la evolución histórica de su propio contrato.
 
-* **Historiales SemVer independientes**: las skills pioneras del repositorio (`project-blueprint`, `engineering-workflow`, `marcozen`, `tech-cleanup`) atravesaron evoluciones de contrato mayores y se encuentran en la serie `v2.x`. Por su parte, la familia visual completa y `ux-audit` nacieron de forma más reciente y se encuentran actualmente en `v0.2.0`.
+* **Historiales SemVer independientes**: las skills pioneras del repositorio (`project-blueprint`, `engineering-workflow`, `marcozen`, `tech-cleanup`) atravesaron evoluciones de contrato mayores y se encuentran en la serie `v2.x`. Por su parte, la familia visual completa y `ux-audit` nacieron de forma más reciente y se encuentran actualmente en la serie `v0.x`.
 * **Evolución real sin sincronización forzada**: la serie `0.x` indica que el contrato todavía se considera en evolución. Cuando una skill se considere suficientemente estable para asumir un contrato público `1.x`, puede pasar a `1.0.0`. Después puede seguir evolucionando mediante versiones `1.x` y futuros cambios mayores cuando corresponda. No se sincronizan versiones artificialmente.
 * **Documentación compartida**: modificar el README, esta guía o cualquier documento transversal del repositorio **no cambia la versión de ninguna skill**. Solo se incrementa la versión de una skill cuando cambia **su** propio contrato operativo (fases, reglas, fronteras o formato de salida).
 

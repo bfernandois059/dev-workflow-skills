@@ -5,15 +5,17 @@ description: >-
   criterio visual y dentro del alcance funcional solicitado. Úsala para construir una pantalla o
   sección nueva; para rehacer una que se ve genérica, plana o desordenada; para traducir un
   mockup o una referencia aprobada a interfaz real; para resolver jerarquía, composición,
-  densidad, tipografía, spacing, color, estados o visualización de datos de una vista concreta; y
-  para decidir entre construir a mano o usar una librería de gráficos, motion, tablas o
-  primitives accesibles. Sirve tanto para sitios comerciales y e-commerce como para dashboards,
-  intranets, CRM, sistemas internos, herramientas operacionales y paneles de administración.
-  Dispara con "rediseña este hero", "esta pantalla se ve genérica", "todos los KPI pesan igual",
-  "no sé dónde mirar", "agrega un gráfico de evolución", "mejora esta vista del CRM", "implementa
-  esta sección". No la uses para explorar direcciones visuales todavía no decididas, para revisar
-  sin construir, para adaptar responsive una interfaz existente, para consolidar componentes
-  repetidos ni para normalizar clases de Tailwind.
+  densidad, tipografía, spacing, color, estados o visualización de datos de una vista concreta;
+  para corregir la experiencia de una vista —incluidos los hallazgos de una auditoría UX— sin
+  perder interacciones, calidad visual ni estructura de código; y para decidir entre construir a
+  mano o usar una librería de gráficos, motion, tablas o primitives accesibles. Sirve tanto para
+  sitios comerciales y e-commerce como para dashboards, intranets, CRM, sistemas internos,
+  herramientas operacionales y paneles de administración. Dispara con "rediseña este hero",
+  "esta pantalla se ve genérica", "todos los KPI pesan igual", "no sé dónde mirar", "agrega un
+  gráfico de evolución", "mejora esta vista del CRM", "mejora el UX de este formulario", "aplica
+  los hallazgos de la auditoría", "implementa esta sección". No la uses para explorar direcciones
+  visuales todavía no decididas, para revisar sin construir, para adaptar responsive una interfaz
+  existente, para consolidar componentes repetidos ni para normalizar clases de Tailwind.
 ---
 
 # Interface Craft
@@ -21,7 +23,7 @@ description: >-
 **Cómo se resuelve visualmente esta interfaz concreta para que cumpla bien su función y
 pertenezca a este producto.**
 
-Un agente que diseña interfaz falla de dos maneras, y casi nunca por falta de gusto.
+Un agente que diseña interfaz falla de tres maneras, y casi nunca por falta de gusto.
 
 La primera es **la convergencia**. Ante cualquier problema aparece la misma respuesta —badge,
 título grande, párrafo, dos botones, tres tarjetas— y ante cualquier panel, la misma —título,
@@ -32,12 +34,19 @@ mínima**, o *cambio limpio* como **menos líneas**. Son dimensiones distintas. 
 algo pequeño con criterio, y una interfaz que merece un componente nuevo no se resuelve peor para
 ahorrar un archivo.
 
-Esta skill existe para que la interfaz se decida, no se rellene.
+La tercera es **la mejora con pérdida**: se pide mejorar una cosa y se entrega esa cosa mejorada
+junto con dos regresiones que nadie pidió. La experiencia mejora y desaparecen el hover, la
+transición y el atajo de teclado; la pantalla se ve mejor y el archivo quedó reescrito con otra
+estructura. No ocurre por mala decisión sino por falta de decisión: se reescribió sin mirar qué
+había.
+
+Esta skill existe para que la interfaz se decida, no se rellene — y para que lo que ya
+funcionaba siga funcionando.
 
 > **Las decisiones de diseño deben responder al contenido, a la tarea y al producto — no al patrón de UI más fácil de generar.**
 > **Los principios de percepción e interacción son herramientas de decisión, nunca un checklist.**
 
-El contrato común de la familia visual —las nueve reglas compartidas y las fronteras entre
+El contrato común de la familia visual —las reglas compartidas y las fronteras entre
 skills— vive en
 [`docs/visual-skills-architecture.md`](https://github.com/bfernandois059/dev-workflow-skills/blob/main/docs/visual-skills-architecture.md)
 de este repositorio. Se cita, no se copia. Léelo cuando necesites resolver una frontera.
@@ -57,6 +66,8 @@ tarea**: se abre la sección del problema que tienes delante.
 - **Traducir** un mockup, una captura o una referencia aprobada a interfaz real.
 - Resolver un problema visual concreto de una vista: jerarquía, composición, densidad,
   tratamiento, estados, visualización de datos.
+- **Corregir la experiencia** de una vista: orden, feedback, affordance, estados, fricción —por
+  pedido directo ("mejora el UX de esto") o aplicando hallazgos de `ux-audit`.
 
 ## Cuándo no usarla
 
@@ -90,6 +101,69 @@ los incluya explícitamente:
 
 Si al resolver detectas que el problema real está fuera de esta frontera, **resuelve tu alcance y
 nómbralo** en el informe. No lo absorbas.
+
+---
+
+## Qué eje mueve la tarea y qué se preserva
+
+Una interfaz tiene tres dimensiones que se dañan por separado: **experiencia**, **calidad visual**
+y **estructura del código**. Mejorar una no autoriza degradar las otras dos (regla 10 del contrato
+común). Antes de tocar nada, decide **qué eje mueve esta tarea**:
+
+| La tarea pide | Se mueve | Queda congelado |
+|---|---|---|
+| Construir algo nuevo | Las tres, dentro del alcance | Lo existente alrededor |
+| Rediseño visual — "se ve genérica", "no sé dónde mirar" | Composición, jerarquía, tratamiento | Experiencia y estructura |
+| Corrección de experiencia — "mejora el UX", hallazgos de `ux-audit` | Flujo, orden, feedback, affordance, estados | Calidad visual y estructura |
+| Traducir una referencia aprobada | Lo visual, hacia la referencia | Experiencia y estructura; lo que la referencia no muestra **se conserva**, no se borra |
+
+El eje se infiere del problema que la tarea nombra; no abras una entrevista para decidirlo. Si el
+pedido es genérico ("mejora esta pantalla"), mueve el eje donde está el defecto evidente y
+**decláralo** en la entrega.
+
+"Congelado" es concreto. Salvo decisión declarada, se preserva:
+
+| Dimensión | Qué se preserva |
+|---|---|
+| **Experiencia** | Cada acción y dato disponible · estados `hover`/`focus`/`active`/`disabled`/`selected` · transiciones y animaciones · teclado: orden de foco, atajos, `Enter`/`Escape` · tooltips, menús, disclosure · gestos y drag · feedback: validación, toasts, loading · estado que persiste: filtros, scroll, selección · semántica accesible: roles, labels, `aria-*` |
+| **Calidad visual** | La jerarquía que ya funciona · tokens y lenguaje del sistema · acabado: sombras, radius, bordes, microdetalle · responsive existente · dark mode y temas |
+| **Estructura del código** | Archivos y su ubicación · límites de componentes y sus props · dónde vive el estado y cómo se obtienen los datos · handlers y su cableado · convenciones del proyecto: nombres, forma de estilar, librerías |
+
+**Mover un eje con ambición sigue siendo correcto.** Un rediseño visual puede replantear la
+composición entera; una corrección de experiencia puede reordenar un flujo. Lo que no puede es
+llevarse puesto lo que estaba fuera de su eje.
+
+### Línea base antes de tocar
+
+Cuando la tarea modifica una interfaz que ya existe, **lee lo que vas a reemplazar y anota qué
+hace además de verse**. Lo que no anotaste antes de reescribir no sabrás que lo perdiste.
+
+Dónde mirar: handlers (`onClick`, `onKeyDown`, `onSubmit`), variantes de estado (`hover:`,
+`focus-visible:`, `disabled:`, `group-*`, `data-*`), `transition` / `animate` / componentes de
+motion, `aria-*` y roles, renders condicionales, y el render en ejecución cuando el entorno lo
+permita.
+
+Es proporcional: una línea para un ajuste, una lista corta para un rediseño. No es un inventario
+del archivo — es la lista de lo que podría perderse sin que el build lo note.
+
+### Editar sobre lo existente
+
+Reescribir un archivo completo es la forma más común de perder lo que no estabas mirando.
+**Edita sobre lo existente siempre que el cambio lo permita.** Si de verdad hay que reescribir un
+bloque, recorre la línea base ítem por ítem al terminar.
+
+La estructura del código tiene presupuesto propio: por defecto, mismos archivos, mismos límites
+de componente, mismo patrón de estado y de datos, misma forma de estilar. Se reestructura **solo
+cuando la estructura actual es la causa del problema o impide expresar la solución**, lo mínimo
+necesario, y se declara. No entran "de paso": renombrar, mover archivos, cambiar cómo se maneja
+el estado, convertir la forma de estilar ni extraer componentes porque el archivo "quedó largo".
+
+### Pérdida deliberada
+
+A veces la mejora exige perder algo: una acción que solo aparecía en hover pasa a estar siempre
+visible; una animación de entrada se elimina porque retrasa una acción frecuente. Eso es una
+decisión legítima **cuando se toma**: se declara qué se perdió, por qué, y qué lo reemplaza. Una
+pérdida que aparece solo en el diff no fue una decisión.
 
 ---
 
@@ -188,7 +262,7 @@ detalle es maquillaje.
 
 ---
 
-## Los dos modos de fallo
+## Los tres modos de fallo
 
 ### Diseño tímido
 
@@ -198,6 +272,19 @@ intacta aunque sea la causa del problema.
 
 **Alcance funcional y ambición visual son dimensiones distintas.** Mantener acotado *qué hace* la
 pantalla no obliga a mantener tímido *cómo se ve*.
+
+La ambición aplica **al eje que la tarea mueve**. Conservar las interacciones y la estructura
+durante un rediseño visual no es timidez: timidez es no resolver lo que se pidió.
+
+### Mejora con pérdida
+
+Señales: el diff elimina `hover:`, `transition`, `onKeyDown` o `aria-*` que nadie mencionó; el
+archivo fue reescrito completo para un cambio localizado; componentes renombrados, movidos o
+fusionados sin que la tarea lo pidiera; una corrección de experiencia que de paso cambió
+tipografía, colores o spacing; estilos del sistema reemplazados por valores nuevos; un estado
+(loading, error, vacío) que existía y ya no se renderiza.
+
+La causa casi nunca es una mala decisión: es **no haber hecho la línea base**.
 
 ### Diseño genérico
 
@@ -299,6 +386,9 @@ Si al implementar descubres que el patrón se repite en muchas pantallas y merec
 general: **resuelve bien tu alcance, señala el patrón y deriva la consolidación a
 `component-architecture`.** No amplíes el PR de producto por iniciativa propia.
 
+Crear componentes para lo que la interfaz **nueva** necesita es parte del trabajo. Reorganizar
+los que ya existían es estructura, y tiene [presupuesto propio](#editar-sobre-lo-existente).
+
 ---
 
 ## Responsive y estados
@@ -337,10 +427,20 @@ del producto o el objetivo visual explícito de la tarea. Validar no es solo par
 - el contenido dominante manda sobre la cuadrícula;
 - el resultado pertenece orgánicamente al producto.
 
-**B. Validación técnica existente**, con los comandos reales del proyecto.
+**B. Preservación, contra la línea base.** Cuando la interfaz ya existía, recorre cada ítem
+anotado y compruébalo **ejercitándolo**, no mirando el render en reposo: pasa el mouse, navega con
+teclado, dispara la transición, provoca el error, abre el menú. Una interacción perdida no se ve
+en una captura. Revisa además el diff: cada línea eliminada que contenía un handler, una variante
+de estado, una transición o un atributo accesible debe estar reubicada o declarada como pérdida
+deliberada. Y confirma que las dimensiones congeladas no se movieron: una corrección de
+experiencia no debería cambiar el lenguaje visual, ni un rediseño visual la lista de archivos más
+allá de lo declarado.
+
+**C. Validación técnica existente**, con los comandos reales del proyecto.
 
 Si el entorno permite preview o captura, úsalo. **Si no hay forma de ver la interfaz renderizada,
-dilo**: no afirmes que la paridad visual está verificada. Declararlo sin haber mirado es el error
+dilo**: no afirmes que la paridad visual está verificada, ni que una interacción se conservó si
+solo la comprobaste leyendo el código. Declararlo sin haber mirado es el error
 que esta sección existe para impedir.
 
 ---
@@ -372,15 +472,28 @@ El trabajo es proporcional al problema.
 **Mejora acotada**
 
 ```text
-inspeccionar → decidir → implementar → comparar visualmente → validar técnicamente
+inspeccionar → fijar eje y línea base → decidir → implementar sobre lo existente →
+comparar visualmente → comprobar preservación → validar técnicamente
 ```
+
+**Corrección de experiencia**
+
+```text
+entender la fricción (o leer el hallazgo de ux-audit) → fijar línea base →
+cambiar lo mínimo que resuelve la fricción, con el lenguaje visual existente →
+ejercitar el flujo corregido → comprobar preservación → validar técnicamente
+```
+
+El criterio de interacción —feedback, affordance, teclado, continuidad— está en
+[`references/craft-criteria.md`](references/craft-criteria.md#interacción).
 
 **Rediseño importante**
 
 ```text
-inspeccionar contexto y referencias → identificar el problema estructural →
-definir la decisión visual → implementar → revisar el render →
-ajustar lo que se vea defectuoso → validar técnicamente
+inspeccionar contexto y referencias → fijar eje y línea base →
+identificar el problema estructural → definir la decisión visual → implementar →
+revisar el render → ajustar lo que se vea defectuoso →
+comprobar preservación → validar técnicamente
 ```
 
 No introduzcas por defecto: auditoría completa del sitio, design system nuevo, benchmark
@@ -396,6 +509,7 @@ Corto. Esto es una entrega de implementación, no un informe de diseño.
 ```markdown
 ## Interface craft — [pantalla/sección]
 
+**Eje de la tarea:** [construcción nueva / rediseño visual / corrección de experiencia / traducción de referencia]
 **Referencia usada:** [...]
 **Resultado:** [...]
 
@@ -407,6 +521,11 @@ Corto. Esto es una entrega de implementación, no un informe de diseño.
 - [qué se comparó]
 - [qué quedó sin verificar]
 
+### Preservación
+- **Conservado:** [interacciones, estados, motion y estructura comprobados]
+- **Cambiado deliberadamente:** [qué, por qué, qué lo reemplaza]
+- **No comprobado:** [lo que no se pudo ejercitar]
+
 ### Validación técnica
 - [comandos reales ejecutados]
 
@@ -416,7 +535,9 @@ Corto. Esto es una entrega de implementación, no un informe de diseño.
 
 Reglas del informe: cada decisión dice **qué se decidió y contra qué referencia**, no adjetivos.
 Lo que no se pudo ver renderizado se declara. `Fuera de alcance detectado` se omite si no hay
-nada.
+nada. `Preservación` se omite solo en construcción nueva sin interfaz previa; en cualquier otra
+tarea es obligatoria aunque sea una línea, y **"Cambiado deliberadamente: nada" es una respuesta
+válida y frecuente**.
 
 ---
 

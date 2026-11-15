@@ -333,7 +333,7 @@ Después de regenerar, volver a copiar el catálogo a la carpeta del chat: esa c
 
 **Las versiones son independientes por skill.** Un número mayor no significa que una skill sea “mejor” o más madura que otra: refleja la evolución histórica de su propio contrato.
 
-* **Historiales SemVer independientes**: skills creadas en las primeras etapas del repositorio (`project-blueprint`, `engineering-workflow`, `marcozen`, `tech-cleanup`) atravesaron cambios de contrato mayores y se encuentran en la serie `v2.x`. La familia visual completa y `ux-audit` nacieron más recientemente y se encuentran en `v0.2.0`.
+* **Historiales SemVer independientes**: skills creadas en las primeras etapas del repositorio (`project-blueprint`, `engineering-workflow`, `marcozen`, `tech-cleanup`) atravesaron cambios de contrato mayores y se encuentran en la serie `v2.x`. La familia visual completa y `ux-audit` nacieron más recientemente y se encuentran en la serie `v0.x`.
 * **Evolución real sin números artificiales**: la serie `0.x` indica que el contrato todavía se considera en evolución. Cuando una skill se considere suficientemente estable para asumir un contrato público `1.x`, puede pasar a `1.0.0`. Después puede seguir evolucionando mediante versiones `1.x` y futuros cambios mayores cuando corresponda. No se igualan versiones artificialmente.
 * **Cambios en el repositorio**: editar el `README.md`, la guía de selección o la documentación compartida **no cambia la versión de ninguna skill**. Solo se sube la versión de una skill cuando cambia **su** contrato operativo: su método, sus fronteras, sus salidas o sus reglas.
 
@@ -343,12 +343,12 @@ Después de regenerar, volver a copiar el catálogo a la carpeta del chat: esa c
 | `engineering-workflow` | `2.2.0` | `skills/engineering-workflow/VERSION` | `engineering-workflow-v2.2.0` |
 | `visual-foundation` | `0.2.0` | `skills/visual-foundation/VERSION` | `visual-foundation-v0.2.0` |
 | `design-directions` | `0.2.0` | `skills/design-directions/VERSION` | `design-directions-v0.2.0` |
-| `interface-craft` | `0.2.0` | `skills/interface-craft/VERSION` | `interface-craft-v0.2.0` |
+| `interface-craft` | `0.3.0` | `skills/interface-craft/VERSION` | `interface-craft-v0.3.0` |
 | `adaptive-layout` | `0.2.0` | `skills/adaptive-layout/VERSION` | `adaptive-layout-v0.2.0` |
 | `visual-consistency` | `0.2.0` | `skills/visual-consistency/VERSION` | `visual-consistency-v0.2.0` |
 | `component-architecture` | `0.2.0` | `skills/component-architecture/VERSION` | `component-architecture-v0.2.0` |
 | `tailwind-hygiene` | `0.2.0` | `skills/tailwind-hygiene/VERSION` | `tailwind-hygiene-v0.2.0` |
-| `ux-audit` | `0.2.0` | `skills/ux-audit/VERSION` | `ux-audit-v0.2.0` |
+| `ux-audit` | `0.3.0` | `skills/ux-audit/VERSION` | `ux-audit-v0.3.0` |
 | `marcozen` | `2.2.0` | `skills/marcozen/VERSION` | `marcozen-v2.2.0` |
 | `tech-cleanup` | `2.0.0` | `skills/tech-cleanup/VERSION` | `tech-cleanup-v2.0.0` |
 

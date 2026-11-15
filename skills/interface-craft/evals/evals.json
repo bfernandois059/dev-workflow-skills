@@ -84,6 +84,36 @@
       "prompt": "En este dashboard, cada uno de los cuatro KPI tiene un color de acento distinto, un badge brillante, un icono decorativo y un fondo resaltado para que 'ninguno pase desapercibido'.",
       "expected_output": "Reconoce que el tratamiento distintivo es un recurso escaso: si todos los elementos intentan romper el patrón al mismo tiempo con acentos, badges y fondos especiales, se destruye la jerarquía y ninguno destaca. Elimina el énfasis indiscriminado e identifica qué métricas justifican realmente un tratamiento distintivo según su estado, anomalías o necesidad de acción (pudiendo ser una, varias si hay datos fuera de rango, o ninguna si la situación es nominal, sin obligar a que sea exactamente una). Devuelve a los elementos contextuales un tratamiento visual más silencioso, homogéneo y cohesionado, permitiendo que la información crítica resalte por contraste real y no por saturación decorativa.",
       "files": []
+    },
+    {
+      "id": 15,
+      "prompt": "Mejora el UX de este formulario de alta de clientes: la gente no entiende qué campos son obligatorios y pierde lo escrito cuando falla la validación. El formulario actual tiene foco automático al primer error, transición en los mensajes, envío con Enter y vive repartido en FormSection, Field y useClientForm.",
+      "expected_output": "Identifica la tarea como corrección de experiencia: mueve el eje de experiencia y deja congeladas la calidad visual y la estructura del código. Antes de editar fija una línea base con lo que el formulario ya hace además de verse (foco al primer error, transición de mensajes, envío con Enter, estados de los campos). Resuelve la fricción nombrada —obligatoriedad legible y conservación de lo escrito al fallar— editando sobre FormSection, Field y useClientForm, sin fusionarlos, renombrarlos ni mover el estado, y usando los componentes, tokens y duraciones existentes en vez de introducir un estilo nuevo. No aprovecha para cambiar tipografía, colores o spacing. Comprueba la preservación ejercitando el flujo (teclado, error, envío), no solo mirando el render, y entrega la sección Preservación con lo conservado, lo cambiado deliberadamente y lo que no pudo comprobar.",
+      "files": []
+    },
+    {
+      "id": 16,
+      "prompt": "Esta lista de propiedades se ve plana y genérica, rediséñala. Hoy cada fila muestra acciones rápidas al hacer hover, tiene selección múltiple con Shift+clic, y la lista anima la entrada y salida de filas al filtrar.",
+      "expected_output": "Identifica la tarea como rediseño visual: puede replantear composición, jerarquía y tratamiento con ambición, sin caer en diseño tímido. Registra en la línea base las tres capacidades de interacción —acciones en hover, selección múltiple con Shift+clic, animación de entrada/salida al filtrar— y las conserva en el diseño nuevo, o las reemplaza mediante una decisión explícita (por ejemplo, acciones siempre visibles porque el hover no existe en touch) declarada como cambio deliberado con su razón y su reemplazo. No entrega una lista visualmente mejor pero estática. Mantiene handlers, estado de selección y la solución de motion que el proyecto ya usa. Verifica ejercitando hover, selección y filtrado, y declara lo que no pudo comprobar en ejecución.",
+      "files": []
+    },
+    {
+      "id": 17,
+      "prompt": "Mejora la jerarquía de este panel de resumen. Es un solo archivo de 400 líneas, Dashboard.tsx, con el fetch y el estado dentro del componente. Aprovecha y déjalo bien.",
+      "expected_output": "Resuelve la jerarquía, que es lo pedido, editando sobre el archivo existente. No interpreta 'déjalo bien' como autorización para reestructurar: no divide el archivo en múltiples componentes, no extrae el fetch a un hook ni cambia el manejo de estado por iniciativa propia, porque la estructura del código está congelada salvo que sea la causa del problema o impida expresar la solución. Puede crear un componente local solo si la nueva composición realmente lo necesita, y lo declara. Señala el tamaño y la mezcla de responsabilidades del archivo como fuera de alcance detectado, derivando a component-architecture o engineering-workflow, en vez de absorberlo. El diff resultante es legible como cambio de jerarquía, no como reescritura.",
+      "files": []
+    },
+    {
+      "id": 18,
+      "prompt": "ux-audit encontró que en la ficha de cotización la acción 'Enviar al cliente' está escondida dentro del menú de tres puntos y nadie la encuentra. El hallazgo dice 'Preservar al corregir: la confirmación previa al envío y el orden actual del resto del menú'. Aplícalo.",
+      "expected_output": "Aplica el hallazgo como corrección de experiencia acotada: expone 'Enviar al cliente' como acción visible con la jerarquía que corresponde a su frecuencia, usando el estilo de acción que el producto ya tiene. Respeta lo que el hallazgo pide preservar: la confirmación previa al envío sigue existiendo (es fricción protectora, no se elimina para 'agilizar') y el resto del menú conserva su orden y contenido. No rediseña la ficha ni reorganiza las demás acciones. Conserva el handler y el flujo existentes en lugar de reimplementarlos. Verifica ejercitando la acción y la confirmación, y entrega Preservación indicando explícitamente ambos puntos.",
+      "files": []
+    },
+    {
+      "id": 19,
+      "prompt": "Rediseña este selector de fechas del filtro. Ahora las opciones rápidas (Hoy, 7 días, 30 días) aparecen con una animación escalonada de 600 ms cada vez que se abre, y los agentes lo abren decenas de veces al día.",
+      "expected_output": "Reconoce un caso de pérdida deliberada legítima: la animación escalonada de 600 ms retrasa una acción de altísima frecuencia y eliminarla o acortarla drásticamente mejora la tarea. No la conserva por inercia invocando la preservación, pero tampoco la deja desaparecer en silencio: la declara como 'Cambiado deliberadamente' con qué se quitó, por qué (duración frente a frecuencia) y qué queda en su lugar, respetando prefers-reduced-motion y las duraciones del sistema. El resto de la interacción del selector —teclado, cierre con Escape, selección— se conserva y se comprueba.",
+      "files": []
     }
   ]
 }

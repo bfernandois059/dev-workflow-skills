@@ -48,7 +48,7 @@ component-architecture  → consolida la decisión ya resuelta en una responsabi
 tailwind-hygiene        → limpia clases preservando exactamente el resultado
 ```
 
-El contrato común de la familia visual —las nueve reglas compartidas y las fronteras entre
+El contrato común de la familia visual —las reglas compartidas y las fronteras entre
 skills— vive en
 [`docs/visual-skills-architecture.md`](https://github.com/bfernandois059/dev-workflow-skills/blob/main/docs/visual-skills-architecture.md).
 Se cita, no se copia.

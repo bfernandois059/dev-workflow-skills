@@ -172,7 +172,8 @@ por `visual-foundation`, y una propuesta descartada nunca se convierte en regla.
 cuando la tarea lo requiera.
 
 **Cuándo usarla.** Para construir una pantalla, sección o flujo nuevo; para rehacer uno que no
-funciona visualmente; cuando hay una referencia aprobada que traducir a interfaz real.
+funciona visualmente; para corregir la experiencia de una vista, por pedido directo o aplicando
+hallazgos de `ux-audit`; cuando hay una referencia aprobada que traducir a interfaz real.
 
 **Cuándo no usarla.** Para revisar sin construir (`visual-consistency` o `ux-audit`). Para
 explorar direcciones aún no decididas (`design-directions`). Para normalizar clases sin cambiar
@@ -182,14 +183,16 @@ el resultado (`tailwind-hygiene`).
 y la interfaz actual renderizada cuando ya hay algo.
 
 **Salida esperada.** La interfaz diseñada e implementada dentro del alcance, con las decisiones
-visuales relevantes explicadas.
+visuales relevantes explicadas, el eje que la tarea movió y lo que se preservó en los otros dos.
 
 **Qué puede modificar.** El código de la interfaz dentro del alcance solicitado: composición,
 layout, escala, densidad y estructura visual. Puede replantear —no solo ajustar— cuando la
 estructura actual es el problema.
 
 **Qué no debe absorber.** El alcance funcional. Rediseñar una pantalla no autoriza a cambiar
-qué hace. Tampoco absorbe la creación de componentes compartidos como objetivo propio: si al
+qué hace. Tampoco absorbe las dimensiones que la tarea no pidió mover (regla 10): mejorar la
+experiencia no autoriza a rehacer el tratamiento visual ni a reestructurar el código, y un
+rediseño visual no autoriza a perder interacciones que ya funcionaban. Tampoco absorbe la creación de componentes compartidos como objetivo propio: si al
 resolver detecta repetición estructural, lo señala y lo deriva a `component-architecture`.
 
 ---
@@ -400,7 +403,7 @@ como desviación —no se adopta el código como norma retroactiva.
 
 ## Contrato común de las skills visuales
 
-Estas nueve reglas aplican a las siete. Se documentan aquí una vez y **no se repiten dentro de
+Estas diez reglas aplican a las siete. Se documentan aquí una vez y **no se repiten dentro de
 cada `SKILL.md`**.
 
 **1. Respetar el sistema no significa preservar errores.**
@@ -441,6 +444,19 @@ decisión, no consistencia.
 **9. El criterio debe ser perceptual y funcional.**
 Build, lint o typecheck nunca sustituyen una revisión visual cuando la tarea afecta lo que ve el
 usuario. Que compile no es evidencia de que se vea bien.
+
+**10. Mejorar una dimensión no autoriza degradar las otras dos.**
+Toda interfaz tiene tres dimensiones que se pueden dañar por separado: la **experiencia** —lo que
+la persona puede hacer y cómo responde la interfaz: interacciones, estados, feedback, teclado—,
+la **calidad visual** —jerarquía, acabado, motion, pertenencia al sistema— y la **estructura del
+código** —archivos, límites de componentes, ubicación del estado, contratos de props—. Una tarea
+que modifica la interfaz declara **qué dimensión mueve**; las otras dos quedan congeladas por
+defecto. Lo que se pierde en una dimensión congelada es una regresión, salvo que sea un
+intercambio **decidido y declarado** en la entrega: nunca un efecto colateral de reescribir.
+
+Esta regla no contradice la 1 ni la 2. No preservar errores sigue vigente: un defecto dentro de
+la dimensión que se mueve se corrige. Lo que la regla 10 impide es que "replantear" una dimensión
+se convierta en reescribir las tres.
 
 ---
 
@@ -536,7 +552,7 @@ Reglas de autoría:
 - **No repetir lo que ya pertenece a `engineering-workflow`.** Queda fuera de todo `SKILL.md`
   visual: política de ramas, flujo de PR, clasificación general de riesgo, auditorías de
   seguridad y Definition of Done global.
-- **No repetir el contrato común.** Las nueve reglas de este documento se citan, no se copian.
+- **No repetir el contrato común.** Las reglas de este documento se citan, no se copian.
 - **`SKILL.md` deliberadamente compacto.** No hay límite artificial de líneas, pero si una regla
   no es necesaria en prácticamente todos los usos de la skill, se evalúa moverla a `references/`.
 - **Versión SemVer propia**, igual que el resto de las skills. Una modificación del repositorio

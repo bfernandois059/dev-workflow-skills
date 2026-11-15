@@ -42,7 +42,7 @@ adaptive-layout      → adapta esa decisión entre tamaños
 visual-consistency   → revisa si el resultado renderizado corresponde
 ```
 
-El contrato común de la familia visual —las nueve reglas compartidas y las fronteras entre
+El contrato común de la familia visual —las reglas compartidas y las fronteras entre
 skills— vive en
 [`docs/visual-skills-architecture.md`](https://github.com/bfernandois059/dev-workflow-skills/blob/main/docs/visual-skills-architecture.md).
 Se cita, no se copia.

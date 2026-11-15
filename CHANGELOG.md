@@ -2,6 +2,60 @@
 
 Los cambios relevantes de las skills se registran en este archivo.
 
+## [0.4.0] - 2026-11-15
+
+### Preservación entre experiencia, calidad visual y estructura del código
+
+Cierre de un fallo recurrente: al pedir una mejora en una dimensión de la interfaz —típicamente
+"mejora el UX"— el resultado sacrificaba otra. Se perdían interacciones, bajaba la calidad visual
+o se reescribía la estructura del código. La causa era de contrato, no de criterio:
+`interface-craft`, la única skill que recibe ese pedido, era también la única skill de
+transformación sin una regla de qué se preserva. No se creó ninguna skill nueva.
+
+#### Added
+
+- `docs/visual-skills-architecture.md`: **regla 10 del contrato común** — mejorar una dimensión
+  no autoriza degradar las otras dos. Nombra las tres dimensiones (experiencia, calidad visual,
+  estructura del código), exige declarar cuál mueve la tarea y trata toda pérdida en una
+  dimensión congelada como regresión salvo intercambio decidido y declarado. Aclara su relación
+  con las reglas 1 y 2.
+- `interface-craft`: sección **Qué eje mueve la tarea y qué se preserva**, con la tabla de ejes
+  por tipo de pedido (construcción nueva, rediseño visual, corrección de experiencia, traducción
+  de referencia) y la tabla concreta de lo que se preserva en cada dimensión.
+- `interface-craft`: paso de **línea base antes de tocar** —qué hace la interfaz además de
+  verse—, regla de **editar sobre lo existente** con presupuesto estructural propio, y criterio
+  de **pérdida deliberada**.
+- `interface-craft`: tercer modo de fallo, **mejora con pérdida**, con sus señales en el diff.
+- `interface-craft`: validación **B. Preservación, contra la línea base** —ejercitando las
+  interacciones, no mirando el render en reposo— y sección **Preservación** obligatoria en la
+  entrega, junto con **Eje de la tarea**.
+- `interface-craft`: flujo de **corrección de experiencia** y disparadores correspondientes en
+  la descripción ("mejora el UX de este formulario", "aplica los hallazgos de la auditoría").
+- `skills/interface-craft/references/craft-criteria.md`: área **Interacción** —feedback,
+  affordance, teclado, continuidad, costo— con las reglas para corregir experiencia sin
+  introducir un estilo ni perder microinteracciones.
+- `ux-audit`: campo **Preservar al corregir** en el formato de hallazgo, y regla de que el relevo
+  lleva también lo que no debe cambiar.
+- `docs/skill-selection-guide.md`: frontera **"Mejora el UX": `ux-audit` vs `interface-craft`**.
+- Seis evals nuevos: cinco en `interface-craft` (corrección de experiencia sin tocar visual ni
+  estructura, rediseño visual que conserva interacciones, jerarquía sin reestructurar el archivo,
+  aplicación de un hallazgo con restricciones de preservación, pérdida deliberada legítima de una
+  animación) y uno en `ux-audit` (hallazgo acotado que nombra qué preservar).
+
+#### Changed
+
+- `interface-craft`: "diseño tímido" queda acotado al eje que la tarea mueve; conservar
+  interacciones y estructura durante un rediseño visual no es timidez.
+- `ux-audit`: la derivación "corrección visual clara → `interface-craft`" pasa a cubrir
+  correcciones sobre la interfaz, visuales o de experiencia.
+- Las siete skills visuales citan "las reglas compartidas" del contrato común sin número fijo.
+  Es un cambio de redacción: no modifica el contrato de las cinco que no suben de versión.
+
+#### Versiones
+
+- `interface-craft`: `0.2.0` → `0.3.0`
+- `ux-audit`: `0.2.0` → `0.3.0`
+
 ## [0.3.0] - 2026-10-26
 
 ### Seguridad del sistema de skills
