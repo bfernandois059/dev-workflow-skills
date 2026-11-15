@@ -10,7 +10,7 @@ hacen mirando la pantalla— y las señales de falla que hay que buscar.
 Los principios de percepción e interacción incorporados en este documento son **herramientas de decisión y preguntas concretas**, nunca un checklist teórico que deba recitarse en la entrega. Su propósito es resolver la interfaz que tienes delante con criterio visual y funcional; no sustituyen a `ux-audit`, que audita funnels, abandono y recorridos transversales de usuario.
 
 Lo que ya está en [`SKILL.md`](../SKILL.md) no se repite aquí: alcance, precedencia de fuentes,
-orden de decisión, los dos modos de fallo, regla de librerías, validación visual y derivaciones.
+orden de decisión, ejes y preservación, los tres modos de fallo, regla de librerías, validación visual y derivaciones.
 Este archivo entra **después** de esas decisiones, cuando ya sabes qué área tienes que resolver.
 
 | Área | Cuándo abrirla |
@@ -27,6 +27,7 @@ Este archivo entra **después** de esas decisiones, cuando ya sabes qué área t
 | [Dashboards](#dashboards-y-visualización-de-datos) | KPI, gráficos, comparación |
 | [Tablas y listados](#tablas-y-listados) | Muchas filas, muchas columnas, acciones por fila |
 | [Estados](#estados) | Loading, vacío, error, permisos, datos extremos |
+| [Interacción](#interacción) | Corregir experiencia; algo no responde, no se entiende o se perdió al rediseñar |
 | [Motion](#motion) | Transiciones, entradas, feedback |
 
 ---
@@ -418,6 +419,47 @@ datos perfectos** si el componente ya contempla otros.
 
 ---
 
+## Interacción
+
+Se abre cuando la tarea mueve el eje de experiencia, y también cuando un rediseño visual toca
+elementos interactivos.
+
+**Pruebas**
+
+1. **¿Responde?** Cada acción produce una señal proporcional a su duración y consecuencia: estado
+   presionado, progreso, resultado. Si el resultado ya es visible en pantalla, no hace falta un
+   toast además.
+2. **¿Se ve accionable?** Lo interactivo se distingue de lo estático sin tener que pasar el mouse.
+   El hover confirma; no puede ser la única pista, porque en touch y teclado no existe.
+3. **¿Funciona sin mouse?** Orden de foco coherente con el orden visual, foco visible, `Enter` y
+   `Escape` donde se esperan, y el foco vuelve a un lugar razonable al cerrar un overlay.
+4. **¿Hay continuidad?** Lo que la persona escribió, filtró, seleccionó o desplazó sobrevive a un
+   error, a un cambio de vista y a volver atrás.
+5. **¿El costo está donde debe?** Lo frecuente queda a un paso; lo destructivo o irreversible
+   conserva su fricción protectora. Reducir pasos no es el objetivo: reducir duda sí.
+
+**Al corregir experiencia**
+
+- **Cambia la forma mínima que resuelve la fricción.** Reordenar, agrupar, renombrar, exponer o
+  dar feedback suele bastar. Rehacer la pantalla para arreglar un paso confuso cambia tres cosas
+  para corregir una.
+- **Usa el vocabulario visual que ya existe.** Un elemento nuevo —un mensaje de error, un paso, un
+  botón secundario— toma los componentes, tokens, duraciones y easing que el producto ya usa. Una
+  corrección de experiencia no introduce un estilo.
+- **Las microinteracciones existentes son decisiones, no ruido.** Un hover que revela acciones,
+  una transición de 150 ms, un atajo de teclado, un foco que se mueve solo al primer error:
+  alguien los puso ahí. Se conservan o se reemplazan a conciencia; no se pierden al reescribir el
+  JSX.
+- **Simplificar no es amputar.** Si sobran opciones a la vista, la herramienta es jerarquía,
+  agrupación o disclosure — la capacidad sigue alcanzable.
+
+**Señales de falla**: la versión "mejorada" tiene menos estados que la original; elementos que
+antes reaccionaban y ahora son planos; overlays que ya no cierran con `Escape`; un formulario
+"simplificado" que pierde lo escrito al fallar; estilos nuevos que solo existen en la pantalla
+corregida; acciones movidas a un menú sin que nadie decidiera que eran secundarias.
+
+---
+
 ## Motion
 
 **Pruebas**
@@ -437,4 +479,5 @@ instalada, ni se instala una librería para una transición de 150 ms.
 
 **Señales de falla**: animaciones de entrada en contenido que el usuario ya estaba leyendo;
 duraciones largas en acciones frecuentes; movimiento que compite con la lectura; efectos distintos
-para la misma clase de transición en pantallas distintas.
+para la misma clase de transición en pantallas distintas; **motion que existía y desapareció en
+un rediseño** sin que nadie lo decidiera.

@@ -84,6 +84,12 @@
       "prompt": "Un panel operacional muestra ocho acciones que los agentes usan con frecuencias diferentes. Para simplificar quiero dejar solo dos y esconder las otras seis.",
       "expected_output": "Rechaza la regla ciega de «menos opciones = mejor» («Reduce decision ambiguity, not necessarily the number of choices»). Analiza frecuencia, consecuencia, contexto de uso y necesidad de descubribilidad, distinguiendo acciones habituales, contextuales, excepcionales y destructivas. No oculta acciones frecuentes o necesarias solo para «limpiar» estéticamente la pantalla. En lugar de esconder capacidades útiles, propone aplicar jerarquía visual, agrupación semántica o disclosure progresivo para las acciones menos frecuentes o destructivas, manteniendo inmediatamente accesibles las de uso cotidiano. No prescribe una cantidad fija o universal de acciones visibles y fundamenta su criterio en reducir trabajo y ambigüedad, no en minimalismo visual.",
       "files": []
+    },
+    {
+      "id": 15,
+      "prompt": "Audita la pantalla de pedidos del panel. Los operadores se quejan de que el botón Reembolsar está demasiado cerca de Marcar como enviado y se equivocan. Lo demás les funciona bien: usan mucho los atajos de teclado y el filtro que queda guardado entre sesiones.",
+      "expected_output": "Diagnostica el hallazgo real —dos acciones de consecuencia muy distinta adyacentes y con peso similar— con su costo para la tarea y una dirección de corrección (separación, jerarquía, fricción proporcional a la irreversibilidad del reembolso), derivando a interface-craft sin diseñar el componente. Como observó capacidades que sostienen el uso diario y que una corrección descuidada podría llevarse, las nombra en 'Preservar al corregir' o en 'Mantener': los atajos de teclado y el filtro persistente. Deja explícito que el hallazgo es acotado y no justifica rehacer la pantalla. No infla el informe con hallazgos visuales sin costo para la tarea.",
+      "files": []
     }
   ]
 }

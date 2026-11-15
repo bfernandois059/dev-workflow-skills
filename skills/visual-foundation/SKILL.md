@@ -26,7 +26,7 @@ Esta skill no diseña pantallas ni corrige interfaces. Define **el sistema contr
 
 > **A visual rule describes intent and role; its technical mapping describes how the project currently expresses it.**
 
-El contrato común de la familia visual —las nueve reglas compartidas, las fronteras entre skills y la naturaleza de `ui-system.md`— vive en [`docs/visual-skills-architecture.md`](https://github.com/bfernandois059/dev-workflow-skills/blob/main/docs/visual-skills-architecture.md) de este repositorio. Se cita, no se copia. Léelo cuando necesites resolver una frontera.
+El contrato común de la familia visual —las reglas compartidas, las fronteras entre skills y la naturaleza de `ui-system.md`— vive en [`docs/visual-skills-architecture.md`](https://github.com/bfernandois059/dev-workflow-skills/blob/main/docs/visual-skills-architecture.md) de este repositorio. Se cita, no se copia. Léelo cuando necesites resolver una frontera.
 
 ---
 

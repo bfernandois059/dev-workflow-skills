@@ -121,7 +121,8 @@ estructural está genuinamente abierta y comparar opciones agrega valor (`design
 
 La ejecución va a la skill correspondiente:
 
-- corrección visual clara → `interface-craft`;
+- corrección sobre la interfaz, visual o de experiencia —reordenar, exponer una acción, dar
+  feedback, aclarar un estado— → `interface-craft`;
 - **la dirección misma está abierta** y hay varias soluciones estructurales legítimas →
   `design-directions`;
 - la tarea se rompe entre tamaños o pierde capacidades → `adaptive-layout` (**no audites
@@ -132,6 +133,13 @@ La ejecución va a la skill correspondiente:
   si se debe a una regla funcional, persistencia de estado o permisos, va a `engineering-workflow`.
   Sistémico no significa automáticamente componente compartido;
 - cambios funcionales, de datos, contratos o persistencia → `engineering-workflow`.
+
+**El relevo lleva también lo que no debe cambiar.** Quien implementa la corrección no vio el
+recorrido: solo recibe el hallazgo. Si la auditoría observó algo que sostiene la tarea y que una
+corrección descuidada podría llevarse —una interacción, un atajo, un feedback, una fricción
+protectora, la densidad que el uso diario necesita, un tratamiento visual que distingue bien dos
+acciones—, se nombra en el hallazgo como **Preservar al corregir**. Un hallazgo de experiencia
+no es una autorización para rehacer la pantalla, y el informe debe dejarlo escrito.
 
 ---
 
@@ -576,6 +584,7 @@ treinta segundos en un informe.
 **Evidencia:** [...]
 **Costo para el usuario:** [...]
 **Recomendación:** [...]
+**Preservar al corregir:** [solo si algo que funciona está en riesgo con esta corrección]
 **Derivar a:** [skill, solo si corresponde]
 
 #### 2. [...]
