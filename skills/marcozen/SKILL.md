@@ -78,7 +78,13 @@ Si el piso no se ejecuta —el usuario lo excluyó, o no hay forma de leer el c�
 lo dice en su primera línea: **«Seguridad no auditada en este informe»**. Un informe general
 que no menciona seguridad se lee como "sin problemas de seguridad"; ese silencio es el fallo.
 
-En un producto sin usuarios, sin datos de terceros y sin pagos, el piso se reduce al punto 1.
+En un producto sin usuarios, sin datos de terceros y sin pagos, el piso se reduce al punto 1,
+y la ceremonia se reduce con él: el modelo de acceso es `Público sin cuentas` por descripción y
+no se pregunta; no se pide el proyecto del proveedor ni se abre una lista de verificación
+externa salvo que exista una clave privada o un dato personal que proteger; registro, políticas,
+escalada y acceso de administración son `N/A` y no se listan como pendientes. Como mucho se
+pide la URL, si las sondas al despliegue aportan algo. Un sitio estático recibe un informe
+corto, no el formulario de una plataforma.
 
 ---
 
@@ -256,6 +262,7 @@ Todos los hallazgos se clasifican según su **impacto real en el contexto del pr
   - Clasifica como **P0** únicamente si se verifica que contiene o contenía credenciales, tokens, contraseñas, connection strings sensibles u otros secretos reales comprometidos.
   - Si un `.env` versionado contiene exclusivamente configuración no sensible (puertos locales, flags, URLs públicas), repórtalo como hallazgo contextual o mala práctica (P2/P3) según el riesgo.
   - **NUNCA muestres el valor del secreto** en el informe ni en la conversación. Reporta únicamente el tipo de credencial y su ubicación (`archivo:línea`).
+- **Una exposición verificada no se cierra sin preguntar si ya se usó:** ante un `P0` de exposición —registro abierto indebido, datos legibles sin control, camino de escalada, función privilegiada invocable, secreto publicado— el hallazgo incluye la comprobación de uso: cuentas que nadie provisionó, roles elevados no reconocidos, accesos en los registros del proveedor. Se reporta uno de tres resultados: evidencia de uso (posible incidente, se dice primero), sin evidencia en lo revisado (nombrando qué se miró y qué ventana cubren los registros; nunca "no fue explotado") o `No verificado`. Detalle y límites en [`references/external-surface.md`](references/external-surface.md).
 - **Descartar activamente falsos positivos antes de alertar:**
   - Roles de base de datos (`service_role`, `anon`, `authenticated` en sentencias SQL o RLS) son nombres de rol, no secretos.
   - Nombres de variable vacíos en plantillas (`.env.example`) son identificadores, no credenciales.
@@ -436,6 +443,7 @@ La auditoría MarcoZen presenta una estructura clara y directa centrada en la ev
   - *Qué se observó:* [Descripción precisa].
   - *Evidencia:* [Archivo, línea, ruta o comando; si es secreto, solo tipo y ubicación, NUNCA el valor].
   - *Impacto real:* [Consecuencia técnica u operativa].
+  - *¿Ya se usó?:* [Solo en exposiciones: evidencia de uso / sin evidencia en lo revisado, con qué se miró y qué ventana cubre / No verificado].
   - *Acción recomendada:* [Solución directa].
 
 ### P1 (Alto impacto)

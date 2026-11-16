@@ -349,7 +349,7 @@ Después de regenerar, volver a copiar el catálogo a la carpeta del chat: esa c
 | `component-architecture` | `0.2.0` | `skills/component-architecture/VERSION` | `component-architecture-v0.2.0` |
 | `tailwind-hygiene` | `0.2.0` | `skills/tailwind-hygiene/VERSION` | `tailwind-hygiene-v0.2.0` |
 | `ux-audit` | `0.3.0` | `skills/ux-audit/VERSION` | `ux-audit-v0.3.0` |
-| `marcozen` | `2.3.0` | `skills/marcozen/VERSION` | `marcozen-v2.3.0` |
+| `marcozen` | `2.4.0` | `skills/marcozen/VERSION` | `marcozen-v2.4.0` |
 | `tech-cleanup` | `2.0.0` | `skills/tech-cleanup/VERSION` | `tech-cleanup-v2.0.0` |
 
 Consultar una versión instalada y compararla con el repositorio canónico:
