@@ -2,6 +2,40 @@
 
 Los cambios relevantes de las skills se registran en este archivo.
 
+## [0.6.0] - 2026-11-16
+
+### `marcozen`: ajustes tras ejecutar los evals de la 2.3.0
+
+Los diez evals de la 2.3.0 pasaron al ejecutarlos con subagentes que leían la skill desde
+cero. Las respuestas dejaron ver tres cosas que la skill no pedía y que los agentes
+improvisaron, o hicieron de más.
+
+#### Added
+
+- `marcozen`: regla **«una exposición verificada no se cierra sin preguntar si ya se usó»**.
+  Ante un `P0` de exposición el hallazgo incluye la comprobación de uso, con tres resultados
+  posibles: evidencia de uso (posible incidente), sin evidencia en lo revisado —nombrando qué
+  se miró y qué ventana cubren los registros, nunca «no fue explotado»— o `No verificado`.
+  Campo *¿Ya se usó?* en la plantilla de hallazgo. Tabla por tipo de exposición y límites de
+  lectura en `references/external-surface.md`.
+- `skills/marcozen/references/external-surface.md`: tres **consultas de catálogo** nuevas —
+  columnas que los roles de la API pueden escribir, triggers por tabla y funciones
+  `SECURITY DEFINER` ejecutables por `anon` o `authenticated`— con cómo leerlas para cerrar una
+  escalada de privilegios.
+- Dos evals nuevos: hallazgo de registro abierto que el usuario quiere cerrar tras corregirlo,
+  y la petición de escribir «no fue explotada» con siete días de logs.
+
+#### Changed
+
+- `marcozen`: en un producto sin usuarios, datos de terceros ni pagos, el piso de seguridad
+  reduce también la ceremonia: no pregunta el modelo de acceso, no pide el proyecto del
+  proveedor ni abre verificación externa salvo que haya una clave privada o un dato personal
+  que proteger.
+
+#### Versiones
+
+- `marcozen`: `2.3.0` → `2.4.0`
+
 ## [0.5.0] - 2026-11-15
 
 ### `marcozen`: que el diagnóstico de seguridad no dependa de recordar mirar

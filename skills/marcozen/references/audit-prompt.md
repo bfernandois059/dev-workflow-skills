@@ -181,7 +181,9 @@ Entrega un informe con la siguiente estructura:
    - P1: Alto impacto.
    - P2: Mejoras importantes.
    - P3: Optimizaciones.
-   (Para cada hallazgo: qué se observó, evidencia concreta, impacto y acción recomendada).
+   (Para cada hallazgo: qué se observó, evidencia concreta, impacto y acción recomendada. En
+   un P0 de exposición, además: si hay evidencia de que ya se usó, qué se revisó para saberlo y
+   qué ventana cubren los registros; nunca "no fue explotado").
 5. Estado de preparación y veredicto (Listo / Listo con observaciones / No se puede afirmar —
    verificación pendiente / No listo). Con un control requerido sin verificar, el veredicto no
    puede ser Listo ni Listo con observaciones.

@@ -210,6 +210,28 @@ where p.prosecdef and n.nspname = 'public';
 
 -- 5. Visibilidad de buckets (si el proyecto usa el almacenamiento de Supabase)
 select id, name, public from storage.buckets;
+
+-- 6. Columnas que los roles de la API pueden escribir: ¿aparece la de rol, plan u organización?
+select table_name, column_name, grantee
+from information_schema.column_privileges
+where table_schema = 'public' and privilege_type = 'UPDATE'
+  and grantee in ('anon', 'authenticated')
+order by table_name, column_name;
+
+-- 7. Triggers por tabla: ¿hay alguno que impida cambiar esas columnas?
+select event_object_table as table_name, trigger_name, action_timing, event_manipulation
+from information_schema.triggers
+where event_object_schema = 'public'
+order by table_name, trigger_name;
+
+-- 8. Funciones privilegiadas que los roles de la API pueden ejecutar (incluye lo heredado de PUBLIC)
+select p.proname as function, r.rolname as grantee
+from pg_proc p
+join pg_namespace n on n.oid = p.pronamespace
+cross join pg_roles r
+where n.nspname = 'public' and p.prosecdef
+  and r.rolname in ('anon', 'authenticated')
+  and has_function_privilege(r.oid, p.oid, 'EXECUTE');
 ```
 
 Cómo leerlas: una tabla con `rowsecurity = false` y un `GRANT` a `anon` o `authenticated` es
@@ -217,6 +239,13 @@ alcanzable por la API con sus datos completos. Una tabla con `rowsecurity = true
 fila en `pg_policies` niega todo. Una política cuyo `qual` es `true` no filtra nada. Y una tabla
 que aparece en (1) pero no en las migraciones se creó por fuera del repositorio: es
 exactamente la que nadie revisó.
+
+Las tres últimas cierran la escalada de privilegios. Si (6) lista la columna de rol para
+`authenticated` y (7) no muestra un trigger que la proteja, falta solo leer el `with_check` de
+la política en (2): si tampoco la protege, el usuario puede cambiar su propio rol. Y cada fila
+de (8) es una función que salta las políticas y que cualquier sesión —o cualquier visitante,
+si el rol es `anon`— puede invocar: debe validar al llamante por dentro o no estar en esa
+lista.
 
 Cuando no haya ningún acceso al servidor, el estado efectivo de RLS es `No verificado`: dilo, y
 entrega estas consultas en *Verificación externa pendiente* para que el usuario las corra.
@@ -329,6 +358,35 @@ proveedor divergentes de `.env.example`.
 
 **P3 — endurecimiento deseable.** Rotación periódica, reducción de alcance de claves ya
 correctamente ubicadas, políticas más granulares sin fuga demostrada.
+
+### Una exposición verificada abre una segunda pregunta: ¿ya se usó?
+
+Cerrar la puerta no dice si alguien entró. Cuando un hallazgo `P0` es una **exposición** —
+registro abierto en un producto restringido, tabla o bucket legible sin control, camino de
+escalada, función privilegiada invocable, secreto publicado—, el hallazgo no está completo sin
+esta comprobación:
+
+| Exposición | Dónde buscar el uso | Señal |
+|---|---|---|
+| Registro abierto en un producto restringido | Lista de usuarios del proveedor: fecha, proveedor de identidad y dominio de cada cuenta | Cuentas que nadie provisionó |
+| Escalada de privilegios | Filas con rol elevado frente a la lista de quienes deberían tenerlo | Administradores no reconocidos |
+| Tabla o bucket expuesto | Registros de acceso de la API y del almacenamiento del proveedor | Lecturas anónimas o volumen anómalo |
+| Función privilegiada invocable | Registros de la API: llamadas a esa RPC | Invocaciones fuera de la pantalla que la usa |
+| Secreto publicado | Registros de uso de esa credencial en el proveedor | Uso desde orígenes desconocidos |
+
+Tres resultados posibles, y se escribe cuál:
+
+- **Evidencia de uso.** Deja de ser solo un hallazgo: es un posible incidente. Se dice primero
+  y aparte, con lo observado. Contener, rotar y evaluar obligaciones de notificación son
+  decisiones del usuario; la auditoría no las toma ni las ejecuta.
+- **Sin evidencia en lo revisado.** Se nombra qué se miró y **qué ventana cubren los
+  registros**. Nunca se escribe "no fue explotado": la ausencia de rastro en siete días de logs
+  no dice nada del mes anterior.
+- **No verificado.** Sin acceso a los registros, va a *Verificación externa pendiente*.
+
+Límite: los registros y la lista de cuentas son metadatos y entran en la lectura permitida.
+Contar o listar **filas de usuarios** —quién tiene rol de administrador— es leer datos reales:
+se describe la consulta y se pide autorización antes de ejecutarla.
 
 ### Falsos positivos que hay que descartar antes de alertar
 
