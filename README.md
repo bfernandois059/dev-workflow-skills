@@ -247,9 +247,11 @@ La regla que ordena el reparto: el chat describe **qué resultado** se busca, nu
 El catálogo cita literal el `description` del frontmatter de cada skill, que es el mismo texto con el que el agente ejecutor decide si la activa. Esa sección es generada:
 
 ```bash
+python3 scripts/build_skill_catalog.py --check   # ¿hace falta? falla si no lo está
 python3 scripts/build_skill_catalog.py           # regenera el catálogo
-python3 scripts/build_skill_catalog.py --check   # falla si quedó desincronizado
 ```
+
+**`--check` va primero:** responde si hay algo que regenerar sin modificar nada. Si dice `sincronizado`, no hay más que hacer. El modo de escritura informa cuál de los dos casos ocurrió —`actualizado` o `sin cambios`— y deja el archivo intacto cuando ya estaba al día.
 
 Se corre **solo cuando cambia el `description` o la `VERSION` de una skill**. No es parte de redactar un encargo ni del trabajo diario.
 
