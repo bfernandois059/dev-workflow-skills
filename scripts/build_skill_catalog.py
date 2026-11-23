@@ -6,8 +6,13 @@ sección generada. Este script reescribe únicamente la región delimitada por l
 marcadores, tomando el `name`, el `description` del frontmatter y el `VERSION` de
 cada skill. La prosa fuera de los marcadores no se toca.
 
+    python3 scripts/build_skill_catalog.py --check   # ¿hace falta? falla si no lo está
     python3 scripts/build_skill_catalog.py           # reescribe el catálogo
-    python3 scripts/build_skill_catalog.py --check   # falla si está desincronizado
+
+Conviene correr `--check` primero: responde si hay algo que regenerar sin tocar nada.
+El modo de escritura dice cuál de los dos casos ocurrió —`actualizado` o `sin
+cambios`— y no reescribe el archivo cuando ya estaba al día. `sin cambios` significa
+además que no hay nada que volver a copiar a donde se consuma el catálogo.
 
 El `description` del frontmatter es el texto de routing autoritativo: es el que
 leen los agentes para decidir si activan la skill. El catálogo lo cita literal
@@ -105,15 +110,21 @@ def main():
         flags=re.S,
     )
 
+    synced = updated == current
+
     if args.check:
-        if updated != current:
+        if not synced:
             print(f"{CATALOG} está desincronizado de los SKILL.md", file=sys.stderr)
             return 1
         print(f"{CATALOG}: {len(skills)} skills, sincronizado")
         return 0
 
+    if synced:
+        print(f"{CATALOG}: {len(skills)} skills, sin cambios")
+        return 0
+
     CATALOG.write_text(updated, encoding="utf-8")
-    print(f"{CATALOG}: {len(skills)} skills")
+    print(f"{CATALOG}: {len(skills)} skills, actualizado")
     return 0
 
 
